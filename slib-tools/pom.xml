@@ -1,0 +1,23 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>slib</artifactId>
+    <groupId>fr.lgi2p.kid</groupId>
+    <version>${project-version}</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>slib-tools</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+  	<module>slib-tools-ontofocus</module>
+  	<module>slib-tools-module</module>
+  	<module>slib-tools-sml</module>
+  </modules>
+  <dependencies>
+  	<dependency>
+  		<groupId>fr.lgi2p.kid</groupId>
+  		<artifactId>slib-utils</artifactId>
+  		<version>${project-version}</version>
+  	</dependency>
+  </dependencies>
+</project>

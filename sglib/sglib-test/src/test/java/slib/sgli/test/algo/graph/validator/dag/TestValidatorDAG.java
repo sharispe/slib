@@ -1,0 +1,214 @@
+/*
+
+Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+
+This software is a computer program whose purpose is to 
+process semantic graphs.
+
+This software is governed by the CeCILL  license under French law and
+abiding by the rules of distribution of free software.  You can  use, 
+modify and/ or redistribute the software under the terms of the CeCILL
+license as circulated by CEA, CNRS and INRIA at the following URL
+"http://www.cecill.info". 
+
+As a counterpart to the access to the source code and  rights to copy,
+modify and redistribute granted by the license, users are provided only
+with a limited warranty  and the software's author,  the holder of the
+economic rights,  and the successive licensors  have only  limited
+liability. 
+
+In this respect, the user's attention is drawn to the risks associated
+with loading,  using,  modifying and/or developing or reproducing the
+software by the user in light of its specific status of free software,
+that may mean  that it is complicated to manipulate,  and  that  also
+therefore means  that it is reserved for developers  and  experienced
+professionals having in-depth computer knowledge. Users are therefore
+encouraged to load and test the software's suitability as regards their
+requirements in conditions enabling the security of their systems and/or 
+data to be ensured and,  more generally, to use and operate it in the 
+same conditions as regards security. 
+
+The fact that you are presently reading this means that you have had
+knowledge of the CeCILL license and that you accept its terms.
+
+ */
+ 
+ 
+package slib.sgli.test.algo.graph.validator.dag;
+
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import org.junit.Test;
+import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDFS;
+
+import slib.sgli.test.algo.graph.SGL_UnitTestValues;
+import slib.sgli.test.algo.graph.TestUtils;
+import slib.sglib.algo.validator.dag.ValidatorDAG;
+import slib.sglib.io.util.GFormat;
+import slib.sglib.model.graph.G;
+import slib.sglib.model.graph.elements.E;
+import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.impl.EdgeTyped;
+import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.repo.impl.DataRepository;
+import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SGL_Exception;
+import slib.utils.impl.SetUtils;
+
+import com.tinkerpop.blueprints.Direction;
+
+public class TestValidatorDAG {
+
+	G g;
+	Set<URI> subClassURis;
+	URI rootURI;
+	SGL_UnitTestValues testValues;
+
+	public TestValidatorDAG() throws SGL_Exception{
+
+		testValues = new SGL_UnitTestValues();
+		rootURI = testValues.G_BASIC_THING;
+
+		g = TestUtils.loadTestGraph(GFormat.SGL,SGL_UnitTestValues.G_DAG_BASIC);
+		subClassURis = new HashSet<URI>();
+		subClassURis.add(RDFS.SUBCLASSOF);
+	}
+	
+	@Test
+	public void test_dag_root() throws SGL_Ex_Critic{
+
+		System.out.println(g.toString());
+		
+		Set<V> roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+		
+		System.out.println("Roots: "+roots);
+		assertTrue(roots.size() == 1);
+		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
+		
+		
+		V newRoot = new VertexTyped(g, g.getDataRepository().createURI("http://newURI"), VType.CLASS);
+		g.addV(newRoot);
+		
+		roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+		assertTrue(roots.size() == 2);
+	}
+	
+	@Test
+	public void test_dag_root_2() throws SGL_Ex_Critic{
+
+		System.out.println(g.toString());
+		
+		Set<V> roots = new ValidatorDAG().getDAGRoots(g,subClassURis,Direction.OUT);
+		
+		assertTrue(roots.size() == 1);
+		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
+	}
+
+	@Test
+	public void test_true_dag() throws SGL_Ex_Critic{
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, subClassURis,Direction.IN);
+		assertTrue(isDag);
+	}
+	
+	@Test
+	public void test_true_tax_dag() throws SGL_Ex_Critic{
+
+		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		
+		assertTrue(isDag == true);
+		
+		V root = g.getV(testValues.G_BASIC_THING);
+		V human = g.getV(testValues.G_BASIC_HUMAN);
+		
+		//create cycle
+		
+		E e = new EdgeTyped(root, human, RDFS.SUBCLASSOF);
+		g.addE(e);
+		
+		isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		assertTrue(isDag == false);
+	}
+	
+	@Test
+	public void test_true_tax_dag_unique_root() throws SGL_Ex_Critic{
+
+		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+		
+		assertTrue(isDag == true);
+		
+		V newRoot = new VertexTyped(g, g.getDataRepository().createURI("http://newURI"), VType.CLASS);
+		g.addV(newRoot);
+		
+		isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+		assertTrue(isDag == false);
+	}
+	
+	
+	@Test
+	public void test_false_tax_dag_unique_root() throws SGL_Ex_Critic{
+
+		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+		
+		assertTrue(isDag == true);
+		
+		URI newRootURI = DataRepository.getSingleton().createURI(SGL_UnitTestValues.uriGraph+"new_Root");
+		
+		V newRoot = g.addV(new VertexTyped(g,newRootURI, VType.CLASS));
+		
+		g.addE(g.getV(testValues.G_BASIC_FICTIV_ORGANISM),newRoot, RDFS.SUBCLASSOF);
+		g.addE(newRoot, g.getV(testValues.G_BASIC_FICTIV_ORGANISM), RDFS.SUBCLASSOF);
+		
+		isDag = new ValidatorDAG().isDag(g, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.IN);
+		assertTrue(isDag == false);
+		
+		isDag = new ValidatorDAG().containsTaxonomicDag(g);
+		assertTrue(isDag == false);
+		
+		isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+		assertTrue(isDag == false);
+	}
+	
+	@Test
+	public void test_false_tax_dag() throws SGL_Ex_Critic{
+
+		URI animalURI 	= testValues.G_BASIC_ANIMAL;
+		URI menURI 		= testValues.G_BASIC_MEN;
+		
+		System.out.println(g.toString());
+
+		// create a cycle
+		g.addE(g.getV(animalURI), g.getV(menURI), RDFS.SUBCLASSOF);
+		
+		System.out.println(g.toString());
+		
+		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		
+		assertTrue(isDag == false);
+	}
+
+	@Test
+	public void test_false_dag() throws SGL_Ex_Critic{
+
+		URI animalURI 	= testValues.G_BASIC_ANIMAL;
+		URI menURI 		= testValues.G_BASIC_MEN;
+		
+		System.out.println(g.toString());
+
+		// add an is-a inverse relationship between men and animal to create a cycle
+		g.addE(g.getV(animalURI), g.getV(menURI), RDFS.SUBCLASSOF);
+		
+		System.out.println(g.toString());
+		
+		assertTrue(new ValidatorDAG().isDag(g, RDFS.SUBCLASSOF,Direction.IN) == false);
+		
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, RDFS.SUBCLASSOF);
+		
+		assertTrue(isDag == false);
+	}
+
+}

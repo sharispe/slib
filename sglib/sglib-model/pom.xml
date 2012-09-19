@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <artifactId>sglib</artifactId>
+    <groupId>fr.lgi2p.kid</groupId>
+    <version>${project-version}</version>
+    <relativePath>..</relativePath>
+  </parent>
+  <artifactId>sglib-model</artifactId>
+  
+  <repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven Repository Switchboard</name>
+			<layout>default</layout>
+			<url>http://repo1.maven.org/maven2</url>
+		</repository>
+		
+		<repository>
+			<id>aduna-repo</id>
+			<name>Aduna repository</name>
+			<url>http://repo.aduna-software.org/maven2/releases</url>
+		</repository>
+	</repositories>
+  
+  	<dependencies>
+
+	<dependency>
+		<groupId>org.openrdf.sesame</groupId>
+		<artifactId>sesame-runtime</artifactId>
+		<version>2.6.9</version>
+	</dependency>
+	<dependency>
+		<groupId>org.openrdf.sesame</groupId>
+		<artifactId>sesame-rio-rdfxml</artifactId>
+		<version>2.6.8</version>
+	</dependency>
+	<dependency>
+		<groupId>org.openrdf.sesame</groupId>
+		<artifactId>sesame-rio-n3</artifactId>
+		<version>2.6.8</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>com.tinkerpop.blueprints</groupId>
+		<artifactId>blueprints-core</artifactId>
+		<version>2.1.0</version>
+	</dependency>
+
+
+
+	
+  	</dependencies>
+	
+</project>

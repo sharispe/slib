@@ -1,0 +1,84 @@
+# Nb of: EdgeType	VertexTypes	 Vertices	Edges	
+graph_test	2	1	34	36
+
+EDGE_TYPE
+# id	URI	inverse_id	is_transitive(0,1)
+0	is_a	-1	1
+1	part_of	-1	1
+
+VERTEX_TYPE
+0	class
+
+VERTICES
+0	thing	0
+1	idea	0
+2	object	0
+3	tools	0
+4	hummer	0
+5	knife	0
+6	organism	0
+7	fictiv_organism	0
+8	mushroom	0
+9	plant	0
+10	cactus	0
+11	vegetable	0
+12	carrot	0
+13	tomato	0
+14	animal	0
+15	fish	0
+16	lionfish	0
+17	clownfish	0
+18	mammal	0
+19	human	0
+20	child	0
+21	adult	0
+22	men	0
+23	women	0
+24	mouse	0
+25	wild_mouse	0
+26	domestic_mouse	0
+27	spider	0
+28	complex_tools	0
+29	table	0
+30	real_organism	0
+31	spiderman	0
+32	shark	0
+33	swiss_knife	0
+
+EDGES
+1	0	0
+2	0	0
+29	2	0
+3	2	0
+28	3	0
+5	3	0
+4	3	0
+33	5	0
+33	28	0
+6	0	0
+18	14	0
+24	18	0
+25	24	0
+26	24	0
+19	18	0
+20	19	0
+21	19	0
+22	21	0
+23	21	0
+31	22	0
+31	27	0
+31	7	0
+7	6	0
+30	6	0
+8	30	0
+9	30	0
+10	9	0
+11	9	0
+12	11	0
+13	11	0
+14	30	0
+15	14	0
+16	15	0
+17	15	0
+27	14	0
+32	15	0
