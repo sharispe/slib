@@ -43,6 +43,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map.Entry;
 
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -88,6 +89,8 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	Double  emptyAnnotsScores;
 
 	public String graphURI;
+	
+	
 
 
 

@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: slib.sgli.test.algo.graph.metric.TestDepthAnalyser
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.148 sec
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.116 sec

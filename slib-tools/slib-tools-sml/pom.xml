@@ -38,6 +38,11 @@
 			<artifactId>slib-sml</artifactId>
 			<version>${project-version}</version>
 		</dependency>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>slib-tools-module</artifactId>
+			<version>0.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

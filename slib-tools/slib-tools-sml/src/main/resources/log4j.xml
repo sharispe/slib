@@ -3,21 +3,13 @@
 <log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
 
 	<appender name="CA" class="org.apache.log4j.ConsoleAppender">
-		<param name="Threshold" value="DEBUG"/>
+		<param name="Threshold" value="INFO"/>
 		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p  %-4r [%t] %c{1}: %m%n" />
-		</layout>
-	</appender>
-	<appender name="FA" class="org.apache.log4j.FileAppender">
-		<param name="File" value="sgl-debug.log"/>
-		<param name="Threshold" value="DEBUG"/>
-		<param name="Append" value="false"/>
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-4r [%t] %-5p %c %x - %m%n" />
+			<param name="ConversionPattern" value="%m%n" />
 		</layout>
 	</appender>
 	<root>
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="CA" />
 		<appender-ref ref="FA" />
 	</root>
