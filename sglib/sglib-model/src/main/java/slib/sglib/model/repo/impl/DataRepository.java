@@ -96,10 +96,9 @@ public class DataRepository extends SGLValueFactory implements IDataRepository{
 	public boolean loadNamespacePrefix(String prefix, String reference) throws SGL_Ex_Critic {
 
 		if(!namespaces.contains(reference))
-			namespaces.add(reference);
+			createNamespace(reference);
 
 		if(!namespacesPrefix.containsKey(prefix)){
-
 			namespacesPrefix.put(prefix, reference);
 			return true;
 		}
@@ -113,9 +112,23 @@ public class DataRepository extends SGLValueFactory implements IDataRepository{
 	public G getGraph(URI uri){
 		return graphs.get(uri);
 	}
+	
+	public Map<URI,G> getGraphs(){
+		return graphs;
+	}
 
 	public void addGraph(G g) {
 		graphs.put(g.getURI(), g);
+	}
+	
+	/**
+	 * Return the namespace associated to the given prefix
+	 * @param ns_prefix
+	 * @return the associated namespace or null
+	 */
+	public String getNamespace(String ns_prefix){
+		if(ns_prefix == null) return null;
+		return namespacesPrefix.get(ns_prefix);
 	}
 
 }

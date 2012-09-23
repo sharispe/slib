@@ -1,33 +1,60 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>sglib</artifactId>
-    <groupId>fr.lgi2p.kid</groupId>
-    <version>${project-version}</version>
-    <relativePath>..</relativePath>
-  </parent>
-  <artifactId>sglib-io</artifactId>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>sglib</artifactId>
+		<groupId>fr.lgi2p.kid</groupId>
+		<version>0.0.2-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>sglib-io</artifactId>
 
-  <dependencies>
-  	<dependency>
-  		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>slib-utils</artifactId>
-  		<version>${project-version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>sglib-model</artifactId>
-  		<version>${project-version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>slib-indexer</artifactId>
-  		<version>${project-version}</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>sglib-algo</artifactId>
-  		<version>0.0.2</version>
-  	</dependency>
-  </dependencies>
+	<dependencies>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>slib-utils</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>sglib-model</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>slib-indexer</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>sglib-algo</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.6</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.0</version>
+			<type>jar</type>
+			<scope>test</scope>
+			<optional>true</optional>
+		</dependency>
+
+
+		<!-- concrete Log4J Implementation for SLF4J API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.6</version>
+			<scope>runtime</scope>
+		</dependency>
+
+	</dependencies>
 </project>

@@ -190,7 +190,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 	}
 
 
-	private void init(G g, String file){
+	private void init(G g, String file, String defaultNamespace){
 
 		this.g = g;
 		this.graphURI = g.getURI();
@@ -199,7 +199,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 		logger.info("Loading OBO specification from:"+filepath);
 
-		defaultNamespace = null;
+		this.defaultNamespace = defaultNamespace;
 
 		format_version 		= "undefined";
 
@@ -215,7 +215,12 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 	public void populate(GDataConf conf, G g) throws SGL_Exception {
 
-		init(g,conf.getLoc());
+		String defaultNamespace = (String) conf.getParameter("default-namespace");
+		
+		if(defaultNamespace == null)
+			throw new SGL_Exception("OBO loader requires a parameter default-namespace ");
+		
+		init(g,conf.getLoc(),defaultNamespace);
 		loadOboSpec();
 
 		logger.debug("OBO specification loaded.");
@@ -268,10 +273,11 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 						if(data != null){
 
-							if(data[0].equals(OBOconstants.DEF_NAMESPACE_FLAG))
-								defaultNamespace = data[1];
-
-							else if(data[0].equals(OBOconstants.FORMAT_VERSION_FLAG))
+//							if(data[0].equals(OBOconstants.DEF_NAMESPACE_FLAG))
+//								defaultNamespace = data[1];
+//
+//							else 
+								if(data[0].equals(OBOconstants.FORMAT_VERSION_FLAG))
 								format_version = data[1];
 						}
 					}
@@ -294,10 +300,11 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 							if( flag.equals(OBOconstants.TERM_ID_FLAG) ){ // id
 
 								oboTermCurrent = new OboTerm();
-								oboTermCurrent.setURIstring(gNamespace+value);
+								
+								oboTermCurrent.setURIstring( buildURI(value) );
 							}
 							else if( flag.equals(OBOconstants.ISA_FLAG) ){ // is_a
-								oboTermCurrent.addRel(subClassOfURI,gNamespace+value);
+								oboTermCurrent.addRel(subClassOfURI, buildURI(value) );
 							}
 							// is_obsolete:
 							else if( flag.equals(OBOconstants.OBSOLETE_FLAG) ){ // is_obsolete
@@ -309,8 +316,8 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 								String[] datasub = spaces.split(value);
 
-								String relType   = gNamespace+datasub[0].trim();
-								String targetURI = gNamespace+datasub[1].trim();
+								String relType   = buildURI( datasub[0].trim() );
+								String targetURI = buildURI( datasub[1].trim() );
 
 								oboTermCurrent.addRel(relType, targetURI);
 							}
@@ -333,7 +340,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 							// id:
 							if( flag.equals(OBOconstants.TYPEDEF_ID_FLAG) ){
-								oboTypeCurrent = new OboType(graphURI+value);
+								oboTypeCurrent = new OboType( buildURI(value) );
 							}
 							// is_transitive:
 							else if( flag.equals(OBOconstants.TYPEDEF_ISTRANSIVE_FLAG) ){
@@ -344,8 +351,10 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 							// inverse_of:
 							else if( flag.equals(OBOconstants.TYPEDEF_INVERSE_OF_FLAG) ){
 
-								setOppositeRel(oboTypeCurrent.getURIstring(), graphURI+value);
-								setOppositeRel(graphURI+value, oboTypeCurrent.getURIstring());
+								String uri_opp = buildURI(value);
+								
+								setOppositeRel(oboTypeCurrent.getURIstring(), uri_opp );
+								setOppositeRel(uri_opp , oboTypeCurrent.getURIstring());
 							}
 							// is_symmetric:
 							else if( flag.equals(OBOconstants.TYPEDEF_SYMMETRIC_FLAG) ){
@@ -377,6 +386,24 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 	}
 
 
+
+	private String buildURI(String value) throws SGL_Ex_Critic {
+		
+		String info[] = getDataColonSplit(value);
+		
+
+		if(data != null && info.length == 2){
+
+			String ns = data.getNamespace(info[0]);
+			if(ns == null)
+				throw new SGL_Ex_Critic("No namespace associated to prefix "+info[0]+". Cannot load "+value+", please load required namespace prefix");
+			
+			return ns+info[1];
+		}
+		else{
+			return defaultNamespace+value;
+		}
+	}
 
 	private void checkLine(String line) throws SGL_Ex_Critic {
 

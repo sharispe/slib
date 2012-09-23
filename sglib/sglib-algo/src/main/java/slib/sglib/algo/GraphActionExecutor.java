@@ -200,12 +200,12 @@ public class GraphActionExecutor {
 	private static void rerooting(GAction action, G g) throws SGL_Ex_Critic {
 
 
-		logger.debug("Rerooting");
+		logger.info("Rerooting");
 
 		// Re-rooting
 		String rootURIs = (String) action.getParameter("root_uri");
 
-		logger.debug("Fetching root node, uri: "+rootURIs);
+		logger.info("Fetching root node, uri: "+rootURIs);
 
 
 		if(rootURIs != null && !rootURIs.isEmpty()){
@@ -214,7 +214,7 @@ public class GraphActionExecutor {
 				RooterDAG.rootUnderlyingTaxonomicDAG(g,SGLVOC.UNIVERSAL_ROOT);
 			else{
 				URI rootURI = DataRepository.getSingleton().createURI(rootURIs);
-
+				
 				if(g.getV(rootURI) == null)
 					throw new SGL_Ex_Critic("Cannot resolve specified root:"+rootURI);
 				else{

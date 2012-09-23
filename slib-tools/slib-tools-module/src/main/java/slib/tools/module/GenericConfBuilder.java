@@ -24,8 +24,10 @@ public class GenericConfBuilder {
 	 * @see {@link GlobalConfPattern}
 	 * @throws SGL_Ex_Critic if a non existing pattern is used
 	 */
-	private static String applyGlobalPatterns(String v) throws SGL_Ex_Critic{
+	public static String applyGlobalPatterns(String v) throws SGL_Ex_Critic{
 
+		if(v == null) return null;
+		
 		Matcher m = patternRgx.matcher(v);
 
 		HashMap<String, String > variables = GlobalConfPattern.getInstance().getVariables();

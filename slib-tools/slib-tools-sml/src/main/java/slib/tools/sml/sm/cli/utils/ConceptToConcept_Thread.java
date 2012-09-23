@@ -99,8 +99,14 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 				uriE1s = q.getKey();
 				uriE2s = q.getValue();
 
-				uriE1 = df.createURI(uriE1s);
-				uriE2 = df.createURI(uriE2s);
+				try {
+					uriE1 = df.createURI(uriE1s);
+					uriE2 = df.createURI(uriE2s);
+				}
+				catch (IllegalArgumentException e) {
+
+					throw new SGL_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
+				}
 
 				e1 = g.getV(uriE1);
 				e2 = g.getV(uriE2);
@@ -128,8 +134,8 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
 					if(Double.isNaN(sim) || Double.isInfinite(sim))
 						SMutils.throwArithmeticCriticalException(p, e1,e2,sim);
-					
-					
+
+
 				}
 				tmp_buffer.append("\n");
 				results.buffer.append(tmp_buffer);

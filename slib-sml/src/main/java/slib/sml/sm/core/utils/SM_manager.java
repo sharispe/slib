@@ -808,9 +808,26 @@ public class SM_manager {
 		HashMap<V,Set<V>> linkedEntities = new HashMap<V,Set<V>>();
 		Set<V> instances = g.getV(VType.INSTANCE);
 		
-		for(V o : instances)
-			linkedEntities.put(o, g.getV(o,RDF.TYPE,Direction.OUT));
 
+		
+		for(V o : instances){
+			Set<V> annots = g.getV(o,RDF.TYPE,Direction.OUT);
+			
+			if(annots == null)
+				annots = new HashSet<V>();
+			
+			for(V v : annots){
+				Set<V> instancesV = linkedEntities.get(v);
+				
+				if(instancesV == null)
+					instancesV = new HashSet<V>();
+				
+				instancesV.add(o);
+				
+				linkedEntities.put(v, instancesV);
+			}
+
+		}
 		// Get Topological ordering trough DFS
 		// - get roots
 		Set<V> roots = new ValidatorDAG().getDAGRoots(g, goToSuperClassETypes, Direction.OUT);
@@ -820,7 +837,13 @@ public class SM_manager {
 
 
 		ResultStack<V,Long> rStack = new ResultStack<V,Long>();
-
+		
+		// initialize data structure
+		for (int i = 0; i< topoOrdering.size(); i++) {
+			if(linkedEntities.get(topoOrdering.get(i)) == null)
+				linkedEntities.put(topoOrdering.get(i), new HashSet<V>());
+		}
+		
 		for (int i = 0; i< topoOrdering.size(); i++) {
 
 			V currentV = topoOrdering.get(i);

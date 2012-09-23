@@ -11,6 +11,5 @@
 	<root>
 		<level value="INFO" />
 		<appender-ref ref="CA" />
-		<appender-ref ref="FA" />
 	</root>
 </log4j:configuration>

@@ -49,6 +49,7 @@ import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.bio.gaf2.GraphLoader_GAF_2;
 import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;
+import slib.sglib.io.loader.csv.GraphLoader_CSV;
 import slib.sglib.io.loader.rdf.RDFLoader;
 import slib.sglib.io.loader.sgl.GraphLoader_SGL;
 import slib.sglib.io.util.GFormat;
@@ -85,6 +86,13 @@ public class GraphLoaderGeneric {
 		return g;
 	}
 
+	/**
+	 * Build the graph considering the given consideration.
+	 * Add the loaded graph to the {@link DataRepository}
+	 * @param graphConf
+	 * @return
+	 * @throws SGL_Exception
+	 */
 	public static G load(GraphConf graphConf) throws SGL_Exception{
 		
 		logger.debug("Loading Graph");
@@ -96,9 +104,9 @@ public class GraphLoaderGeneric {
 			populate(dataConf,g);
 		}
 		
-		logger.debug(g.toString());
+		logger.info(g.toString());
 		
-		GraphActionExecutor.applyActions(graphConf.getActions(), (G) null);
+		GraphActionExecutor.applyActions(graphConf.getActions(),g);
 
 		DataRepository.getSingleton().addGraph(g);
 		
@@ -128,6 +136,9 @@ public class GraphLoaderGeneric {
 		
 		else if(data.getFormat()  == GFormat.NTRIPLES)
 			return new RDFLoader(RDFFormat.NTRIPLES);
+		
+		else if(data.getFormat()  == GFormat.CSV)
+			return new GraphLoader_CSV();
 		else
 			throw new SGL_Ex_Critic("Unknown Graph format "+data.getFormat());
 	}

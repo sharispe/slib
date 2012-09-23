@@ -224,7 +224,8 @@ public interface G extends NotifyingSail{
 	
 	/**
 	 * Add an edge of the given type (URI) between the specified source and target
-	 * If the given edge already exits nothing is done
+	 * If the given edge already exits nothing is done.
+	 * If the involved don't exist they are created.
 	 * @param src the source of the edge
 	 * @param target the target of the edge
 	 * @param type the {@link URI} of the edge to create

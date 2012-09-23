@@ -124,12 +124,12 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				String module = (String) gconf.getParam(Sm_XML_Cst.SML_MODULE);
 				
 				if(module == null || !module.equals(Sm_XML_Cst.SML_SM))
-					Util.error("Please specify a attribut module='sm' ");
+					Util.error("Please specify a attribut module='sm' to tag "+Sm_XML_Cst.SML_TAG);
 				
 				graphURI = (String) gconf.getParam(XmlTags.GRAPH_ATT);
 				
 				if(graphURI == null)
-					Util.error("Please specify a attribut graph='graph_uri' specifying which graph must be considered ");
+					Util.error("Please specify a attribut graph='graph_uri' to tag "+Sm_XML_Cst.SML_TAG+" specifying which graph must be considered ");
 				
 				String includeFile = (String) gconf.getParam(Sm_XML_Cst.SML_SM_include);
 				if(includeFile != null){
@@ -951,23 +951,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	public Double getEmptyAnnotsScores() {
 		return emptyAnnotsScores;
 	}
-
-
-
-	
-	public static void main(String[] args) {
-
-		String conf = System.getProperty("user.dir")+"/src/main/resources/conf_sgl.xml";
-		
-		try {
-			@SuppressWarnings("unused")
-			Sm_XMLConfLoader cfgLoader = new Sm_XMLConfLoader(conf);
-
-		} catch (SGL_Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 
 
 }

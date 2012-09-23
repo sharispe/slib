@@ -256,8 +256,6 @@ public class SmCli implements SmlModuleCLI {
 
 				EntityToEntity_Thread callable = new EntityToEntity_Thread(poolWorker,queriesBench,this,nbMeasures);
 
-
-
 				poolWorker.addTask();
 				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
 				Future<ThreadResultsQueryLoader> future = poolWorker.getPool().submit(callable);
@@ -485,23 +483,7 @@ public class SmCli implements SmlModuleCLI {
 	public InstancesAccessor getiAccessor() {
 		return iAccessor;
 	}
-
-
-
-	public static void main(String[] args) {
-
-		String conf;
-		conf = System.getProperty("user.dir")+"/src/main/resources/conf_sgl.xml";
-//		conf = System.getProperty("user.dir")+"/src/main/resources/conf_sgl_2.xml";
-		
-		try {
-			SmCli launcher = new SmCli();
-			launcher.execute(conf);
-
-		} catch (SGL_Exception e) {
-			e.printStackTrace();
-		}
-	}
-
+	
+	
 
 }

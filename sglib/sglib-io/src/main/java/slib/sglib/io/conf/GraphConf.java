@@ -22,6 +22,7 @@ public class GraphConf  extends ParametrableImpl implements CheckableValidity{
 	}
 	
 	public GraphConf(URI uri){
+		this();
 		this.uri = uri;
 	}
 	

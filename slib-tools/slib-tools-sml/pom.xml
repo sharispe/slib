@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>slib-tools</artifactId>
 		<groupId>fr.lgi2p.kid</groupId>
-		<version>${project-version}</version>
+		<version>0.0.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>slib-tools-sml</artifactId>
@@ -12,12 +12,12 @@
 		<dependency>
 			<groupId>fr.lgi2p.kid</groupId>
 			<artifactId>sglib-model</artifactId>
-			<version>${project-version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.lgi2p.kid</groupId>
 			<artifactId>sglib-io</artifactId>
-			<version>${project-version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -36,12 +36,12 @@
 		<dependency>
 			<groupId>fr.lgi2p.kid</groupId>
 			<artifactId>slib-sml</artifactId>
-			<version>${project-version}</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>fr.lgi2p.kid</groupId>
 			<artifactId>slib-tools-module</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 

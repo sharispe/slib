@@ -108,9 +108,18 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 				uriE1s = q.getKey();
 				uriE2s = q.getValue();
 
-				uriE1 = df.createURI(uriE1s);
-				uriE2 = df.createURI(uriE2s);
+				try {
 
+
+					uriE1 = df.createURI(uriE1s);
+					uriE2 = df.createURI(uriE2s);
+
+				}
+				catch (IllegalArgumentException e) {
+
+					throw new SGL_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
+				}
+				
 				e1 = g.getV(uriE1);
 				e2 = g.getV(uriE2);
 

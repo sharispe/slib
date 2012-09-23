@@ -94,6 +94,19 @@ public class XmlTags {
 	public static final String ACTION_TAG = "action";
 	public static final String URI_PREFIX_ATTR = "uri_prefix";
 
+	public static final String MAP_TAG = "map";
 	
+	public static final String MAP_ATT_FIELD  = "field";
+	public static final String MAP_ATT_TYPE   = "type";
+	public static final String MAP_ATT_PREFIX = "prefix";
 	
+	public static final String STM_TAG = "stm";
+	
+	public static final String STM_ATT_SUBJECT     = "subject";
+	public static final String STM_ATT_PREDICATE   = "predicate";
+	public static final String STM_ATT_OBJECT 	   = "object";
+	
+	public static final String STM_CONSTRAINT_TAG = "constraint";
+	public static final String STM_CONSTRAINT_ATT_ELEMENT = "element";
+	public static final String STM_CONSTRAINT_ATT_TYPE 	  = "type";
 }

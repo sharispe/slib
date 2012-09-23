@@ -43,7 +43,8 @@ public enum GFormat {
 	SGL,
 	GAF2,
 	RDF_XML,
-	NTRIPLES;
+	NTRIPLES,
+	CSV;
 	
 
 }

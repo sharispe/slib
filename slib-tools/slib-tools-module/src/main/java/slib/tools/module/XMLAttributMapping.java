@@ -19,6 +19,7 @@ public class XMLAttributMapping {
         aMap.put("rdf_xml"  , GFormat.RDF_XML );
         aMap.put("ntriples" , GFormat.NTRIPLES );
         aMap.put("gaf_2"	, GFormat.GAF2);
+        aMap.put("csv"		, GFormat.CSV);
         
         GDataFormatMapping = Collections.unmodifiableMap(aMap);
     }

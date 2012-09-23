@@ -1,0 +1,5 @@
+#surefire
+#Sun Sep 23 15:20:25 CEST 2012
+user.dir=/home/seb/development/java/workspace/slib/sglib/sglib-model
+localRepository=/home/seb/.m2/repository
+basedir=/home/seb/development/java/workspace/slib/sglib/sglib-model

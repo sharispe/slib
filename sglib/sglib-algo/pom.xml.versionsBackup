@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>sglib</artifactId>
+		<groupId>fr.lgi2p.kid</groupId>
+		<version>0.0.2</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>sglib-algo</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>fr.lgi2p.kid</groupId>
+			<artifactId>sglib-model</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.6</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- concrete Log4J Implementation for SLF4J API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.6</version>
+			<scope>runtime</scope>
+		</dependency>
+
+
+	</dependencies>
+</project>
