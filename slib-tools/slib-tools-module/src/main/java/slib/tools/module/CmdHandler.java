@@ -57,7 +57,7 @@ import slib.utils.ex.SGL_Exception;
 public abstract class CmdHandler {
 	
 	public ModuleCst cst;
-	public ModuleCmdHandlerCst cstCmd;
+	public ToolCmdHandlerCst cstCmd;
 	
 	public Options options;
 	public HelpFormatter helpFormatter;
@@ -80,7 +80,7 @@ public abstract class CmdHandler {
 		}
 	};
 	
-	public CmdHandler(ModuleCst cst,ModuleCmdHandlerCst cstCmd, String[] args) throws SGL_Exception{
+	public CmdHandler(ModuleCst cst,ToolCmdHandlerCst cstCmd, String[] args) throws SGL_Exception{
 		this.cst = cst;
 		this.cstCmd = cstCmd;
 		
@@ -115,9 +115,9 @@ public abstract class CmdHandler {
 			logger.info(cst.getDescription());
 	}
 	
-	public void showReportBug() {
-		if(cst.getReportBug() != null)
-			logger.info("Bugs : "+cst.getReportBug());
+	public void showContact() {
+		if(cst.getContact() != null)
+			logger.info("Contact : "+cst.getContact());
 	}
 
 	public void showRef() {
@@ -125,7 +125,7 @@ public abstract class CmdHandler {
 			logger.info("Please cite: "+cst.getReference());
 	}
 
-	public void ending(String message,boolean showHelp,boolean showDesc,boolean showBubreport){
+	public void ending(String message,boolean showHelp,boolean showDesc,boolean showContact){
 
 		if(message != null)
 			logger.info(message);
@@ -134,8 +134,8 @@ public abstract class CmdHandler {
 		
 		if(showDesc)
 			showDescription();
-		if(showBubreport)
-			showReportBug();
+		if(showContact)
+			showContact();
 		if(showHelp)
 			helpFormatter.printHelp( USAGE, HEADER, options, FOOTER );
 
@@ -149,10 +149,10 @@ public abstract class CmdHandler {
 
 		logger.info(HEADER);
 		showDescription();
-		showReportBug();
+		showContact();
 		
 		if(message != null)
-			logger.info(message);
+			logger.info("\n"+message+"\n");
 
 		
 		if(showHelp)

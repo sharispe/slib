@@ -217,8 +217,11 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 		String defaultNamespace = (String) conf.getParameter("default-namespace");
 		
-		if(defaultNamespace == null)
-			throw new SGL_Exception("OBO loader requires a parameter default-namespace ");
+		if(defaultNamespace == null){
+			defaultNamespace = g.getURI().getNamespace();
+			logger.info("OBO loader set default-namespace "+defaultNamespace);
+			
+		}
 		
 		init(g,conf.getLoc(),defaultNamespace);
 		loadOboSpec();

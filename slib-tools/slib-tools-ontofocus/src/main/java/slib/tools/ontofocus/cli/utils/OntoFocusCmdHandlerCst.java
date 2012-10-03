@@ -43,9 +43,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import slib.sglib.io.util.GFormat;
-import slib.tools.module.ModuleCmdHandlerCst;
+import slib.tools.module.ToolCmdHandlerCst;
 
-public class OntoFocusCmdHandlerCst extends ModuleCmdHandlerCst{
+public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 
 
 	public static final String   appCmdName 	  	= "OntoFocus.jar ";

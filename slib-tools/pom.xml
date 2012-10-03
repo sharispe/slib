@@ -11,7 +11,7 @@
   <modules>
   	<module>slib-tools-ontofocus</module>
   	<module>slib-tools-module</module>
-  	<module>slib-tools-sml</module>
+  	<module>slib-tools-sml-toolkit</module>
   </modules>
   <dependencies>
   	<dependency>

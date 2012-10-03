@@ -119,6 +119,7 @@ public class Test_GraphReduction_Transitive {
 		
 		GraphConf gconf = new GraphConf();
 		gconf.setUri(SGL_UnitTestValues.uriGraph);
+		GDataConf conf = new GDataConf(GFormat.OBO, gofilePath);
 		gconf.addGDataConf(new GDataConf(GFormat.OBO, gofilePath));
 		
 		g = loader.load(gconf);

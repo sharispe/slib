@@ -50,7 +50,7 @@ public abstract class ModuleCst {
 	public  String   version     = null;
 	public  String   reference   = null;
 	public  String   description = null;
-	public  String   reportBug   = null;
+	public  String   contact   = null;
 	
 	/**
 	 * Build the Module Constant object
@@ -58,20 +58,20 @@ public abstract class ModuleCst {
 	 * @param version	the version of the application as String
 	 * @param reference	the reference of the module
 	 * @param description a description of the module
-	 * @param reportBug the email to contact if a bug is encountered.
+	 * @param contact the email to contact if a bug is encountered.
 	 */
-	public ModuleCst(String appName, String version, String reference,String description, String reportBug){
+	public ModuleCst(String appName, String version, String reference,String description, String contact){
 		
 		this.appName = appName;
 		this.version = version;
 		this.reference = reference;
 		this.description = description;
-		this.reportBug  = reportBug;
+		this.contact  = contact;
 	}
 	
 	public String getVersion(){return version;}
 	public String getAppName(){return appName;}
 	public String getReference(){return reference;}
 	public String getDescription(){return description;}
-	public String getReportBug(){return reportBug;}
+	public String getContact(){return contact;}
 }
