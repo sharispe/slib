@@ -1,5 +1,10 @@
 package slib.sglib.algo;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,8 +65,6 @@ public class GraphActionExecutor {
 		else if(actionType == GActionType.RDFS_INFERENCE)
 			rdfsInference(action,g);
 
-		else if(actionType == GActionType.REMOVE_RDFS_EXTRA_VERTICES)
-			removeRDFSExtraVertices(action,g);
 
 		else if(actionType == GActionType.VERTICES_REDUCTION)
 			verticeReduction(action,g);
@@ -72,10 +75,14 @@ public class GraphActionExecutor {
 
 	private static void verticeReduction(GAction action, G g) throws SGL_Ex_Critic {
 
-		String regex = (String) action.getParameter("regex");
-		Set<V> toRemove = new HashSet<V>();
-
 		logger.debug("Starting "+GActionType.VERTICES_REDUCTION);
+
+		String regex     = (String) action.getParameter("regex");
+		String vocVal    = (String) action.getParameter("vocabulary");
+		String file_uris = (String) action.getParameter("file_uris");
+
+
+		Set<V> toRemove = new HashSet<V>();
 
 		if(regex != null){
 
@@ -108,8 +115,60 @@ public class GraphActionExecutor {
 
 			logger.debug("ending "+GActionType.VERTICES_REDUCTION);
 		}
+		else if(vocVal != null){
+
+			String[] vocs = vocVal.split(",");
+
+			for(String voc : vocs){
+
+				if(voc.trim().equals("RDF")){
+					logger.info("Removing RDF vocabulary");
+					removeVoc(getRDFVocURIs(), g);
+				}
+				else if(voc.trim().equals("RDFS")){
+					logger.info("Removing RDFS vocabulary");
+					removeVoc(getRDFSVocURIs(), g);
+				}
+				else if(voc.trim().equals("OWL")){
+					logger.info("Removing OWL vocabulary");
+					removeVoc(getOWLVocURIs(), g);
+				}
+			}
+		}
+		else if(file_uris != null){
+
+			String[] files = file_uris.split(",");
+
+			for(String f : files){
+
+				logger.info("Removing Uris specified in "+f);
+
+				DataRepository dataRepo = DataRepository.getSingleton();
+
+				try {
+
+					FileInputStream fstream = new FileInputStream(f.trim());
+					DataInputStream in 		= new DataInputStream(fstream);
+					BufferedReader br 		= new BufferedReader(new InputStreamReader(in));
+
+					String line;
+
+					while ((line = br.readLine()) != null)   {
+
+						line = line.trim();
+						V v = g.getV( dataRepo.createURI(line) );
+						if(v != null) g.removeV(v);
+					}
+					in.close();
+				} catch (IOException e) {
+					throw new SGL_Ex_Critic(e.getMessage());
+				}
+			}
+		}
 
 	}
+
+
 
 
 	private static void rdfsInference(GAction action, G g) throws SGL_Ex_Critic{
@@ -138,40 +197,97 @@ public class GraphActionExecutor {
 
 	}
 
-	private static void removeRDFSExtraVertices(GAction action, G g) {
+	private static String[] getRDFVocURIs() {
 
-		String[] toRemove = {
+		return new String[]{
 				"http://www.w3.org/1999/02/22-rdf-syntax-ns#first"
-				,"http://www.w3.org/2000/01/rdf-schema#subClassOf"
-				,"http://www.w3.org/2000/01/rdf-schema#label"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#nil"
-				,"http://www.w3.org/2000/01/rdf-schema#Class"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq"
-				,"http://www.w3.org/2000/01/rdf-schema#member"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
-				,"http://www.w3.org/2000/01/rdf-schema#comment"
-				,"http://www.w3.org/2000/01/rdf-schema#Literal"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#rest"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#value"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral"
-				,"http://www.w3.org/2000/01/rdf-schema#seeAlso"
-				,"http://www.w3.org/2000/01/rdf-schema#Resource"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#object"
-				,"http://www.w3.org/2000/01/rdf-schema#Container"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#List"
 				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement"
+				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#subject"
+				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#langString"
+				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#li"
+		};
+
+	}
+
+	private static String[] getRDFSVocURIs() {
+		return new String[]{
+				"http://www.w3.org/2000/01/rdf-schema#subClassOf"
+				,"http://www.w3.org/2000/01/rdf-schema#label"
+				,"http://www.w3.org/2000/01/rdf-schema#Class"
+				,"http://www.w3.org/2000/01/rdf-schema#member"
+				,"http://www.w3.org/2000/01/rdf-schema#comment"
+				,"http://www.w3.org/2000/01/rdf-schema#Literal"
+				,"http://www.w3.org/2000/01/rdf-schema#seeAlso"
+				,"http://www.w3.org/2000/01/rdf-schema#Resource"
+				,"http://www.w3.org/2000/01/rdf-schema#Container"
 				,"http://www.w3.org/2000/01/rdf-schema#isDefinedBy"
 				,"http://www.w3.org/2000/01/rdf-schema#domain"
 				,"http://www.w3.org/2000/01/rdf-schema#subPropertyOf"
 				,"http://www.w3.org/2000/01/rdf-schema#Datatype"
 				,"http://www.w3.org/2000/01/rdf-schema#range"
 				,"http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty"
-				,"http://www.w3.org/1999/02/22-rdf-syntax-ns#subject"
 		};
+	}
+
+	private static String[] getOWLVocURIs() {
+		return new String[]{
+				"http://www.w3.org/2002/07/owl#AllDifferent"
+				,"http://www.w3.org/2002/07/owl#allValuesFrom"
+				,"http://www.w3.org/2002/07/owl#AnnotationProperty"
+				,"http://www.w3.org/2002/07/owl#backwardCompatibleWith"
+				,"http://www.w3.org/2002/07/owl#cardinality"
+				,"http://www.w3.org/2002/07/owl#Class"
+				,"http://www.w3.org/2002/07/owl#complementOf"
+				,"http://www.w3.org/2002/07/owl#DatatypeProperty"
+				,"http://www.w3.org/2002/07/owl#DeprecatedClass"
+				,"http://www.w3.org/2002/07/owl#DeprecatedProperty"
+				,"http://www.w3.org/2002/07/owl#differentFrom"
+				,"http://www.w3.org/2002/07/owl#disjointWith"
+				,"http://www.w3.org/2002/07/owl#distinctMembers"
+				,"http://www.w3.org/2002/07/owl#equivalentClass"
+				,"http://www.w3.org/2002/07/owl#equivalentProperty"
+				,"http://www.w3.org/2002/07/owl#FunctionalProperty"
+				,"http://www.w3.org/2002/07/owl#hasValue"
+				,"http://www.w3.org/2002/07/owl#imports"
+				,"http://www.w3.org/2002/07/owl#incompatibleWith"
+				,"http://www.w3.org/2002/07/owl#Individual"
+				,"http://www.w3.org/2002/07/owl#intersectionOf"
+				,"http://www.w3.org/2002/07/owl#InverseFunctionalProperty"
+				,"http://www.w3.org/2002/07/owl#inverseOf"
+				,"http://www.w3.org/2002/07/owl#maxCardinality"
+				,"http://www.w3.org/2002/07/owl#minCardinality"
+				,"http://www.w3.org/2002/07/owl#ObjectProperty"
+				,"http://www.w3.org/2002/07/owl#oneOf"
+				,"http://www.w3.org/2002/07/owl#onProperty"
+				,"http://www.w3.org/2002/07/owl#Ontology"
+				,"http://www.w3.org/2002/07/owl#OntologyProperty"
+				,"http://www.w3.org/2002/07/owl#priorVersion"
+				,"http://www.w3.org/2002/07/owl#Restriction"
+				,"http://www.w3.org/2002/07/owl#sameAs"
+				,"http://www.w3.org/2002/07/owl#someValuesFrom"
+				,"http://www.w3.org/2002/07/owl#SymmetricProperty"
+				,"http://www.w3.org/2002/07/owl#TransitiveProperty"
+				,"http://www.w3.org/2002/07/owl#unionOf"
+				,"http://www.w3.org/2002/07/owl#versionInfo"
+		};
+	}
+
+
+
+	private static void removeVoc(String[] toRemove, G g) {
+
 
 		DataRepository dataRepo = DataRepository.getSingleton();
 		for(String s : toRemove){
@@ -214,7 +330,7 @@ public class GraphActionExecutor {
 				RooterDAG.rootUnderlyingTaxonomicDAG(g,SGLVOC.UNIVERSAL_ROOT);
 			else{
 				URI rootURI = DataRepository.getSingleton().createURI(rootURIs);
-				
+
 				if(g.getV(rootURI) == null)
 					throw new SGL_Ex_Critic("Cannot resolve specified root:"+rootURI);
 				else{

@@ -128,7 +128,7 @@ public class TypeInferencer {
 			}
 			else{
 				V o = e.getTarget();
-				if(o.getType() != VType.UNDEFINED && o.getType().equals(VType.INSTANCE)){
+				if(o.getType() == VType.INSTANCE){
 					type = VType.INSTANCE;
 				}
 			}

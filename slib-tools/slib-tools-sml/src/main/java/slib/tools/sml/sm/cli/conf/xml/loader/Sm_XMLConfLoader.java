@@ -790,8 +790,8 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
 	private void extractOptConf(Conf gc) throws SGL_Ex_Critic {
 
-		String benchSize_s  	 = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
-		String cache_pairwise_s  = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
+		String benchSize_s  	   = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
+		String cache_pairwise_s    = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
 		String skipEmptyAnnots_s   = (String) gc.getParam(Sm_XML_Cst.OPT_SKIP_EMPTY_ANNOTS_ATTR);
 		String emptyAnnotsScore_s  = (String) gc.getParam(Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR);
 

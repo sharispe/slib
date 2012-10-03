@@ -100,7 +100,11 @@ public class SmCli implements SmlModuleCLI {
 	}
 
 
-
+	/**
+	 * Execute from configuration file
+	 * @param confFile
+	 * @throws SGL_Exception
+	 */
 	public void execute(String confFile) throws SGL_Exception{
 
 		conf = new Sm_XMLConfLoader(confFile);
@@ -108,7 +112,7 @@ public class SmCli implements SmlModuleCLI {
 
 		// Load the graph and perform required graph treatments
 		GraphLoaderGeneric.load(conf.generic.getGraphConfs());
-		
+
 		logger.info("Retrieving the graph "+conf.graphURI);
 
 		URI  graphURI = DataRepository.getSingleton().createURI(conf.graphURI);
@@ -249,7 +253,7 @@ public class SmCli implements SmlModuleCLI {
 			while (qloader.hasNext()){
 
 				Thread.sleep(100);// To create thread wave
-				logger.debug("Await Free Ressource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//				logger.debug("Await Free Resource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
 				poolWorker.awaitFreeResource();
 
 				List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
@@ -257,7 +261,7 @@ public class SmCli implements SmlModuleCLI {
 				EntityToEntity_Thread callable = new EntityToEntity_Thread(poolWorker,queriesBench,this,nbMeasures);
 
 				poolWorker.addTask();
-				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
 				Future<ThreadResultsQueryLoader> future = poolWorker.getPool().submit(callable);
 
 				results.add(future);
@@ -370,7 +374,7 @@ public class SmCli implements SmlModuleCLI {
 			while (qloader.hasNext()){
 
 				Thread.sleep(100);// To create thread wave
-				logger.debug("Await Free Ressource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//				logger.debug("Await Free Ressource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
 				poolWorker.awaitFreeResource();
 
 				List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
@@ -380,7 +384,7 @@ public class SmCli implements SmlModuleCLI {
 
 
 				poolWorker.addTask();
-				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
 				Future<ThreadResultsQueryLoader> future = poolWorker.getPool().submit(callable);
 
 				results.add(future);
@@ -483,7 +487,7 @@ public class SmCli implements SmlModuleCLI {
 	public InstancesAccessor getiAccessor() {
 		return iAccessor;
 	}
-	
-	
+
+
 
 }

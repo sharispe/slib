@@ -40,31 +40,31 @@ public class Sm_XML_Cst {
 	
 	// Tags
 
-	public static final String SML_TAG	= "sml";
+	public static final String SML_TAG			= "sml";
 	
-	public static final String SML_SM	= "sm";
+	public static final String SML_SM			= "sm";
 	
 	public static final String SML_SM_include	= "include";
 
-	public static final String MEASURES_TAG = "measures";
+	public static final String MEASURES_TAG  	= "measures";
 
-	public static final String ICS_TAG = "ics";
+	public static final String ICS_TAG 		 	= "ics";
 	
-	public static final String OPERATORS_TAG = "operators";
-	public static final String OPERATOR_TAG = "operator";
+	public static final String OPERATORS_TAG 	= "operators";
+	public static final String OPERATOR_TAG  	= "operator";
 	
 	
 
-	public static final String QUERIES_TAG = "queries";
+	public static final String QUERIES_TAG 		 = "queries";
 
 	public static final String QUERIES_TYPE_CTOC = "cTOc";
 
 	public static final String QUERIES_TYPE_OTOO = "oTOo";
 	public static final String QUERIES_TYPE_OTOO_FULL = "oTOo_full";
 
-	public static final String QUERY_TAG = "query";
+	public static final String QUERY_TAG 	= "query";
 
-	public static final String MEASURE_TAG = "measure";
+	public static final String MEASURE_TAG  = "measure";
 
 	public static final String IC_TAG 		= "ic";
 	public static final String IC_ATTR 		= "ic";

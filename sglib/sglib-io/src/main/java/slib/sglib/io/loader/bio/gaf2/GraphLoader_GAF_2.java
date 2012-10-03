@@ -72,7 +72,7 @@ import slib.utils.impl.BigFileReader;
  * GAF 2 parser used to construct a {@link KnowledgeBase} from a GAF 2.0 annotation file
  *  
  * The parser consider considering GAF 2.0 specification provided at 
- * http://wiki.geneontology.org/index.php/GO_Consortium_web_GAF2.0_documentation documentation
+ * http://wiki.geneontology.org/index.php/GO_Consortium_web_GAF2.0_documentation 
  * http://www.geneontology.org/GO.format.gaf-2_0.shtml
  * 
  * TODO 

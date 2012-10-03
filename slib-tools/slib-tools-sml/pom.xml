@@ -7,7 +7,7 @@
 		<version>0.0.2-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>slib-tools-sml</artifactId>
+	<artifactId>slib-tools-sml-toolkit</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>fr.lgi2p.kid</groupId>
