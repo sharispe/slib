@@ -1,6 +1,0 @@
-http://purl.org/obo/owl/GO#GO_0000030
-http://purl.org/obo/owl/GO#GO_0000031
-http://purl.org/obo/owl/GO#GO_0008149
-http://purl.org/obo/owl/GO#GO_0008150
-http://purl.org/obo/owl/GO#GO_0016443
-http://purl.org/obo/owl/GO#GO_0016444
