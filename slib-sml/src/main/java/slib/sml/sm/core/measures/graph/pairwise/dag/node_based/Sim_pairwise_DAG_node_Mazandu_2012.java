@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
@@ -57,7 +57,7 @@ import slib.utils.ex.SGL_Exception;
 public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract{
 
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 
 		
 		double ic_mica = c.getIC_MICA(conf.getICconf(),a, b);

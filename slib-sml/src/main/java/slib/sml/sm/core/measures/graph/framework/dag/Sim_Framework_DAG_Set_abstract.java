@@ -41,7 +41,7 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
 import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
@@ -49,7 +49,7 @@ import slib.utils.ex.SGL_Exception;
 public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG,Sim_Groupwise_Standalone{
 
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 
 		Set<V> ancA = c.getAncestors(a);
 		Set<V> ancB = c.getAncestors(b);
@@ -60,7 +60,7 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
 	/**
 	 * TODO Ugly Optimize
 	 */
-	public double sim(Set<V> setA, Set<V> setB, SM_manager c , SMconf conf) throws SGL_Exception{
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine c , SMconf conf) throws SGL_Exception{
 		Set<V> ancA = c.getAncestors(setA);
 		Set<V> ancB = c.getAncestors(setB);
 		

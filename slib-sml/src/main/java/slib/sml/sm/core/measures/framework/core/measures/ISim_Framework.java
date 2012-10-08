@@ -37,7 +37,7 @@ package slib.sml.sm.core.measures.framework.core.measures;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
@@ -45,7 +45,7 @@ public interface ISim_Framework {
 
 	public double sim(V a, 
 			V b, 
-			SM_manager c, 
+			SM_Engine c, 
 			RepresentationOperators operator, 
 			SMconf conf) throws SGL_Exception;
 }

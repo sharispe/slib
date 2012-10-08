@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.graph.groupwise.dag;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
@@ -54,7 +54,7 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf conf) {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) {
 		
 		Set<V> ancA = rc.getAncestors(setA);
 		Set<V> ancB = rc.getAncestors(setB);

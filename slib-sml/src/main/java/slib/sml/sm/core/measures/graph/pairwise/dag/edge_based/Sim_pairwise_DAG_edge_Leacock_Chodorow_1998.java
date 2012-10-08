@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
@@ -49,7 +49,7 @@ import slib.utils.ex.SGL_Exception;
  */
 public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 
 		Sim_pairwise_DAG_edge_Rada_1989 sRada = new Sim_pairwise_DAG_edge_Rada_1989();
 		

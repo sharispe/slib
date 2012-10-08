@@ -39,12 +39,12 @@ package slib.sml.sm.core.measures;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
 public interface  Sim_Groupwise_AddOn extends Sim_Groupwise {
 	
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SGL_Exception;
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SGL_Exception;
 
 }

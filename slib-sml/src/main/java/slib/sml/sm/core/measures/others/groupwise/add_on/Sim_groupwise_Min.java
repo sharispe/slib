@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.others.groupwise.add_on;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 
@@ -47,7 +47,7 @@ public class Sim_groupwise_Min extends Sim_groupwise_general_abstract{
 
 
 
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf groupwiseconf,  SMconf conf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SGL_Ex_Critic {
 		
 		return rc.getMatrixScore(setA,setB, conf).getMin();
 	}

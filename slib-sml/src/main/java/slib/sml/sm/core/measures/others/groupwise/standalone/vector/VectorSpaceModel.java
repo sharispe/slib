@@ -40,14 +40,14 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 import slib.utils.impl.ResultStack;
 
 public class VectorSpaceModel implements Sim_Groupwise_Standalone{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf groupwiseconf) throws SGL_Exception {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SGL_Exception {
 		
 		ResultStack<V,Double> v1 = rc.getVector(setA, groupwiseconf);
 		ResultStack<V,Double> v2 = rc.getVector(setB, groupwiseconf);

@@ -40,7 +40,7 @@ package slib.sml.sm.core.measures.framework.core.measures.impl;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.measures.framework.core.measures.Sim_Framework;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.ex.SGL_Exception;
@@ -49,7 +49,7 @@ import slib.utils.ex.SGL_Exception;
 public class Sim_Framework_Sokal_Sneath_I extends Sim_Framework{
 	
 
-	public double compute(GraphRepresentation a, GraphRepresentation b, SM_manager c, RepresentationOperators operators, SMconf conf) throws SGL_Exception {
+	public double compute(GraphRepresentation a, GraphRepresentation b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SGL_Exception {
 		
 		if(!operators.validateRules(a, b, c))
 			return operators.getRulesInvalidatedScore();

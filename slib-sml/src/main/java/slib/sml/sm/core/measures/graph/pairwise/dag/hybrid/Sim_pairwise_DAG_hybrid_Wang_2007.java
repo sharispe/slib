@@ -41,7 +41,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
@@ -55,7 +55,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
 
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) {
 
 		Map<V, Double> sc_A = c.computeSemanticContribution(a);
 		Map<V, Double> sc_B = c.computeSemanticContribution(b);

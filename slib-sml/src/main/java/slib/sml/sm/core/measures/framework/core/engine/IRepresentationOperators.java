@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.sm.core.measures.framework.core.engine;
 import slib.sml.sm.core.utils.OperatorConf;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SGL_Exception;
 
 /**
@@ -63,11 +63,11 @@ public interface IRepresentationOperators{
 	 * 
 	 * @param rep_a a {@link GraphRepresentation}
 	 * @param rep_b a {@link GraphRepresentation}
-	 * @param manager the {@link SM_manager} used to process the graph
+	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the commonality between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager manager) throws SGL_Exception;
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
 	
 	/**
 	 * Evaluate the subtraction between two given graph representations.
@@ -76,11 +76,11 @@ public interface IRepresentationOperators{
 	 * 
 	 * @param rep_a a {@link GraphRepresentation}
 	 * @param rep_b a {@link GraphRepresentation}
-	 * @param manager the {@link SM_manager} used to process the graph
+	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the subtraction between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager manager) throws SGL_Exception;
+	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
 	
 	/**
 	 * Evaluate the difference between two given graph representations.
@@ -89,11 +89,11 @@ public interface IRepresentationOperators{
 	 * 
 	 * @param rep_a a {@link GraphRepresentation}
 	 * @param rep_b a {@link GraphRepresentation}
-	 * @param manager the {@link SM_manager} used to process the graph
+	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the difference between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager manager) throws SGL_Exception;
+	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
 	
 	/**
 	 * Evaluate the informativeness of a given graph representation i.e. the amount of information contained be the graph representation
@@ -102,11 +102,11 @@ public interface IRepresentationOperators{
 	 * 
 	 * @param rep_a a {@link GraphRepresentation}
 	 * @param rep_b a {@link GraphRepresentation}
-	 * @param manager the {@link SM_manager} used to process the graph
+	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the informativeness of the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double informativeness(GraphRepresentation rep, SM_manager manager) throws SGL_Exception;
+	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SGL_Exception;
 
 	/**
 	 * Return a boolean defining if the operator to evaluate commonalities is defined.
@@ -118,21 +118,21 @@ public interface IRepresentationOperators{
 	/**
 	 * Return a boolean defining if the operator to evaluate subtraction is defined.
 	 * @return true if the operator to evaluate subtraction is defined
-	 * @see #subtraction(GraphRepresentation, GraphRepresentation, SM_manager)
+	 * @see #subtraction(GraphRepresentation, GraphRepresentation, SM_Engine)
 	 */
 	public boolean asOperatorSubstraction();
 	
 	/**
 	 * Return a boolean defining if the operator to evaluate difference is defined.
 	 * @return true if the operator to evaluate difference is defined
-	 * @see #diff(GraphRepresentation, GraphRepresentation, SM_manager)
+	 * @see #diff(GraphRepresentation, GraphRepresentation, SM_Engine)
 	 */
 	public boolean asOperatorDifference();
 	
 	/**
 	 * Return a boolean defining if the operator to evaluate informativeness is defined.
 	 * @return true if the operator to evaluate informativeness of a graph representation is defined
-	 * @see IRepresentationOperators#informativeness(GraphRepresentation, SM_manager)
+	 * @see IRepresentationOperators#informativeness(GraphRepresentation, SM_Engine)
 	 */
 	public boolean asOperatorGRinformativness();
 	
@@ -148,17 +148,17 @@ public interface IRepresentationOperators{
 	 * 
 	 * @param rep_a a {@link GraphRepresentation}
 	 * @param rep_b a {@link GraphRepresentation}
-	 * @param manager the {@link SM_manager} used to process the graph
+	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return true if the rules are validated
 	 * @throws SGL_Exception
-	 * @see {@link #subtraction(GraphRepresentation, GraphRepresentation, SM_manager)}
+	 * @see {@link #subtraction(GraphRepresentation, GraphRepresentation, SM_Engine)}
 	 */
-	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager manager) throws SGL_Exception;
+	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
 	
 	/**
 	 * Return the score to affect to comparison for which operators rules are not validated
 	 * @return a default score i.e. 0
-	 * @see IRepresentationOperators#validateRules(GraphRepresentation, GraphRepresentation, SM_manager)
+	 * @see IRepresentationOperators#validateRules(GraphRepresentation, GraphRepresentation, SM_Engine)
 	 */
 	public double  getRulesInvalidatedScore();
 	

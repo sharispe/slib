@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.graph.framework.dag;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
@@ -56,7 +56,7 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
 	
 	
 	@Override
-	public double sim(V a, V b, SM_manager c,SMconf conf) {
+	public double sim(V a, V b, SM_Engine c,SMconf conf) {
 		
 		int nbV = c.getNbVertices();
 		Set<V> ancA = c.getAncestors(a);
@@ -66,7 +66,7 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
 	}
 	
 	@Override
-	public double sim(Set<V> setA, Set<V> setB, SM_manager c,SMconf conf) {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine c,SMconf conf) {
 		
 		int nbV = c.getNbVertices();
 		Set<V> ancA = c.getAncestors(setA);

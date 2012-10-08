@@ -46,7 +46,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SGL_Exception;
 import slib.utils.impl.ResultStack;
 
@@ -66,7 +66,7 @@ import com.tinkerpop.blueprints.Direction;
  */
 public class ICi_mazandu_2012 implements ICtopo{
 
-	public ResultStack<V,Double> compute( SM_manager manager) throws SGL_Exception{
+	public ResultStack<V,Double> compute( SM_Engine manager) throws SGL_Exception{
 
 		ResultStack<V,Double> results = new ResultStack<V,Double>(this.getClass().getSimpleName());
 
@@ -108,7 +108,7 @@ public class ICi_mazandu_2012 implements ICtopo{
 		return results;
 	}
 
-	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_manager manager)
+	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
 			throws SGL_Exception {
 		return compute(manager);
 	}

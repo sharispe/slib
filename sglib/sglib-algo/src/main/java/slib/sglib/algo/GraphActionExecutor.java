@@ -16,6 +16,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
+import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -44,6 +45,7 @@ import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.impl.Util;
 
 import com.tinkerpop.blueprints.Direction;
+
 
 public class GraphActionExecutor {
 
@@ -123,15 +125,15 @@ public class GraphActionExecutor {
 
 				if(voc.trim().equals("RDF")){
 					logger.info("Removing RDF vocabulary");
-					removeVoc(getRDFVocURIs(), g);
+					removeVocURIs(getRDFVocURIs(), g);
 				}
 				else if(voc.trim().equals("RDFS")){
 					logger.info("Removing RDFS vocabulary");
-					removeVoc(getRDFSVocURIs(), g);
+					removeVocURIs(getRDFSVocURIs(), g);
 				}
 				else if(voc.trim().equals("OWL")){
 					logger.info("Removing OWL vocabulary");
-					removeVoc(getOWLVocURIs(), g);
+					removeVocURIs(getOWLVocURIs(), g);
 				}
 			}
 		}
@@ -197,6 +199,10 @@ public class GraphActionExecutor {
 
 	}
 
+	/**
+	 * Vocabulary associated to RDF
+	 * @return the strings associated to the URIs of the RDF vocabulary
+	 */
 	private static String[] getRDFVocURIs() {
 
 		return new String[]{
@@ -286,8 +292,13 @@ public class GraphActionExecutor {
 
 
 
-	private static void removeVoc(String[] toRemove, G g) {
-
+	/**
+	 * Try to remove the vertices associated to the given URIs specified as strings.
+	 * If a string is not a valid URI a {@link IllegalArgumentException} can be throw.  
+	 * @param toRemove set of strings corresponding to the URIs to remove
+	 * @param g the graph in which the treatment require to be performed.
+	 */
+	private static void removeVocURIs(String[] toRemove, G g) {
 
 		DataRepository dataRepo = DataRepository.getSingleton();
 		for(String s : toRemove){

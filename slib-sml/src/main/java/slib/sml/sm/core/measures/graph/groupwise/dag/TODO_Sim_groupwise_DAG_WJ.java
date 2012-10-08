@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.graph.groupwise.dag;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 
@@ -52,7 +52,7 @@ import slib.utils.ex.SGL_Ex_Critic;
  */
 public class TODO_Sim_groupwise_DAG_WJ extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf conf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SGL_Ex_Critic {
 		throw new UnsupportedOperationException(this.getClass()+" Not yet supported");
 	}
 

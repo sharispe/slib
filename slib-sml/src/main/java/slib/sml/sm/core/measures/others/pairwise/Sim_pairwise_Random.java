@@ -40,13 +40,13 @@ import java.util.Random;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.Sim_Pairwise;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
 public class Sim_pairwise_Random implements Sim_Pairwise{
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 		Random r = new Random();
 		return r.nextDouble();
 	}

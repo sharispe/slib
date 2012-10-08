@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.framework.core.measures.impl;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.measures.framework.core.measures.Sim_Framework;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.ex.SGL_Exception;
@@ -77,7 +77,7 @@ public class Sim_Framework_Tversky_1977 extends Sim_Framework{
 	 * <li> the the only subtraction to consider (according to k) produce 0
 	 * </ul>
 	 */
-	public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager c, RepresentationOperators operators, SMconf conf) throws SGL_Exception {
+	public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SGL_Exception {
 		
 		if(! operators.asOperatorCommonalities())
 			throw new SGL_Ex_Critic(this.getClass()+" requires operator commonality" +

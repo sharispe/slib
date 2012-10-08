@@ -41,7 +41,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 import slib.utils.impl.ResultStack;
@@ -60,7 +60,7 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 		
 		Map<V, Double> minDists_cA = c.getAllShortestPath(a); 
 		Map<V, Double> minDists_cB = c.getAllShortestPath(b); 

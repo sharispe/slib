@@ -41,7 +41,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.ex.SGL_Exception;
@@ -63,7 +63,7 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract{
 	double alpha = 0.2;
 	double beta  = 0.6;
 
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
 
 		double sp_AtoB 				  = c.getShortestPath(a, b);
 		Set<V> ancestors_A 	  = c.getAncestors(a);

@@ -43,7 +43,7 @@ import org.openrdf.model.Resource;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SGL_Exception;
 
 /**
@@ -62,10 +62,10 @@ public class GraphRepresentationAsSet extends GraphRepresentation {
 	/**
 	 * 
 	 * @param resource the {@link Resource} considered.
-	 * @param mnger the {@link SM_manager} loaded for the processed graph
+	 * @param mnger the {@link SM_Engine} loaded for the processed graph
 	 * @throws SGL_Exception
 	 */
-	public GraphRepresentationAsSet(V resource,SM_manager mnger) throws SGL_Exception{
+	public GraphRepresentationAsSet(V resource,SM_Engine mnger) throws SGL_Exception{
 		super(resource);
 		
 		if(resource.getType().equals( VType.CLASS))

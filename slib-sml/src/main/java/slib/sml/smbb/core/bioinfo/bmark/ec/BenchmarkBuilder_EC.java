@@ -58,7 +58,7 @@ import slib.sglib.model.entity.EntityBasic;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_EC;
 import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.ex.SGL_Exception;
@@ -255,7 +255,7 @@ public class BenchmarkBuilder_EC {
 
 		prot2ec_mapping = new HashMap<V, HashSet<String>>();
 
-		SM_manager dm = new SM_manager(g);
+		SM_Engine dm = new SM_Engine(g);
 
 		for(V e : instancesAccessor.getInstances()){
 			Set<V> annots = instancesAccessor.getDirectClass(e);

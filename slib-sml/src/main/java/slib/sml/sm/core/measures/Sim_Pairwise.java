@@ -37,10 +37,10 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
 public interface Sim_Pairwise {
-	public double sim(V a, V b, SM_manager c, SMconf conf) throws SGL_Exception;
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception;
 }

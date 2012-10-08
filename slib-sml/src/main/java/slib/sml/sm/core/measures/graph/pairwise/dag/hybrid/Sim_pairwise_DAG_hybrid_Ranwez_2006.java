@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
@@ -58,7 +58,7 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract{
 	
-	public double sim(V a, V b, SM_manager c, SMconf conf) {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) {
 		
 		Set<V> hypoAncEx = c.getHypoAncEx(a,b);
 		Set<V> hypoA = c.getDescendants(a);

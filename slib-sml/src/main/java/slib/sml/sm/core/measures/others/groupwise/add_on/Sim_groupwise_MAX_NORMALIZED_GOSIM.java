@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.others.groupwise.add_on;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
@@ -72,7 +72,7 @@ public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_ab
 		return sim ;
 	}
 
-	public double sim(Set<V> setA, Set<V> setB,  SM_manager rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB,  SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SGL_Ex_Critic {
 		
 		MatrixDouble<V,V> results_setA_B = rc.getMatrixScore(setA,setB, paiwiseconf);
 		MatrixDouble<V,V> results_setA_A = rc.getMatrixScore(setA,setA, paiwiseconf);

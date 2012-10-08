@@ -54,7 +54,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.SmlModuleCLI;
@@ -79,7 +79,7 @@ public class SmCli implements SmlModuleCLI {
 	Logger logger = LoggerFactory.getLogger(SmCli.class);
 
 	public Sm_XMLConfLoader conf;
-	public SM_manager simManager;
+	public SM_Engine simManager;
 
 	InstancesAccessor iAccessor;
 
@@ -121,7 +121,7 @@ public class SmCli implements SmlModuleCLI {
 		if(g == null)
 			Util.error("No graph associated to the uri "+conf.graphURI+" was loaded...");
 
-		simManager = new SM_manager(g);
+		simManager = new SM_Engine(g);
 
 
 		for(ICconf g: conf.gConfICs)

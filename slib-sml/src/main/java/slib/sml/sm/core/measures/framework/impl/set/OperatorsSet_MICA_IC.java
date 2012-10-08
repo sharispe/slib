@@ -41,7 +41,7 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.utils.OperatorConf;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SGL_Exception;
 
 /**
@@ -68,7 +68,7 @@ public class OperatorsSet_MICA_IC extends OperatorsSet_IC{
 	 * Contrary to {@link OperatorsSet_ICA_Grasm_IC} the aggregation operator is max and not average.
 	 */
 	@Override
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_manager manager) throws SGL_Exception{
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception{
 
 		V class_a = (V) manager.getGraph().getV(rep_a.getResourceValue());
 		V class_b = (V) manager.getGraph().getV(rep_b.getResourceValue());

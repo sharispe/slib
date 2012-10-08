@@ -41,13 +41,13 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
-import slib.sml.sm.core.utils.SM_manager;
+import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SGL_Exception;
 
 public class Sim_groupwise_Random implements Sim_Groupwise_Standalone{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_manager rc, SMconf conf)
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf)
 			throws SGL_Exception {
 		
 		Random r = new Random();
