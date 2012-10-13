@@ -54,7 +54,6 @@ import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.sml.smbb.core.SmbbCst;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.Interaction;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.InteractionSet;
 import slib.sml.smbb.core.bioinfo.i_o.loader.mitab.MITAB25_reader;
@@ -94,7 +93,7 @@ public class BenchmarkBuilder_Interact {
 
 		Integer minAnnot = conf.getMin_annot();
 
-		logger.info("Starting "+SmbbCst.type_GO_PPI+" benchmark generation.");
+		logger.info("Starting  benchmark generation.");
 		logger.info(conf.toString());
 
 		DataRepository data = DataRepository.getSingleton();
@@ -323,7 +322,7 @@ public class BenchmarkBuilder_Interact {
 			outfile.close();
 
 			if(nbIteration == max_nbIteration){
-				throw new SLIB_Ex_Critic("Cannot generate benchmark, please reconsider applied restrictions (e.g. "+SmbbCst.min_annot_size+")...");
+				throw new SLIB_Ex_Critic("Cannot generate benchmark, please reconsider applied restrictions ...");
 			}
 
 			logger.info("Set of incorrect interaction contains "+negativePPIsetSize);

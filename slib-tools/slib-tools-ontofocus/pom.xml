@@ -3,7 +3,7 @@
   <parent>
     <artifactId>slib-tools</artifactId>
     <groupId>fr.lgi2p.kid</groupId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>slib-tools-ontofocus</artifactId>
@@ -11,22 +11,109 @@
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-algo</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-model</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-io</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>slib-tools-module</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   </dependencies>
+  
+  <properties>
+    <pom.ontofocus.version>${sml-toolkit.version}</pom.ontofocus.version>
+  </properties>
+  
+  <build>
+        <finalName>ontofocus-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
+
+        <filters>
+            <filter>src/main/resources/ontofocus-constants.properties</filter>
+        </filters>
+    
+        <resources>
+            <!-- include main.properties -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>ontofocus-constants.properties</include>
+                </includes>
+            </resource>
+
+            <!-- exclude everything else -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>ontofocus-constants.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+
+                <configuration>
+                    <finalName>ontofocus-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>slib.tools.ontofocus.cli.OntoFocusCmdHandler</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <phase>package</phase><!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Copy jars -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/ontofocus-latest.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/ontofocus-${sml-toolkit.version}.jar"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
+        </plugins>
+
+    </build>
+    
 </project>

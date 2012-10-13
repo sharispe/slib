@@ -39,19 +39,11 @@ package slib.sml.smbb.core;
 import slib.tools.module.ModuleCst;
 
 
-public class SmbbCst extends ModuleCst{
+public class SmbbCst {
 	
-	public static final String   appName   = "smbb";
-	public static final String   version   = "0.0.1";
-	public static final String   reference = null;
-	public static final String   description = null;
-	public static final String   report_bug = "harispe.sebastien@gmail.com";
-	
-	
-	public SmbbCst() {
-		super(appName, version, reference,description,report_bug);
-	}
 
+        public static String name = "smbb";
+        
 	public final static String type = "type";
 	
 	public final static String kb_id = "kb";
@@ -88,6 +80,7 @@ public class SmbbCst extends ModuleCst{
 	public static String out_genes_ec   = "out_genes_ec";
 	public static String out_genes_pair = "out_genes_pair";
 	public static String out_genes_pair_ecsim   = "out_genes_pair_ecsim";
+    
 
 	
 	

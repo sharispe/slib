@@ -37,25 +37,22 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.tools.ontofocus.core.utils;
 
 import slib.tools.module.ModuleCst;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
 public class OntoFocusCst extends ModuleCst{
 	
 
-	public static final String	 version 	  		= "v0.1";
-	public static final String   appName	 	  	= "ontoFocus";
 	
-	public static final String	reference =   "Ranwez V, Ranwez S, Janaqi S:\n"+
-										  	  "Sub-Ontology Extraction Using Hyponym and Hypernym Closure on is-a"+
-										  	  "Directed Acyclic Graphs.\n"+
-										  	  "IEEE Transactions on Knowledge and Data Engineering 2011, 99:1-14.";
-
-	public static final String   description = null;
+        /**
+         * See properties file and POM for constant values
+         */
+        public static final String   properties_file_name   = "ontofocus-constants.properties";
+        public static final String   properties_prefix      = "ontofocus";
 	
-	public static final String   report_bug = "harispe.sebastien@gmail.com";
 	
-	public OntoFocusCst() {
-		super(appName, version, reference,description,report_bug);
+	public OntoFocusCst() throws SLIB_Ex_Critic {
+		super(properties_file_name,properties_prefix);
 	}
 
 }

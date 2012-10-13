@@ -3,7 +3,7 @@
   <parent>
     <artifactId>slib</artifactId>
     <groupId>fr.lgi2p.kid</groupId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>slib-sml</artifactId>
@@ -12,23 +12,23 @@
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   		<type>pom</type>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-model</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-algo</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>slib-tools-module</artifactId>
-  		<version>0.0.2-SNAPSHOT</version>
+  		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

@@ -38,7 +38,6 @@ package slib.sml.smbb.core.conf.xml.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sml.smbb.core.SmbbCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
@@ -103,25 +102,25 @@ public class SmbbConf_GO_KEGG extends SmbbConf_GO {
 		super.isValid();
 
 		if(taxon == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
+			Util.error("Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
 		
 		if(kegg_index == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.kegg_index+" parameter ");
+			Util.error("Please specify "+SmbbCst.kegg_index+" parameter ");
 		
 		if(out_pair_file == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_pair_file+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_pair_file+" parameter ");
 		
 		if(outputPositiveRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.positiveRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.positiveRel);
 		
 		if(outputNegativeRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.negativeRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.negativeRel);
 		
 		if(pathway_clusters == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.pathway_clusters+" parameter ");
+			Util.error("Please specify "+SmbbCst.pathway_clusters+" parameter ");
 		
 		if(indexOut == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.index_out+" parameter ");
+			Util.error("Please specify "+SmbbCst.index_out+" parameter ");
 		
 		return true;
 	}

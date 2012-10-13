@@ -47,8 +47,8 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
 import slib.sml.smbb.core.SmbbCst;
+
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_EC;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_KEGG;
@@ -91,7 +91,7 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 		
 		super(confFile);
 		
-		logger.info("Loading "+SmbbCst.appName+" Configuration ");
+		logger.info("Loading "+SmbbCst.name+" Configuration ");
 
 		try {
 			// Load and validate XML configuration specification

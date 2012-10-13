@@ -44,13 +44,13 @@ import org.apache.commons.cli.OptionBuilder;
 
 import slib.tools.module.ToolCmdHandlerCst;
 
-public class SmlCliCst extends ToolCmdHandlerCst{
+public class SmlToolKitCliCst extends ToolCmdHandlerCst{
 
 
 
-	public static final String   appCmdName 	  	= "sml-toolkit-<version>.jar ";
+	public static final String   appCmdName 	= "sml-toolkit-<version>.jar ";
 	
-	public static final String   ToolName_SM 	  	= "sm";
+	public static final String   ToolName_SM 	= "sm";
 	public static final String   ToolName_SMBB 	= "smbb";
 	public static final String   ToolName_SME 	= "sme";
 	public static final String   ToolName_SMUTILS = "smutils";
@@ -65,7 +65,7 @@ public class SmlCliCst extends ToolCmdHandlerCst{
 	
 	
 	
-	public SmlCliCst() {
+	public SmlToolKitCliCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 	
@@ -73,7 +73,7 @@ public class SmlCliCst extends ToolCmdHandlerCst{
 	 * Error messages  
 	 */
 	
-	public static final String errorTool = "[ERROR] Incorrect tool, supported are "+Arrays.toString(SmlCliCst.acceptedTools);
+	public static final String errorTool = "[ERROR] Incorrect tool, supported are "+Arrays.toString(SmlToolKitCliCst.acceptedTools);
 			
 	/*
 	 * Setting Options 
@@ -86,7 +86,7 @@ public class SmlCliCst extends ToolCmdHandlerCst{
 	@SuppressWarnings("static-access")
 	public static Option tool		 = OptionBuilder.withArgName( "value")
 	.hasArg()
-	.withDescription( "Tool name "+Arrays.toString(SmlCliCst.acceptedTools))
+	.withDescription( "Tool name "+Arrays.toString(SmlToolKitCliCst.acceptedTools))
 	.create( toolArg );
 
 

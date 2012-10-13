@@ -34,22 +34,28 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit;
 
 import slib.tools.module.ModuleCst;
-import slib.tools.smltoolkit.SmlCliCst;
+import slib.utils.ex.SLIB_Ex_Critic;
 
-public class SmCst extends ModuleCst {
+/**
+ * Constant of the Semantic Framework Module
+ * 
+ * @author Sebastien Harispe
+ *
+ */
+public class SmlToolKitCst extends ModuleCst {
 
-
-	public static final String   appName   = SmlCliCst.ToolName_SM;
-	public static final String   version   = "0.0.1";
-	public static final String   reference = null;
-	public static final String   description = null;
-	public static final String   report_bug = "harispe.sebastien@gmail.com";
+        /**
+         * See properties file and POM for constant values
+         */
+        public static final String   properties_file_name   = "sml-toolkit-constants.properties";
+        public static final String   properties_prefix      = "sml-toolkit";
 	
 	
-	public SmCst() {
-		super(appName, version, reference,description, report_bug);
+	public SmlToolKitCst() throws SLIB_Ex_Critic {
+		super(properties_file_name,properties_prefix);
 	}
+
 }

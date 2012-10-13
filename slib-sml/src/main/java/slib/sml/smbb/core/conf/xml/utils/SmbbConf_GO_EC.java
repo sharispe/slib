@@ -38,7 +38,6 @@ package slib.sml.smbb.core.conf.xml.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sml.smbb.core.SmbbCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
@@ -83,16 +82,16 @@ public class SmbbConf_GO_EC extends SmbbConf_GO {
 		super.isValid();
 
 		if(ec2GO_mapping == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.ec2GO_mapping+" parameter ");
+			Util.error("Please specify "+SmbbCst.ec2GO_mapping+" parameter ");
 
 		if(out_genes_ec == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_genes_ec+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_genes_ec+" parameter ");
 
 		if(out_genes_pair == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_genes_pair+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_genes_pair+" parameter ");
 
 		if(out_genes_pair_ecsim == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_genes_pair_ecsim+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_genes_pair_ecsim+" parameter ");
 
 		return true;
 	}

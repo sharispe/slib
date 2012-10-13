@@ -38,7 +38,6 @@ package slib.sml.smbb.core.conf.xml.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sml.smbb.core.SmbbCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
@@ -123,22 +122,22 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 			Util.error("Invalid "+SmbbCst.setSize+" value "+setSize);
 		
 		if(knownRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.knownRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.knownRel);
 		
 		if(knownRelBase == null)
 			knownRelBase = knownRel;
 		
 		if(outputPositiveRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.positiveRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.positiveRel);
 		
 		if(outputNegativeRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.negativeRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.negativeRel);
 		
 		if(kb_uri == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a KB id (i.e "+SmbbCst.kb_id+" parameter) check URIs ");
+			Util.error("Please specify a KB id (i.e "+SmbbCst.kb_id+" parameter) check URIs ");
 		
 		if(taxon == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
+			Util.error("Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
 		
 		return true;
 	}

@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>slib</artifactId>
 		<groupId>fr.lgi2p.kid</groupId>
-		<version>0.0.2-SNAPSHOT</version>
+		<version>0.0.3-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>slib-utils</artifactId>

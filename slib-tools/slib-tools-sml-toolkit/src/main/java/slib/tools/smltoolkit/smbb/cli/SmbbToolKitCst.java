@@ -34,22 +34,21 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.sme.cli.utils;
+package slib.tools.smltoolkit.smbb.cli;
 
+import slib.tools.smltoolkit.sm.cli.utils.*;
 import slib.tools.module.ModuleCst;
-import slib.tools.smltoolkit.SmlCliCst;
+import slib.tools.smltoolkit.SmlToolKitCliCst;
+import slib.tools.smltoolkit.SmlToolKitCst;
+import slib.utils.ex.SLIB_Ex_Critic;
 
-public class SmeCst extends ModuleCst {
+public class SmbbToolKitCst extends ModuleCst {
 
 
-	public static final String   appName   = SmlCliCst.ToolName_SME;
-	public static final String   version   = "0.0.1";
-	public static final String   reference = null;
-	public static final String   description = null;
-	public static final String   report_bug = "harispe.sebastien@gmail.com";
+	public static final String   properties_prefix   = "sml-toolkit-smbb";
 	
 	
-	public SmeCst() {
-		super(appName, version, reference,description,report_bug);
+	public SmbbToolKitCst() throws SLIB_Ex_Critic {
+		super(SmlToolKitCst.properties_file_name,properties_prefix);
 	}
 }

@@ -62,20 +62,20 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public class SmlCli extends CmdHandler{
+public class SmlToolKitCli extends CmdHandler{
 
 
 	public String  tool	  = null;
 
-	static Logger logger = LoggerFactory.getLogger(SmlCli.class);
+	static Logger logger = LoggerFactory.getLogger(SmlToolKitCli.class);
 
 	String[] argsTool;
 	String[] argsGeneral;
 	CommandLine argsGeneralCMD;
 
-	public SmlCli(String[] args) throws SLIB_Exception {
+	public SmlToolKitCli(String[] args) throws SLIB_Exception {
 
-		super(new SmlCst() , new SmlCliCst(), args);
+		super(new SmlToolKitCst() , new SmlToolKitCliCst(), args);
 		
 
 
@@ -98,19 +98,19 @@ public class SmlCli extends CmdHandler{
 				ending(null,true);
 			}
 			else if(argsGeneralCMD.hasOption("version")){
-				ending("version "+SmlCst.version,false);
+				ending("version "+cst.version,false);
 			}
 			else{
 				//-- tool name 
-				if(argsGeneralCMD.hasOption(SmlCliCst.toolArg))
-					tool = argsGeneralCMD.getOptionValue( SmlCliCst.toolArg );
+				if(argsGeneralCMD.hasOption(SmlToolKitCliCst.toolArg))
+					tool = argsGeneralCMD.getOptionValue( SmlToolKitCliCst.toolArg );
 				else
-					ending(SmlCliCst.errorTool,true);
+					ending(SmlToolKitCliCst.errorTool,true);
 			}
 
 		}
 		catch( ParseException exp ) {
-			ending( "Error : "+SmlCliCst.appCmdName+" Parsing failed.  Trace: " + exp.getMessage(),true );
+			ending( "Error : "+SmlToolKitCliCst.appCmdName+" Parsing failed.  Trace: " + exp.getMessage(),true );
 		}
 		launch();
 	}
@@ -121,22 +121,22 @@ public class SmlCli extends CmdHandler{
 
 		SmlModuleCLI cli = null;
 
-		if(!Arrays.asList(SmlCliCst.acceptedTools).contains(tool))
-			ending(SmlCliCst.errorTool,true);
+		if(!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool))
+			ending(SmlToolKitCliCst.errorTool,true);
 
-		else if(tool.equals(SmlCliCst.ToolName_SM))
+		else if(tool.equals(SmlToolKitCliCst.ToolName_SM))
 			cli = new SmCli();
 
-		else if(tool.equals(SmlCliCst.ToolName_SMBB))
+		else if(tool.equals(SmlToolKitCliCst.ToolName_SMBB))
 			cli = new SmbbCli();
 
-		else if(tool.equals(SmlCliCst.ToolName_SME))
+		else if(tool.equals(SmlToolKitCliCst.ToolName_SME))
 			cli = new SmeCli();
 
-		else if(tool.equals(SmlCliCst.ToolName_SMUTILS))
+		else if(tool.equals(SmlToolKitCliCst.ToolName_SMUTILS))
 			cli = new SmlUtilsCli();
 
-		else if(tool.equals(SmlCliCst.ToolName_SML_DEPLOY))
+		else if(tool.equals(SmlToolKitCliCst.ToolName_SML_DEPLOY))
 			cli = new SmlDeployCli();
 
 
@@ -166,7 +166,7 @@ public class SmlCli extends CmdHandler{
 			else{
 				argsGeneral_.add(in[i]);
 
-				if(in[i].equals("-"+SmlCliCst.toolArg))
+				if(in[i].equals("-"+SmlToolKitCliCst.toolArg))
 					prefmoduleArgs = true;
 				else if(prefmoduleArgs)
 					moduleArgs = true;
@@ -184,7 +184,7 @@ public class SmlCli extends CmdHandler{
 	public static void main(String[] args) {
 
 		try {
-			SmlCli c = new SmlCli(args);
+			SmlToolKitCli c = new SmlToolKitCli(args);
 
 		} catch (Exception e) {
 			logger.error("\n\n[Error] "+e.getMessage()+"\n");

@@ -42,15 +42,15 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 
 import slib.tools.module.ToolCmdHandlerCst;
-import slib.tools.smltoolkit.SmlCliCst;
+import slib.tools.smltoolkit.SmlToolKitCliCst;
 
 public class SmlDeployCmdHandlerCst extends ToolCmdHandlerCst {
 
 	
 
 	
-	public static final String   moduleName 	  	= SmlCliCst.ToolName_SML_DEPLOY;
-	public static final String   appCmdName 	  	= SmlCliCst.appCmdName+" -module "+moduleName;
+	public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SML_DEPLOY;
+	public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
 	public static boolean debugMode  = false;
 	
 	/*

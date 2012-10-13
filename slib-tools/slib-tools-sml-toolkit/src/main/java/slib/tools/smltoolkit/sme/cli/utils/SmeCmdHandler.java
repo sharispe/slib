@@ -63,7 +63,7 @@ public class SmeCmdHandler extends CmdHandler {
 
 
 	public SmeCmdHandler(String[] args) throws SLIB_Exception {
-		super(new SmeCst(), new SmeCmdHandlerCst(), args);
+		super(new SmeToolKitCst(), new SmeCmdHandlerCst(), args);
 	}
 	
 

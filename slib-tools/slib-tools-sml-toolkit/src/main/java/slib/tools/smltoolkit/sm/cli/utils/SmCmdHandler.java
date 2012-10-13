@@ -56,7 +56,7 @@ public class SmCmdHandler extends CmdHandler {
 	
 
 	public SmCmdHandler(String[] args)throws SLIB_Exception {
-		super(new SmCst(), new SmCmdHandlerCst(), args);
+		super(new SmToolkitCst(), new SmCmdHandlerCst(), args);
 	}
 
 	

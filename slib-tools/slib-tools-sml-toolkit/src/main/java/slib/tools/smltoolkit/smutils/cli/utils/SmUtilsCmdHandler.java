@@ -83,7 +83,7 @@ public class SmUtilsCmdHandler extends CmdHandler {
 
 
 	public SmUtilsCmdHandler(String[] args) throws SLIB_Exception {
-		super(new SmUtilsCst(), new SmUtilsCmdHandlerCst(), args);
+		super(new SmUtilsToolKitCst(), new SmUtilsCmdHandlerCst(), args);
 	}
 
 

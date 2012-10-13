@@ -1,106 +1,135 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>slib-tools</artifactId>
-		<groupId>fr.lgi2p.kid</groupId>
-		<version>0.0.2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>slib-tools-sml-toolkit</artifactId>
-	<dependencies>
-		<dependency>
-			<groupId>fr.lgi2p.kid</groupId>
-			<artifactId>sglib-model</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.lgi2p.kid</groupId>
-			<artifactId>sglib-io</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>slib-tools</artifactId>
+        <groupId>fr.lgi2p.kid</groupId>
+        <version>0.0.3-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>slib-tools-sml-toolkit</artifactId>
+    
+    <properties>
+        <toolkit.version>${sml-toolkit.version}</toolkit.version>
+    </properties>
+  
+    <dependencies>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-model</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-io</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<scope>compile</scope>
-			<version>1.5.6</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>runtime</scope>
-			<version>1.5.6</version>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+            <version>1.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+            <version>1.5.6</version>
+        </dependency>
 
-		<dependency>
-			<groupId>fr.lgi2p.kid</groupId>
-			<artifactId>slib-sml</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>fr.lgi2p.kid</groupId>
-			<artifactId>slib-tools-module</artifactId>
-			<version>0.0.2-SNAPSHOT</version>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>slib-sml</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>slib-tools-module</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
+    <build>
+        <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
 
-		<resources>
-			<!-- include main.properties -->
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>main.properties</include>
-				</includes>
-			</resource>
+        <filters>
+            <filter>src/main/resources/sml-toolkit-constants.properties</filter>
+        </filters>
+    
+        <resources>
+            <!-- include main.properties -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>sml-toolkit-constants.properties</include>
+                </includes>
+            </resource>
 
-			<!-- exclude everything else -->
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>main.properties</exclude>
-				</excludes>
-			</resource>
-		</resources>
+            <!-- exclude everything else -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>sml-toolkit-constants.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
 
-		<plugins>
+        <plugins>
 
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
 
-				<configuration>
-					<finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
-					<archive>
-						<manifest>
-							<mainClass>slib.tools.smltoolkit.SmlCli</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id><!-- this is used for inheritance merges -->
-						<phase>package</phase><!-- append to the packaging phase. -->
-						<goals>
-							<goal>attached</goal><!-- goals == mojos -->
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+                <configuration>
+                    <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>slib.tools.smltoolkit.SmlToolKitCli</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <phase>package</phase><!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Copy jars -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-${sml-toolkit.version}.jar"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
 
 
+        </plugins>
 
-		</plugins>
-
-	</build>
+    </build>
 
 </project>

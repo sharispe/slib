@@ -43,7 +43,6 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sml.smbb.core.SmbbCst;
 import slib.tools.module.CmdHandler;
 import slib.utils.ex.SLIB_Exception;
 
@@ -58,7 +57,7 @@ public class SmbbCmdHandler extends CmdHandler {
 	
 
 	public SmbbCmdHandler(String[] args) throws SLIB_Exception {
-		super(new SmbbCst(), new SmbbCmdHandlerCst(), args);
+		super(new SmbbToolKitCst(), new SmbbCmdHandlerCst(), args);
 	}
 
 

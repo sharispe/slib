@@ -38,7 +38,6 @@ package slib.sml.smbb.core.conf.xml.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sml.smbb.core.SmbbCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
@@ -103,25 +102,25 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 		super.isValid();
 
 		if(taxon == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
+			Util.error("Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");
 		
 		if(pFamKB_index == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.pFamKb_index+" parameter ");
+			Util.error("Please specify "+SmbbCst.pFamKb_index+" parameter ");
 		
 		if(pFamClans == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.pFamClans+" parameter ");
+			Util.error("Please specify "+SmbbCst.pFamClans+" parameter ");
 		
 		if(out_pair_file == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_pair_file+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_pair_file+" parameter ");
 		
 		if(out_clan_prot == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify "+SmbbCst.out_clan_prot+" parameter ");
+			Util.error("Please specify "+SmbbCst.out_clan_prot+" parameter ");
 		
 		if(outputPositiveRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.positiveRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.positiveRel);
 		
 		if(outputNegativeRel == null)
-			Util.error("[Module "+SmbbCst.appName+"] Please specify a value for parameter "+SmbbCst.negativeRel);
+			Util.error("Please specify a value for parameter "+SmbbCst.negativeRel);
 		
 		
 		return true;

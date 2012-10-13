@@ -58,7 +58,7 @@ public class SmlDeployCmdHandler extends CmdHandler {
 	
 
 	public SmlDeployCmdHandler(String[] args)throws SLIB_Exception {
-		super(new SmlDeployCst(), new SmlDeployCmdHandlerCst(), args);
+		super(new SmlDeployToolKitCst(), new SmlDeployCmdHandlerCst(), args);
 	}
 
 	

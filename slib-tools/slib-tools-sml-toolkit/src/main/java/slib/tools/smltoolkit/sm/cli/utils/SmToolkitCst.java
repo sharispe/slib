@@ -34,73 +34,20 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.smbb.cli.conf.xml.utils;
+package slib.tools.smltoolkit.sm.cli.utils;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.tools.smltoolkit.smbb.cli.SmbbToolKitCst;
-import slib.utils.ex.SLIB_Exception;
+import slib.tools.module.ModuleCst;
+import slib.tools.smltoolkit.SmlToolKitCliCst;
+import slib.tools.smltoolkit.SmlToolKitCst;
+import slib.utils.ex.SLIB_Ex_Critic;
+
+public class SmToolkitCst extends ModuleCst {
 
 
-public class SmbbCmdHandler  extends CmdHandler {
-
+	public static final String   properties_prefix   = "sml-toolkit-sm";
 	
-	public String  xmlConfFile;
-
-
-	static Logger logger = LoggerFactory.getLogger(SmbbCmdHandler.class);
 	
-
-	public SmbbCmdHandler(String[] args) throws SLIB_Exception {
-		super(new SmbbToolKitCst(), new SmbbCmdHandlerCst(), args);
+	public SmToolkitCst() throws SLIB_Ex_Critic {
+		super(SmlToolKitCst.properties_file_name,properties_prefix);
 	}
-
-
-	public void processArgs(String[] args){
-		
-		CommandLineParser parser = new BasicParser();
-
-		try {
-			CommandLine line = parser.parse( options, args );
-
-			if(line.hasOption("help")){
-				ending("",true);
-			}
-			else{
-				
-				//-- XML file
-				if(line.hasOption("xmlconf")){
-					this.xmlConfFile = line.getOptionValue( "xmlconf" );
-				}
-				else
-					ending(SmbbCmdHandlerCst.errorMissingXMLconf,true);
-			}
-
-		}
-		catch( ParseException exp ) {
-			ending( cst.appName+" Parsing failed.  Reason: " + exp.getMessage(),true );
-		}
-	}
-
-
-
-	public static void main(String[] args) {
-
-		try {
-			SmbbCmdHandler 	    c = new SmbbCmdHandler(args);
-			SmCli ssp = new SmCli();
-			ssp.execute(c.xmlConfFile);
-			
-		} catch (Exception e) {
-			logger.info("Ooops : "+e.getMessage());
-			logger.info("see log file.");
-		}
-	}
-
 }

@@ -38,7 +38,6 @@ package slib.tools.smltoolkit.smbb.cli.conf.xml.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sml.smbb.core.SmbbCst;
 import slib.tools.module.ModuleConf;
 import slib.utils.ex.SLIB_Ex_Critic;
