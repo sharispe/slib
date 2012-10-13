@@ -117,6 +117,7 @@
                             <tasks>
                                 <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar"/>
                                 <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-${sml-toolkit.version}.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/../releases/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar"/>
                             </tasks>
                         </configuration>
                         <goals>
