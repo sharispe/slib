@@ -59,8 +59,8 @@ import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.Interaction;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.InteractionSet;
 import slib.sml.smbb.core.bioinfo.i_o.loader.mitab.MITAB25_reader;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_PPI;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Class used to generate interaction benchmarks
@@ -83,7 +83,7 @@ public class BenchmarkBuilder_Interact {
 	public static void generateBenchmark(
 			G g, 
 			InstancesAccessor instancesAccessor,
-			SmbbConf_GO_PPI conf) throws SGL_Exception{
+			SmbbConf_GO_PPI conf) throws SLIB_Exception{
 
 
 		Integer setSize = conf.getSetSize();
@@ -178,7 +178,7 @@ public class BenchmarkBuilder_Interact {
 			logger.info("Randomly build the positive class composed of "+conf.getSetSize()+" couples of entities ");
 
 			if(conf.getSetSize() > positivePPIset.size())
-				throw new SGL_Exception("Cannot build benchmarks... class size exceed potential interactions loaded respectively "+conf.getSetSize()+" "+positivePPIset.size());
+				throw new SLIB_Exception("Cannot build benchmarks... class size exceed potential interactions loaded respectively "+conf.getSetSize()+" "+positivePPIset.size());
 
 			HashSet<Interaction> positivePPIsetTest = new HashSet<Interaction>();
 
@@ -220,7 +220,7 @@ public class BenchmarkBuilder_Interact {
 
 
 			if(positivePPIset.size() == 0)
-				throw new SGL_Ex_Critic("Cannnot generate a correct PPI benchmark no positive interaction loaded... please check parameters");
+				throw new SLIB_Ex_Critic("Cannnot generate a correct PPI benchmark no positive interaction loaded... please check parameters");
 
 			// Load PPI information to generate the negative set
 
@@ -245,7 +245,7 @@ public class BenchmarkBuilder_Interact {
 			int nbProteins    = instancesAccessor.getInstances().size();
 
 			if(nbProteins*nbProteins - nbPositivePPI < nbPositivePPI)
-				throw new SGL_Ex_Critic("Due to the number of positive PPI set, the program cannot generate a negative PPI set");
+				throw new SLIB_Ex_Critic("Due to the number of positive PPI set, the program cannot generate a negative PPI set");
 
 
 			V[] fullBase = new V[nbProteins];
@@ -323,7 +323,7 @@ public class BenchmarkBuilder_Interact {
 			outfile.close();
 
 			if(nbIteration == max_nbIteration){
-				throw new SGL_Ex_Critic("Cannot generate benchmark, please reconsider applied restrictions (e.g. "+SmbbCst.min_annot_size+")...");
+				throw new SLIB_Ex_Critic("Cannot generate benchmark, please reconsider applied restrictions (e.g. "+SmbbCst.min_annot_size+")...");
 			}
 
 			logger.info("Set of incorrect interaction contains "+negativePPIsetSize);
@@ -336,7 +336,7 @@ public class BenchmarkBuilder_Interact {
 			}
 
 		} catch (IOException e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 	}
 }

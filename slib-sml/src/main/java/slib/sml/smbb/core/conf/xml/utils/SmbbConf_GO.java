@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import slib.sml.smbb.core.SmbbCst;
 import slib.tools.module.ModuleConf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
 public class SmbbConf_GO implements ModuleConf {
@@ -54,7 +54,7 @@ public class SmbbConf_GO implements ModuleConf {
 	
 	public SmbbConf_GO(){} 
 
-	public boolean isValid() throws SGL_Ex_Critic {
+	public boolean isValid() throws SLIB_Ex_Critic {
 		
 		if(type == null)
 			Util.error("Please specify a "+SmbbCst.type);

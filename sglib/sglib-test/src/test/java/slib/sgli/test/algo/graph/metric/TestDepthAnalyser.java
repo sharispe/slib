@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SGL_UnitTestValues;
+import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
 import slib.sgli.test.algo.graph.TestUtils;
 import slib.sglib.algo.metric.DepthAnalyserAG;
 import slib.sglib.algo.utils.WalkConstraintTax;
@@ -50,7 +50,7 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 import com.tinkerpop.blueprints.Direction;
@@ -76,19 +76,19 @@ public class TestDepthAnalyser {
 	int max_depth_thing = 0;
 	
 
-	SGL_UnitTestValues testvalues;
+	SLIB_UnitTestValues testvalues;
 	
 	WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 
-	public TestDepthAnalyser() throws SGL_Exception{
-		testvalues = new SGL_UnitTestValues();
+	public TestDepthAnalyser() throws SLIB_Exception{
+		testvalues = new SLIB_UnitTestValues();
 		
-		g = TestUtils.loadTestGraph(GFormat.SGL,SGL_UnitTestValues.G_DAG_BASIC);
+		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 		depthAnalyser = new DepthAnalyserAG(g, wc);
 	}
 
 	@Test
-	public void test_max_depth() throws SGL_Exception{
+	public void test_max_depth() throws SLIB_Exception{
 
 		ResultStack<V,Integer> maxDepths = depthAnalyser.getVMaxDepths();
 		
@@ -100,7 +100,7 @@ public class TestDepthAnalyser {
 	}
 
 	@Test
-	public void test_min_depth() throws SGL_Exception{
+	public void test_min_depth() throws SLIB_Exception{
 
 		ResultStack<V,Integer> minDepths = depthAnalyser.getVMinDepths();
 		

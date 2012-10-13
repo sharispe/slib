@@ -2,14 +2,12 @@ package slib.sglib.io.conf;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.algo.utils.GAction;
 import slib.utils.i.CheckableValidity;
 import slib.utils.impl.ParametrableImpl;
 
-public class GraphConf  extends ParametrableImpl implements CheckableValidity{
+public class GraphConf extends ParametrableImpl implements CheckableValidity, Comparable<Object>{
 
 	URI uri;
 	
@@ -73,6 +71,11 @@ public class GraphConf  extends ParametrableImpl implements CheckableValidity{
 	public void setActions(List<GAction> actions) {
 		this.actions = actions;
 	}
+
+    @Override
+    public int compareTo(Object o) {
+        return 1;
+    }
 
 
 }

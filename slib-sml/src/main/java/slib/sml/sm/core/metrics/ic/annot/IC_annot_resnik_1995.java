@@ -39,7 +39,7 @@ package slib.sml.sm.core.metrics.ic.annot;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 
@@ -53,7 +53,7 @@ import slib.utils.impl.ResultStack;
 public class IC_annot_resnik_1995 implements ICcorpus{
 
 
-	public ResultStack<V,Double> compute(ResultStack<V,Long> nbOccurences) throws SGL_Exception{
+	public ResultStack<V,Double> compute(ResultStack<V,Long> nbOccurences) throws SLIB_Exception{
 
 		// add 1 to all element occurrence counts to avoid -log(0)
 		ResultStack<V,Double> rtemp   = ProbOccurence.compute(nbOccurences,1);
@@ -76,7 +76,7 @@ public class IC_annot_resnik_1995 implements ICcorpus{
 		return results;
 	}
 	
-	public ResultStack<V,Double> compute(SM_Engine manager) throws SGL_Exception {
+	public ResultStack<V,Double> compute(SM_Engine manager) throws SLIB_Exception {
 		return compute(manager.getNbInstancesInferredPropFromCorpus());
 	}
 

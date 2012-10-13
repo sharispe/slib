@@ -53,7 +53,7 @@ import slib.sml.smbb.core.bioinfo.bmark.pfam.BenchmarkBuilder_Pfam;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.BenchmarkBuilder_Interact;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.smbb.cli.conf.xml.loader.Smbb_XMLConfLoader;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
 /**
@@ -81,12 +81,12 @@ public class SmbbCli implements SmlModuleCLI {
 	 * @param confFile the path of the configuration file to take into account
 	 * @throws SGL_Exception
 	 */
-	public SmbbCli(String confFile) throws SGL_Exception{
+	public SmbbCli(String confFile) throws SLIB_Exception{
 		execute(confFile);
 	}
 
 
-	public void execute(String[] args) throws SGL_Exception {
+	public void execute(String[] args) throws SLIB_Exception {
 		SmbbCmdHandler cfgLoader = new SmbbCmdHandler(args);
 		execute(cfgLoader.xmlConfFile);
 	}
@@ -97,7 +97,7 @@ public class SmbbCli implements SmlModuleCLI {
 	 * @param confFile
 	 * @throws SGL_Exception
 	 */
-	private void execute(String confFile) throws SGL_Exception {
+	private void execute(String confFile) throws SLIB_Exception {
 
 		conf = new Smbb_XMLConfLoader(confFile);
 
@@ -163,7 +163,7 @@ public class SmbbCli implements SmlModuleCLI {
 		try {
 			SmbbCli launcher = new SmbbCli(conf);
 		} 
-		catch (SGL_Exception e) {
+		catch (SLIB_Exception e) {
 			e.printStackTrace();
 		}
 	}

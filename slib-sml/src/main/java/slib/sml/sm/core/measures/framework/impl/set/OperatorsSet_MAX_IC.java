@@ -44,7 +44,7 @@ import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.OperatorConf;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -78,11 +78,11 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * to use to compute {@link V} informativeness see {@link OperatorConf#ic} and {@link ICconf}
 	 * @param conf the configuration of the operator
 	 */
-	public OperatorsSet_MAX_IC(OperatorConf conf) throws SGL_Exception {
+	public OperatorsSet_MAX_IC(OperatorConf conf) throws SLIB_Exception {
 		super(conf);
 		
 		if(this.conf.ic == null)
-			throw new SGL_Exception("Please associate an IC configuration to operator "+conf.id+"  "+conf.flag);
+			throw new SLIB_Exception("Please associate an IC configuration to operator "+conf.id+"  "+conf.flag);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates commonalities the IC of represented
 	 * classes MICA
 	 */
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception{
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep_a).anc;
 		Set<V> b = ((GraphRepresentationAsSet) rep_b).anc;
@@ -117,7 +117,7 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates subtraction as informativeness 
 	 * of the class represented by rep_a - commonality(rep_a,rep_b).
 	 */
-	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception {
+	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		
 		return informativeness(rep_a, manager) - commonalities(rep_a, rep_b, manager);
 	}
@@ -128,7 +128,7 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates difference as sum of the informativeness 
 	 * of the compared representation -  2 * commonality(rep_a,rep_b).
 	 */
-	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception {
+	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		return informativeness(rep_a, manager)+informativeness(rep_b, manager)- 2. *commonalities(rep_a, rep_b, manager);
 	}
 
@@ -154,7 +154,7 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * Because the metric used to compute the IC must monotonically decrease from the leaves
 	 * to the root informativeness(rep) must be equals to the IC of the class represented by rep.
 	 */
-	public double informativeness(GraphRepresentation rep,SM_Engine manager) throws SGL_Exception {
+	public double informativeness(GraphRepresentation rep,SM_Engine manager) throws SLIB_Exception {
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep).anc;
 		
@@ -175,7 +175,7 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * Return true if the {@link GraphRepresentation} are supported see {@link #supportRepresentations(GraphRepresentation...)}
 	 * and if compared representation not only contains the root of the graph
 	 */
-	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception {
+	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		
 		if(supportRepresentations(rep_a,rep_b)){
 			

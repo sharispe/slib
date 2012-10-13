@@ -63,8 +63,8 @@ import slib.tools.module.GenericConfBuilder;
 import slib.tools.module.XML_ModuleConfLoader;
 import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
@@ -97,7 +97,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	//	private boolean optConfDefined = false;
 
 
-	public Sm_XMLConfLoader(String confFile) throws SGL_Exception{
+	public Sm_XMLConfLoader(String confFile) throws SLIB_Exception{
 
 		super(confFile);
 
@@ -156,13 +156,13 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 		} catch (Exception e) {
 			if(logger.isDebugEnabled())
 				e.printStackTrace();
-			throw new SGL_Exception(e.getMessage());
+			throw new SLIB_Exception(e.getMessage());
 		}
 	}
 
 
 
-	private void checkData() throws SGL_Ex_Critic {
+	private void checkData() throws SLIB_Ex_Critic {
 		checkIcs();
 		checkPairwiseMeasures();
 		checkGroupwiseMeasures();
@@ -170,7 +170,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void loadData(Document document) throws SGL_Ex_Critic {
+	private void loadData(Document document) throws SLIB_Ex_Critic {
 
 		NodeList opt = document.getElementsByTagName(Sm_XML_Cst.OPT_MODULE_TAG);
 
@@ -212,7 +212,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void checkQueries() throws SGL_Ex_Critic {
+	private void checkQueries() throws SLIB_Ex_Critic {
 
 		for(Conf conf :gConfQueries){
 
@@ -232,7 +232,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void checkIcs() throws SGL_Ex_Critic {
+	private void checkIcs() throws SLIB_Ex_Critic {
 
 		for(ICconf m : gConfICs){
 
@@ -268,24 +268,24 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 		logger.info(gConfICs.size()+" IC conf loaded ");
 	}
 
-	private void loadQueries(Element item) throws SGL_Ex_Critic {
+	private void loadQueries(Element item) throws SLIB_Ex_Critic {
 		Conf querySet = GenericConfBuilder.build(item);
 		gConfQueries.add(querySet);
 	}
 
 
-	private void loadICs(Element item) throws SGL_Ex_Critic {
+	private void loadICs(Element item) throws SLIB_Ex_Critic {
 		NodeList list = item.getElementsByTagName(Sm_XML_Cst.IC_ATTR);
 		LinkedHashSet<Conf> gConfICsGenerics = GenericConfBuilder.build(list);
 		gConfICs.addAll( buildICconf(gConfICsGenerics));
 	}
 
-	private void loadOperators(Element item) throws SGL_Ex_Critic {
+	private void loadOperators(Element item) throws SLIB_Ex_Critic {
 		NodeList list = item.getElementsByTagName(Sm_XML_Cst.OPERATOR_TAG);
 		gConfOperators.addAll( buildOperatorconf( GenericConfBuilder.build(list) ));
 	}
 
-	private void checkPairwiseMeasures() throws SGL_Ex_Critic {
+	private void checkPairwiseMeasures() throws SLIB_Ex_Critic {
 
 		for(SMconf m : gConfPairwise){
 
@@ -356,20 +356,20 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void checkFrameworkMeasure(SMconf m) throws SGL_Ex_Critic{
+	private void checkFrameworkMeasure(SMconf m) throws SLIB_Ex_Critic{
 		if(m.representation == null)
-			throw new SGL_Ex_Critic("Please specify a representation (attribut "+Sm_XML_Cst.REPRESENTATION_ATTR+") associated to measure id "+m.id);
+			throw new SLIB_Ex_Critic("Please specify a representation (attribut "+Sm_XML_Cst.REPRESENTATION_ATTR+") associated to measure id "+m.id);
 
 		if(m.operator == null)
-			throw new SGL_Ex_Critic("Please specify an operator engine (attribut "+Sm_XML_Cst.OPERATOR_FLAG_ATTR+" or "+Sm_XML_Cst.OPERATOR_TAG+", see doc) associated to measure id "+m.id);
+			throw new SLIB_Ex_Critic("Please specify an operator engine (attribut "+Sm_XML_Cst.OPERATOR_FLAG_ATTR+" or "+Sm_XML_Cst.OPERATOR_TAG+", see doc) associated to measure id "+m.id);
 
 		if(!SMConstants.operators.containsKey(m.operator.flag))
-			throw new SGL_Ex_Critic("Unknown operator flag "+m.operator.flag+" in measure id : "+m.id);
+			throw new SLIB_Ex_Critic("Unknown operator flag "+m.operator.flag+" in measure id : "+m.id);
 	}
 
 
 
-	private void checkGroupwiseMeasures() throws SGL_Ex_Critic {
+	private void checkGroupwiseMeasures() throws SLIB_Ex_Critic {
 
 		for(SMconf m : gConfGroupwise){
 
@@ -398,7 +398,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 						}
 					}
 					if(!valid)
-						throw new SGL_Ex_Critic("Cannot refer to unloaded pairwise measure '"+pairwise_measure+"' in groupwise " +
+						throw new SLIB_Ex_Critic("Cannot refer to unloaded pairwise measure '"+pairwise_measure+"' in groupwise " +
 								"measure definition id="+id);
 
 				}
@@ -459,7 +459,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void processMeasureSpec(Element item) throws SGL_Ex_Critic {
+	private void processMeasureSpec(Element item) throws SLIB_Ex_Critic {
 		
 		String type = getAttValue((Element)item,XmlTags.TYPE_ATTR);
 
@@ -480,7 +480,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			Util.error("Please precise the type of measure associated to 'measures' tag");
 	}
 
-	private LinkedHashSet<SMconf> buildPairwiseConf(LinkedHashSet<Conf> gCong) throws SGL_Ex_Critic {
+	private LinkedHashSet<SMconf> buildPairwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
 		LinkedHashSet<SMconf> sspPairwiseConf = new LinkedHashSet<SMconf>();
 
@@ -499,7 +499,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			if(icID != null && icID.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)){
 
 				if(gConfICs.size() == 0)
-					throw new SGL_Ex_Critic(" Pairwise measure "+label+" requires IC(s) to be defined, none found");
+					throw new SLIB_Ex_Critic(" Pairwise measure "+label+" requires IC(s) to be defined, none found");
 					
 				for(ICconf ic_conf : gConfICs){
 					
@@ -531,7 +531,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 		return sspPairwiseConf;
 	}
 
-	private SMconf buildPairwiseConf(Conf c) throws SGL_Ex_Critic {
+	private SMconf buildPairwiseConf(Conf c) throws SLIB_Ex_Critic {
 
 		// Attributes (processed below), not considered as extraParameters
 
@@ -562,7 +562,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			icConf = getIC(icID);
 
 			if(icConf == null)
-				throw new SGL_Ex_Critic("Cannot locate IC "+icID+" define for pairwise measure "+id);
+				throw new SLIB_Ex_Critic("Cannot locate IC "+icID+" define for pairwise measure "+id);
 		}	
 
 
@@ -578,7 +578,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			ICconf ic_prob = getIC(ic_prob_id);
 
 			if(ic_prob == null)
-				throw new SGL_Ex_Critic("Cannot locate IC used to compute MICA probability for "+id+", please define an attribute "+Sm_XML_Cst.IC_PROB+" refering to an IC id ");
+				throw new SLIB_Ex_Critic("Cannot locate IC used to compute MICA probability for "+id+", please define an attribute "+Sm_XML_Cst.IC_PROB+" refering to an IC id ");
 
 			pc.addParam(Sm_XML_Cst.IC_PROB, ic_prob);
 		}
@@ -613,7 +613,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
 
 
-	private OperatorConf loadOperatorInfo(Conf c) throws SGL_Ex_Critic {
+	private OperatorConf loadOperatorInfo(Conf c) throws SLIB_Ex_Critic {
 
 		String id    = (String) c.getParam(XmlTags.ID_ATTR);
 		String operator_flag  = (String) c.getParam(Sm_XML_Cst.OPERATOR_FLAG_ATTR);
@@ -627,7 +627,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			opConf = getOperatorConf(operator_id);
 
 			if(opConf == null){
-				throw new SGL_Ex_Critic("Cannot refer to unknow operator id  "+operator_id+" in measure id : "+id);
+				throw new SLIB_Ex_Critic("Cannot refer to unknow operator id  "+operator_id+" in measure id : "+id);
 			}
 		}
 		return opConf;
@@ -654,7 +654,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private LinkedHashSet<SMconf> buildGroupwiseConf(LinkedHashSet<Conf> gCong) throws SGL_Ex_Critic {
+	private LinkedHashSet<SMconf> buildGroupwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
 		LinkedHashSet<SMconf> sspGoupwiseConf = new LinkedHashSet<SMconf>();
 
@@ -738,7 +738,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 		return sspGoupwiseConf;
 	}
 
-	private SMconf buildGroupwiseConf(Conf c) throws SGL_Ex_Critic {
+	private SMconf buildGroupwiseConf(Conf c) throws SLIB_Ex_Critic {
 
 		// Attributes (processed below), not considered as extraParameters
 
@@ -773,7 +773,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				}
 			}
 			if(icConf == null)
-				throw new SGL_Ex_Critic("Cannot locate IC "+ic_id+" define for groupwise measure "+id);
+				throw new SLIB_Ex_Critic("Cannot locate IC "+ic_id+" define for groupwise measure "+id);
 
 		}	
 
@@ -788,7 +788,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
 
 
-	private void extractOptConf(Conf gc) throws SGL_Ex_Critic {
+	private void extractOptConf(Conf gc) throws SLIB_Ex_Critic {
 
 		String benchSize_s  	   = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
 		String cache_pairwise_s    = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
@@ -801,7 +801,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				benchSize = Integer.parseInt(benchSize_s);
 			}
 			catch(NumberFormatException e){
-				throw new SGL_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_BENCH_SIZE_ATTR+" to an integer value ");
+				throw new SLIB_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_BENCH_SIZE_ATTR+" to an integer value ");
 			}
 		}
 
@@ -810,7 +810,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				emptyAnnotsScores = Double.parseDouble(emptyAnnotsScore_s);
 			}
 			catch(NumberFormatException e){
-				throw new SGL_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR+" to a numeric value ");
+				throw new SLIB_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR+" to a numeric value ");
 			}
 		}
 
@@ -830,7 +830,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 		}
 	}
 
-	private LinkedHashSet<ICconf> buildICconf(LinkedHashSet<Conf> gCong) throws SGL_Ex_Critic {
+	private LinkedHashSet<ICconf> buildICconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
 
 		LinkedHashSet<ICconf> icConfSet = new LinkedHashSet<ICconf>();
@@ -861,7 +861,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				ic = new IC_Conf_Corpus(id,label,flag);
 			}
 			else{
-				throw new SGL_Ex_Critic("Cannot resolve IC flag: "+flag);
+				throw new SLIB_Ex_Critic("Cannot resolve IC flag: "+flag);
 			}
 
 			ic = addExtraAttributs(defaultAttributs,c,ic);
@@ -869,7 +869,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			
 			for(ICconf m : icConfSet){
 				if(m.id.equals(ic.id))
-					throw new SGL_Ex_Critic("Duplicate id for IC "+ic.id);
+					throw new SLIB_Ex_Critic("Duplicate id for IC "+ic.id);
 			}
 			icConfSet.add(ic);
 		}
@@ -877,7 +877,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private LinkedHashSet<OperatorConf> buildOperatorconf(LinkedHashSet<Conf> gCong) throws SGL_Ex_Critic {
+	private LinkedHashSet<OperatorConf> buildOperatorconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
 		String[] defaultAttributs = {
 
@@ -898,10 +898,10 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			String ic_id  	 = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
 
 			if(id == null){
-				throw new SGL_Ex_Critic("All operators must have an attribut "+XmlTags.ID_ATTR);
+				throw new SLIB_Ex_Critic("All operators must have an attribut "+XmlTags.ID_ATTR);
 			}
 			else if(flag == null || ! SMConstants.operators.containsKey(flag)){
-				throw new SGL_Ex_Critic("Unknown operator "+flag+" for operator "+id);
+				throw new SLIB_Ex_Critic("Unknown operator "+flag+" for operator "+id);
 			}
 			else if(ic_id != null){
 
@@ -914,7 +914,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 				}
 
 				if(ic_conf == null)
-					throw new SGL_Ex_Critic("Please specify a valid IC id associated to Operator "+id);
+					throw new SLIB_Ex_Critic("Please specify a valid IC id associated to Operator "+id);
 			}
 
 			// check duplicate 
@@ -922,7 +922,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 			for (OperatorConf conf: operatorConfSet ) {
 
 				if(conf.id.equals(id))
-					throw new SGL_Ex_Critic("Duplicate operator id "+id);
+					throw new SLIB_Ex_Critic("Duplicate operator id "+id);
 			}
 
 			OperatorConf opt = new OperatorConf(flag, id, ic_conf); 

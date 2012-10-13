@@ -47,7 +47,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
 public class TestSetUtils {
@@ -74,7 +74,7 @@ public class TestSetUtils {
 	int c2_intersection = 0;
 	int c2_union		= 6;
 
-	public TestSetUtils() throws SGL_Ex_Critic{
+	public TestSetUtils() throws SLIB_Ex_Critic{
 
 	}
 
@@ -101,15 +101,15 @@ public class TestSetUtils {
 
 
 //	@Test
-//	public void set_operation_on_large_sets() throws SGL_Exception{
+//	public void set_operation_on_large_sets() throws SLIB_Exception{
 //
 //		String path = System.getProperty("user.dir")+"/data/test/graph/obo/";
 //		String go 	= path+"gene_ontology_ext.obo";
 //
 //		String filePath = go;
 //
-//		GraphConf conf  = new GraphConf(SGL_UnitTestValues.uriGraph,GraphFileFormats.OBO, filePath);
-//		GraphConf conf2 = new GraphConf(SGL_UnitTestValues.uriGraph,GraphFileFormats.OBO, filePath);
+//		GraphConf conf  = new GraphConf(SLIB_UnitTestValues.uriGraph,GraphFileFormats.OBO, filePath);
+//		GraphConf conf2 = new GraphConf(SLIB_UnitTestValues.uriGraph,GraphFileFormats.OBO, filePath);
 //
 //		g1 = GraphLoaderGeneric.load(conf);
 //		g2 = GraphLoaderGeneric.load(conf2);

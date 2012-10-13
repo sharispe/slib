@@ -51,8 +51,8 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -91,7 +91,7 @@ public class RVF_DAG extends RVF{
 	 * @return an HashMap key V value the set of vertices reachable from the key Set<V>
 	 * @throws SGL_Ex_Critic 
 	 */
-	public Map<V, Set<V>> getAllVertices() throws SGL_Ex_Critic{
+	public Map<V, Set<V>> getAllVertices() throws SLIB_Ex_Critic{
 
 		logger.debug("Get All reachable vertices : start");
 
@@ -119,7 +119,7 @@ public class RVF_DAG extends RVF{
 		}
 		
 		if(queue.size() == 0)
-			throw new SGL_Ex_Critic("Oooops applied constraints are too high");
+			throw new SLIB_Ex_Critic("Oooops applied constraints are too high");
 
 		logger.debug("queue size: "+queue.size());
 		
@@ -232,7 +232,7 @@ public class RVF_DAG extends RVF{
 		return allReachableLeaves;
 	}
 
-	public ResultStack<V,Long> computeNbPathLeadingToAllVertices() throws SGL_Exception{
+	public ResultStack<V,Long> computeNbPathLeadingToAllVertices() throws SLIB_Exception{
 		
 		ResultStack<V,Long> allVertices = new ResultStack<V,Long>();
 
@@ -252,7 +252,7 @@ public class RVF_DAG extends RVF{
 	 * @return ResultStack of type Double representing the number occurrences propagated of each vertices
 	 * @throws SGL_Ex_Critic 
 	 */
-	public ResultStack<V,Long> propagateNbOccurences(ResultStack<V,Long> nbOccurrence) throws SGL_Exception{
+	public ResultStack<V,Long> propagateNbOccurences(ResultStack<V,Long> nbOccurrence) throws SLIB_Exception{
 
 		HashMap<V, Set<V>> allVertices 		 = new HashMap<V, Set<V>>();
 		HashMap<V, Integer> inDegree 	 	 = new HashMap<V, Integer>();

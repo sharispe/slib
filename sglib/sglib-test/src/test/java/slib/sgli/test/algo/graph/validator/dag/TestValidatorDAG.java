@@ -45,7 +45,7 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SGL_UnitTestValues;
+import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
 import slib.sgli.test.algo.graph.TestUtils;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.io.util.GFormat;
@@ -56,8 +56,8 @@ import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -67,20 +67,20 @@ public class TestValidatorDAG {
 	G g;
 	Set<URI> subClassURis;
 	URI rootURI;
-	SGL_UnitTestValues testValues;
+	SLIB_UnitTestValues testValues;
 
-	public TestValidatorDAG() throws SGL_Exception{
+	public TestValidatorDAG() throws SLIB_Exception{
 
-		testValues = new SGL_UnitTestValues();
+		testValues = new SLIB_UnitTestValues();
 		rootURI = testValues.G_BASIC_THING;
 
-		g = TestUtils.loadTestGraph(GFormat.SGL,SGL_UnitTestValues.G_DAG_BASIC);
+		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 		subClassURis = new HashSet<URI>();
 		subClassURis.add(RDFS.SUBCLASSOF);
 	}
 	
 	@Test
-	public void test_dag_root() throws SGL_Ex_Critic{
+	public void test_dag_root() throws SLIB_Ex_Critic{
 
 		System.out.println(g.toString());
 		
@@ -99,7 +99,7 @@ public class TestValidatorDAG {
 	}
 	
 	@Test
-	public void test_dag_root_2() throws SGL_Ex_Critic{
+	public void test_dag_root_2() throws SLIB_Ex_Critic{
 
 		System.out.println(g.toString());
 		
@@ -110,13 +110,13 @@ public class TestValidatorDAG {
 	}
 
 	@Test
-	public void test_true_dag() throws SGL_Ex_Critic{
+	public void test_true_dag() throws SLIB_Ex_Critic{
 		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, subClassURis,Direction.IN);
 		assertTrue(isDag);
 	}
 	
 	@Test
-	public void test_true_tax_dag() throws SGL_Ex_Critic{
+	public void test_true_tax_dag() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
 		
@@ -135,7 +135,7 @@ public class TestValidatorDAG {
 	}
 	
 	@Test
-	public void test_true_tax_dag_unique_root() throws SGL_Ex_Critic{
+	public void test_true_tax_dag_unique_root() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
 		
@@ -150,13 +150,13 @@ public class TestValidatorDAG {
 	
 	
 	@Test
-	public void test_false_tax_dag_unique_root() throws SGL_Ex_Critic{
+	public void test_false_tax_dag_unique_root() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
 		
 		assertTrue(isDag == true);
 		
-		URI newRootURI = DataRepository.getSingleton().createURI(SGL_UnitTestValues.uriGraph+"new_Root");
+		URI newRootURI = DataRepository.getSingleton().createURI(SLIB_UnitTestValues.uriGraph+"new_Root");
 		
 		V newRoot = g.addV(new VertexTyped(g,newRootURI, VType.CLASS));
 		
@@ -174,7 +174,7 @@ public class TestValidatorDAG {
 	}
 	
 	@Test
-	public void test_false_tax_dag() throws SGL_Ex_Critic{
+	public void test_false_tax_dag() throws SLIB_Ex_Critic{
 
 		URI animalURI 	= testValues.G_BASIC_ANIMAL;
 		URI menURI 		= testValues.G_BASIC_MEN;
@@ -192,7 +192,7 @@ public class TestValidatorDAG {
 	}
 
 	@Test
-	public void test_false_dag() throws SGL_Ex_Critic{
+	public void test_false_dag() throws SLIB_Ex_Critic{
 
 		URI animalURI 	= testValues.G_BASIC_ANIMAL;
 		URI menURI 		= testValues.G_BASIC_MEN;

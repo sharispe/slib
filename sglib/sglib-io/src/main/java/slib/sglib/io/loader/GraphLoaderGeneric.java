@@ -56,8 +56,8 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class GraphLoaderGeneric {
 
@@ -66,7 +66,7 @@ public class GraphLoaderGeneric {
 
 	public static Logger logger = LoggerFactory.getLogger(GraphLoaderGeneric.class);
 
-	public static G populate(GDataConf dataConf, G g) throws SGL_Exception{
+	public static G populate(GDataConf dataConf, G g) throws SLIB_Exception{
 
 		logger.debug("Populate "+g.getURI()+" based on "+dataConf.getLoc());
 		
@@ -93,7 +93,7 @@ public class GraphLoaderGeneric {
 	 * @return
 	 * @throws SGL_Exception
 	 */
-	public static G load(GraphConf graphConf) throws SGL_Exception{
+	public static G load(GraphConf graphConf) throws SLIB_Exception{
 		
 		logger.debug("Loading Graph");
 		
@@ -114,13 +114,13 @@ public class GraphLoaderGeneric {
 	}
 
 
-	public static void load(Collection<GraphConf> graphConfs) throws SGL_Exception{
+	public static void load(Collection<GraphConf> graphConfs) throws SLIB_Exception{
 
 		for(GraphConf conf : graphConfs)
 			load(conf);
 	}
 
-	private static IGraphLoader getLoader(GDataConf data) throws SGL_Ex_Critic {
+	private static IGraphLoader getLoader(GDataConf data) throws SLIB_Ex_Critic {
 
 		if(data.getFormat() == GFormat.OBO)
 			return new GraphLoader_OBO_1_2();
@@ -140,7 +140,7 @@ public class GraphLoaderGeneric {
 		else if(data.getFormat()  == GFormat.CSV)
 			return new GraphLoader_CSV();
 		else
-			throw new SGL_Ex_Critic("Unknown Graph format "+data.getFormat());
+			throw new SLIB_Ex_Critic("Unknown Graph format "+data.getFormat());
 	}
 
 

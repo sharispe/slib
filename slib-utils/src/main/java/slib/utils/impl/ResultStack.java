@@ -41,7 +41,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class ResultStack<X,N extends Number> {
 	
@@ -83,12 +83,12 @@ public class ResultStack<X,N extends Number> {
 	 * @return the double value associated to the queried key
 	 * @throws SGL_Exception_Dev if the queried value is not found
 	 */
-	public N get(X v) throws SGL_Ex_Critic{
+	public N get(X v) throws SLIB_Ex_Critic{
 		
 		N val = values.get(v);
 		
 		if(val == null)
-			throw new SGL_Ex_Critic("Error in "+ResultStack.class.getName()+" Try to access a value associated to a non existing key "+v+" \nResultStack info :"+toString());
+			throw new SLIB_Ex_Critic("Error in "+ResultStack.class.getName()+" Try to access a value associated to a non existing key "+v+" \nResultStack info :"+toString());
 		return val;
 	}
 	
@@ -98,7 +98,7 @@ public class ResultStack<X,N extends Number> {
 	 * @return the double value associated to the queried key
 	 * @throws SGL_Exception_Dev if the queried value is not found
 	 */
-	public boolean containsKey(X v) throws SGL_Ex_Critic{
+	public boolean containsKey(X v) throws SLIB_Ex_Critic{
 		return values.containsKey(v);
 	}
 	

@@ -40,8 +40,8 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_node_abstract{
 	
@@ -52,7 +52,7 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
 	private double beta  = 0.5;
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -68,19 +68,19 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
 		ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
 		
 		if(confic == null)
-			throw new SGL_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
+			throw new SLIB_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
 		
 		double p_MICA  = c.getP_MICA( confic, a,b);
 		
 		if(p_MICA < 0 || p_MICA > 1)
-			throw new SGL_Ex_Critic("Probability measure is expected... Given IC "+confic.getId()+" is not suited as it apparently doesn't provide values restricted in [0,1] ");
+			throw new SLIB_Ex_Critic("Probability measure is expected... Given IC "+confic.getId()+" is not suited as it apparently doesn't provide values restricted in [0,1] ");
 		
 		return sim(ic_a, ic_b, ic_MICA, p_MICA, alpha, beta);
 	}
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SGL_Ex_Critic {
+	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {
 		
 		Sim_pairwise_DAG_node_Tversky_IC m = new Sim_pairwise_DAG_node_Tversky_IC(alpha,beta);
 		

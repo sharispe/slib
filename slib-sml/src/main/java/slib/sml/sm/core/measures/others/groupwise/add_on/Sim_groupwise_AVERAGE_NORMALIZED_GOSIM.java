@@ -41,7 +41,7 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 
@@ -72,7 +72,7 @@ public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_genera
 		return sim ;
 	}
 
-	public double sim(Set<V> setA, Set<V> setB,  SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB,  SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
 		
 		MatrixDouble<V,V> results_setA_B = rc.getMatrixScore(setA,setB, paiwiseconf);
 		MatrixDouble<V,V> results_setA_A = rc.getMatrixScore(setA,setA, paiwiseconf);

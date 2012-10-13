@@ -34,33 +34,22 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.utils.ex;
 
-import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
+public class SLIB_Ex_Critic extends SLIB_Exception {
 
-public class SMutils {
-	
-	
-	public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a,V b, Object value) throws SGL_Ex_Critic{
-		
-		throw new SGL_Ex_Critic("Critical error. \n" +
-				"A result produced by the pairwise measure "+pairwiseConf.flag+" was not a number "+value+" (NaN/Infinity). \n" +
-				"Pairwise measure in use "+pairwiseConf.flag+" id="+pairwiseConf.id+". \n" +
-				"Classes compared "+a+" vs "+b+". \n" +
-				"This issue can be encountred if an infinite value have been detected.\n" +
-				"Please report the bug to the developpers\n");
-	}
-
-	public static void throwArithmeticCriticalException(SMconf m, SMconf p, V e1,
-			V e2, Object value) throws SGL_Ex_Critic {
-		throw new SGL_Ex_Critic("Critical error. \n" +
-				"A result produced by the measure "+m.flag+" was not a number "+value+" (NaN/infinity). \n" +
-				"Pairwise measure in use "+p.flag+" id="+p.id+". \n" +
-				"Entities compared "+e1+" vs "+e2+". \n" +
-				"This issue can be encountred if an infinite value have been detected.\n" +
-				"Please report the bug to the developpers\n");
+	public SLIB_Ex_Critic(String message) {
+		super(message);
 	}
 	
+	public SLIB_Ex_Critic(Throwable cause) {
+		super(cause);
+	}
+	
+	public SLIB_Ex_Critic(String message, Throwable cause) {
+		super(message,cause);
+	}
+
+	private static final long serialVersionUID = 1L;
+
 }

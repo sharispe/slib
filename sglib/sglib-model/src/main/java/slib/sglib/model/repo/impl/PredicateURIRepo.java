@@ -46,8 +46,8 @@ import org.openrdf.model.vocabulary.RDFS;
 
 import slib.sglib.model.repo.IPredicateURIRepo;
 import slib.sglib.model.voc.SGLVOC;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Warning;
 
 public class PredicateURIRepo implements IPredicateURIRepo{
 
@@ -85,7 +85,7 @@ public class PredicateURIRepo implements IPredicateURIRepo{
 	}
 
 
-	public URI load(String suri) throws SGL_Ex_Critic {
+	public URI load(String suri) throws SLIB_Ex_Critic {
 
 		URI uri = factory.createURI(suri);
 
@@ -99,20 +99,20 @@ public class PredicateURIRepo implements IPredicateURIRepo{
 		return inverses.get(uri);
 	}
 
-	public void defineInverseURI(URI uri, URI uriI) throws SGL_Exception_Warning {
+	public void defineInverseURI(URI uri, URI uriI) throws SLIB_Ex_Warning {
 
 			
 		if(		inverses.containsKey(uri) && 
 				!inverses.get(uri).equals(uriI))
 			
-			throw new SGL_Exception_Warning("" +
+			throw new SLIB_Ex_Warning("" +
 					"Error Setting "+uriI+" as inverse of "+uri+"" +
 					"\nInverse URI already define for "+uri+"-> "+inverses.get(uri));
 
 		if(		inverses.containsKey(uriI) 
 				&& !inverses.get(uriI).equals(uri))
 			
-			throw new SGL_Exception_Warning("" +
+			throw new SLIB_Ex_Warning("" +
 					"Error Setting "+uri+" as inverse of "+uriI+"" +
 					"\nInverse URI already define for "+uriI+"-> "+inverses.get(uriI));
 
@@ -136,8 +136,8 @@ public class PredicateURIRepo implements IPredicateURIRepo{
 	}
 
 
-	public URI createInverse(URI eType) throws SGL_Ex_Critic {
-		URI inverse = load(SGLVOC.SGL_NS+eType.getLocalName()+"_inverse");
+	public URI createInverse(URI eType) throws SLIB_Ex_Critic {
+		URI inverse = load(SGLVOC.SLIB_NS+eType.getLocalName()+"_inverse");
 		return inverse;
 	}
 

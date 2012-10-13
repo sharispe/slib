@@ -46,7 +46,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>sml-toolkit-0.0.2-${maven.build.timestamp}-lib</finalName>
+		<finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
 
 		<resources>
 			<!-- include main.properties -->
@@ -74,7 +74,7 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 
 				<configuration>
-					<finalName>sml-toolkit-0.0.2-${maven.build.timestamp}</finalName>
+					<finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>

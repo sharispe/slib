@@ -60,8 +60,8 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_EC;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * http://www.biomedcentral.com/1471-2105/11/588/table/T3
@@ -93,7 +93,7 @@ public class BenchmarkBuilder_EC {
 	public void generateBenchmark(
 			G graph, 
 			InstancesAccessor instancesAccessor,
-			SmbbConf_GO_EC conf) throws SGL_Exception{
+			SmbbConf_GO_EC conf) throws SLIB_Exception{
 
 		this.g = graph;
 		this.instancesAccessor = instancesAccessor;
@@ -110,7 +110,7 @@ public class BenchmarkBuilder_EC {
 		loadVertex2EC_mapping();
 		
 		if(vertex2ec_mapping.size() == 0){
-			throw new SGL_Ex_Critic("Mapping results is empty, processed aborted");
+			throw new SLIB_Ex_Critic("Mapping results is empty, processed aborted");
 			
 		}
 		generateProtMapping();
@@ -120,7 +120,7 @@ public class BenchmarkBuilder_EC {
 
 
 
-	private void generateGeneECAnnotationFile() throws SGL_Ex_Critic {
+	private void generateGeneECAnnotationFile() throws SLIB_Ex_Critic {
 
 		logger.debug("generating Gene EC annotations");
 
@@ -145,12 +145,12 @@ public class BenchmarkBuilder_EC {
 
 
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
 
-	private void generateComparisonFile() throws SGL_Ex_Critic {
+	private void generateComparisonFile() throws SLIB_Ex_Critic {
 
 		logger.debug("computing EC scores & Generating output files...");
 		
@@ -204,7 +204,7 @@ public class BenchmarkBuilder_EC {
 			outGenePairsScoresFile.close();
 			outGenePairsFile.close();
 		}catch (IOException e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}		
 
@@ -251,7 +251,7 @@ public class BenchmarkBuilder_EC {
 
 
 
-	private void generateProtMapping() throws SGL_Exception {
+	private void generateProtMapping() throws SLIB_Exception {
 
 		prot2ec_mapping = new HashMap<V, HashSet<String>>();
 
@@ -282,7 +282,7 @@ public class BenchmarkBuilder_EC {
 
 
 
-	private void loadVertex2EC_mapping() throws SGL_Exception {
+	private void loadVertex2EC_mapping() throws SLIB_Exception {
 
 		logger.info("Loading mapping... ");
 
@@ -328,7 +328,7 @@ public class BenchmarkBuilder_EC {
 			}
 			in.close();
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic("Error: " + e.getMessage());
+			throw new SLIB_Ex_Critic("Error: " + e.getMessage());
 		}
 
 		//		for(V v : vertex2ec_mapping.keySet())

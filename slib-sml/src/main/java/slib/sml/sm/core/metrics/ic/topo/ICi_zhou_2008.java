@@ -39,7 +39,7 @@ package slib.sml.sm.core.metrics.ic.topo;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 
@@ -68,7 +68,7 @@ public class ICi_zhou_2008 implements ICtopo{
 	
 	
 	public ResultStack<V,Double> compute(	ResultStack<V,Integer> alldepths, 
-										ResultStack<V,Long> allNbDescendants) throws SGL_Exception{
+										ResultStack<V,Long> allNbDescendants) throws SLIB_Exception{
 
 		ResultStack<V,Double> results = new ResultStack<V,Double>(this.getClass().getSimpleName());
 		
@@ -97,7 +97,7 @@ public class ICi_zhou_2008 implements ICtopo{
 	}
 
 	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-			throws SGL_Exception {
+			throws SLIB_Exception {
 		
 		if(conf.containsParam("k"))
 			k = Double.parseDouble((String) conf.getParam("k"));

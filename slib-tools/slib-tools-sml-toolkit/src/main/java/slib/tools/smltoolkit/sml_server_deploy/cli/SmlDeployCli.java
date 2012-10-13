@@ -45,8 +45,8 @@ import org.slf4j.LoggerFactory;
 import slib.sml.sml_server_deploy.core.CmdExecutor;
 import slib.sml.sml_server_deploy.core.SmlDeployXMLLoader;
 import slib.tools.smltoolkit.SmlModuleCLI;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 
 public class SmlDeployCli implements SmlModuleCLI{
@@ -56,7 +56,7 @@ public class SmlDeployCli implements SmlModuleCLI{
 
 
 
-	public void execute(String[] args) throws SGL_Exception {
+	public void execute(String[] args) throws SLIB_Exception {
 		SmlDeployCmdHandler  c = new SmlDeployCmdHandler(args);
 
 		SmlDeployXMLLoader loader = new SmlDeployXMLLoader();
@@ -73,7 +73,7 @@ public class SmlDeployCli implements SmlModuleCLI{
 
 			cmdExecutor.runAllBenchmarks();
 		} catch (Exception e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 	}
 

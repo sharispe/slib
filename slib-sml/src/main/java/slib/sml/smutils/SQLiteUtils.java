@@ -60,8 +60,8 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Class used to process large SME results files through SQLlite databases
@@ -106,7 +106,7 @@ public class SQLiteUtils {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	private String[] getHeader(String filepath) throws SGL_Ex_Critic{
+	private String[] getHeader(String filepath) throws SLIB_Ex_Critic{
 
 		String[] header = null;
 
@@ -127,7 +127,7 @@ public class SQLiteUtils {
 			}
 			in.close();
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		return header;
 	}
@@ -171,7 +171,7 @@ public class SQLiteUtils {
 	 * 
 	 * @throws SGL_Exception
 	 */
-	public void createTableDB(String filepath, String db, String tableName) throws SGL_Ex_Critic{
+	public void createTableDB(String filepath, String db, String tableName) throws SLIB_Ex_Critic{
 
 
 		logger.info("Create SQLlite DB from "+filepath);
@@ -189,9 +189,9 @@ public class SQLiteUtils {
 			String[] header = getHeader(filepath);
 
 			if(header == null)
-				throw new SGL_Ex_Critic("Cannot locate header of file "+filepath);
+				throw new SLIB_Ex_Critic("Cannot locate header of file "+filepath);
 			else if(header.length < 2 )
-				throw new SGL_Ex_Critic("Corrupted file "+filepath+", header must contains at least two fields dtected header :" +implodeArray(header));
+				throw new SLIB_Ex_Critic("Corrupted file "+filepath+", header must contains at least two fields dtected header :" +implodeArray(header));
 
 			logger.info("Populating SQLlite DB ... be patient");
 
@@ -243,7 +243,7 @@ public class SQLiteUtils {
 							headerb = true;
 						else{
 							if(data.length != header.length)
-								throw new SGL_Ex_Critic("Corrupted file "+filepath+", result line "+countLine+" contains abnormal number of values considering header");
+								throw new SLIB_Ex_Critic("Corrupted file "+filepath+", result line "+countLine+" contains abnormal number of values considering header");
 							else{
 
 
@@ -273,7 +273,7 @@ public class SQLiteUtils {
 				}
 				in.close();
 			}catch (IOException e){//Catch exception if any
-				throw new SGL_Ex_Critic(e.getMessage());
+				throw new SLIB_Ex_Critic(e.getMessage());
 			}
 			prep.executeBatch();
 			conn.commit();
@@ -283,9 +283,9 @@ public class SQLiteUtils {
 
 		}
 		 catch (SQLException e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		} catch (ClassNotFoundException e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 	}
 
@@ -305,7 +305,7 @@ public class SQLiteUtils {
 	 * 
 	 * @throws SGL_Exception
 	 */
-	public void mergeTables(String db_tAB, String table_A, String table_B, String db_tmerge, String table_merge) throws SGL_Exception {
+	public void mergeTables(String db_tAB, String table_A, String table_B, String db_tmerge, String table_merge) throws SLIB_Exception {
 
 		mergeTables(db_tAB, table_A, db_tAB,  table_B, db_tmerge, table_merge);
 	}
@@ -327,7 +327,7 @@ public class SQLiteUtils {
 	 * 
 	 * @throws SGL_Exception
 	 */
-	public void mergeTables(String db_tA, String table_A, String db_tB, String table_B, String db_tmerge,String table_merge) throws SGL_Ex_Critic {
+	public void mergeTables(String db_tA, String table_A, String db_tB, String table_B, String db_tmerge,String table_merge) throws SLIB_Ex_Critic {
 
 		logger.info("Loading SQLlite DB : "+table_A+" from "+db_tA+"  "+table_B+" from "+db_tB);
 		logger.info("Batch limit : "+BATCH_LIMIT);
@@ -373,10 +373,10 @@ public class SQLiteUtils {
 			DatabaseMetaData meta_B = conn_B.getMetaData();
 
 			if( ! tablesExists(meta_A,table_A))
-				throw new SGL_Ex_Critic("Cannot find table "+table_A+" in database "+db_tA);
+				throw new SLIB_Ex_Critic("Cannot find table "+table_A+" in database "+db_tA);
 
 			if( ! tablesExists(meta_B,table_B))
-				throw new SGL_Ex_Critic("Cannot find table "+table_B+" in database "+db_tB);
+				throw new SLIB_Ex_Critic("Cannot find table "+table_B+" in database "+db_tB);
 
 
 			ArrayList<String> colNames_tA = new ArrayList<String>();
@@ -429,9 +429,9 @@ public class SQLiteUtils {
 			logger.info("Final header : "+headerMerge);
 
 			if(colNames_tB.size() == 0)
-				throw new SGL_Exception("Empty table "+table_A+", no values to merge");
+				throw new SLIB_Exception("Empty table "+table_A+", no values to merge");
 			if(colNames_tB.size() == 0)
-				throw new SGL_Exception("Empty table "+table_B+", no values to merge");
+				throw new SLIB_Exception("Empty table "+table_B+", no values to merge");
 
 			String header_m = "\""+e_A_flag+"\",\""+e_B_flag+"\"";
 			String header_q = "?,?";
@@ -541,7 +541,7 @@ public class SQLiteUtils {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -557,7 +557,7 @@ public class SQLiteUtils {
 	 * 
 	 * @throws SGL_Exception SQL_Exception are encompassed in a SGL_Exception 
 	 */
-	private boolean tablesExists(DatabaseMetaData dbMetadata,String table) throws SGL_Exception {
+	private boolean tablesExists(DatabaseMetaData dbMetadata,String table) throws SLIB_Exception {
 
 		try{
 			ResultSet res = dbMetadata.getTables(null, null, null, 
@@ -571,7 +571,7 @@ public class SQLiteUtils {
 			}
 		}
 		catch(SQLException e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		return false;
 	}
@@ -657,7 +657,7 @@ public class SQLiteUtils {
 	 *  
 	 * @throws SGL_Exception
 	 */
-	public void flushTableInFile(String sqlLiteDB, String table, String outfile) throws SGL_Ex_Critic {
+	public void flushTableInFile(String sqlLiteDB, String table, String outfile) throws SLIB_Ex_Critic {
 
 
 		logger.info("flushing SQLlite table "+table+" of database "+sqlLiteDB+" in "+outfile);
@@ -755,7 +755,7 @@ public class SQLiteUtils {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -768,7 +768,7 @@ public class SQLiteUtils {
 	 * @param newDB the name of the database where the new table will be created
 	 * @throws SGL_Exception 
 	 */
-	public void copyTable(String db, String table, String newDB,String tableNew) throws SGL_Ex_Critic {
+	public void copyTable(String db, String table, String newDB,String tableNew) throws SLIB_Ex_Critic {
 
 		logger.info("Copy SQLlite DB : "+table+" from "+db+" to "+newDB+" table "+tableNew);
 		logger.info("Batch limit : "+BATCH_LIMIT);
@@ -797,7 +797,7 @@ public class SQLiteUtils {
 			DatabaseMetaData metaNew = connNewDB.getMetaData();
 
 			if( ! tablesExists(meta,table))
-				throw new SGL_Ex_Critic("Cannot locate table "+table+" in database "+db);
+				throw new SLIB_Ex_Critic("Cannot locate table "+table+" in database "+db);
 
 			if( tablesExists(metaNew,tableNew))
 				logger.info("dropt table "+tableNew+" (already exists in database "+newDB+")");
@@ -884,7 +884,7 @@ public class SQLiteUtils {
 
 		}
 		catch(Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -897,7 +897,7 @@ public class SQLiteUtils {
 	 * SQLlite do not support ALTER column, a temporal copy of the table is performed during the process  
 	 * @throws SGL_Ex_Critic
 	 */
-	public void dropColumns(String db, String table, Set<String> columnsToDrop) throws SGL_Ex_Critic {
+	public void dropColumns(String db, String table, Set<String> columnsToDrop) throws SLIB_Ex_Critic {
 
 		logger.info("Drop Columns "+Arrays.toString(columnsToDrop.toArray())+" from "+table+" of database "+db);
 		logger.info("Batch limit : "+BATCH_LIMIT);
@@ -911,7 +911,7 @@ public class SQLiteUtils {
 			DatabaseMetaData meta    = conn.getMetaData();
 
 			if( ! tablesExists(meta,table))
-				throw new SGL_Ex_Critic("Cannot locate table "+table+" in database "+db);
+				throw new SLIB_Ex_Critic("Cannot locate table "+table+" in database "+db);
 
 			Statement stat 	   = conn.createStatement();
 			Statement statDrop = conn.createStatement();
@@ -1009,7 +1009,7 @@ public class SQLiteUtils {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -1019,7 +1019,7 @@ public class SQLiteUtils {
 	 * @param table the name of table to drop
 	 * @throws SGL_Exception 
 	 */
-	public  void dropTable(String db, String table) throws SGL_Ex_Critic {
+	public  void dropTable(String db, String table) throws SLIB_Ex_Critic {
 
 		logger.info("Drop table : "+table+" from "+db);
 
@@ -1038,7 +1038,7 @@ public class SQLiteUtils {
 
 		}
 		catch(Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -1049,7 +1049,7 @@ public class SQLiteUtils {
 	 * @param db the database
 	 * @throws SGL_Exception 
 	 */
-	public void getInfo(String db) throws SGL_Ex_Critic {
+	public void getInfo(String db) throws SLIB_Ex_Critic {
 
 		getInfo(db,null);
 	}
@@ -1060,7 +1060,7 @@ public class SQLiteUtils {
 	 * @param table the table
 	 * @throws SGL_Exception 
 	 */
-	public void getInfo(String db, String table) throws SGL_Ex_Critic {
+	public void getInfo(String db, String table) throws SLIB_Ex_Critic {
 
 
 		try{
@@ -1120,7 +1120,7 @@ public class SQLiteUtils {
 			System.out.println(dbInfo);
 		}
 		catch(Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
@@ -1132,7 +1132,7 @@ public class SQLiteUtils {
 	 * @param newTableName
 	 * @throws SGL_Exception 
 	 */
-	public void renameTable(String db, String table, String newTableName) throws SGL_Ex_Critic {
+	public void renameTable(String db, String table, String newTableName) throws SLIB_Ex_Critic {
 
 		logger.info("Rename table : "+table+" from "+db+" to "+newTableName);
 
@@ -1152,7 +1152,7 @@ public class SQLiteUtils {
 		}
 		catch(Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 	
@@ -1242,7 +1242,7 @@ public class SQLiteUtils {
 
 			sqlLiteUtil.getInfo(sqlLiteDB,table_rename);
 		} 
-		catch (SGL_Exception e) {
+		catch (SLIB_Exception e) {
 			e.printStackTrace();
 		}
 	}

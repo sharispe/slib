@@ -43,7 +43,7 @@ import slib.sml.sm.core.measures.framework.core.engine.IGraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.utils.OperatorConf;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 
@@ -65,7 +65,7 @@ public class OperatorsSet extends RepresentationOperators{
 	 * 
 	 * The {@link OperatorsSet} implementation evaluates commonalities as the cardinality of the set intersection.
 	 */
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception{
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep_a).anc;
 		Set<V> b = ((GraphRepresentationAsSet) rep_b).anc;
@@ -82,7 +82,7 @@ public class OperatorsSet extends RepresentationOperators{
 	 */
 	public double subtraction(GraphRepresentation rep_a,
 			GraphRepresentation rep_b, SM_Engine manager)
-			throws SGL_Exception {
+			throws SLIB_Exception {
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep_a).anc;
 		Set<V> b = ((GraphRepresentationAsSet) rep_b).anc;
@@ -97,7 +97,7 @@ public class OperatorsSet extends RepresentationOperators{
 	 * as the summed cardinality of the compared {@link GraphRepresentation} 
 	 * minus twice the cardinality of their intersection.
 	 */
-	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception {
+	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep_a).anc;
 		Set<V> b = ((GraphRepresentationAsSet) rep_b).anc;
@@ -124,7 +124,7 @@ public class OperatorsSet extends RepresentationOperators{
 	 * 
 	 * The {@link OperatorsSet} implementation defines the informativeness as the cardinality of the set of vertices
 	 */
-	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SGL_Exception {
+	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SLIB_Exception {
 		return ((GraphRepresentationAsSet) rep).anc.size();
 	}
 
@@ -172,7 +172,7 @@ public class OperatorsSet extends RepresentationOperators{
 	 * <br/><br/> See interface doc below <br/> {@inheritDoc}
 	 */
 	public boolean validateRules(GraphRepresentation a,
-			GraphRepresentation b, SM_Engine manager) throws SGL_Exception {
+			GraphRepresentation b, SM_Engine manager) throws SLIB_Exception {
 		return supportRepresentations(a,b);
 		
 	}

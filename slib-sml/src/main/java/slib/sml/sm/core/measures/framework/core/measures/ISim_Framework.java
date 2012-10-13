@@ -39,7 +39,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 public interface ISim_Framework {
 
@@ -47,5 +47,5 @@ public interface ISim_Framework {
 			V b, 
 			SM_Engine c, 
 			RepresentationOperators operator, 
-			SMconf conf) throws SGL_Exception;
+			SMconf conf) throws SLIB_Exception;
 }

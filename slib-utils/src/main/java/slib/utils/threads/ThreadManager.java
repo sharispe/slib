@@ -40,7 +40,7 @@ package slib.utils.threads;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class ThreadManager extends PoolLocker{
 	
@@ -61,7 +61,7 @@ public class ThreadManager extends PoolLocker{
     	super(MAX_THREAD_DEFAULT);
     }
     
-    public PoolWorker getMaxLoadPoolWorker() throws SGL_Ex_Critic{
+    public PoolWorker getMaxLoadPoolWorker() throws SLIB_Ex_Critic{
     	
     	synchronized(lock) {
     		
@@ -75,15 +75,15 @@ public class ThreadManager extends PoolLocker{
     	}
     }
     
-    public PoolWorker getPoolWorker(int size) throws SGL_Ex_Critic{
+    public PoolWorker getPoolWorker(int size) throws SLIB_Ex_Critic{
     	
     	synchronized(lock) {
     		
         	if(size > capacity)
-        		throw new SGL_Ex_Critic("Error during pool worker request maximum Number of thread "+capacity+" requested "+size);
+        		throw new SLIB_Ex_Critic("Error during pool worker request maximum Number of thread "+capacity+" requested "+size);
         	
         	else if(running + size > capacity)
-        		throw new SGL_Ex_Critic("Unable to allocate the requested number of threads, available "+(capacity-running)+" requested "+size);
+        		throw new SLIB_Ex_Critic("Unable to allocate the requested number of threads, available "+(capacity-running)+" requested "+size);
         	
         	running += size;
         	

@@ -41,7 +41,7 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -61,7 +61,7 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_LP extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SGL_Exception {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 		
 		Set<V> ancestors_setA = rc.getAncestors(setA);
 		Set<V> ancestors_setB = rc.getAncestors(setB);

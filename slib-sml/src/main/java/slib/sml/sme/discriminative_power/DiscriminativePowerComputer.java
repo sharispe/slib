@@ -49,7 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sml.sme.utils.SymmetricResultStack;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.BigFileReader;
 
 public class DiscriminativePowerComputer {
@@ -74,7 +74,7 @@ public class DiscriminativePowerComputer {
 
 
 	public void compute(String clansfile, String protComparison,
-			Double max_value,String out) throws SGL_Ex_Critic {
+			Double max_value,String out) throws SLIB_Ex_Critic {
 		
 		if(max_value != null)
 			this.max_value = max_value;
@@ -85,7 +85,7 @@ public class DiscriminativePowerComputer {
 	}
 
 
-	private void loadClans(String clansFile) throws SGL_Ex_Critic {
+	private void loadClans(String clansFile) throws SLIB_Ex_Critic {
 		logger.info("Loading Clans information from: "+clansFile);
 
 		protClanMapping = new HashMap<String, String>();
@@ -107,7 +107,7 @@ public class DiscriminativePowerComputer {
 				String uniprotKBs = data[1];
 
 				if(clanProteins.containsKey(clanID))
-					throw new SGL_Ex_Critic("Duplicate clan specification: "+clanID);
+					throw new SLIB_Ex_Critic("Duplicate clan specification: "+clanID);
 
 				clanProteins.put(clanID, new HashSet<String>());
 
@@ -122,15 +122,15 @@ public class DiscriminativePowerComputer {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		logger.info(protClanMapping.size()+" clans loaded");
 		
 		if(protClanMapping.size() == 0)
-			throw new SGL_Ex_Critic("Cannot perform treatments without clans loaded");
+			throw new SLIB_Ex_Critic("Cannot perform treatments without clans loaded");
 	}
 
-	public void loadingScore(String infile) throws SGL_Ex_Critic{
+	public void loadingScore(String infile) throws SLIB_Ex_Critic{
 		logger.info("Loading Sims  from: "+infile);
 
 		ArrayList<String> methodsFlags = null;
@@ -164,19 +164,19 @@ public class DiscriminativePowerComputer {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
-	public double getResult(String methID, String o1, String o2) throws SGL_Ex_Critic{
+	public double getResult(String methID, String o1, String o2) throws SLIB_Ex_Critic{
 
 		if(methResults.containsKey(methID)){
 			return methResults.get(methID).getSim(o1, o2);
 		}
-		throw new SGL_Ex_Critic("Cannot find result stack for "+methID);
+		throw new SLIB_Ex_Critic("Cannot find result stack for "+methID);
 	}
 
-	public double computeIntraSetSim(String methID, String clan) throws SGL_Ex_Critic{
+	public double computeIntraSetSim(String methID, String clan) throws SLIB_Ex_Critic{
 
 		ArrayList<String> allProtClan = new ArrayList<String>(clanProteins.get(clan));
 
@@ -193,7 +193,7 @@ public class DiscriminativePowerComputer {
 		return intraSetSim;
 	}
 
-	public double computeInterSetSim(String methID, String clan_a, String clan_b) throws SGL_Ex_Critic{
+	public double computeInterSetSim(String methID, String clan_a, String clan_b) throws SLIB_Ex_Critic{
 
 		ArrayList<String> allProtClan_a = new ArrayList<String>(clanProteins.get(clan_a));
 		ArrayList<String> allProtClan_b = new ArrayList<String>(clanProteins.get(clan_b));
@@ -212,7 +212,7 @@ public class DiscriminativePowerComputer {
 		return interSetSim;
 	}
 
-	public double computeDiscriminativePower(String methID,String clan) throws SGL_Ex_Critic{
+	public double computeDiscriminativePower(String methID,String clan) throws SLIB_Ex_Critic{
 
 		int 	p  = clanProteins.keySet().size()-1;
 		double intraSetSim = computeIntraSetSim(methID, clan);
@@ -233,7 +233,7 @@ public class DiscriminativePowerComputer {
 		return dp;
 	}
 
-	public void computeAllDiscriminativePower(String outfile) throws SGL_Ex_Critic{
+	public void computeAllDiscriminativePower(String outfile) throws SLIB_Ex_Critic{
 
 		try{
 			FileWriter fstream = new FileWriter(outfile);
@@ -260,11 +260,11 @@ public class DiscriminativePowerComputer {
 			
 			logger.info("discriminative powers calculated, consult: "+outfile);
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
-	public static void main(String[] args) throws SGL_Ex_Critic {
+	public static void main(String[] args) throws SLIB_Ex_Critic {
 
 		String dir = System.getProperty("user.dir");
 

@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 
 public class SmlDeployCmdHandler extends CmdHandler {
@@ -57,7 +57,7 @@ public class SmlDeployCmdHandler extends CmdHandler {
 	static Logger logger = LoggerFactory.getLogger(SmlDeployCmdHandler.class);
 	
 
-	public SmlDeployCmdHandler(String[] args)throws SGL_Exception {
+	public SmlDeployCmdHandler(String[] args)throws SLIB_Exception {
 		super(new SmlDeployCst(), new SmlDeployCmdHandlerCst(), args);
 	}
 

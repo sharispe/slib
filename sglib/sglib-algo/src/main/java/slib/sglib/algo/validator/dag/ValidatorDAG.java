@@ -53,7 +53,7 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.WalkConstraints;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -81,7 +81,7 @@ public class ValidatorDAG {
 	 *  Algorithm
 	 *---------------------------------------------------------------------*/
 
-	public boolean isDag(G graph, Set<URI> rootURIs, Set<URI> edgesTypes, Direction dir) throws SGL_Ex_Critic{
+	public boolean isDag(G graph, Set<URI> rootURIs, Set<URI> edgesTypes, Direction dir) throws SLIB_Ex_Critic{
 
 		this.direction = dir;
 
@@ -107,7 +107,7 @@ public class ValidatorDAG {
 			V root	= graph.getV(rootUri);
 
 			if(root == null)
-				throw new SGL_Ex_Critic("Vertex '"+rootUri+"' not found in "+graph.getURI());
+				throw new SLIB_Ex_Critic("Vertex '"+rootUri+"' not found in "+graph.getURI());
 
 			performDFS(root);
 		}
@@ -152,7 +152,7 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean containsTaxonomicDag(G graph) throws SGL_Ex_Critic{
+	public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic{
 		return isDag(graph, RDFS.SUBCLASSOF,Direction.IN);
 	}
 
@@ -165,7 +165,7 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean isDag(G graph, URI type, Direction dir) throws SGL_Ex_Critic{
+	public boolean isDag(G graph, URI type, Direction dir) throws SLIB_Ex_Critic{
 		return isDag(graph, SetUtils.buildSet(type),dir);
 	}
 
@@ -180,11 +180,11 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean isDag(G graph, URI rootURI, Set<URI> edgeTypes, Direction dir) throws SGL_Ex_Critic{
+	public boolean isDag(G graph, URI rootURI, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic{
 		return isDag(graph, SetUtils.buildSet(rootURI), edgeTypes, dir);
 	}
 
-	public boolean containsTaxonomicalDag(G graph) throws SGL_Ex_Critic{
+	public boolean containsTaxonomicalDag(G graph) throws SLIB_Ex_Critic{
 		return isDag(graph, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
 	}
 
@@ -198,7 +198,7 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean isDag(G graph, URI rootURI, URI type, Direction dir) throws SGL_Ex_Critic{
+	public boolean isDag(G graph, URI rootURI, URI type, Direction dir) throws SLIB_Ex_Critic{
 		return isDag(graph, rootURI, SetUtils.buildSet(type), dir);
 	}
 
@@ -215,7 +215,7 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SGL_Ex_Critic{
+	public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic{
 
 		Set<V> roots = getDAGRoots(graph, edgeTypes,dir.opposite());
 
@@ -261,7 +261,7 @@ public class ValidatorDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean containsRootedTaxonomicDag(G g) throws SGL_Ex_Critic{
+	public boolean containsRootedTaxonomicDag(G g) throws SLIB_Ex_Critic{
 
 		
 		Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.OUT);
@@ -295,12 +295,12 @@ public class ValidatorDAG {
 	 * @throws SGL_Ex_Critic
 	 * @see 
 	 */
-	public V getRootedTaxonomicDAGRoot(G g) throws SGL_Ex_Critic {
+	public V getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
 
 		Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.OUT);
 
 		if(roots.size() != 1)
-			throw new SGL_Ex_Critic("Multiple root detected");
+			throw new SLIB_Ex_Critic("Multiple root detected");
 
 		return roots.iterator().next();
 	}
@@ -343,7 +343,7 @@ public class ValidatorDAG {
 	 * @return
 	 * @throws SGL_Ex_Critic 
 	 */
-	public boolean isUniqueRootedDagRoot(G g, URI rootURI, URI edgesType) throws SGL_Ex_Critic {
+	public boolean isUniqueRootedDagRoot(G g, URI rootURI, URI edgesType) throws SLIB_Ex_Critic {
 
 		return isUniqueRootedDagRoot(g, rootURI, SetUtils.buildSet(edgesType),Direction.IN);
 	}
@@ -354,7 +354,7 @@ public class ValidatorDAG {
 	 * @return
 	 * @throws SGL_Ex_Critic 
 	 */
-	public boolean isUniqueRootedTaxonomicDag(G g, URI rootURI) throws SGL_Ex_Critic {
+	public boolean isUniqueRootedTaxonomicDag(G g, URI rootURI) throws SLIB_Ex_Critic {
 
 		return isUniqueRootedDagRoot(g, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.IN);
 	}
@@ -367,7 +367,7 @@ public class ValidatorDAG {
 	 * @return
 	 * @throws SGL_Ex_Critic 
 	 */
-	public boolean isUniqueRootedDagRoot(G g, URI rootURI, Set<URI> edgesType, Direction dir) throws SGL_Ex_Critic {
+	public boolean isUniqueRootedDagRoot(G g, URI rootURI, Set<URI> edgesType, Direction dir) throws SLIB_Ex_Critic {
 
 		if( isDag(g, edgesType, dir) ){
 

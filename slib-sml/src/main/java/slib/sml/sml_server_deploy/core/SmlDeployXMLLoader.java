@@ -25,7 +25,7 @@ import slib.sml.sml_server_deploy.core.utils.Benchmark;
 import slib.sml.sml_server_deploy.core.utils.BenchmarkInput;
 import slib.sml.sml_server_deploy.core.utils.CmdProfile;
 import slib.sml.sml_server_deploy.core.utils.Command;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
 public class SmlDeployXMLLoader {
@@ -40,7 +40,7 @@ public class SmlDeployXMLLoader {
 	LinkedList<CmdProfile>  cmdProfilesCollection;
 	LinkedList<Benchmark>   benchmarksList;
 
-	public CmdExecutor loadConf(String xmlFile) throws SGL_Ex_Critic{
+	public CmdExecutor loadConf(String xmlFile) throws SLIB_Ex_Critic{
 
 		executor = new CmdExecutor();
 
@@ -124,13 +124,13 @@ public class SmlDeployXMLLoader {
 
 		} catch (Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
 
 
-	private void checkIncoherencies() throws SGL_Ex_Critic {
+	private void checkIncoherencies() throws SLIB_Ex_Critic {
 		// Check basic incoherencies 
 		// cmd id duplicate
 
@@ -138,7 +138,7 @@ public class SmlDeployXMLLoader {
 			for(int j = i+1; j < cmdCollection.size();j++){
 
 				if(cmdCollection.get(i).getName().equalsIgnoreCase(cmdCollection.get(j).getName())){
-					throw new SGL_Ex_Critic("Duplicate Command id (Ignore case) "+cmdCollection.get(i).getName());
+					throw new SLIB_Ex_Critic("Duplicate Command id (Ignore case) "+cmdCollection.get(i).getName());
 				}
 			}	
 		}
@@ -150,7 +150,7 @@ public class SmlDeployXMLLoader {
 
 
 				if(cmdProfilesCollection.get(i).getName().equalsIgnoreCase(cmdProfilesCollection.get(j).getName())){
-					throw new SGL_Ex_Critic("Duplicate Command profiles id (Ignore case) "+cmdProfilesCollection.get(i).getName());
+					throw new SLIB_Ex_Critic("Duplicate Command profiles id (Ignore case) "+cmdProfilesCollection.get(i).getName());
 				}
 			}	
 		}
@@ -161,7 +161,7 @@ public class SmlDeployXMLLoader {
 			for(int j = i+1; j < benchmarksList.size();j++){
 
 				if(benchmarksList.get(i).getName().equalsIgnoreCase(benchmarksList.get(j).getName())){
-					throw new SGL_Ex_Critic("Duplicate Benchmark id (Ignore case) "+benchmarksList.get(i).getName());
+					throw new SLIB_Ex_Critic("Duplicate Benchmark id (Ignore case) "+benchmarksList.get(i).getName());
 				}
 			}	
 		}
@@ -169,7 +169,7 @@ public class SmlDeployXMLLoader {
 
 
 
-	private LinkedList<Command> buildCommands(NodeList list) throws SGL_Ex_Critic {
+	private LinkedList<Command> buildCommands(NodeList list) throws SLIB_Ex_Critic {
 
 		LinkedList<Command> listCmds = new LinkedList<Command>();
 
@@ -220,7 +220,7 @@ public class SmlDeployXMLLoader {
 	}
 
 
-	private LinkedList<CmdProfile> buildCmdProfiles(NodeList list) throws SGL_Ex_Critic {
+	private LinkedList<CmdProfile> buildCmdProfiles(NodeList list) throws SLIB_Ex_Critic {
 
 
 		LinkedList<CmdProfile> listCmdProfiles = new LinkedList<CmdProfile>();
@@ -275,7 +275,7 @@ public class SmlDeployXMLLoader {
 					}
 
 					if(!f)
-						throw new SGL_Ex_Critic("Cannot find command '"+cmd_id+"' used in profile  "+name);
+						throw new SLIB_Ex_Critic("Cannot find command '"+cmd_id+"' used in profile  "+name);
 				}
 				profile.setWorkflow(workflow);
 				listCmdProfiles.add(profile);
@@ -285,7 +285,7 @@ public class SmlDeployXMLLoader {
 	}
 
 
-	private LinkedList<Benchmark> buildBenchmarksConfig(NodeList list) throws SGL_Ex_Critic {
+	private LinkedList<Benchmark> buildBenchmarksConfig(NodeList list) throws SLIB_Ex_Critic {
 
 
 		LinkedList<Benchmark> listBenchmarks = new LinkedList<Benchmark>();
@@ -414,7 +414,7 @@ public class SmlDeployXMLLoader {
 
 	}
 
-	private LinkedList<CmdProfile> buildProfile(NodeList list) throws SGL_Ex_Critic {
+	private LinkedList<CmdProfile> buildProfile(NodeList list) throws SLIB_Ex_Critic {
 
 
 		LinkedList<CmdProfile> profiles = new LinkedList<CmdProfile>();
@@ -452,7 +452,7 @@ public class SmlDeployXMLLoader {
 				}
 				
 				if(!f)
-					throw new SGL_Ex_Critic("Cannot find cmd_profile id "+cmd_profile_id+"  type "+cmd_profile_type+" in benchmarks ");
+					throw new SLIB_Ex_Critic("Cannot find cmd_profile id "+cmd_profile_id+"  type "+cmd_profile_type+" in benchmarks ");
 
 				profiles.add(p);
 			}
@@ -496,7 +496,7 @@ public class SmlDeployXMLLoader {
 		return vars;
 	}
 
-	private LinkedHashSet<Entry<String, String>> buildEntries(NodeList list) throws SGL_Ex_Critic {
+	private LinkedHashSet<Entry<String, String>> buildEntries(NodeList list) throws SLIB_Ex_Critic {
 
 		LinkedHashSet<Entry<String, String>> gConfSet = new LinkedHashSet<Entry<String, String>>();
 
@@ -523,7 +523,7 @@ public class SmlDeployXMLLoader {
 		return value;
 	}
 
-	public static void main(String[] args) throws SGL_Ex_Critic, IOException, InterruptedException {
+	public static void main(String[] args) throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		SmlDeployXMLLoader loader = new SmlDeployXMLLoader();
 

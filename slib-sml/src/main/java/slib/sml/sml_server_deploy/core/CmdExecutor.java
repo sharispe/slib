@@ -28,7 +28,7 @@ import slib.sml.sml_server_deploy.core.utils.BenchmarkInput;
 import slib.sml.sml_server_deploy.core.utils.CmdProfile;
 import slib.sml.sml_server_deploy.core.utils.Command;
 import slib.sml.sml_server_deploy.core.utils.TreadIO;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class CmdExecutor {
 
@@ -96,7 +96,7 @@ public class CmdExecutor {
 	}
 
 
-	private void run(Benchmark benchmark) throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void run(Benchmark benchmark) throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 
 		logger.info("------------------------------------------------");
@@ -156,7 +156,7 @@ public class CmdExecutor {
 			logInfo("Skipping hook "+DEF_HOOK_POSTPROCESS);
 	}
 
-	private void defaultHooks(Benchmark b) throws SGL_Ex_Critic {
+	private void defaultHooks(Benchmark b) throws SLIB_Ex_Critic {
 
 		logInfo("Apply default hooks for benchmarks type "+b.getType());
 
@@ -207,14 +207,14 @@ public class CmdExecutor {
 
 	}
 
-	private void generateConfFromTemplate(Benchmark b,String templateVarName, String produceConfVarName) throws SGL_Ex_Critic {
+	private void generateConfFromTemplate(Benchmark b,String templateVarName, String produceConfVarName) throws SLIB_Ex_Critic {
 
 		logInfo("Generating configuration file "+templateVarName);
 
 		String smbb_xml_template_file_path = getVariable(b,templateVarName);
 
 		if(smbb_xml_template_file_path == null)
-			throw new SGL_Ex_Critic("Cannot state required variable "+templateVarName);
+			throw new SLIB_Ex_Critic("Cannot state required variable "+templateVarName);
 
 
 		smbb_xml_template_file_path = applyPatterns(b,smbb_xml_template_file_path);
@@ -228,7 +228,7 @@ public class CmdExecutor {
 		String output_template = getVariable(b,produceConfVarName);
 
 		if(output_template == null)
-			throw new SGL_Ex_Critic("Cannot state required variable "+produceConfVarName);
+			throw new SLIB_Ex_Critic("Cannot state required variable "+produceConfVarName);
 
 		output_template = applyPatterns(b,output_template);
 
@@ -239,7 +239,7 @@ public class CmdExecutor {
 			out.write(output);
 			out.close();
 		} catch (IOException e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 
 		logInfo("Conf build from template");
@@ -251,7 +251,7 @@ public class CmdExecutor {
 			dirConf.mkdir();
 	}
 
-	private String buildConfFromTemplate(Benchmark b,String templatepath) throws SGL_Ex_Critic {
+	private String buildConfFromTemplate(Benchmark b,String templatepath) throws SLIB_Ex_Critic {
 
 		String out = "";
 		try{
@@ -280,7 +280,7 @@ public class CmdExecutor {
 
 					if(value == null){
 
-						throw new SGL_Ex_Critic("Undefined pattern '"+vName+"' used in template "+templatepath+" please define the corresponding pattern.");
+						throw new SLIB_Ex_Critic("Undefined pattern '"+vName+"' used in template "+templatepath+" please define the corresponding pattern.");
 					}
 
 					line = line.replaceAll("\\|\\|\\|"+vName+"\\|\\|\\|", value);
@@ -296,7 +296,7 @@ public class CmdExecutor {
 
 			in.close();
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 		return out;
 	}
@@ -310,7 +310,7 @@ public class CmdExecutor {
 
 	}
 
-	private void loadToDataDirectory(Benchmark b,BenchmarkInput i) throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void loadToDataDirectory(Benchmark b,BenchmarkInput i) throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		String filepath = applyPatterns(b,i.getPath());
 		File f = new File(filepath);
@@ -321,7 +321,7 @@ public class CmdExecutor {
 		File ftarget = new File(data_directory+"/"+fname);
 
 		if(!f.exists())
-			throw new SGL_Ex_Critic("Cannot locate file '"+filepath+"'");
+			throw new SLIB_Ex_Critic("Cannot locate file '"+filepath+"'");
 
 
 		if(!ftarget.exists()){
@@ -337,13 +337,13 @@ public class CmdExecutor {
 		}
 	}
 
-	private void run(Benchmark b,Command command) throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void run(Benchmark b,Command command) throws SLIB_Ex_Critic, IOException, InterruptedException {
 		logInfo("Executing command "+command.getName());
 		run(applyPatterns(b,command));
 
 	}
 
-	private void run(String cmd) throws IOException, InterruptedException, SGL_Ex_Critic{
+	private void run(String cmd) throws IOException, InterruptedException, SLIB_Ex_Critic{
 
 		cmd = cmd.trim();
 
@@ -365,7 +365,7 @@ public class CmdExecutor {
 		logInfo("Done 		"+cmd);
 
 		if(status != 0)
-			throw new SGL_Ex_Critic("Error abnormal exit status executing command '"+cmd+"', consult log");
+			throw new SLIB_Ex_Critic("Error abnormal exit status executing command '"+cmd+"', consult log");
 	}
 
 	private String[] buildCmd(String cmd) {
@@ -380,7 +380,7 @@ public class CmdExecutor {
 
 
 
-	private String applyPatterns(boolean isGlobalPattern,Map<String,String> variables, String v) throws SGL_Ex_Critic{
+	private String applyPatterns(boolean isGlobalPattern,Map<String,String> variables, String v) throws SLIB_Ex_Critic{
 
 
 		Pattern p = patternGlobalRgx;
@@ -408,7 +408,7 @@ public class CmdExecutor {
 				for(String k : variables.keySet())
 					loadedPatters += "key='"+k+"'\tvalue='"+variables.get(k)+"'\n";
 
-				throw new SGL_Ex_Critic("Undefined "+scopeInfo+" pattern '"+vName+"' used in "+v+" please define the corresponding pattern." +
+				throw new SLIB_Ex_Critic("Undefined "+scopeInfo+" pattern '"+vName+"' used in "+v+" please define the corresponding pattern." +
 						"\nLoaded patters " + loadedPatters);
 			}
 
@@ -421,7 +421,7 @@ public class CmdExecutor {
 	}
 
 
-	private String applyPatterns(Benchmark b, Command cmd) throws SGL_Ex_Critic {
+	private String applyPatterns(Benchmark b, Command cmd) throws SLIB_Ex_Critic {
 
 		String cmd_build = cmd.getCommandPattern();
 
@@ -445,13 +445,13 @@ public class CmdExecutor {
 			attemps++;
 
 			if(attemps == 10)
-				throw new SGL_Ex_Critic("Unable to compile the following command pattern using 10 iterations. " +
+				throw new SLIB_Ex_Critic("Unable to compile the following command pattern using 10 iterations. " +
 						"Note that recursive definitions are not allowed.\n"+cmd.getCommandPattern());
 		}
 		return cmd_build;	
 	}
 
-	private String applyPatterns(Benchmark b,String cmd) throws SGL_Ex_Critic {
+	private String applyPatterns(Benchmark b,String cmd) throws SLIB_Ex_Critic {
 
 		//		logInfo("Applying patterns : "+cmd);
 		int attemps = 0;
@@ -470,7 +470,7 @@ public class CmdExecutor {
 			attemps++;
 
 			if(attemps == 10)
-				throw new SGL_Ex_Critic("Unable to compile the following command pattern using 10 iterations. " +
+				throw new SLIB_Ex_Critic("Unable to compile the following command pattern using 10 iterations. " +
 						"Note that recursive definitions are not allowed.\n"+cmd);
 		}
 
@@ -485,7 +485,7 @@ public class CmdExecutor {
 	}
 
 
-	public void runAllBenchmarks() throws SGL_Ex_Critic, IOException, InterruptedException {
+	public void runAllBenchmarks() throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		applyBenchmarkRestrictions();
 
@@ -596,7 +596,7 @@ public class CmdExecutor {
 	 * Generate the XML file containing information about all benchmarks
 	 * @throws SGL_Ex_Critic
 	 */
-	private void generateFinalXMLinfo() throws SGL_Ex_Critic {
+	private void generateFinalXMLinfo() throws SLIB_Ex_Critic {
 
 		logger.info("Generate Final XML information file considering "+benchmarks.size()+" benchmark(s)");
 
@@ -672,7 +672,7 @@ public class CmdExecutor {
 			}
 
 		}catch (Exception e){//Catch exception if any
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 	}
 
@@ -682,7 +682,7 @@ public class CmdExecutor {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private void preprocessing() throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void preprocessing() throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		// Create the data directory if required
 		File dataDir = new File(data_directory);
@@ -708,21 +708,21 @@ public class CmdExecutor {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	private void checkRequiredGlobalVariables() throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void checkRequiredGlobalVariables() throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		for(Entry<String, String> e : requiredGlobalVariables.entrySet()){
 			if(!globalVariables.containsKey(e.getKey()))
-				throw new SGL_Ex_Critic("Missing GLOBAL variable : "+e.getKey()+"\n information : "+e.getValue());
+				throw new SLIB_Ex_Critic("Missing GLOBAL variable : "+e.getKey()+"\n information : "+e.getValue());
 		}
 
 		data_directory = globalVariables.get("DATA_DIRECTORY");
 	}
 	
-	private void checkRequiredLocalVariables(Benchmark b) throws SGL_Ex_Critic, IOException, InterruptedException {
+	private void checkRequiredLocalVariables(Benchmark b) throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		for(Entry<String, String> e : requiredLocalVariables.entrySet()){
 			if(!b.getLocalVariables().containsKey(e.getKey()))
-				throw new SGL_Ex_Critic("Missing LOCAL variable : "+e.getKey()+" in '"+b.getName()+"' benchmark configuration  \n information : "+e.getValue());
+				throw new SLIB_Ex_Critic("Missing LOCAL variable : "+e.getKey()+" in '"+b.getName()+"' benchmark configuration  \n information : "+e.getValue());
 		}
 
 		data_directory = globalVariables.get("DATA_DIRECTORY");

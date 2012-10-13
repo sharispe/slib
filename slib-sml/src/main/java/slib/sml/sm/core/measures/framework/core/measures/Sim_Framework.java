@@ -41,7 +41,7 @@ import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 
 public abstract class Sim_Framework implements ISim_Framework{
@@ -49,7 +49,7 @@ public abstract class Sim_Framework implements ISim_Framework{
 
 	public final double sim(V a, V b, SM_Engine c,
 			RepresentationOperators operator, SMconf conf)
-			throws SGL_Exception {
+			throws SLIB_Exception {
 		
 		GraphRepresentation rep_a = c.getRepresentation(a,conf);
 		GraphRepresentation rep_b = c.getRepresentation(b,conf);
@@ -57,7 +57,7 @@ public abstract class Sim_Framework implements ISim_Framework{
 		return sim(rep_a,rep_b,c,operator,conf);
 	}
 
-	public final double sim(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SGL_Exception{
+	public final double sim(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SLIB_Exception{
 		
 		if(!operator.validateRules(rep_a, rep_b, c))
 			return operator.getRulesInvalidatedScore();
@@ -65,6 +65,6 @@ public abstract class Sim_Framework implements ISim_Framework{
 		return compute(rep_a, rep_b, c, operator, conf);
 	}
 	
-	protected abstract double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SGL_Exception;
+	protected abstract double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SLIB_Exception;
 
 }

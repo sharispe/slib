@@ -40,7 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
 public class MatrixDynamic<N extends Number>{
@@ -120,9 +120,9 @@ public class MatrixDynamic<N extends Number>{
 		return rowIndex.size();
 	}
 	
-	public void addColumn(Object r) throws SGL_Ex_Critic{
+	public void addColumn(Object r) throws SLIB_Ex_Critic{
 		if(columnIndex.containsKey(r))
-			throw new SGL_Ex_Critic("Column "+r+"already exists");
+			throw new SLIB_Ex_Critic("Column "+r+"already exists");
 		
 		int id = columnIndex.size()+1;
 		columnIndex.put(r, id);
@@ -135,9 +135,9 @@ public class MatrixDynamic<N extends Number>{
 		matrix.add(column);
 	}
 	
-	public void addRow(Object r) throws SGL_Ex_Critic{
+	public void addRow(Object r) throws SLIB_Ex_Critic{
 		if(rowIndex.containsKey(r))
-			throw new SGL_Ex_Critic("Row "+r+"already exists");
+			throw new SLIB_Ex_Critic("Row "+r+"already exists");
 		
 		int id = rowIndex.size()+1;
 		rowIndex.put(r, id);

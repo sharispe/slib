@@ -40,13 +40,13 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class Sim_pairwise_DAG_node_Schlicker_3WJaccard_SimRel implements Sim_DAG_node_abstract{
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -55,7 +55,7 @@ public class Sim_pairwise_DAG_node_Schlicker_3WJaccard_SimRel implements Sim_DAG
 		ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
 		
 		if(confic == null)
-			throw new SGL_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
+			throw new SLIB_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
 		
 		double p_MICA  = c.getP_MICA( confic, a,b);
 		

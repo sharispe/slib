@@ -39,7 +39,7 @@ package slib.sglib.io.loader;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.model.graph.G;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 
 /**
@@ -57,7 +57,7 @@ public interface IGraphLoader {
 	 * @throws SGL_Exception if an error is thrown during loading. 
 	 * Note that all exceptions are encapsulated in a {@link SGL_Exception} 
 	 */
-	public G load(GraphConf conf) throws SGL_Exception;
+	public G load(GraphConf conf) throws SLIB_Exception;
 	
 	/**
 	 * Populate an existing graph considering the given configuration
@@ -66,6 +66,6 @@ public interface IGraphLoader {
 	 * @throws SGL_Exception if an error is thrown during loading. 
 	 * Note that all exceptions are encapsulated in a {@link SGL_Exception} 
 	 */
-	public void populate(GDataConf conf, G g) throws SGL_Exception;
+	public void populate(GDataConf conf, G g) throws SLIB_Exception;
 
 }

@@ -39,7 +39,7 @@ package slib.sml.sm.core.metrics.ic.annot;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 
@@ -52,12 +52,12 @@ public class IC_probOccurence_propagatted implements ICcorpus{
 
 	
 
-	public ResultStack<V,Double> compute(ResultStack<V,Long> NbOccurrenceAnnotPropagatted) throws SGL_Exception{
+	public ResultStack<V,Double> compute(ResultStack<V,Long> NbOccurrenceAnnotPropagatted) throws SLIB_Exception{
 
 		return ProbOccurence.compute(NbOccurrenceAnnotPropagatted,0); 
 	}
 	
-	public ResultStack<V,Double> compute(SM_Engine manager) throws SGL_Exception {
+	public ResultStack<V,Double> compute(SM_Engine manager) throws SLIB_Exception {
 		return compute(manager.getNbInstancesInferredPropFromCorpus());
 	}
 

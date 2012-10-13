@@ -22,8 +22,8 @@ import slib.sglib.io.loader.IGraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class RDFLoader implements IGraphLoader{
 
@@ -34,18 +34,18 @@ public class RDFLoader implements IGraphLoader{
 	
 	public RDFLoader(){}
 
-	public RDFLoader(RDFFormat format) throws SGL_Ex_Critic{
+	public RDFLoader(RDFFormat format) throws SLIB_Ex_Critic{
 
 		loadFormat(format);
 
 	}
 	
 	
-	public G load(GraphConf conf) throws SGL_Exception {
+	public G load(GraphConf conf) throws SLIB_Exception {
 		return GraphLoaderGeneric.load(conf);
 	}
 	
-	public void populate(GDataConf conf, G g) throws SGL_Exception {
+	public void populate(GDataConf conf, G g) throws SLIB_Exception {
 		
 		loadConf(conf);
 		
@@ -55,7 +55,7 @@ public class RDFLoader implements IGraphLoader{
 		
 	}
 
-	private void loadConf(GDataConf conf) throws SGL_Ex_Critic {
+	private void loadConf(GDataConf conf) throws SLIB_Ex_Critic {
 		
 		GFormat format = conf.getFormat();
 		if(format == GFormat.RDF_XML)
@@ -63,13 +63,13 @@ public class RDFLoader implements IGraphLoader{
 		else if(format == GFormat.NTRIPLES)
 			loadFormat(RDFFormat.NTRIPLES);
 		else 
-			throw new SGL_Ex_Critic("Unsupported RDF format "+format);
+			throw new SLIB_Ex_Critic("Unsupported RDF format "+format);
 	}
 
 
 	
 
-	private void loadFormat(RDFFormat format) throws SGL_Ex_Critic{
+	private void loadFormat(RDFFormat format) throws SLIB_Ex_Critic{
 		if(format.equals(RDFFormat.NTRIPLES)){
 			parser = new NTriplesParser(DataRepository.getSingleton());
 		}
@@ -78,10 +78,10 @@ public class RDFLoader implements IGraphLoader{
 			parser.setStopAtFirstError(false);
 		}
 		else 
-			throw new SGL_Ex_Critic("Unsupported RDF format "+format);
+			throw new SLIB_Ex_Critic("Unsupported RDF format "+format);
 	}
 
-	public void load(G g, String file) throws SGL_Ex_Critic{
+	public void load(G g, String file) throws SLIB_Ex_Critic{
 
 
 		RDFHandler rdfHandler = new SglRdfHandler(g);
@@ -95,17 +95,17 @@ public class RDFLoader implements IGraphLoader{
 			parser.parse(br, "");
 		}
 		catch (Exception e) {
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 	
-	public void load(G g, String file, RDFFormat format) throws SGL_Ex_Critic{
+	public void load(G g, String file, RDFFormat format) throws SLIB_Ex_Critic{
 
 		loadFormat(format);
 		load(g, file);
 	}
 
-	public void load(G g, Map<String,RDFFormat> rdfFileConf) throws SGL_Ex_Critic{
+	public void load(G g, Map<String,RDFFormat> rdfFileConf) throws SLIB_Ex_Critic{
 
 		for(Entry<String, RDFFormat> e : rdfFileConf.entrySet())
 			load(g, e.getKey(),e.getValue());

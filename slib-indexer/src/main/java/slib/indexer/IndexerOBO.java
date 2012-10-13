@@ -45,8 +45,8 @@ import java.io.InputStreamReader;
 import org.openrdf.model.URI;
 
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
 
 public class IndexerOBO extends Indexer<URI>{
@@ -60,7 +60,7 @@ public class IndexerOBO extends Indexer<URI>{
 	
 	
 	
-	public  IndexerOBO(String filepath, URI uriBase) throws SGL_Exception {
+	public  IndexerOBO(String filepath, URI uriBase) throws SLIB_Exception {
 
 		try {
 
@@ -125,7 +125,7 @@ public class IndexerOBO extends Indexer<URI>{
 			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 
 	}
@@ -159,7 +159,7 @@ public class IndexerOBO extends Indexer<URI>{
 
 
 	
-	private void checkLine(String line) throws SGL_Ex_Critic {
+	private void checkLine(String line) throws SLIB_Ex_Critic {
 
 		if(line.equals(OBOconstants.TERM_FLAG)){
 			handleTerm();
@@ -167,7 +167,7 @@ public class IndexerOBO extends Indexer<URI>{
 		}
 	}
 	
-	private void handleTerm() throws SGL_Ex_Critic {
+	private void handleTerm() throws SLIB_Ex_Critic {
 
 		if(onTermSpec){
 
@@ -184,7 +184,7 @@ public class IndexerOBO extends Indexer<URI>{
 	}
 	
 	@SuppressWarnings("unused")
-	public static void main(String[] args) throws SGL_Exception {
+	public static void main(String[] args) throws SLIB_Exception {
 		String path = System.getProperty("user.dir")+"/data/graph/obo/gene_ontology_ext.obo";
 		Indexer<URI> i = new IndexerOBO(path,null);
 	}

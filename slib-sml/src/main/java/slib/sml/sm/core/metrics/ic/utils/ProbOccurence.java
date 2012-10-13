@@ -39,8 +39,8 @@ package slib.sml.sm.core.metrics.ic.utils;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.topo.ICtopo;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 public class ProbOccurence implements ICtopo{
@@ -52,7 +52,7 @@ public class ProbOccurence implements ICtopo{
 	 * @return
 	 * @throws SGL_Ex_Critic 
 	 */
-	public static ResultStack<V,Double> compute(ResultStack<V,Long> nbOccurrence,int addToOccurrence) throws SGL_Exception{
+	public static ResultStack<V,Double> compute(ResultStack<V,Long> nbOccurrence,int addToOccurrence) throws SLIB_Exception{
 		
 		double max = nbOccurrence.getMax();
 		ResultStack<V,Double> results = new ResultStack<V,Double>();
@@ -72,7 +72,7 @@ public class ProbOccurence implements ICtopo{
 	}
 	
 	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-			throws SGL_Exception {
+			throws SLIB_Exception {
 		return compute(manager.getAllNbDescendants(),0);
 	}
 	

@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.io.loader.utils.filter.graph;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class FilterGraph extends Filter{
@@ -45,7 +45,7 @@ public class FilterGraph extends Filter{
 		super(id, type);
 	}
 	
-	public FilterGraph(Conf conf) throws SGL_Ex_Critic {
+	public FilterGraph(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 	}
 

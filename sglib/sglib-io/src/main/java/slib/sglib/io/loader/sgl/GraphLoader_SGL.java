@@ -58,8 +58,8 @@ import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * TODO Comment DO not Support transitivity and inverse definitions anymore 
@@ -106,15 +106,15 @@ public class GraphLoader_SGL implements IGraphLoader{
 	int nbVerticesLoaded 	= 0;
 	int nbEdgesLoaded 		= 0;
 
-	public G load(GraphConf conf) throws SGL_Exception{
+	public G load(GraphConf conf) throws SLIB_Exception{
 		return GraphLoaderGeneric.load(conf);
 	}
 	
-	public void populate(GDataConf conf, G g) throws SGL_Exception {
+	public void populate(GDataConf conf, G g) throws SLIB_Exception {
 		process(conf, g);
 	}
 	
-	public void process(GDataConf conf, G graph) throws SGL_Exception{
+	public void process(GDataConf conf, G graph) throws SLIB_Exception{
 		
 		this.g = graph;
 		data = DataRepository.getSingleton();
@@ -165,12 +165,12 @@ public class GraphLoader_SGL implements IGraphLoader{
 			in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 	}
 
 
-	private void loadEdge(String line) throws SGL_Ex_Critic {
+	private void loadEdge(String line) throws SLIB_Ex_Critic {
 		String[] data = line.split("\t");
 
 		if(data.length == 3){
@@ -194,7 +194,7 @@ public class GraphLoader_SGL implements IGraphLoader{
 	}
 
 
-	private void loadVertex(String line) throws SGL_Exception {
+	private void loadVertex(String line) throws SLIB_Exception {
 		String[] data = line.split("\t");
 
 		if(data.length == 3){
@@ -212,10 +212,10 @@ public class GraphLoader_SGL implements IGraphLoader{
 			else if(vertexTypes[idType] == VType.INSTANCE)
 				v = new VertexTyped(g, u,VType.INSTANCE);
 			else
-				throw new SGL_Exception("Vertex type not supported "+vertexTypes[idType]);
+				throw new SLIB_Exception("Vertex type not supported "+vertexTypes[idType]);
 
 			if(id >= vertices.length)
-				throw new SGL_Ex_Critic("Incoherent vType id : "+id+" max "+(nbVertexType-1)+" ...");
+				throw new SLIB_Ex_Critic("Incoherent vType id : "+id+" max "+(nbVertexType-1)+" ...");
 
 			vertices[id] = v;
 			g.addV(v);
@@ -230,7 +230,7 @@ public class GraphLoader_SGL implements IGraphLoader{
 	}
 
 
-	private void loadEdgeType(String line) throws SGL_Exception {
+	private void loadEdgeType(String line) throws SLIB_Exception {
 		
 		String[] data = line.split("\t");
 
@@ -248,7 +248,7 @@ public class GraphLoader_SGL implements IGraphLoader{
 				eType = this.data.eTypes.createPURI( data[1] );
 						
 				if(id >= edgeTypes.length)
-					throw new SGL_Ex_Critic("Incoherent eType id : "+id+" max "+(nbEdgeType-1)+" ...");
+					throw new SLIB_Ex_Critic("Incoherent eType id : "+id+" max "+(nbEdgeType-1)+" ...");
 			}
 			edgeTypes[id] 		= eType;
 			eTypeInverseMap[id] = idInverse;
@@ -264,7 +264,7 @@ public class GraphLoader_SGL implements IGraphLoader{
 
 
 
-	private void loadVertexType(String line) throws SGL_Ex_Critic {
+	private void loadVertexType(String line) throws SLIB_Ex_Critic {
 		String[] data = line.split("\t");
 
 		if(data.length == 2){
@@ -276,12 +276,12 @@ public class GraphLoader_SGL implements IGraphLoader{
 			else if(data[1].equals(VTYPE_INSTANCE))
 				vType = VType.INSTANCE;
 			else
-				throw new SGL_Ex_Critic("Unsupported type "+data[1]);
+				throw new SLIB_Ex_Critic("Unsupported type "+data[1]);
 
 			int id = Integer.parseInt(data[0]);
 
 			if(id >= vertexTypes.length)
-				throw new SGL_Ex_Critic("Incoherent vType id : "+id+" max "+(nbVertexType-1)+" ...");
+				throw new SLIB_Ex_Critic("Incoherent vType id : "+id+" max "+(nbVertexType-1)+" ...");
 
 			vertexTypes[id] = vType;
 			
@@ -319,12 +319,12 @@ public class GraphLoader_SGL implements IGraphLoader{
 	}
 
 
-	private void initSearch(String line) throws SGL_Ex_Critic {
+	private void initSearch(String line) throws SLIB_Ex_Critic {
 		logger.debug("Header: "+line);
 		String[] expS = line.split("\t");
 
 		if(expS.length != 5){
-			throw new SGL_Ex_Critic("Incorrect Header require: GraphURI,EdgeTypeNB,VertexTypesNB,VerticesNB,EdgesNB(separate by tabs)");
+			throw new SLIB_Ex_Critic("Incorrect Header require: GraphURI,EdgeTypeNB,VertexTypesNB,VerticesNB,EdgesNB(separate by tabs)");
 		}
 		else{
 			try{
@@ -342,7 +342,7 @@ public class GraphLoader_SGL implements IGraphLoader{
 				nbEdges    		= Integer.parseInt(expS[4]);
 			}
 			catch(Exception e){
-				throw new SGL_Ex_Critic("Invalide value specified in header "+line+"\n"+e.getMessage());
+				throw new SLIB_Ex_Critic("Invalide value specified in header "+line+"\n"+e.getMessage());
 			}
 		}
 	}

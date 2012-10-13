@@ -50,7 +50,7 @@ import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.OntoFocus;
 import slib.tools.ontofocus.core.utils.OntoFocusConf;
 import slib.tools.ontofocus.core.utils.OntoFocusCst;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 
 public class OntoFocusCmdHandler extends CmdHandler {
@@ -69,7 +69,7 @@ public class OntoFocusCmdHandler extends CmdHandler {
 	static Logger logger = LoggerFactory.getLogger(OntoFocusCmdHandler.class);
 
 
-	public OntoFocusCmdHandler(String[] args) throws SGL_Exception {
+	public OntoFocusCmdHandler(String[] args) throws SLIB_Exception {
 		
 		super(new OntoFocusCst(),new OntoFocusCmdHandlerCst(),args);
 

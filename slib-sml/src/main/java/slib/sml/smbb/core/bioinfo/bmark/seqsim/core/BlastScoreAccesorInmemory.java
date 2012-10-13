@@ -39,7 +39,7 @@ package slib.sml.smbb.core.bioinfo.bmark.seqsim.core;
 import java.io.IOException;
 import java.util.HashMap;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 
 public class BlastScoreAccesorInmemory implements IblastScoreAcessor{
@@ -62,12 +62,12 @@ public class BlastScoreAccesorInmemory implements IblastScoreAcessor{
 			System.out.println(q+"\t"+scoreStorage.get(q));
 	}
 	
-	public double getBlastScore(String protA, String protB) throws SGL_Ex_Critic {
+	public double getBlastScore(String protA, String protB) throws SLIB_Ex_Critic {
 		
 		QueryEntry qentry = new QueryEntry(protA,protB);
 		
 		if(!scoreStorage.containsKey(qentry))
-			throw new SGL_Ex_Critic("Cannot locate blast score associated to entry "+protA+" "+protB);
+			throw new SLIB_Ex_Critic("Cannot locate blast score associated to entry "+protA+" "+protB);
 		
 		return scoreStorage.get(qentry);
 	}

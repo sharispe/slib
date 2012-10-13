@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sml.smbb.core.SmbbCst;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
@@ -78,7 +78,7 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 	 * </ul>
 	 * @throws SGL_Ex_Critic if an error occurs during object creation
 	 */
-	public SmbbConf_GO_PPI(Conf genericConf) throws SGL_Ex_Critic {
+	public SmbbConf_GO_PPI(Conf genericConf) throws SLIB_Ex_Critic {
 		
 		this();
 		
@@ -115,7 +115,7 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 	}
 
 	@Override
-	public boolean isValid() throws SGL_Ex_Critic {
+	public boolean isValid() throws SLIB_Ex_Critic {
 		
 		super.isValid();
 		

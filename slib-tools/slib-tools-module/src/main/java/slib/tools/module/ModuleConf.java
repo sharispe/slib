@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.tools.module;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
 /**
@@ -55,5 +55,5 @@ public interface ModuleConf {
 	 * @return true if the configuration is valid.
 	 * @throws SGL_Ex_Critic
 	 */
-	public boolean isValid() throws SGL_Ex_Critic;
+	public boolean isValid() throws SLIB_Ex_Critic;
 }

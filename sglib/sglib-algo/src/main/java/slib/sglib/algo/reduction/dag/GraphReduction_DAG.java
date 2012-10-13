@@ -50,7 +50,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -88,14 +88,14 @@ public class GraphReduction_DAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public static void reduction(G g,URI rootURI, final Set<URI> edgeTypes, Direction dir, boolean onlyAddGivenEtypes) throws SGL_Ex_Critic{
+	public static void reduction(G g,URI rootURI, final Set<URI> edgeTypes, Direction dir, boolean onlyAddGivenEtypes) throws SLIB_Ex_Critic{
 
 		logger.info("Reduction");
 
 		V root = g.getV(rootURI);
 
 		if(root == null)
-			throw new SGL_Ex_Critic("Cannot resolve specified root "+rootURI);
+			throw new SLIB_Ex_Critic("Cannot resolve specified root "+rootURI);
 
 		RVF_TAX rvf = new RVF_TAX(g,Direction.IN);
 
@@ -153,7 +153,7 @@ public class GraphReduction_DAG {
 	 * @return the graph which corresponds to the reduction
 	 * @throws SGL_Ex_Critic
 	 */
-	public static void taxonomicReduction(G g,URI rootURI, boolean onlyAddTaxonomical) throws SGL_Ex_Critic{
+	public static void taxonomicReduction(G g,URI rootURI, boolean onlyAddTaxonomical) throws SLIB_Ex_Critic{
 
 		reduction(g, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.IN, onlyAddTaxonomical);
 	}

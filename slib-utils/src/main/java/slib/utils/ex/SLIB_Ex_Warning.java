@@ -34,65 +34,16 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.utils.ex;
 
-import org.apache.commons.cli.BasicParser;
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+public class SLIB_Ex_Warning extends SLIB_Exception {
 
-import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.utils.ex.SGL_Exception;
-
-
-public class SmCmdHandler extends CmdHandler {
-
-
-	public String  xmlConfFile;
-	static Logger logger = LoggerFactory.getLogger(SmCmdHandler.class);
+	private static final long serialVersionUID = 1L;
 	
-
-	public SmCmdHandler(String[] args)throws SGL_Exception {
-		super(new SmCst(), new SmCmdHandlerCst(), args);
+	public SLIB_Ex_Warning(String message) {
+		super(message);
 	}
 
 	
-	public void processArgs(String[] args){
-		
-		CommandLineParser parser = new BasicParser();
 
-		try {
-			CommandLine line = parser.parse( options, args );
-
-			if(line.hasOption("help")){
-				ending("",true);
-			}
-			else{
-				if(line.hasOption("xmlconf"))
-					xmlConfFile = line.getOptionValue( "xmlconf" );
-				else
-					ending(SmCmdHandlerCst.errorMissingXMLconf,true);
-			}
-		}
-		catch( ParseException exp ) {
-			ending( cst.appName+" Parsing failed.  Reason: " + exp.getMessage(),true );
-		}
-	}
-
-
-	public static void main(String[] args) {
-
-		try {
-			SmCmdHandler 	    c = new SmCmdHandler(args);
-			SmCli ssp = new SmCli();
-			ssp.execute(c.xmlConfFile);
-			
-		} catch (Exception e) {
-			logger.info("Ooops : "+e.getMessage());
-			logger.info("see log file.");
-		}
-	}
 }

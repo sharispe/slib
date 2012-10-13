@@ -22,8 +22,8 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
 public class GraphLoader_CSV implements IGraphLoader{
@@ -59,11 +59,11 @@ public class GraphLoader_CSV implements IGraphLoader{
 
 
 
-	public G load(GraphConf conf) throws SGL_Exception {
+	public G load(GraphConf conf) throws SLIB_Exception {
 		return GraphLoaderGeneric.load(conf);
 	}
 
-	public void populate(GDataConf conf, G g) throws SGL_Exception {
+	public void populate(GDataConf conf, G g) throws SLIB_Exception {
 		
 		logger.debug("Loading CSV.");
 		
@@ -74,7 +74,7 @@ public class GraphLoader_CSV implements IGraphLoader{
 		logger.debug("CSV specification loaded.");
 	}
 
-	private void loadConf(GDataConf conf) throws SGL_Ex_Critic {
+	private void loadConf(GDataConf conf) throws SLIB_Ex_Critic {
 		
 		String header = (String) conf.getParameter("header");
 		
@@ -103,17 +103,17 @@ public class GraphLoader_CSV implements IGraphLoader{
 			this.statementTemplates.putAll(statementTemplates);
 		
 		if(this.mappings.size() == 0){
-			throw new SGL_Ex_Critic("Please specify a mapping for CSV loader");
+			throw new SLIB_Ex_Critic("Please specify a mapping for CSV loader");
 		}
 		
 		if(this.statementTemplates.size() == 0){
-			throw new SGL_Ex_Critic("Please specify a statement template for CSV loader");
+			throw new SLIB_Ex_Critic("Please specify a statement template for CSV loader");
 		}
 		
 	}
 	
 	
-	private void loadCSV(String filepath) throws SGL_Exception {
+	private void loadCSV(String filepath) throws SLIB_Exception {
 		
 		long evaluated = 0; // number of statements evaluated according to the templates defined
 		long rejected  = 0; // those excluded due to specified constraints.
@@ -152,7 +152,7 @@ public class GraphLoader_CSV implements IGraphLoader{
 			}
 			in.close();
 		} catch (IOException e) {
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		
 		logger.info("Number of statements rejected due to constraint: "+rejected+"/"+evaluated);
@@ -168,7 +168,7 @@ public class GraphLoader_CSV implements IGraphLoader{
 	 * @return boolean success.
 	 * @throws SGL_Ex_Critic
 	 */
-	private boolean buildStatement(CSV_StatementTemplate t, String[] data) throws SGL_Ex_Critic {
+	private boolean buildStatement(CSV_StatementTemplate t, String[] data) throws SLIB_Ex_Critic {
 		
 		
 			
@@ -201,12 +201,12 @@ public class GraphLoader_CSV implements IGraphLoader{
 
 
 
-	private V buildVertex(int id, String[] data) throws SGL_Ex_Critic {
+	private V buildVertex(int id, String[] data) throws SLIB_Ex_Critic {
 		
 		CSV_Mapping vmap = mappings.get(id);
 		
 		if(vmap == null || data.length-1 < id)
-			throw new SGL_Ex_Critic("Cannot load statement considering the given configuration. Error parsing "+Arrays.toString(data));
+			throw new SLIB_Ex_Critic("Cannot load statement considering the given configuration. Error parsing "+Arrays.toString(data));
 		
 		String uriAsString = data[id];
 		

@@ -51,7 +51,7 @@ import slib.sglib.model.repo.impl.DataRepository;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 import slib.utils.threads.PoolWorker;
 
@@ -117,7 +117,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 				}
 				catch (IllegalArgumentException e) {
 
-					throw new SGL_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
+					throw new SLIB_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
 				}
 				
 				e1 = g.getV(uriE1);
@@ -125,9 +125,9 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
 				if(e1 == null || e2 == null){
 					if(e1 == null)
-						throw new SGL_Ex_Critic("Cannot locate "+uriE1+" in "+g.getURI());
+						throw new SLIB_Ex_Critic("Cannot locate "+uriE1+" in "+g.getURI());
 					if(e2 == null)
-						throw new SGL_Ex_Critic("Cannot locate "+uriE2+" in "+g.getURI());
+						throw new SLIB_Ex_Critic("Cannot locate "+uriE2+" in "+g.getURI());
 				}
 
 				// clear tmp_buffer
@@ -176,7 +176,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 						}
 
 						if(pm_conf == null)
-							throw new SGL_Ex_Critic("Cannot locate configuration associated to pairwise measure "+pm_id);
+							throw new SLIB_Ex_Critic("Cannot locate configuration associated to pairwise measure "+pm_id);
 
 						sim = sspM.simManager.computeGroupwiseAddOnSim(m, pm_conf, setE1,setE2);
 

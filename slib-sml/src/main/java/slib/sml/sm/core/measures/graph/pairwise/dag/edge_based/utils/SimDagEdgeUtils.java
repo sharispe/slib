@@ -43,7 +43,7 @@ import java.util.Set;
 
 import slib.sglib.algo.shortest_path.Dijkstra;
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -124,7 +124,7 @@ public class SimDagEdgeUtils {
 	}	
 	
 	public static V searchMSA(Set<V> interSecAncestors,
-			ResultStack<V,Integer> maxDepths) throws SGL_Exception {
+			ResultStack<V,Integer> maxDepths) throws SLIB_Exception {
 		
 		
 		V msa = null;

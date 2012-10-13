@@ -44,7 +44,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Graph representation as a set of {@link VClass} corresponding to the set of {@link VClass}
@@ -65,7 +65,7 @@ public class GraphRepresentationAsSet extends GraphRepresentation {
 	 * @param mnger the {@link SM_Engine} loaded for the processed graph
 	 * @throws SGL_Exception
 	 */
-	public GraphRepresentationAsSet(V resource,SM_Engine mnger) throws SGL_Exception{
+	public GraphRepresentationAsSet(V resource,SM_Engine mnger) throws SLIB_Exception{
 		super(resource);
 		
 		if(resource.getType().equals( VType.CLASS))

@@ -49,7 +49,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -99,7 +99,7 @@ public class RooterDAG {
 	 * 
 	 * @throws SGL_Ex_Critic
 	 */
-	public static URI rootUnderlyingDAG(G g, Set<URI> etypeDAG, boolean checkUnderlyingDAG, URI rootURI,Direction dir) throws SGL_Ex_Critic{
+	public static URI rootUnderlyingDAG(G g, Set<URI> etypeDAG, boolean checkUnderlyingDAG, URI rootURI,Direction dir) throws SLIB_Ex_Critic{
 
 		Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 		
@@ -107,7 +107,7 @@ public class RooterDAG {
 		
 		if(checkUnderlyingDAG && !validator.isDag(g, etypeDAG,dir))
 			
-			throw new SGL_Ex_Critic("Error during rerooting: " +
+			throw new SLIB_Ex_Critic("Error during rerooting: " +
 					"Underlying graph build from the set of edge types "+etypeDAG+"" +
 					"is not a DAG");
 
@@ -152,7 +152,7 @@ public class RooterDAG {
 	 * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
 	 * @throws SGL_Ex_Critic
 	 */
-	public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootURI, Direction dir) throws SGL_Ex_Critic{
+	public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootURI, Direction dir) throws SLIB_Ex_Critic{
 		return rootUnderlyingDAG(g, SetUtils.buildSet(eType), checkUnderlyingDAG,rootURI,dir);
 	}
 	
@@ -162,7 +162,7 @@ public class RooterDAG {
 	 * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
 	 * @throws SGL_Ex_Critic
 	 */
-	public static URI rootUnderlyingTaxonomicDAG(G g, URI rootURI) throws SGL_Ex_Critic{
+	public static URI rootUnderlyingTaxonomicDAG(G g, URI rootURI) throws SLIB_Ex_Critic{
 
 		Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 		logger.debug("Rooting taxonomic Graph");

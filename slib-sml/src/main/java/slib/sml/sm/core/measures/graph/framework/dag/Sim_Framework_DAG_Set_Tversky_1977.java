@@ -41,7 +41,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
@@ -63,7 +63,7 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
 	}
 
 	
-	public double sim(Set<V> ancA, Set<V> ancB, SMconf conf) throws SGL_Exception {
+	public double sim(Set<V> ancA, Set<V> ancB, SMconf conf) throws SLIB_Exception {
 		
 		if(conf != null && conf.containsParam(k_param_name))
 			k = conf.getParamAsDouble(k_param_name);

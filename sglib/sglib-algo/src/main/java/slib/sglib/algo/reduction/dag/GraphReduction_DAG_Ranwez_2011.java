@@ -54,9 +54,9 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.impl.memory.GraphMemory_Abstract;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -128,7 +128,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 			Set<URI> edgesTypesDirect,
 			boolean validateDAGproperty
 
-			) throws SGL_Exception {
+			) throws SLIB_Exception {
 
 		data = DataRepository.getSingleton();
 
@@ -143,7 +143,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 		logger.debug("Selected Etypes: "+edgesTypes);
 
 		if(rootVertex == null)
-			throw new SGL_Ex_Critic("Unable to find Vertex associated to Root URI "+rootURI);
+			throw new SLIB_Ex_Critic("Unable to find Vertex associated to Root URI "+rootURI);
 
 		if(validateDAGproperty){
 
@@ -154,7 +154,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 			boolean isDag = vdag.isDag(graph,edgesTypes, Direction.IN);// (graph, rootURI , edgesTypeInverse);
 
 			if(!isDag)
-				throw new SGL_Ex_Critic(
+				throw new SLIB_Ex_Critic(
 						"Treatment can only be performed on a DAG, traversal "+
 						"respecting your parameters define a cyclic graph.");
 
@@ -174,7 +174,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 		}
 	}
 
-	public G exec(Set<URI> selectedURI, String graphReductionURI) throws SGL_Ex_Critic, SGL_Exception_Warning {
+	public G exec(Set<URI> selectedURI, String graphReductionURI) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
 		this.selectedURI = selectedURI;
 		
@@ -386,16 +386,16 @@ public class GraphReduction_DAG_Ranwez_2011 {
 		return verticesReduction;
 	}
 
-	private void checkQueryValidity() throws SGL_Ex_Critic, SGL_Exception_Warning {
+	private void checkQueryValidity() throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
 
 		if(selectedURI == null || selectedURI.size() < 2)
-			throw new SGL_Exception_Warning("Warning: Query skipped, a minimim of two URI have to be specified to build a query");
+			throw new SLIB_Ex_Warning("Warning: Query skipped, a minimim of two URI have to be specified to build a query");
 
 		for (URI uri : selectedURI) {
 
 			if(!graph.containsVertex(uri))
-				throw new SGL_Exception_Warning("No vertex associated to URI: "+uri);
+				throw new SLIB_Ex_Warning("No vertex associated to URI: "+uri);
 		}
 	}
 

@@ -41,7 +41,7 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a Taxonomy. 
@@ -55,7 +55,7 @@ import slib.utils.ex.SGL_Exception;
 public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abstract{
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		Set<V> disjointAncs = c.getDisjointCommonAncestors(a, b);
 		double sumIC = 0;

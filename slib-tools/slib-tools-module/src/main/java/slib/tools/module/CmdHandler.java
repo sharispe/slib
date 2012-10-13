@@ -45,8 +45,8 @@ import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Abstract command handler
@@ -80,7 +80,7 @@ public abstract class CmdHandler {
 		}
 	};
 	
-	public CmdHandler(ModuleCst cst,ToolCmdHandlerCst cstCmd, String[] args) throws SGL_Exception{
+	public CmdHandler(ModuleCst cst,ToolCmdHandlerCst cstCmd, String[] args) throws SLIB_Exception{
 		this.cst = cst;
 		this.cstCmd = cstCmd;
 		
@@ -103,11 +103,11 @@ public abstract class CmdHandler {
 	}
 	
 
-	public abstract void processArgs(String[] args) throws SGL_Exception;
+	public abstract void processArgs(String[] args) throws SLIB_Exception;
 
 	
-	public void showCmdLineExamples() throws SGL_Exception{
-		throw new SGL_Ex_Critic("No command line examples, sorry");
+	public void showCmdLineExamples() throws SLIB_Exception{
+		throw new SLIB_Ex_Critic("No command line examples, sorry");
 	}
 
 	public void showDescription() {

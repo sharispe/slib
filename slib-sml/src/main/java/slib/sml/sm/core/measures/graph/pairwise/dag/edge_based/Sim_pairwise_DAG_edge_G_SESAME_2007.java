@@ -43,7 +43,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -70,7 +70,7 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract{
 			Set<V> ancestors_B,
 			Map<V, Double> distMin_a,
 			Map<V, Double> distMin_b,
-			ResultStack<V,Integer> maxDepths) throws SGL_Exception {
+			ResultStack<V,Integer> maxDepths) throws SLIB_Exception {
 		
 		double sim = 0;
 		

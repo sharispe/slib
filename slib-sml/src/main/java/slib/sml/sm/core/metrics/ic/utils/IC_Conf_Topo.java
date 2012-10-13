@@ -36,20 +36,20 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.sm.core.metrics.ic.utils;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
 public class IC_Conf_Topo extends ICconf{
 	
-	public IC_Conf_Topo(String id,String label,String flag) throws SGL_Ex_Critic{
+	public IC_Conf_Topo(String id,String label,String flag) throws SLIB_Ex_Critic{
 		
 		super(id,label,flag);
 		
 		if(isCorpusBased)
-			throw new SGL_Ex_Critic(flag+" is not an intrinsic IC");
+			throw new SLIB_Ex_Critic(flag+" is not an intrinsic IC");
 	}
 	
-	public IC_Conf_Topo(String flag) throws SGL_Ex_Critic{
+	public IC_Conf_Topo(String flag) throws SLIB_Ex_Critic{
 		
 		super(flag,flag,flag);
 	}

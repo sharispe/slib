@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.metrics.ic.utils;
 
 import slib.sml.sm.core.utils.SMConstants;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 
@@ -50,7 +50,7 @@ public abstract class ICconf extends Conf{
 	public boolean isCorpusBased;
 
 	
-	public ICconf(String id) throws SGL_Ex_Critic{
+	public ICconf(String id) throws SLIB_Ex_Critic{
 		this.id 	= id;
 		this.label  = id;
 		this.flag   = id;
@@ -65,7 +65,7 @@ public abstract class ICconf extends Conf{
 	 * @param flag	SSPConstants flag corresponding to the IC 
 	 * @throws SGL_Ex_Critic 
 	 */
-	public ICconf(String id,String label,String flag) throws SGL_Ex_Critic{
+	public ICconf(String id,String label,String flag) throws SLIB_Ex_Critic{
 		this.id 	= id;
 		this.label  = label;
 		this.flag   = flag;
@@ -74,7 +74,7 @@ public abstract class ICconf extends Conf{
 
 	}
 
-	private void validate() throws SGL_Ex_Critic {
+	private void validate() throws SLIB_Ex_Critic {
 		
 		if(SMConstants.SIM_PAIRWISE_DAG_NODE_IC_ANNOT.containsKey(flag)){
 
@@ -87,7 +87,7 @@ public abstract class ICconf extends Conf{
 			this.isCorpusBased  = false;
 		}
 		else 
-			throw new SGL_Ex_Critic("Unknown IC Flag "+flag);
+			throw new SLIB_Ex_Critic("Unknown IC Flag "+flag);
 	}
 
 	public String getId() {

@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.io.loader.utils.filter.graph;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public abstract class Filter {
@@ -49,15 +49,15 @@ public abstract class Filter {
 		this.type = type;
 	}
 	
-	public Filter(Conf conf) throws SGL_Ex_Critic{
+	public Filter(Conf conf) throws SLIB_Ex_Critic{
 		
 		String id   = (String) conf.getParam("id");
 		String type = (String) conf.getParam("type");
 		
 		if(id == null)
-			throw new SGL_Ex_Critic("Missing id value for a filter");
+			throw new SLIB_Ex_Critic("Missing id value for a filter");
 		if(type == null)
-			throw new SGL_Ex_Critic("Missing type value for filter "+type);
+			throw new SLIB_Ex_Critic("Missing type value for filter "+type);
 		
 		this.id   = id;
 		this.type = type;

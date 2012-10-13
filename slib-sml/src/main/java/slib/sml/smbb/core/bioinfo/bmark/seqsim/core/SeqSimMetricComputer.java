@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.smbb.core.bioinfo.bmark.seqsim.core;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * Implementation of Sequence related metrics proposed by 
@@ -55,7 +55,7 @@ public class SeqSimMetricComputer {
 		this.blastScoreAcessor = blastScoreAcessor;
 	}
 
-	public double LRBS(String protA, String protB) throws SGL_Ex_Critic{
+	public double LRBS(String protA, String protB) throws SLIB_Ex_Critic{
 		
 		double blastScore_AvsB = blastScoreAcessor.getBlastScore(protA, protB);
 		double blastScore_BvsA = blastScoreAcessor.getBlastScore(protB, protA);
@@ -63,7 +63,7 @@ public class SeqSimMetricComputer {
 		return Math.log10((blastScore_AvsB + blastScore_BvsA)/2.);
 	}
 	
-	public double RRBS(String protA, String protB) throws SGL_Ex_Critic{
+	public double RRBS(String protA, String protB) throws SLIB_Ex_Critic{
 		
 		double blastScore_AvsB = blastScoreAcessor.getBlastScore(protA, protB);
 		double blastScore_BvsA = blastScoreAcessor.getBlastScore(protB, protA);

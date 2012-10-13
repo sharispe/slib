@@ -46,7 +46,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 import com.tinkerpop.blueprints.Direction;
 
@@ -77,7 +77,7 @@ public class RVF_TAX extends RVF_DAG{
 	}
 
 	
-	public Map<V, Set<V>> getAllRVClass() throws SGL_Ex_Critic {
+	public Map<V, Set<V>> getAllRVClass() throws SLIB_Ex_Critic {
 		return getAllVertices();
 	}
 }

@@ -46,7 +46,7 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SGL_UnitTestValues;
+import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
 import slib.sgli.test.algo.graph.TestUtils;
 import slib.sglib.algo.extraction.rvf.RVF_DAG;
 import slib.sglib.algo.extraction.rvf.RVF_TAX;
@@ -55,8 +55,8 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -66,18 +66,18 @@ public class TestReachableVerticesFinder{
 	public G g;
 	public RVF_DAG rvf;
 	
-	SGL_UnitTestValues testValues;
+	SLIB_UnitTestValues testValues;
 	
-	public TestReachableVerticesFinder() throws SGL_Exception{
+	public TestReachableVerticesFinder() throws SLIB_Exception{
 		
-		testValues = new SGL_UnitTestValues();
+		testValues = new SLIB_UnitTestValues();
 		
 		
-		g = TestUtils.loadTestGraph(GFormat.SGL,SGL_UnitTestValues.G_DAG_BASIC);
+		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 	}
 	
 	@Test
-	public void test_dag_descendant_1() throws SGL_Ex_Critic{
+	public void test_dag_descendant_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 		rvf = new RVF_DAG(g, wc);
@@ -95,7 +95,7 @@ public class TestReachableVerticesFinder{
 
 	
 	@Test
-	public void test_dag_descendant_2() throws SGL_Ex_Critic{
+	public void test_dag_descendant_2() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 		rvf = new RVF_DAG(g, wc);
@@ -109,7 +109,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_descendant_3() throws SGL_Ex_Critic{
+	public void test_dag_descendant_3() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 		rvf = new RVF_DAG(g, wc);
@@ -120,7 +120,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_descendant_4() throws SGL_Ex_Critic{
+	public void test_dag_descendant_4() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 		rvf = new RVF_DAG(g, wc);
@@ -131,7 +131,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_ancestors_1() throws SGL_Ex_Critic{
+	public void test_dag_ancestors_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
 		rvf = new RVF_DAG(g, wc);
@@ -143,7 +143,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_ancestors_1b() throws SGL_Ex_Critic{
+	public void test_dag_ancestors_1b() throws SLIB_Ex_Critic{
 		
 		RVF_TAX rvf = new RVF_TAX( g, Direction.OUT);
 		Map<V,Set<V>> ancestorsMap = rvf.getAllRVClass();
@@ -158,7 +158,7 @@ public class TestReachableVerticesFinder{
 	
 	
 	@Test
-	public void test_dag_ancestors_2() throws SGL_Ex_Critic{
+	public void test_dag_ancestors_2() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
 		rvf = new RVF_DAG(g, wc);
@@ -170,7 +170,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_ancestors_3() throws SGL_Ex_Critic{
+	public void test_dag_ancestors_3() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
 		rvf = new RVF_DAG(g, wc);
@@ -181,7 +181,7 @@ public class TestReachableVerticesFinder{
 	}
 	
 	@Test
-	public void test_dag_all_1() throws SGL_Ex_Critic{
+	public void test_dag_all_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.BOTH);
 		rvf = new RVF_DAG(g, wc);
@@ -193,7 +193,7 @@ public class TestReachableVerticesFinder{
 	}
 
 	@Test
-	public void test_dag_all_2() throws SGL_Ex_Critic{
+	public void test_dag_all_2() throws SLIB_Ex_Critic{
 		
 		HashSet<URI> setEdge = new HashSet<URI>();
 		setEdge.add(RDFS.SUBCLASSOF);

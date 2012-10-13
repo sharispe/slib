@@ -31,7 +31,7 @@ import slib.sglib.io.loader.utils.filter.graph.Filter;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.i.Parametrable;
 import slib.utils.impl.Util;
@@ -66,7 +66,7 @@ public class XMLConfLoaderGeneric {
 
     
 
-	public XMLConfLoaderGeneric(String xmlFile) throws SGL_Ex_Critic{
+	public XMLConfLoaderGeneric(String xmlFile) throws SLIB_Ex_Critic{
 
 
 		dataRepo = DataRepository.getSingleton();
@@ -78,7 +78,7 @@ public class XMLConfLoaderGeneric {
 		load();
 	}
 
-	private void load() throws SGL_Ex_Critic{
+	private void load() throws SLIB_Ex_Critic{
 		logger.info("Loading XML conf from : "+xmlFile);
 
 
@@ -169,7 +169,7 @@ public class XMLConfLoaderGeneric {
 
 
 		} catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 
 
@@ -179,7 +179,7 @@ public class XMLConfLoaderGeneric {
 	}
 
 
-	private void loadNamespaces(Element item) throws SGL_Ex_Critic {
+	private void loadNamespaces(Element item) throws SLIB_Ex_Critic {
 
 		NodeList list = item.getElementsByTagName(XmlTags.NAMESPACE_TAG);
 
@@ -191,16 +191,16 @@ public class XMLConfLoaderGeneric {
 			String ref = (String) m.getParam(XmlTags.NS_ATTR_REF);
 
 			if(prefix == null)
-				throw new SGL_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_PREFIX+" attribut");
+				throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_PREFIX+" attribut");
 			else if(ref == null)
-				throw new SGL_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_REF+" attribut associated to variable "+prefix);
+				throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_REF+" attribut associated to variable "+prefix);
 
 			logger.info("add namespace prefix : "+prefix+" ref : "+ref);
 			DataRepository.getSingleton().loadNamespacePrefix(prefix, ref);
 		}
 	}
 
-	private void loadGraphConf(Element item) throws SGL_Ex_Critic {
+	private void loadGraphConf(Element item) throws SLIB_Ex_Critic {
 		logger.debug("Loading graph conf");
 
 		GraphConf gconf = new GraphConf();
@@ -240,7 +240,7 @@ public class XMLConfLoaderGeneric {
 				GFormat gFormat = XMLAttributMapping.GDataFormatMapping.get(format); 
 
 				if(gFormat == null)
-					throw new SGL_Ex_Critic("Unknow data format "+format+", valids "+XMLAttributMapping.GDataFormatMapping.keySet());
+					throw new SLIB_Ex_Critic("Unknow data format "+format+", valids "+XMLAttributMapping.GDataFormatMapping.keySet());
 
 				// Data Location
 
@@ -287,7 +287,7 @@ public class XMLConfLoaderGeneric {
 				GActionType gType = XMLAttributMapping.GActionTypeMapping.get(type); 
 
 				if(gType == null)
-					throw new SGL_Ex_Critic("Unknow action type "+type+", accepted "+XMLAttributMapping.GActionTypeMapping.keySet());
+					throw new SLIB_Ex_Critic("Unknow action type "+type+", accepted "+XMLAttributMapping.GActionTypeMapping.keySet());
 
 				GAction gAction = new GAction(gType);
 
@@ -306,7 +306,7 @@ public class XMLConfLoaderGeneric {
 
 	}
 
-	private GDataConf gDataConfAdditional(GFormat gFormat, Element dataConf, GDataConf gDataConf) throws SGL_Ex_Critic {
+	private GDataConf gDataConfAdditional(GFormat gFormat, Element dataConf, GDataConf gDataConf) throws SLIB_Ex_Critic {
 		
 		if(gFormat == GFormat.CSV){
 			
@@ -340,10 +340,10 @@ public class XMLConfLoaderGeneric {
 				String prefix = (String) conf.getParam(XmlTags.MAP_ATT_PREFIX);
 				
 				if(field == null)
-					throw new SGL_Ex_Critic("Cannot state field number associated to mapping definition in CSV configuration");
+					throw new SLIB_Ex_Critic("Cannot state field number associated to mapping definition in CSV configuration");
 				
 				if(! admittedVType.containsKey(type))
-					throw new SGL_Ex_Critic("Cannot state type "+type+" associated to mapping definition in CSV configuration, admitted "+admittedVType.keySet());
+					throw new SLIB_Ex_Critic("Cannot state type "+type+" associated to mapping definition in CSV configuration, admitted "+admittedVType.keySet());
 				
 				VType vtype = admittedVType.get(type);
 				
@@ -368,13 +368,13 @@ public class XMLConfLoaderGeneric {
 				String p_string = (String) conf.getParam(XmlTags.STM_ATT_PREDICATE);
 				
 				if(s_id == null)
-					throw new SGL_Ex_Critic("Cannot state number associated to subject statement template in CSV configuration");
+					throw new SLIB_Ex_Critic("Cannot state number associated to subject statement template in CSV configuration");
 				
 				if(o_id == null)
-					throw new SGL_Ex_Critic("Cannot state number associated to object statement template in CSV configuration");
+					throw new SLIB_Ex_Critic("Cannot state number associated to object statement template in CSV configuration");
 				
 				if(p_string == null)
-					throw new SGL_Ex_Critic("Cannot state number associated to predicate statement template in CSV configuration");
+					throw new SLIB_Ex_Critic("Cannot state number associated to predicate statement template in CSV configuration");
 				
 				URI p = null;
 				
@@ -399,9 +399,9 @@ public class XMLConfLoaderGeneric {
 					StatementTemplate_Constraint_Type type = admittedStmConstraintType.get(typeString);
 					
 					if(elem == null)
-						throw new SGL_Ex_Critic("Cannot state element "+element+" associated to statement constraint definition in CSV configuration, admitted "+admittedStmConstraintElement.keySet());
+						throw new SLIB_Ex_Critic("Cannot state element "+element+" associated to statement constraint definition in CSV configuration, admitted "+admittedStmConstraintElement.keySet());
 					if(type == null)
-						throw new SGL_Ex_Critic("Cannot state type "+typeString+" associated to statement constraint definition in CSV configuration, admitted "+admittedStmConstraintType.keySet());
+						throw new SLIB_Ex_Critic("Cannot state type "+typeString+" associated to statement constraint definition in CSV configuration, admitted "+admittedStmConstraintType.keySet());
 					
 					CSV_StatementTemplate_Constraint constraint = new CSV_StatementTemplate_Constraint(elem,type);
 					m.addConstraint(constraint);
@@ -441,7 +441,7 @@ public class XMLConfLoaderGeneric {
 		}
 	}
 
-	private void loadVariablesConf(Element item) throws SGL_Ex_Critic {
+	private void loadVariablesConf(Element item) throws SLIB_Ex_Critic {
 
 		NodeList list = item.getElementsByTagName(XmlTags.VARIABLE_TAG);
 
@@ -455,9 +455,9 @@ public class XMLConfLoaderGeneric {
 			String value = (String) m.getParam(XmlTags.VALUE_ATTR);
 
 			if(key == null)
-				throw new SGL_Ex_Critic("Invalid "+XmlTags.VARIABLE_TAG+" tag, missing a "+XmlTags.KEY_ATTR+" attribut");
+				throw new SLIB_Ex_Critic("Invalid "+XmlTags.VARIABLE_TAG+" tag, missing a "+XmlTags.KEY_ATTR+" attribut");
 			else if(value == null)
-				throw new SGL_Ex_Critic("Invalid "+XmlTags.VARIABLE_TAG+" tag, missing a "+XmlTags.VALUE_ATTR+" attribut associated to variable "+key);
+				throw new SLIB_Ex_Critic("Invalid "+XmlTags.VARIABLE_TAG+" tag, missing a "+XmlTags.VALUE_ATTR+" attribut associated to variable "+key);
 
 			logger.info("add variable key : {"+key+"} value : "+value);
 			userConf.addVar(key, value);
@@ -468,7 +468,7 @@ public class XMLConfLoaderGeneric {
 
 
 
-	private void loadFiltersConf(Element item) throws SGL_Ex_Critic {
+	private void loadFiltersConf(Element item) throws SLIB_Ex_Critic {
 
 		NodeList list = item.getElementsByTagName(XmlTags.FILTER_TAG);
 		LinkedHashSet<Conf> gConfGenerics = GenericConfBuilder.build(list);
@@ -476,7 +476,7 @@ public class XMLConfLoaderGeneric {
 
 	}
 
-	private LinkedHashSet<Filter> buildFilters( LinkedHashSet<Conf> gConfGenerics) throws SGL_Ex_Critic {
+	private LinkedHashSet<Filter> buildFilters( LinkedHashSet<Conf> gConfGenerics) throws SLIB_Ex_Critic {
 
 		for(Conf c: gConfGenerics){
 
@@ -485,7 +485,7 @@ public class XMLConfLoaderGeneric {
 			// check duplicate filter id
 			for(Filter ft: filters){
 				if(ft.getId().equals(f.getId()))
-					throw new SGL_Ex_Critic("Duplicate id '"+f.getId()+"' found in filter specification");
+					throw new SLIB_Ex_Critic("Duplicate id '"+f.getId()+"' found in filter specification");
 			}
 			filters.add( f );
 		}
@@ -493,7 +493,7 @@ public class XMLConfLoaderGeneric {
 		return filters;
 	}
 
-	private void extractOptConf(Conf gc) throws SGL_Ex_Critic {
+	private void extractOptConf(Conf gc) throws SLIB_Ex_Critic {
 
 		String nbThread_s   	 = (String) gc.getParam(XmlTags.OPT_NB_THREADS_ATTR);
 		if(nbThread_s != null){
@@ -502,7 +502,7 @@ public class XMLConfLoaderGeneric {
 				ThreadManager.getSingleton().setMaxThread(nbThreads);
 			}
 			catch(NumberFormatException e){
-				throw new SGL_Ex_Critic("Error converting "+XmlTags.OPT_NB_THREADS_ATTR+" to integer value ");
+				throw new SLIB_Ex_Critic("Error converting "+XmlTags.OPT_NB_THREADS_ATTR+" to integer value ");
 			}
 		}	
 	}

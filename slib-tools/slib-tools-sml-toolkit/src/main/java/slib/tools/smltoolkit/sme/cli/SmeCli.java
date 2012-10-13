@@ -43,8 +43,8 @@ import slib.sml.sme.discriminative_power.DiscriminativePowerComputer;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sme.cli.utils.SmeCmdHandler;
 import slib.tools.smltoolkit.sme.cli.utils.SmeCmdHandlerCst;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * TODO manage empty annotation
@@ -61,12 +61,12 @@ public class SmeCli implements SmlModuleCLI{
 	private SmeCmdHandler cfgLoader;
 
 
-	public void execute(String[] argsModule) throws SGL_Exception {
+	public void execute(String[] argsModule) throws SLIB_Exception {
 		cfgLoader = new SmeCmdHandler(argsModule);
 		execute();
 	}
 
-	public void execute() throws SGL_Ex_Critic{
+	public void execute() throws SLIB_Ex_Critic{
 		
 		if(cfgLoader.process.equals(SmeCmdHandlerCst.processDP)){
 			

@@ -54,7 +54,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.BigFileReader;
 
 /**
@@ -94,7 +94,7 @@ public class ResultsMerger {
 	int splitSize = splitSize_default;
 
 
-	public void process(String file_a, String file_b, String out) throws SGL_Ex_Critic {
+	public void process(String file_a, String file_b, String out) throws SLIB_Ex_Critic {
 
 		logger.info("Merging results");
 		logger.info("file A: "+file_a);
@@ -131,13 +131,13 @@ public class ResultsMerger {
 
 			outbuff.close();
 		}catch (Exception e){
-			throw new SGL_Ex_Critic("Error: " + e.getMessage());
+			throw new SLIB_Ex_Critic("Error: " + e.getMessage());
 		}
 
 		logger.info("output: "+out);
 	}
 
-	private void checkEntrySetCoherency(Set<String> entries_A,Set<String> entries_B) throws SGL_Ex_Critic {
+	private void checkEntrySetCoherency(Set<String> entries_A,Set<String> entries_B) throws SLIB_Ex_Critic {
 
 		logger.info("Check entry coherencies");
 
@@ -161,11 +161,11 @@ public class ResultsMerger {
 		error += count;
 
 		if(error != 0)
-			throw new SGL_Ex_Critic("Incoherencies detected see rows prefixed by  !!! above ");
+			throw new SLIB_Ex_Critic("Incoherencies detected see rows prefixed by  !!! above ");
 
 	}
 
-	public void processLarge(String file_a, String file_b, String output,String tmp_dir, Integer split_size) throws SGL_Ex_Critic {
+	public void processLarge(String file_a, String file_b, String output,String tmp_dir, Integer split_size) throws SLIB_Ex_Critic {
 
 
 		values_a_index = new HashMap<String, Long>();
@@ -224,7 +224,7 @@ public class ResultsMerger {
 				Long file_a_index = e.getValue();
 
 				if(!values_b_index.containsKey(qentry))
-					throw new SGL_Ex_Critic("Cannot locate entry corresponding to query "+qentry);
+					throw new SLIB_Ex_Critic("Cannot locate entry corresponding to query "+qentry);
 
 				Long file_b_index = values_b_index.get(qentry);	
 
@@ -244,7 +244,7 @@ public class ResultsMerger {
 			outbuff.close();
 		}catch (Exception e){
 			e.printStackTrace();
-			throw new SGL_Ex_Critic("Error: " + e.getMessage());
+			throw new SLIB_Ex_Critic("Error: " + e.getMessage());
 		}
 
 		removeTmpFiles();
@@ -279,7 +279,7 @@ public class ResultsMerger {
 
 	}
 
-	public String getLine(boolean isFile_A, Long file_index) throws SGL_Ex_Critic {
+	public String getLine(boolean isFile_A, Long file_index) throws SLIB_Ex_Critic {
 
 		String out = null;
 		long file_nb 	= file_index/splitSize;
@@ -310,7 +310,7 @@ public class ResultsMerger {
 			br.close();
 
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		return out;
 	}
@@ -350,7 +350,7 @@ public class ResultsMerger {
 	}
 
 
-	private HashMap<String, String> mergeValues() throws SGL_Ex_Critic {
+	private HashMap<String, String> mergeValues() throws SLIB_Ex_Critic {
 
 		HashMap<String, String> newValues = new HashMap<String, String>();
 
@@ -369,24 +369,24 @@ public class ResultsMerger {
 
 			}
 			else{
-				throw new SGL_Ex_Critic("Cannot locate entry "+q+" in file "+file_b);
+				throw new SLIB_Ex_Critic("Cannot locate entry "+q+" in file "+file_b);
 			}
 		}
 		return newValues;
 	}
 
 
-	private void checkDuplicateHeaderFields() throws SGL_Ex_Critic {
+	private void checkDuplicateHeaderFields() throws SLIB_Ex_Critic {
 		for (int i = 2; i < header_a.size(); i++) {
 			for (int j = 2; j < header_b.size(); j++) {
 				if(header_a.get(i).equals(header_b.get(j))){
-					throw new SGL_Ex_Critic("Duplicate header fields");
+					throw new SLIB_Ex_Critic("Duplicate header fields");
 				}
 			}
 		}
 	}
 
-	private ArrayList<String> mergeHeaders() throws SGL_Ex_Critic{
+	private ArrayList<String> mergeHeaders() throws SLIB_Ex_Critic{
 
 		logger.info("Merging headers");
 		checkDuplicateHeaderFields();
@@ -402,7 +402,7 @@ public class ResultsMerger {
 	}
 
 
-	private void loadData(boolean isFile_A) throws SGL_Ex_Critic{
+	private void loadData(boolean isFile_A) throws SLIB_Ex_Critic{
 
 		String filePath=file_a;
 
@@ -435,15 +435,15 @@ public class ResultsMerger {
 						headerb = true;
 						header = new ArrayList<String>(Arrays.asList(data));
 						if(data.length < 2 )
-							throw new SGL_Ex_Critic("Corrupted file "+filePath+", result line "+countLine+" header must contains at least two fields");
+							throw new SLIB_Ex_Critic("Corrupted file "+filePath+", result line "+countLine+" header must contains at least two fields");
 					}
 					else{
 						if(data.length != header.size())
-							throw new SGL_Ex_Critic("Corrupted file "+filePath+", result line "+countLine+" contains abnormal number of values considering header");
+							throw new SLIB_Ex_Critic("Corrupted file "+filePath+", result line "+countLine+" contains abnormal number of values considering header");
 						else{
 							String entry = data[0]+"\t"+data[1];
 							if(values.containsKey(entry))
-								throw new SGL_Ex_Critic("Duplicate row "+entry+" line "+countLine);
+								throw new SLIB_Ex_Critic("Duplicate row "+entry+" line "+countLine);
 							String[] vals = Arrays.copyOfRange(data, 2, data.length);
 							values.put(entry, implodeArray(vals));
 						}
@@ -452,7 +452,7 @@ public class ResultsMerger {
 			}
 			in.close();
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 
 		if(isFile_A){
@@ -465,7 +465,7 @@ public class ResultsMerger {
 		}
 	}
 
-	private void loadDataIndex(boolean isFile_A) throws SGL_Ex_Critic{
+	private void loadDataIndex(boolean isFile_A) throws SLIB_Ex_Critic{
 
 
 		String filePath=file_a;
@@ -521,15 +521,15 @@ public class ResultsMerger {
 						headerb = true;
 						header = new ArrayList<String>(Arrays.asList(data));
 						if(data.length < 2 )
-							throw new SGL_Ex_Critic("Corrupted file "+filePath+", result line "+(countLine+1)+" header must contains at least two fields");
+							throw new SLIB_Ex_Critic("Corrupted file "+filePath+", result line "+(countLine+1)+" header must contains at least two fields");
 					}
 					else{
 						if(data.length != header.size())
-							throw new SGL_Ex_Critic("Corrupted file "+filePath+", result line "+(countLine+1)+" contains abnormal number of values considering header");
+							throw new SLIB_Ex_Critic("Corrupted file "+filePath+", result line "+(countLine+1)+" contains abnormal number of values considering header");
 						else{
 							String entry = data[0]+"\t"+data[1];
 							if(values.containsKey(entry))
-								throw new SGL_Ex_Critic("Duplicate row "+entry+" line "+(countLine+1));
+								throw new SLIB_Ex_Critic("Duplicate row "+entry+" line "+(countLine+1));
 							values.put(entry, countLine);
 						}
 					}
@@ -555,7 +555,7 @@ public class ResultsMerger {
 				outbuff.close();
 
 		}catch (IOException e){//Catch exception if any
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 
 		if(isFile_A){
@@ -588,7 +588,7 @@ public class ResultsMerger {
 			e.printStackTrace();
 			System.out.println("Try to merge using large file parameter");
 		}
-		catch (SGL_Ex_Critic e) {
+		catch (SLIB_Ex_Critic e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

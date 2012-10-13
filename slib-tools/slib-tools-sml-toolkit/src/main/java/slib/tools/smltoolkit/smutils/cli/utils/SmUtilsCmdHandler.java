@@ -48,8 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.tools.module.CmdHandler;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 
 public class SmUtilsCmdHandler extends CmdHandler {
@@ -82,12 +82,12 @@ public class SmUtilsCmdHandler extends CmdHandler {
 	static Logger logger = LoggerFactory.getLogger(SmUtilsCmdHandler.class);
 
 
-	public SmUtilsCmdHandler(String[] args) throws SGL_Exception {
+	public SmUtilsCmdHandler(String[] args) throws SLIB_Exception {
 		super(new SmUtilsCst(), new SmUtilsCmdHandlerCst(), args);
 	}
 
 
-	public void processArgs(String[] args) throws SGL_Exception {
+	public void processArgs(String[] args) throws SLIB_Exception {
 
 		CommandLineParser parser = new BasicParser();
 
@@ -138,7 +138,7 @@ public class SmUtilsCmdHandler extends CmdHandler {
 						this.BATCH_LIMIT = Integer.parseInt(cmd.getOptionValue( "BATCH_LIMIT" ));
 					}
 					catch(NumberFormatException e){
-						throw new SGL_Ex_Critic("Cannot convert BATCH_LIMIT to integer");
+						throw new SLIB_Ex_Critic("Cannot convert BATCH_LIMIT to integer");
 					}
 				}
 
@@ -147,7 +147,7 @@ public class SmUtilsCmdHandler extends CmdHandler {
 						this.BATCH_LIMIT_MATRIX_LINE = Integer.parseInt(cmd.getOptionValue( "BATCH_LIMIT_MATRIX_LINE" ));
 					}
 					catch(NumberFormatException e){
-						throw new SGL_Ex_Critic("Cannot convert BATCH_LIMIT_MATRIX_LINE to integer");
+						throw new SLIB_Ex_Critic("Cannot convert BATCH_LIMIT_MATRIX_LINE to integer");
 					}
 				}
 
@@ -181,7 +181,7 @@ public class SmUtilsCmdHandler extends CmdHandler {
 	}
 	
 	@Override
-	public void showCmdLineExamples() throws SGL_Exception {
+	public void showCmdLineExamples() throws SLIB_Exception {
 		System.out.println(SmUtilsCmdHandlerCst.cmd_examples);
 		ending(null,false,false,false);
 	}
@@ -189,7 +189,7 @@ public class SmUtilsCmdHandler extends CmdHandler {
 	
 
 	@SuppressWarnings("unused")
-	public static void main(String[] args) throws SGL_Exception {
+	public static void main(String[] args) throws SLIB_Exception {
 		SmUtilsCmdHandler handler = new SmUtilsCmdHandler(null);
 	}
 

@@ -63,9 +63,9 @@ import slib.sglib.model.voc.SGLVOC;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.utils.OntoFocusConf;
 import slib.tools.ontofocus.core.utils.QueryEntryURI;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.QueryEntry;
 import slib.utils.impl.QueryFileIterator;
 
@@ -89,7 +89,7 @@ public class OntoFocus {
 		data = DataRepository.getSingleton();
 	}
 
-	public void excecute(OntoFocusConf c) throws SGL_Exception, IOException {
+	public void excecute(OntoFocusConf c) throws SLIB_Exception, IOException {
 
 		this.c = c;
 
@@ -150,7 +150,7 @@ public class OntoFocus {
 					catch(Exception ex){
 						System.err.println("Error processing entry "+e.getKey()+" : "+ex.getMessage());
 						
-						if(!(ex instanceof SGL_Exception_Warning)){
+						if(!(ex instanceof SLIB_Ex_Warning)){
 							ex.printStackTrace();
 							System.exit(-1);
 						}
@@ -162,7 +162,7 @@ public class OntoFocus {
 	}
 
 
-	private void root() throws SGL_Ex_Critic {
+	private void root() throws SLIB_Ex_Critic {
 
 		if(c.rootURI == null){
 			rootURI = RooterDAG.rootUnderlyingTaxonomicDAG(baseGraph,SGLVOC.UNIVERSAL_ROOT);
@@ -179,7 +179,7 @@ public class OntoFocus {
 		}
 	}
 
-	private void loadEtypeConf() throws SGL_Ex_Critic {
+	private void loadEtypeConf() throws SLIB_Ex_Critic {
 
 		// load specialization relationship
 		admittedRels = new HashSet<URI>();
@@ -236,7 +236,7 @@ public class OntoFocus {
 
 	}
 
-	private QueryEntryURI loadQueryURI(QueryEntry queryEntry) throws SGL_Ex_Critic{
+	private QueryEntryURI loadQueryURI(QueryEntry queryEntry) throws SLIB_Ex_Critic{
 
 
 		QueryEntryURI q = new QueryEntryURI();

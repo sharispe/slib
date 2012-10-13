@@ -41,8 +41,8 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 
 /**
  * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a Taxonomy. 
@@ -56,13 +56,13 @@ import slib.utils.ex.SGL_Exception_Warning;
 public class Sim_pairwise_DAG_node_Resnik_1995_Ancestors implements Sim_DAG_node_abstract{
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception{
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception{
 		
 		double sim = 0;
 		Set<V> dcas = c.getDisjointCommonAncestors(a, b);
 		
 		if(dcas.size() == 0)
-			throw new SGL_Exception_Warning("No disjoint ancestors detected for "+a+" "+b+", similarity set to 0");
+			throw new SLIB_Ex_Warning("No disjoint ancestors detected for "+a+" "+b+", similarity set to 0");
 		
 		V mica = null;
 		double mica_ic = -Double.MAX_VALUE;

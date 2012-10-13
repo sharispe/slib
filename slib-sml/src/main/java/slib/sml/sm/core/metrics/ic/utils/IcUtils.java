@@ -40,9 +40,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -58,15 +58,15 @@ public class IcUtils {
 	 */
 	public static double searchMax_IC_MICA(Set<V> ancA, 
 			Set<V> ancB, 
-			ResultStack<V,Double> icResults) throws SGL_Exception{
+			ResultStack<V,Double> icResults) throws SLIB_Exception{
 
 		Set<V> intersec = SetUtils.intersection(ancA, ancB);
 
 		if(intersec.isEmpty())
-			throw new SGL_Exception_Warning("Searching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
+			throw new SLIB_Ex_Warning("Searching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
 		
 		else if(icResults == null)
-			throw new SGL_Exception_Warning("Empty result stack...");
+			throw new SLIB_Ex_Warning("Empty result stack...");
 		
 		Iterator<V> it = intersec.iterator();
 		double max = icResults.get( it.next() ); 
@@ -83,15 +83,15 @@ public class IcUtils {
 	public static double searchMin_pOc_MICA(
 			Set<V> ancA, 
 			Set<V> ancB, 
-			ResultStack<V,Double> icResults) throws SGL_Exception{
+			ResultStack<V,Double> icResults) throws SLIB_Exception{
 
 		Set<V> intersec = SetUtils.intersection(ancA, ancB);
 		
 		if(intersec.isEmpty())
-			throw new SGL_Exception_Warning("Searching a min from an empty collection, be sure the compared concepts are locate under the specified root...");
+			throw new SLIB_Ex_Warning("Searching a min from an empty collection, be sure the compared concepts are locate under the specified root...");
 
 		if(icResults == null)
-			throw new SGL_Ex_Critic("Empty result set");
+			throw new SLIB_Ex_Critic("Empty result set");
 		
 		Iterator<V> it = intersec.iterator();
 		double min = icResults.get( it.next() ); // TODO check empty intersection

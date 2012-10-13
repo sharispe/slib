@@ -36,7 +36,7 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.smbb.core.bioinfo.bmark.seqsim.core;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public interface IblastScoreAcessor {
 	
@@ -47,6 +47,6 @@ public interface IblastScoreAcessor {
 	 * @return associated blast score
 	 * @throws SGL_Ex_Critic if the score is not found
 	 */
-	public double getBlastScore(String protA,String protB) throws SGL_Ex_Critic;
+	public double getBlastScore(String protA,String protB) throws SLIB_Ex_Critic;
 
 }

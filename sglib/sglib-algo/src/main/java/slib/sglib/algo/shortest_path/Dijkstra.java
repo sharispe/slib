@@ -51,7 +51,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.weight.GWS;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 import com.tinkerpop.blueprints.Direction;
 
@@ -80,7 +80,7 @@ public class Dijkstra{
 	 * @param setEdgeTypes the set of edge types to consider
 	 * @throws SGL_Ex_Critic if graph weighting scheme contains negative values associated to graph edges
 	 */
-	public Dijkstra(G g, Set<URI> setEdgeTypes) throws SGL_Ex_Critic{
+	public Dijkstra(G g, Set<URI> setEdgeTypes) throws SLIB_Ex_Critic{
 		this.g = g;
 		this.setEdgeTypes = setEdgeTypes;
 		this.ws = g.getWeightingScheme();
@@ -93,11 +93,11 @@ public class Dijkstra{
 	 * Check the weighting scheme only contains non negative weights
 	 * @throws SGL_Ex_Critic
 	 */
-	private void checkGWSisNonNegative() throws SGL_Ex_Critic {
+	private void checkGWSisNonNegative() throws SLIB_Ex_Critic {
 		
 		for(E e : g.getE(setEdgeTypes)){
 			if(ws.getWeight(e) < 0)
-				throw new SGL_Ex_Critic("Dijkstra algorithm cannot be used for a weighting scheme composed of negative weight");
+				throw new SLIB_Ex_Critic("Dijkstra algorithm cannot be used for a weighting scheme composed of negative weight");
 		}
 	}
 
@@ -109,7 +109,7 @@ public class Dijkstra{
 	 * @param weightingScheme a 
 	 * @throws SGL_Ex_Critic if the specified weighting scheme contains negative values associated to graph edges
 	 */
-	public Dijkstra(G g, Set<URI> setEdgeTypes, GWS weightingScheme) throws SGL_Ex_Critic{
+	public Dijkstra(G g, Set<URI> setEdgeTypes, GWS weightingScheme) throws SLIB_Ex_Critic{
 		this.g = g;
 		this.setEdgeTypes = setEdgeTypes;
 		this.ws = weightingScheme;

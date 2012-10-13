@@ -42,7 +42,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.utils.OperatorConf;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * {@link OperatorsSet_ICA_Grasm} extends {@link OperatorsSet} in order to
@@ -68,7 +68,7 @@ public class OperatorsSet_ICA_Grasm extends OperatorsSet{
 	 * cardinality divided by the number of dca.
 	 */
 	@Override
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception{
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 
 		V class_a = (V) manager.getGraph().getV(rep_a.getResourceValue());
 		V class_b = (V) manager.getGraph().getV(rep_b.getResourceValue());

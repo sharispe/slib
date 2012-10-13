@@ -39,8 +39,8 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 
 /**
@@ -66,7 +66,7 @@ public class Sim_pairwise_DAG_node_Tversky_IC implements Sim_DAG_node_abstract{
 
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		if(conf != null && conf.containsParam(alpha_param_name))
 			alpha = conf.getParamAsDouble(alpha_param_name);
@@ -81,10 +81,10 @@ public class Sim_pairwise_DAG_node_Tversky_IC implements Sim_DAG_node_abstract{
 		return sim(ic_a,ic_b,ic_MICA);
 	}
 
-	public double sim(double ic_a, double ic_b, double ic_mica) throws SGL_Ex_Critic {
+	public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
 		
 		if(ic_mica > ic_a || ic_mica > ic_b )
-			throw new SGL_Ex_Critic("Wrong parameters used with Tversky measure. " +
+			throw new SLIB_Ex_Critic("Wrong parameters used with Tversky measure. " +
 					"IC MICA must be inferior to IC(a) and IC(b)");
 
 		double j = 0.;

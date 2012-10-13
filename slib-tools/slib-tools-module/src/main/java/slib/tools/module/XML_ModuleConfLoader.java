@@ -38,13 +38,13 @@ package slib.tools.module;
 
 import org.w3c.dom.Element;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class XML_ModuleConfLoader {
 	
 	public XMLConfLoaderGeneric generic;
 	
-	public XML_ModuleConfLoader(String xmlFile) throws SGL_Ex_Critic{
+	public XML_ModuleConfLoader(String xmlFile) throws SLIB_Ex_Critic{
 		
 		generic = new XMLConfLoaderGeneric(xmlFile);
 	}

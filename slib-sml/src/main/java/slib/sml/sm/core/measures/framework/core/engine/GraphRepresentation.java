@@ -42,7 +42,7 @@ import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
 
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Abstract class implementing the {@link IGraphRepresentation} interface
@@ -63,11 +63,11 @@ public abstract class GraphRepresentation implements IGraphRepresentation {
 	 * @throws SGL_Exception if the given resource is not supported
 	 * @see #support(Resource);
 	 */
-	public GraphRepresentation(V resource) throws SGL_Exception{
+	public GraphRepresentation(V resource) throws SLIB_Exception{
 
 		this.r = resource;
 		if(!support(resource))
-			throw new SGL_Exception("Do not support "+resource.getClass().getName());
+			throw new SLIB_Exception("Do not support "+resource.getClass().getName());
 	}
 
 

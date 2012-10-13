@@ -46,7 +46,7 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.IDataRepository;
 import slib.sglib.model.repo.IPredicateURIRepo;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * This class defines the singleton used as an in memory repository which manage all
@@ -89,21 +89,23 @@ public class DataRepository extends SGLValueFactory implements IDataRepository{
 		graphs = new HashMap<URI, G>();
 	}
 
+    @Override
 	public void createNamespace(String nm_s) {
 		namespaces.add(nm_s);
 	}
 
-	public boolean loadNamespacePrefix(String prefix, String reference) throws SGL_Ex_Critic {
+	public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic {
 
-		if(!namespaces.contains(reference))
-			createNamespace(reference);
+		if(!namespaces.contains(reference)) {
+                createNamespace(reference);
+            }
 
 		if(!namespacesPrefix.containsKey(prefix)){
 			namespacesPrefix.put(prefix, reference);
 			return true;
 		}
 		else if(namespacesPrefix.containsKey(prefix) && !namespacesPrefix.get(prefix).equals(reference)){
-			throw new SGL_Ex_Critic("Cannot include namespace prefix "+prefix+" for namespace "+reference+"" +
+			throw new SLIB_Ex_Critic("Cannot include namespace prefix "+prefix+" for namespace "+reference+"" +
 					"\n prefix already linked to "+namespacesPrefix.get(prefix));
 		}
 		return false;

@@ -57,8 +57,8 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_KEGG;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
 
 /**
@@ -90,7 +90,7 @@ public class BenchmarkBuilder_Kegg {
 	public void generateBenchmark(
 			G graph, 
 			InstancesAccessor instancesAccessor,
-			SmbbConf_GO_KEGG conf) throws SGL_Exception{
+			SmbbConf_GO_KEGG conf) throws SLIB_Exception{
 
 		
 		this.instancesAccessor = instancesAccessor;
@@ -103,7 +103,7 @@ public class BenchmarkBuilder_Kegg {
 
 
 		if(pathway_clusters.length == 0)
-			throw new SGL_Ex_Critic("Invalid number of cluster specified "+pathway_clusters.length);
+			throw new SLIB_Ex_Critic("Invalid number of cluster specified "+pathway_clusters.length);
 
 		logger.info("Building Kegg benchmark considering clusters: "+Arrays.toString(pathway_clusters));
 		logger.info(conf.toString());
@@ -135,7 +135,7 @@ public class BenchmarkBuilder_Kegg {
 	}
 
 
-	private void buildIndexFile(String indexFile) throws SGL_Ex_Critic   {
+	private void buildIndexFile(String indexFile) throws SLIB_Ex_Critic   {
 
 		try{
 			FileWriter fstream = new FileWriter(indexFile);
@@ -165,13 +165,13 @@ public class BenchmarkBuilder_Kegg {
 			
 			logger.info("Reduced index file generated at "+indexFile);
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 
 	}
 
 
-	private HashMap<String, Set<String>> loadClusters(String entityNamespace) throws SGL_Ex_Critic {
+	private HashMap<String, Set<String>> loadClusters(String entityNamespace) throws SLIB_Ex_Critic {
 
 
 		HashMap<String, Set<String>> clusters = new HashMap<String, Set<String>>();
@@ -195,13 +195,13 @@ public class BenchmarkBuilder_Kegg {
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		return clusters;
 	}
 
 
-	public void buildPairwiseEvalFile(String outfile) throws SGL_Ex_Critic{
+	public void buildPairwiseEvalFile(String outfile) throws SLIB_Ex_Critic{
 
 		ArrayList<URI> uris = new ArrayList<URI>(getAllClanProteinURIs());
 
@@ -216,7 +216,7 @@ public class BenchmarkBuilder_Kegg {
 
 			out.close();
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		logger.info("comparison file generated see: "+outfile);
 	}
@@ -230,7 +230,7 @@ public class BenchmarkBuilder_Kegg {
 		return uris;
 	}
 
-	private void buildPostiveEvalFile(String outFile) throws SGL_Ex_Critic {
+	private void buildPostiveEvalFile(String outFile) throws SLIB_Ex_Critic {
 
 
 		try{
@@ -246,12 +246,12 @@ public class BenchmarkBuilder_Kegg {
 			}
 			out.close();
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		logger.info("Positive comparison generated see: "+outFile);
 	}
 
-	private void buildNegativeEvalFile(String outFile,int nb) throws SGL_Ex_Critic {
+	private void buildNegativeEvalFile(String outFile,int nb) throws SLIB_Ex_Critic {
 
 
 		ArrayList<URI> uris = new ArrayList<URI>(getAllClanProteinURIs());
@@ -300,10 +300,10 @@ public class BenchmarkBuilder_Kegg {
 				String mess = "Despite the numerous attempts ("+allowedAttemps+"), the program fails " +
 						"to generate a negative set of pairwise comparison" +
 						"... the selected clans overlap is to high. ";
-				throw new SGL_Ex_Critic(mess);
+				throw new SLIB_Ex_Critic(mess);
 			}
 		}catch (Exception e){
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		logger.info("Negative comparison generated see: "+outFile);
 	}
@@ -319,7 +319,7 @@ public class BenchmarkBuilder_Kegg {
 		return clans;
 	}
 
-	private int getNbPostiveEval() throws SGL_Ex_Critic {
+	private int getNbPostiveEval() throws SLIB_Ex_Critic {
 
 		int count = 0;
 		for(HashSet<URI> set : clustersEntitiesUris.values())
@@ -328,7 +328,7 @@ public class BenchmarkBuilder_Kegg {
 	}
 
 
-	public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SGL_Ex_Critic {
+	public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SLIB_Ex_Critic {
 
 		buildPostiveEvalFile(protPositiveComparison);
 

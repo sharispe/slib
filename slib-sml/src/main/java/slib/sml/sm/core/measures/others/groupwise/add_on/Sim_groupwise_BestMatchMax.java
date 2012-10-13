@@ -41,12 +41,12 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 public class Sim_groupwise_BestMatchMax extends Sim_groupwise_general_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SLIB_Ex_Critic {
 
 		MatrixDouble<V,V> results_setA = rc.getMatrixScore(setA,setB, conf);
 		

@@ -54,7 +54,7 @@ import slib.tools.smltoolkit.smbb.cli.SmbbCli;
 import slib.tools.smltoolkit.sme.cli.SmeCli;
 import slib.tools.smltoolkit.sml_server_deploy.cli.SmlDeployCli;
 import slib.tools.smltoolkit.smutils.cli.SmlUtilsCli;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Semantic Measures Library Command Line Interface 
@@ -73,7 +73,7 @@ public class SmlCli extends CmdHandler{
 	String[] argsGeneral;
 	CommandLine argsGeneralCMD;
 
-	public SmlCli(String[] args) throws SGL_Exception {
+	public SmlCli(String[] args) throws SLIB_Exception {
 
 		super(new SmlCst() , new SmlCliCst(), args);
 		
@@ -82,7 +82,7 @@ public class SmlCli extends CmdHandler{
 	}
 
 
-	public void processArgs(String[] args) throws SGL_Exception {
+	public void processArgs(String[] args) throws SLIB_Exception {
 
 		preProcessArgs(args);
 
@@ -116,7 +116,7 @@ public class SmlCli extends CmdHandler{
 	}
 
 
-	private void launch() throws SGL_Exception {
+	private void launch() throws SLIB_Exception {
 
 
 		SmlModuleCLI cli = null;

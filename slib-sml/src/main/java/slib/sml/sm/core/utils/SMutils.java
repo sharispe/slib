@@ -37,14 +37,14 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.utils;
 
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class SMutils {
 	
 	
-	public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a,V b, Object value) throws SGL_Ex_Critic{
+	public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a,V b, Object value) throws SLIB_Ex_Critic{
 		
-		throw new SGL_Ex_Critic("Critical error. \n" +
+		throw new SLIB_Ex_Critic("Critical error. \n" +
 				"A result produced by the pairwise measure "+pairwiseConf.flag+" was not a number "+value+" (NaN/Infinity). \n" +
 				"Pairwise measure in use "+pairwiseConf.flag+" id="+pairwiseConf.id+". \n" +
 				"Classes compared "+a+" vs "+b+". \n" +
@@ -53,8 +53,8 @@ public class SMutils {
 	}
 
 	public static void throwArithmeticCriticalException(SMconf m, SMconf p, V e1,
-			V e2, Object value) throws SGL_Ex_Critic {
-		throw new SGL_Ex_Critic("Critical error. \n" +
+			V e2, Object value) throws SLIB_Ex_Critic {
+		throw new SLIB_Ex_Critic("Critical error. \n" +
 				"A result produced by the measure "+m.flag+" was not a number "+value+" (NaN/infinity). \n" +
 				"Pairwise measure in use "+p.flag+" id="+p.id+". \n" +
 				"Entities compared "+e1+" vs "+e2+". \n" +

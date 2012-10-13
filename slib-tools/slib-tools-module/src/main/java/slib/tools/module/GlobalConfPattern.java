@@ -38,8 +38,8 @@ package slib.tools.module;
 
 import java.util.HashMap;
 
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class GlobalConfPattern {
 	
@@ -59,9 +59,9 @@ public class GlobalConfPattern {
 		variables = new HashMap<String, String>();
 	}
 	
-	public void addVar(String key, String value) throws SGL_Ex_Critic{
+	public void addVar(String key, String value) throws SLIB_Ex_Critic{
 		if(variables.containsKey(key))
-			throw new SGL_Ex_Critic("Duplicate global variable "+key);
+			throw new SLIB_Ex_Critic("Duplicate global variable "+key);
 		variables.put(key, value);
 	}
 	
@@ -69,7 +69,7 @@ public class GlobalConfPattern {
 		return variables;
 	}
 	
-	public String getValue(String key) throws SGL_Exception{
+	public String getValue(String key) throws SLIB_Exception{
 		return variables.get(key);
 	}
 }

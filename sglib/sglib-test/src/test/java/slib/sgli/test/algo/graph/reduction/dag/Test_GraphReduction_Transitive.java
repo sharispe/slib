@@ -45,7 +45,7 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SGL_UnitTestValues;
+import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
 import slib.sgli.test.algo.graph.TestUtils;
 import slib.sglib.algo.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.reduction.dag.GraphReduction_Transitive;
@@ -59,21 +59,21 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sglib.model.voc.SGLVOC;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 import com.tinkerpop.blueprints.Direction;
 
 public class Test_GraphReduction_Transitive {
 	
 	G g;
-	SGL_UnitTestValues test = new SGL_UnitTestValues();
+	SLIB_UnitTestValues test = new SLIB_UnitTestValues();
 
-	public Test_GraphReduction_Transitive() throws SGL_Exception{
-		g = TestUtils.loadTestGraph(GFormat.SGL,SGL_UnitTestValues.G_DAG_BASIC);
+	public Test_GraphReduction_Transitive() throws SLIB_Exception{
+		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 	}
 
 	@Test
-	public void transitiveReductionToyGraph() throws SGL_Exception{
+	public void transitiveReductionToyGraph() throws SLIB_Exception{
 
 		System.out.println("Checking Transitive Reduction");
 		Set<E> removedEdges;
@@ -110,15 +110,15 @@ public class Test_GraphReduction_Transitive {
 
 
 	@Test
-	public void transitiveReductionGO() throws SGL_Exception{
+	public void transitiveReductionGO() throws SLIB_Exception{
 
-		String gofilePath 	= SGL_UnitTestValues.G_GO;
+		String gofilePath 	= SLIB_UnitTestValues.G_GO;
 
 		DataRepository.getSingleton().loadNamespacePrefix("GO", "http://GO#");
 		GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
 		
 		GraphConf gconf = new GraphConf();
-		gconf.setUri(SGL_UnitTestValues.uriGraph);
+		gconf.setUri(SLIB_UnitTestValues.uriGraph);
 		GDataConf conf = new GDataConf(GFormat.OBO, gofilePath);
 		gconf.addGDataConf(new GDataConf(GFormat.OBO, gofilePath));
 		
@@ -126,7 +126,7 @@ public class Test_GraphReduction_Transitive {
 
 		System.out.println(g.toString());
 		
-		URI root_uri = DataRepository.getSingleton().createURI(SGLVOC.SGL_NS, "FICTIVE_ROOT");
+		URI root_uri = DataRepository.getSingleton().createURI(SGLVOC.SLIB_NS, "FICTIVE_ROOT");
 		
 		RooterDAG.rootUnderlyingTaxonomicDAG(g, root_uri);
 		

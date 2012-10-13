@@ -51,7 +51,7 @@ import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
@@ -76,12 +76,12 @@ public class GraphReduction_Transitive {
 	 * @throws SGL_Ex_Critic if the given graph is not a rooted Graph considering SUBCLASSOF relationships
 	 * @return the set of edges removed.
 	 */
-	public static Set<E> process(G graph) throws SGL_Ex_Critic {
+	public static Set<E> process(G graph) throws SLIB_Ex_Critic {
 		
 		ValidatorDAG validator = new ValidatorDAG();
 		
 		if( ! validator.containsRootedTaxonomicDag(graph))
-			throw new SGL_Ex_Critic("Transitive reduction require ROOTED DAG");
+			throw new SLIB_Ex_Critic("Transitive reduction require ROOTED DAG");
 		
 		V root = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
 		

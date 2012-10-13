@@ -40,7 +40,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 
@@ -61,7 +61,7 @@ public class Sim_Framework_DAG_Set_Bader_2003 extends Sim_Framework_DAG_Set_abst
 
 
 	@Override
-	public double sim(Set<V> setA, Set<V> setB, SMconf conf) throws SGL_Exception {
+	public double sim(Set<V> setA, Set<V> setB, SMconf conf) throws SLIB_Exception {
 
 		Set<V> interSecAncestors = SetUtils.intersection(setA, setB);
 

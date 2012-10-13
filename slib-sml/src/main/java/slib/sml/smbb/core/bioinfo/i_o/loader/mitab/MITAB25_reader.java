@@ -51,7 +51,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.InteractionSet;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.BigFileReader;
 
 
@@ -82,11 +82,11 @@ public class MITAB25_reader {
 	
 
 
-	public InteractionSet load(String filePath) throws SGL_Ex_Critic{
+	public InteractionSet load(String filePath) throws SLIB_Ex_Critic{
 		return load(filePath,"",null,null);
 	}
 
-	public InteractionSet load(String filePath,String uriprefix, String flagTaxon_A,String flagTaxon_B) throws SGL_Ex_Critic{
+	public InteractionSet load(String filePath,String uriprefix, String flagTaxon_A,String flagTaxon_B) throws SLIB_Ex_Critic{
 
 		InteractionSet ppiSet = new InteractionSet();
 
@@ -167,7 +167,7 @@ public class MITAB25_reader {
 			
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		return ppiSet;
 	}

@@ -40,7 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sml.smbb.core.SmbbCst;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
@@ -61,7 +61,7 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 		type = SmbbCst.type_GO_PFAM;
 	} 
 
-	public SmbbConf_GO_Pfam(Conf sspBBConf_g) throws SGL_Ex_Critic {
+	public SmbbConf_GO_Pfam(Conf sspBBConf_g) throws SLIB_Ex_Critic {
 
 		this();
 
@@ -96,7 +96,7 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 	}
 
 	@Override
-	public boolean isValid() throws SGL_Ex_Critic {
+	public boolean isValid() throws SLIB_Ex_Critic {
 
 		logger.info(toString());
 

@@ -44,7 +44,7 @@ import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
 import slib.sglib.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics;
 import slib.sglib.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics_cst;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
@@ -52,7 +52,7 @@ public class FilterBuilderGeneric {
 	
 	
 	
-	public static Filter buildFilter(Conf gconf) throws SGL_Ex_Critic{
+	public static Filter buildFilter(Conf gconf) throws SLIB_Ex_Critic{
 		
 		Filter f = null;
 		

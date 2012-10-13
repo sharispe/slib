@@ -2,7 +2,7 @@ package slib.utils.i;
 
 import java.util.Map;
 
-public interface Parametrable {
+public interface Parametrable{
 
 	public void addParameter(String name, Object o);
 	public Object getParameter(String name);

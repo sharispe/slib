@@ -64,9 +64,9 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
-import slib.utils.ex.SGL_Exception_Warning;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.OBOconstants;
 
 /**
@@ -183,7 +183,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		data = DataRepository.getSingleton();
 	}
 
-	public G load(GraphConf conf) throws SGL_Exception {
+	public G load(GraphConf conf) throws SLIB_Exception {
 
 		G g = GraphLoaderGeneric.load(conf);
 		return g;
@@ -213,7 +213,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		oboTypeCurrent = null;
 	}
 
-	public void populate(GDataConf conf, G g) throws SGL_Exception {
+	public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
 		String defaultNamespace = (String) conf.getParameter("default-namespace");
 		
@@ -229,7 +229,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		logger.debug("OBO specification loaded.");
 	}
 
-	private void loadOboSpec() throws SGL_Exception {
+	private void loadOboSpec() throws SLIB_Exception {
 
 		try {
 
@@ -264,7 +264,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 						// check format-version 
 						if(!format_version.equals(format_parser) && !allow_all_gafVersion)
-							throw new SGL_Exception_Warning("Parser of format-version '"+format_parser+"' used to load OBO version '"+format_version+"'");
+							throw new SLIB_Ex_Warning("Parser of format-version '"+format_parser+"' used to load OBO version '"+format_version+"'");
 
 						if(line.equals(OBOconstants.TERM_FLAG))
 							onTermSpec = true;
@@ -381,7 +381,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 			in.close();
 		} catch (IOException e) {
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		}
 		loadGraph();
 
@@ -390,16 +390,16 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 
 
-	private String buildURI(String value) throws SGL_Ex_Critic {
+	private String buildURI(String value) throws SLIB_Ex_Critic {
 		
 		String info[] = getDataColonSplit(value);
 		
 
-		if(data != null && info.length == 2){
+		if(info != null && info.length == 2){
 
 			String ns = data.getNamespace(info[0]);
 			if(ns == null)
-				throw new SGL_Ex_Critic("No namespace associated to prefix "+info[0]+". Cannot load "+value+", please load required namespace prefix");
+				throw new SLIB_Ex_Critic("No namespace associated to prefix "+info[0]+". Cannot load "+value+", please load required namespace prefix");
 			
 			return ns+info[1];
 		}
@@ -408,7 +408,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		}
 	}
 
-	private void checkLine(String line) throws SGL_Ex_Critic {
+	private void checkLine(String line) throws SLIB_Ex_Critic {
 
 		if(line.equals(OBOconstants.TERM_FLAG)){
 			handleElement();
@@ -422,7 +422,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		}
 	}
 
-	private void handleElement() throws SGL_Ex_Critic {
+	private void handleElement() throws SLIB_Ex_Critic {
 
 		if(onTermSpec)
 			handleTerm();
@@ -431,7 +431,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 			handleTypeDef();
 	}
 
-	private void setOppositeRel(String uri, String oppositeURI) throws SGL_Ex_Critic {
+	private void setOppositeRel(String uri, String oppositeURI) throws SLIB_Ex_Critic {
 
 		// Check if opposite have already been specified
 		// and that is opposite is not the one we try to specify
@@ -445,29 +445,29 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 					"Please correct [Typedef] '"+uri+"' & "+
 					"[Typedef] '"+oppositeURI+"' specification.";
 
-			throw new SGL_Ex_Critic(error);
+			throw new SLIB_Ex_Critic(error);
 		}
 		inverseRel.put(uri, oppositeURI);
 	}
 
 
-	private void handleTerm() throws SGL_Ex_Critic {
+	private void handleTerm() throws SLIB_Ex_Critic {
 
 		if(onTermSpec){
 
 			if(oboTerms.containsKey(oboTermCurrent.getURIstring()))
-				throw new SGL_Ex_Critic("Duplicate entry for [Term] "+oboTermCurrent.getURIstring());
+				throw new SLIB_Ex_Critic("Duplicate entry for [Term] "+oboTermCurrent.getURIstring());
 
 			oboTerms.put(oboTermCurrent.getURIstring(), oboTermCurrent);
 			oboTermCurrent = new OboTerm();
 		}
 	}
 
-	private void handleTypeDef() throws SGL_Ex_Critic {
+	private void handleTypeDef() throws SLIB_Ex_Critic {
 
 		if(onTypeDef){
 			if(oboTypes.containsKey(oboTypeCurrent.getURIstring()))
-				throw new SGL_Ex_Critic("Duplicate entry for [Typedef] "+oboTypeCurrent.getURIstring());
+				throw new SLIB_Ex_Critic("Duplicate entry for [Typedef] "+oboTypeCurrent.getURIstring());
 
 			oboTypes.put(oboTypeCurrent.getURIstring(), oboTypeCurrent);
 			oboTermCurrent = new OboTerm();
@@ -494,7 +494,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 	 * Create the graph considering information loaded 
 	 * @throws SGL_Exception
 	 */
-	private void loadGraph() throws SGL_Exception {
+	private void loadGraph() throws SLIB_Exception {
 
 		// - create vertices -----------------------------------------------
 
@@ -584,7 +584,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 		this.allow_all_gafVersion = allow_all_gafVersion;
 	}
 
-	public static void main(String[] args) throws SGL_Exception_Warning {
+	public static void main(String[] args) throws SLIB_Ex_Warning {
 
 		//		String path = System.getProperty("user.dir")+"/data/graph/obo/";
 		//

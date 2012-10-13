@@ -49,8 +49,8 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 import com.tinkerpop.blueprints.Direction;
@@ -96,7 +96,7 @@ public class DepthAnalyserAG {
 	 * @return a ResultStack containing the depth of each vertex.
 	 * @throws SGL_Ex_Critic 
 	 */
-	private ResultStack<V,Integer> getVDepths(boolean max) throws SGL_Exception {
+	private ResultStack<V,Integer> getVDepths(boolean max) throws SLIB_Exception {
 		
 		ResultStack<V,Integer> computedDepths = new ResultStack<V,Integer>();
 		
@@ -169,7 +169,7 @@ public class DepthAnalyserAG {
 	 * @return a ResultStack containing the maximal depth of each vertex.
 	 * @throws SGL_Ex_Critic 
 	 */
-	public ResultStack<V,Integer> getVMaxDepths() throws SGL_Exception {
+	public ResultStack<V,Integer> getVMaxDepths() throws SLIB_Exception {
 		
 		logger.debug("Compute max depths");
 		return getVDepths(true);
@@ -179,7 +179,7 @@ public class DepthAnalyserAG {
 	 * @return a ResultStack containing the minimal depth of each vertex.
 	 * @throws SGL_Ex_Critic 
 	 */
-	public ResultStack<V,Integer> getVMinDepths() throws SGL_Exception{
+	public ResultStack<V,Integer> getVMinDepths() throws SLIB_Exception{
 		
 		logger.debug("Compute min depths");
 		return getVDepths(false);
@@ -190,7 +190,7 @@ public class DepthAnalyserAG {
 	 * key Integer the depth, value the number of vertices with the corresponding depth
 	 * @throws SGL_Ex_Critic 
 	 */
-	public HashMap<Integer, Integer> getMinDepthsDistribution() throws SGL_Exception{
+	public HashMap<Integer, Integer> getMinDepthsDistribution() throws SLIB_Exception{
 		
 		ResultStack<V,Integer> allDepths = getVMinDepths();
 		HashMap<Integer, Integer> distribution = getDistribution(allDepths);
@@ -204,7 +204,7 @@ public class DepthAnalyserAG {
 	 * key Integer the depth, value the number of vertices with the corresponding depth
 	 * @throws SGL_Ex_Critic 
 	 */
-	public HashMap<Integer, Integer> getMaxDepthsDistribution() throws SGL_Exception{
+	public HashMap<Integer, Integer> getMaxDepthsDistribution() throws SLIB_Exception{
 		
 		ResultStack<V,Integer> allDepths = getVMaxDepths();
 		HashMap<Integer, Integer> distribution = getDistribution(allDepths);

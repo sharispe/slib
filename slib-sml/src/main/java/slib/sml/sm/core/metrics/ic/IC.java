@@ -39,11 +39,11 @@ package slib.sml.sm.core.metrics.ic;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
 public interface IC {
 	
-	public ResultStack<V,Double> compute(ICconf conf, SM_Engine manager) throws SGL_Ex_Critic;
+	public ResultStack<V,Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;
 
 }

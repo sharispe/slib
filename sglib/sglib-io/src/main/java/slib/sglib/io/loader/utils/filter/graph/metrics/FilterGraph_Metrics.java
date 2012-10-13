@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.io.loader.utils.filter.graph.metrics;
 
 import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class FilterGraph_Metrics extends FilterGraph {
@@ -50,7 +50,7 @@ public class FilterGraph_Metrics extends FilterGraph {
 		super(id, FilterGraph_Metrics_cst.TYPE);
 	}
 	
-	public FilterGraph_Metrics(Conf conf) throws SGL_Ex_Critic {
+	public FilterGraph_Metrics(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 		
 		String removeEmptys = (String) conf.getParam(FilterGraph_Metrics_cst.REMOVE_EMPTY);
@@ -62,20 +62,20 @@ public class FilterGraph_Metrics extends FilterGraph {
 			else if(removeEmptys.equalsIgnoreCase("false"))
 				removeEmpty = false;
 			else
-				throw new SGL_Ex_Critic("Only value true or false are admitted for field "+FilterGraph_Metrics_cst.REMOVE_EMPTY+" in "+this.getId());
+				throw new SLIB_Ex_Critic("Only value true or false are admitted for field "+FilterGraph_Metrics_cst.REMOVE_EMPTY+" in "+this.getId());
 			
 		}
 		
 		
 		String value_s      = (String) conf.getParam(FilterGraph_Metrics_cst.VALUE);
 		if(value_s == null)
-			throw new SGL_Ex_Critic("Please specify a value (attribut "+FilterGraph_Metrics_cst.VALUE+" for Filter "+this.getId());
+			throw new SLIB_Ex_Critic("Please specify a value (attribut "+FilterGraph_Metrics_cst.VALUE+" for Filter "+this.getId());
 		else{
 			try{
 				value = Double.parseDouble(value_s);
 			}
 			catch(NumberFormatException e){
-				throw new SGL_Ex_Critic("Please specify a numeric value for attribute "+FilterGraph_Metrics_cst.VALUE+" in filter "+this.getId()+" current value = "+value_s);
+				throw new SLIB_Ex_Critic("Please specify a numeric value for attribute "+FilterGraph_Metrics_cst.VALUE+" in filter "+this.getId()+" current value = "+value_s);
 			}
 		}
 	}

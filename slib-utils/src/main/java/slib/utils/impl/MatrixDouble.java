@@ -41,7 +41,7 @@ package slib.utils.impl;
 import java.util.HashMap;
 import java.util.Set;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * Matrix of Double object (Non Sparse matrix)
@@ -120,7 +120,7 @@ public class MatrixDouble<C,R>{
 		for(C c: columnIndex.keySet())
 			try {
 				row[i] = getValue(c, r);
-			} catch (SGL_Ex_Critic e) {}
+			} catch (SLIB_Ex_Critic e) {}
 
 		return row;
 	}
@@ -131,12 +131,12 @@ public class MatrixDouble<C,R>{
 		return null;
 	}
 
-	public Double getValue(C colResource,R rowResource) throws SGL_Ex_Critic{
+	public Double getValue(C colResource,R rowResource) throws SLIB_Ex_Critic{
 		try{
 			return matrix[columnIndex.get(colResource)][rowIndex.get(rowResource)];
 		}
 		catch(Exception e){
-			throw new SGL_Ex_Critic("Undefined index contains col index "+colResource+" "+isInColumnIndex(colResource)+"\ncontains row index "+rowResource+" "+isInRowIndex(rowResource)+ " in matrix "+e.getMessage());
+			throw new SLIB_Ex_Critic("Undefined index contains col index "+colResource+" "+isInColumnIndex(colResource)+"\ncontains row index "+rowResource+" "+isInRowIndex(rowResource)+ " in matrix "+e.getMessage());
 		}
 	}
 
@@ -178,10 +178,10 @@ public class MatrixDouble<C,R>{
 		return max;
 	}
 	
-	public Double getMaxColumn(C v) throws SGL_Ex_Critic{
+	public Double getMaxColumn(C v) throws SLIB_Ex_Critic{
 		
 		if(! isInColumnIndex(v))
-			throw new SGL_Ex_Critic("Unable to locate "+v+"in column index");
+			throw new SLIB_Ex_Critic("Unable to locate "+v+"in column index");
 		
 		Double[] columnScore = getColumn(v);
 		Double max = null;
@@ -192,10 +192,10 @@ public class MatrixDouble<C,R>{
 		return max;
 	}
 	
-	public Double getMaxRow(R v) throws SGL_Ex_Critic{
+	public Double getMaxRow(R v) throws SLIB_Ex_Critic{
 		
 		if(! isInRowIndex(v))
-			throw new SGL_Ex_Critic("Unable to locate "+v+"in row index");
+			throw new SLIB_Ex_Critic("Unable to locate "+v+"in row index");
 		
 		Double[] rowScore = getRow(v);
 		Double max = null;
@@ -263,7 +263,7 @@ public class MatrixDouble<C,R>{
 				for(C v : columnIndex.keySet())
 					try {
 						out += "\t"+getValue(v, vj);
-					} catch (SGL_Ex_Critic e) {
+					} catch (SLIB_Ex_Critic e) {
 						e.printStackTrace();// no problem
 					}
 				out += "\n";

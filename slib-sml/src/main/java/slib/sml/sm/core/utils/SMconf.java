@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.utils;
 
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class SMconf extends Conf{
@@ -55,7 +55,7 @@ public class SMconf extends Conf{
 	
 
 	
-	public SMconf(String id,String flag,String label) throws SGL_Ex_Critic{
+	public SMconf(String id,String flag,String label) throws SLIB_Ex_Critic{
 		
 		this.id 	   = id;
 		this.flag 	   = flag;
@@ -64,7 +64,7 @@ public class SMconf extends Conf{
 		init();
 	}
 	
-	public SMconf(String id,String flag,String label, ICconf icConf) throws SGL_Ex_Critic{
+	public SMconf(String id,String flag,String label, ICconf icConf) throws SLIB_Ex_Critic{
 		
 		this.id 	   = id;
 		this.flag 	   = flag;
@@ -73,7 +73,7 @@ public class SMconf extends Conf{
 		init();
 	}
 	
-	public SMconf(String id,String flag,String label, ICconf icConf,String representation,OperatorConf operator) throws SGL_Ex_Critic{
+	public SMconf(String id,String flag,String label, ICconf icConf,String representation,OperatorConf operator) throws SLIB_Ex_Critic{
 		
 		this.id 	   = id;
 		this.flag 	   = flag;
@@ -84,12 +84,12 @@ public class SMconf extends Conf{
 		init();
 	}
 	
-	private void init() throws SGL_Ex_Critic {
+	private void init() throws SLIB_Ex_Critic {
 		
 		this.className 		  	  = SMConstants.semanticMeasureClassName(this.flag);
 		
 		if(this.className == null)
-			throw new SGL_Ex_Critic("Cannot resolve Semantic measure flag: "+flag);
+			throw new SLIB_Ex_Critic("Cannot resolve Semantic measure flag: "+flag);
 	}
 
 	public ICconf getICconf() {

@@ -41,13 +41,13 @@ import java.util.Map;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
 
 public class Sim_pairwise_DAG_edge_Pekar_Staab_2002 extends Sim_DAG_edge_abstract{
 
-public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Ex_Critic {
+public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
 	
 	V msa  = c.getMSA(a,b);
 	V root = c.getRoot();

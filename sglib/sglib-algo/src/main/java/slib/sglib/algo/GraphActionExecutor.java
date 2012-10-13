@@ -41,7 +41,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.SGLcst;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sglib.model.voc.SGLVOC;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
 import com.tinkerpop.blueprints.Direction;
@@ -51,7 +51,7 @@ public class GraphActionExecutor {
 
 	static Logger logger = LoggerFactory.getLogger(GraphActionExecutor.class);
 
-	public static void applyAction(GAction action,G g) throws SGL_Ex_Critic{
+	public static void applyAction(GAction action,G g) throws SLIB_Ex_Critic{
 
 		GActionType actionType = action.type;
 
@@ -72,10 +72,10 @@ public class GraphActionExecutor {
 			verticeReduction(action,g);
 
 		else
-			throw new SGL_Ex_Critic("Unknow action "+action.type);
+			throw new SLIB_Ex_Critic("Unknow action "+action.type);
 	}
 
-	private static void verticeReduction(GAction action, G g) throws SGL_Ex_Critic {
+	private static void verticeReduction(GAction action, G g) throws SLIB_Ex_Critic {
 
 		logger.debug("Starting "+GActionType.VERTICES_REDUCTION);
 
@@ -95,7 +95,7 @@ public class GraphActionExecutor {
 				pattern = Pattern.compile(regex);
 			}
 			catch(PatternSyntaxException e){
-				throw new SGL_Ex_Critic("The specified regex '"+regex+"' is invalid: "+e.getMessage());
+				throw new SLIB_Ex_Critic("The specified regex '"+regex+"' is invalid: "+e.getMessage());
 			}
 
 
@@ -163,7 +163,7 @@ public class GraphActionExecutor {
 					}
 					in.close();
 				} catch (IOException e) {
-					throw new SGL_Ex_Critic(e.getMessage());
+					throw new SLIB_Ex_Critic(e.getMessage());
 				}
 			}
 		}
@@ -173,7 +173,7 @@ public class GraphActionExecutor {
 
 
 
-	private static void rdfsInference(GAction action, G g) throws SGL_Ex_Critic{
+	private static void rdfsInference(GAction action, G g) throws SLIB_Ex_Critic{
 
 		logger.debug("Apply inference engine");
 		Sail sail = new ForwardChainingRDFSInferencer(g);
@@ -194,7 +194,7 @@ public class GraphActionExecutor {
 			repo.shutDown();
 
 		} catch (RepositoryException e) {
-			throw new SGL_Ex_Critic(e.getMessage());
+			throw new SLIB_Ex_Critic(e.getMessage());
 		} 
 
 	}
@@ -307,7 +307,7 @@ public class GraphActionExecutor {
 		}
 	}
 
-	private static void type_vertices(GAction action, G g) throws SGL_Ex_Critic {
+	private static void type_vertices(GAction action, G g) throws SLIB_Ex_Critic {
 
 		logger.debug("Start Typing vertices");
 
@@ -318,13 +318,13 @@ public class GraphActionExecutor {
 
 		if(fails != null){
 			if(Util.stringToBoolean(fails) && !complete)
-				throw new SGL_Ex_Critic("Type inferencer fails to resolve all types...");
+				throw new SLIB_Ex_Critic("Type inferencer fails to resolve all types...");
 		}
 
 		logger.debug("End Typing vertices");
 	}
 
-	private static void rerooting(GAction action, G g) throws SGL_Ex_Critic {
+	private static void rerooting(GAction action, G g) throws SLIB_Ex_Critic {
 
 
 		logger.info("Rerooting");
@@ -343,7 +343,7 @@ public class GraphActionExecutor {
 				URI rootURI = DataRepository.getSingleton().createURI(rootURIs);
 
 				if(g.getV(rootURI) == null)
-					throw new SGL_Ex_Critic("Cannot resolve specified root:"+rootURI);
+					throw new SLIB_Ex_Critic("Cannot resolve specified root:"+rootURI);
 				else{
 					logger.info("Reduce graph considering root "+rootURI);
 					GraphReduction_DAG.taxonomicReduction(g, rootURI, false);
@@ -351,12 +351,12 @@ public class GraphActionExecutor {
 			}
 		}
 		else{
-			throw new SGL_Ex_Critic("Please specify a 'root_uri' associated to the action rerooting");
+			throw new SLIB_Ex_Critic("Please specify a 'root_uri' associated to the action rerooting");
 		}
 
 	}
 
-	private static void transitive_reduction(GAction action, G g) throws SGL_Ex_Critic {
+	private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
 
 		String target = (String) action.getParameter("target");
 
@@ -367,7 +367,7 @@ public class GraphActionExecutor {
 		String[] admittedTarget = {"CLASSES","INSTANCES"};
 
 		if(!Arrays.asList(admittedTarget).contains(target)){
-			throw new SGL_Ex_Critic("Unknow target "+target+", admitted "+Arrays.asList(admittedTarget));
+			throw new SLIB_Ex_Critic("Unknow target "+target+", admitted "+Arrays.asList(admittedTarget));
 		}
 		else if(target.equals("CLASSES"))
 			GraphReduction_Transitive.process(g);
@@ -378,7 +378,7 @@ public class GraphActionExecutor {
 
 	}
 
-	private static void transitive_reductionInstance(GAction action, G g) throws SGL_Ex_Critic {
+	private static void transitive_reductionInstance(GAction action, G g) throws SLIB_Ex_Critic {
 
 		// --------------- TO_SPLIT
 
@@ -438,7 +438,7 @@ public class GraphActionExecutor {
 
 	}
 
-	public static void applyActions(Collection<GAction> actions,G g) throws SGL_Ex_Critic{
+	public static void applyActions(Collection<GAction> actions,G g) throws SLIB_Ex_Critic{
 
 		for(GAction action : actions)
 			applyAction(action, g);

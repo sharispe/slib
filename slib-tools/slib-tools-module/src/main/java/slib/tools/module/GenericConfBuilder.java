@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class GenericConfBuilder {
@@ -24,7 +24,7 @@ public class GenericConfBuilder {
 	 * @see {@link GlobalConfPattern}
 	 * @throws SGL_Ex_Critic if a non existing pattern is used
 	 */
-	public static String applyGlobalPatterns(String v) throws SGL_Ex_Critic{
+	public static String applyGlobalPatterns(String v) throws SLIB_Ex_Critic{
 
 		if(v == null) return null;
 		
@@ -47,7 +47,7 @@ public class GenericConfBuilder {
 				for(String k : variables.keySet())
 					loadedPatters += "key='"+k+"'\tvalue='"+variables.get(k)+"'\n";
 
-				throw new SGL_Ex_Critic("Undefined pattern '"+vName+"' used in "+v+" please define a pattern (see "+XmlTags.VARIABLE_TAG+" tag)." +
+				throw new SLIB_Ex_Critic("Undefined pattern '"+vName+"' used in "+v+" please define a pattern (see "+XmlTags.VARIABLE_TAG+" tag)." +
 						"\nLoaded patters " +
 						loadedPatters +
 						"If you are not aware of pattern please remove '{' and '}' characters");
@@ -60,7 +60,7 @@ public class GenericConfBuilder {
 	}
 	
 	
-	public static Conf build(Element e) throws SGL_Ex_Critic {
+	public static Conf build(Element e) throws SLIB_Ex_Critic {
 		Conf m = new Conf();
 
 		for(int j = 0; j< e.getAttributes().getLength();j++){
@@ -75,7 +75,7 @@ public class GenericConfBuilder {
 	}
 	
 	
-	public static LinkedHashSet<Conf> build(NodeList list) throws SGL_Ex_Critic {
+	public static LinkedHashSet<Conf> build(NodeList list) throws SLIB_Ex_Critic {
 
 		LinkedHashSet<Conf> gConfSet = new LinkedHashSet<Conf>();
 

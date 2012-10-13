@@ -41,13 +41,13 @@ import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class Sim_groupwise_Min extends Sim_groupwise_general_abstract{
 
 
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SGL_Ex_Critic {
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SLIB_Ex_Critic {
 		
 		return rc.getMatrixScore(setA,setB, conf).getMin();
 	}

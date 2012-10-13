@@ -38,17 +38,15 @@ package slib.tools.smltoolkit.sm.cli.utils;
 
 import java.util.Collection;
 import java.util.concurrent.Callable;
-
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 import slib.utils.threads.PoolWorker;
 
@@ -105,7 +103,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 				}
 				catch (IllegalArgumentException e) {
 
-					throw new SGL_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
+					throw new SLIB_Ex_Critic("Query file contains an invalid URI: "+e.getMessage());
 				}
 
 				e1 = g.getV(uriE1);
@@ -113,9 +111,9 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
 				if(e1 == null || e2 == null){
 					if(e1 == null)
-						throw new SGL_Ex_Critic("Cannot locate "+uriE1+" in "+g.getURI());
+						throw new SLIB_Ex_Critic("Cannot locate "+uriE1+" in "+g.getURI());
 					if(e2 == null)
-						throw new SGL_Ex_Critic("Cannot locate "+uriE2+" in "+g.getURI());
+						throw new SLIB_Ex_Critic("Cannot locate "+uriE2+" in "+g.getURI());
 				}
 
 				// clear tmp_buffer

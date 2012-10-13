@@ -34,53 +34,22 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.utils.ex;
 
+public class SLIB_Exception extends Exception{
 
-public class ThreadResultsQueryLoader {
-	
-	public StringBuilder buffer;
-	int skipped  = 0;
-	int setValue = 0;
-	int jobSize;
-
-	
-	public ThreadResultsQueryLoader(int size){
-		
-		jobSize = size;
-		buffer = new StringBuilder();
+	public SLIB_Exception(String message) {
+		super(message);
 	}
 
-
-	public int getSkipped() {
-		return skipped;
+	public SLIB_Exception(Throwable cause) {
+		super(cause);
 	}
 
-
-	public void setSkipped(int skipped) {
-		this.skipped = skipped;
+	public SLIB_Exception(String message, Throwable cause) {
+		super(message, cause);
 	}
 
-
-	public int getSetValue() {
-		return setValue;
-	}
-
-
-	public void setSetValue(int setValue) {
-		this.setValue = setValue;
-	}
-
-
-	public int getJobSize() {
-		return jobSize;
-	}
-
-
-	public void setJobSize(int jobSize) {
-		this.jobSize = jobSize;
-	}
-	
-	
+	private static final long serialVersionUID = 1L;
 
 }

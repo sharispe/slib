@@ -40,7 +40,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 
@@ -67,13 +67,13 @@ public class ICi_probOccurence implements ICtopo{
 
 	
 
-	public ResultStack<V,Double> compute(ResultStack<V,Long> allNbDescendants) throws SGL_Exception{
+	public ResultStack<V,Double> compute(ResultStack<V,Long> allNbDescendants) throws SLIB_Exception{
 
 		return ProbOccurence.compute(allNbDescendants,0); 
 	}
 	
 	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-			throws SGL_Exception {
+			throws SLIB_Exception {
 		return compute(manager.getAllNbDescendants());
 	}
 

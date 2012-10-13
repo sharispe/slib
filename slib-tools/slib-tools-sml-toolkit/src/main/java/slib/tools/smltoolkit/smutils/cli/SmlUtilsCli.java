@@ -46,8 +46,8 @@ import slib.sml.smutils.SQLiteUtils;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.smutils.cli.utils.SmUtilsCmdHandler;
 import slib.tools.smltoolkit.smutils.cli.utils.SmUtilsCmdHandlerCst;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * TODO manage empty annotation
@@ -64,13 +64,13 @@ public class SmlUtilsCli implements SmlModuleCLI{
 	
 	private SmUtilsCmdHandler cfgLoader;
 	
-	public void execute(String[] argsModule) throws SGL_Exception {
+	public void execute(String[] argsModule) throws SLIB_Exception {
 		cfgLoader = new SmUtilsCmdHandler(argsModule);
 		execute();
 	}
 
 
-	public void execute() throws SGL_Ex_Critic{
+	public void execute() throws SLIB_Ex_Critic{
 		
 		if(cfgLoader.process.equals(SmUtilsCmdHandlerCst.process_resultMerger))
 			process_resultMerger();
@@ -82,7 +82,7 @@ public class SmlUtilsCli implements SmlModuleCLI{
 			cfgLoader.ending(SmUtilsCmdHandlerCst.errorMissingProcess,true);
 	}
 	
-	private void process_sqlLiteUtils() throws SGL_Ex_Critic{
+	private void process_sqlLiteUtils() throws SLIB_Ex_Critic{
 		
 		SQLiteUtils utils = new SQLiteUtils();
 		
@@ -219,10 +219,10 @@ public class SmlUtilsCli implements SmlModuleCLI{
 		}
 		
 		else
-			throw new SGL_Ex_Critic("Unsupported operation, see "+Arrays.toString(SmUtilsCmdHandlerCst.acceptedActionSQLite));
+			throw new SLIB_Ex_Critic("Unsupported operation, see "+Arrays.toString(SmUtilsCmdHandlerCst.acceptedActionSQLite));
 	}
 	
-	private void process_resultMerger() throws SGL_Ex_Critic{
+	private void process_resultMerger() throws SLIB_Ex_Critic{
 		if(cfgLoader.file_A == null)
 			cfgLoader.ending("Please specify a file A ",true);
 		
@@ -241,7 +241,7 @@ public class SmlUtilsCli implements SmlModuleCLI{
 				merger.process(cfgLoader.file_A,cfgLoader.file_B,cfgLoader.output);
 			} 
 			catch (OutOfMemoryError e) {
-				throw new SGL_Ex_Critic(" Out Of MemoryError, processed file are too large to be processed in memory. Please allocate more memory, use tmp_dir option or use "+SmUtilsCmdHandlerCst.process_sqlLiteUtils+"(recommended)");
+				throw new SLIB_Ex_Critic(" Out Of MemoryError, processed file are too large to be processed in memory. Please allocate more memory, use tmp_dir option or use "+SmUtilsCmdHandlerCst.process_sqlLiteUtils+"(recommended)");
 			}
 		}
 		else{
@@ -249,7 +249,7 @@ public class SmlUtilsCli implements SmlModuleCLI{
 				merger.processLarge(cfgLoader.file_A,cfgLoader.file_B,cfgLoader.output,cfgLoader.tmp_dir,cfgLoader.split_size);
 			} 
 			catch (OutOfMemoryError e) {
-				throw new SGL_Ex_Critic(" Out Of MemoryError, processed file are too large to be processed. Please allocate more memory, use a tiny split_size parameter or use "+SmUtilsCmdHandlerCst.process_sqlLiteUtils+"(recommended)");
+				throw new SLIB_Ex_Critic(" Out Of MemoryError, processed file are too large to be processed. Please allocate more memory, use a tiny split_size parameter or use "+SmUtilsCmdHandlerCst.process_sqlLiteUtils+"(recommended)");
 			}
 		}
 	}

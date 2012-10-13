@@ -41,7 +41,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class FilterGraph_GAF2 extends FilterGraph {
@@ -53,7 +53,7 @@ public class FilterGraph_GAF2 extends FilterGraph {
 		super(id, FilterGraph_GAF2_cst.TYPE);
 	}
 	
-	public FilterGraph_GAF2(Conf conf) throws SGL_Ex_Critic {
+	public FilterGraph_GAF2(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 		
 		String taxids = (String) conf.getParam(FilterGraph_GAF2_cst.TAXONS_IDS);

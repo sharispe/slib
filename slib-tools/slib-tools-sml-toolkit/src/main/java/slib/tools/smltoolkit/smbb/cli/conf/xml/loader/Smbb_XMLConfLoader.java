@@ -57,8 +57,8 @@ import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_Pfam;
 import slib.tools.module.GenericConfBuilder;
 import slib.tools.module.XML_ModuleConfLoader;
 import slib.tools.smltoolkit.smbb.cli.conf.xml.utils.SmbbConfXmlCst;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
@@ -87,7 +87,7 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 	
 	Document document;
 
-	public Smbb_XMLConfLoader(String confFile) throws SGL_Ex_Critic{
+	public Smbb_XMLConfLoader(String confFile) throws SLIB_Ex_Critic{
 		
 		super(confFile);
 		
@@ -138,14 +138,14 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 		
 			
 		} catch (Exception e) {
-			throw new SGL_Ex_Critic(e);
+			throw new SLIB_Ex_Critic(e);
 		}
 		
 		logger.info("configuration loaded");
 	}
 	
 	
-	private void loadSspBBconf() throws SGL_Ex_Critic {
+	private void loadSspBBconf() throws SLIB_Ex_Critic {
 		
 		type 	 = (String) sspBBConf_g.getParam(SmbbCst.type);
 		graphURI = (String) sspBBConf_g.getParam(SmbbCst.graph_uri);
@@ -155,7 +155,7 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 	}
 
 
-	private void loadInfo(Element item) throws SGL_Ex_Critic {
+	private void loadInfo(Element item) throws SLIB_Ex_Critic {
 		sspBBConf_g = GenericConfBuilder.build(item);
 	}
 	
@@ -196,7 +196,7 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 		try {
 			Smbb_XMLConfLoader cfgLoader = new Smbb_XMLConfLoader(exec_config);
 
-		} catch (SGL_Exception e) {
+		} catch (SLIB_Exception e) {
 			e.printStackTrace();
 		}
 	}

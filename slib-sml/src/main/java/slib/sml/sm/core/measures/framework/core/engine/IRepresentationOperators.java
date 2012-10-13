@@ -37,7 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.framework.core.engine;
 import slib.sml.sm.core.utils.OperatorConf;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  * Interface which defines the methods required to define operators
@@ -67,7 +67,7 @@ public interface IRepresentationOperators{
 	 * @return a double value corresponding to the commonality between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
+	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
 	/**
 	 * Evaluate the subtraction between two given graph representations.
@@ -80,7 +80,7 @@ public interface IRepresentationOperators{
 	 * @return a double value corresponding to the subtraction between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
+	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
 	/**
 	 * Evaluate the difference between two given graph representations.
@@ -93,7 +93,7 @@ public interface IRepresentationOperators{
 	 * @return a double value corresponding to the difference between the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
+	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
 	/**
 	 * Evaluate the informativeness of a given graph representation i.e. the amount of information contained be the graph representation
@@ -106,7 +106,7 @@ public interface IRepresentationOperators{
 	 * @return a double value corresponding to the informativeness of the {@link GraphRepresentation}
 	 * @throws SGL_Exception
 	 */
-	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SGL_Exception;
+	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SLIB_Exception;
 
 	/**
 	 * Return a boolean defining if the operator to evaluate commonalities is defined.
@@ -153,7 +153,7 @@ public interface IRepresentationOperators{
 	 * @throws SGL_Exception
 	 * @see {@link #subtraction(GraphRepresentation, GraphRepresentation, SM_Engine)}
 	 */
-	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SGL_Exception;
+	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
 	/**
 	 * Return the score to affect to comparison for which operators rules are not validated

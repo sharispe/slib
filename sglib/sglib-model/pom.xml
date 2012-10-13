@@ -25,6 +25,7 @@
   
   	<dependencies>
 
+            
 	<dependency>
 		<groupId>org.openrdf.sesame</groupId>
 		<artifactId>sesame-runtime</artifactId>
@@ -47,9 +48,6 @@
 		<version>2.1.0</version>
 	</dependency>
 
-
-
-	
   	</dependencies>
 	
 </project>

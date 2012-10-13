@@ -40,10 +40,10 @@ package slib.sgli.test.algo.graph;
 import org.openrdf.model.URI;
 
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 
-public class SGL_UnitTestValues {
+public class SLIB_UnitTestValues {
 
 	public static final String path 		= System.getProperty("user.dir")+"/src/test/resources/graph/";
 	
@@ -79,7 +79,7 @@ public class SGL_UnitTestValues {
 	
 	DataRepository data = DataRepository.getSingleton();
 	
-	public SGL_UnitTestValues() throws SGL_Ex_Critic{
+	public SLIB_UnitTestValues() throws SLIB_Ex_Critic{
 		
 		G_BASIC_THING  	 		= data.createURI(uriGraph+"thing");
 		G_BASIC_ANIMAL  		= data.createURI(uriGraph+"animal");

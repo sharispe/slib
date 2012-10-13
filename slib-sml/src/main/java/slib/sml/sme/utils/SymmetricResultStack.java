@@ -38,7 +38,7 @@ package slib.sml.sme.utils;
 
 import java.util.HashMap;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class SymmetricResultStack {
 
@@ -65,7 +65,7 @@ public class SymmetricResultStack {
 		}
 	}
 	
-	public double getSim(String o1, String o2) throws SGL_Ex_Critic{
+	public double getSim(String o1, String o2) throws SLIB_Ex_Critic{
 		
 		if(results.containsKey(o1) && results.get(o1).containsKey(o2)){
 			return results.get(o1).get(o2);
@@ -74,7 +74,7 @@ public class SymmetricResultStack {
 			return results.get(o2).get(o1);
 		}
 		else {
-			throw new SGL_Ex_Critic("Result not found for comparison "+o1+" / "+o2);
+			throw new SLIB_Ex_Critic("Result not found for comparison "+o1+" / "+o2);
 		}
 	}
 

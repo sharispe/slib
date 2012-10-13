@@ -39,8 +39,8 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SGL_Ex_Critic;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract{
 	
@@ -49,7 +49,7 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract{
 	private double beta  = 0.;
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SGL_Exception {
+	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -65,7 +65,7 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract{
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica, double beta) throws SGL_Ex_Critic {
+	public double sim(double ic_a, double ic_b, double ic_mica, double beta) throws SLIB_Ex_Critic {
 		
 		double den = (  (ic_a) + (ic_b) + (beta - 2.) * ic_mica );
 		double j = 0.;
@@ -76,7 +76,7 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract{
 		return j;
 	}	
 	
-	public static void main(String[] args) throws SGL_Ex_Critic {
+	public static void main(String[] args) throws SLIB_Ex_Critic {
 		Sim_pairwise_DAG_node_GL p = new Sim_pairwise_DAG_node_GL();
 		System.out.println(p.sim(0.25, 0.25, 0.20, 0));
 	}

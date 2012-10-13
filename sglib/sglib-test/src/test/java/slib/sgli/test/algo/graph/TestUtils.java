@@ -42,11 +42,11 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.impl.DataRepository;
-import slib.utils.ex.SGL_Exception;
+import slib.utils.ex.SLIB_Exception;
 
 public class TestUtils {
 
-	public static G loadTestGraph(GFormat gFormat,String filePath) throws SGL_Exception {
+	public static G loadTestGraph(GFormat gFormat,String filePath) throws SLIB_Exception {
 
 
 		G g = null;

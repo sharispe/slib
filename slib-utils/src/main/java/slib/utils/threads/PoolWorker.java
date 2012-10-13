@@ -40,7 +40,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import slib.utils.ex.SGL_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 public class PoolWorker extends PoolLocker{
 	
@@ -60,12 +60,12 @@ public class PoolWorker extends PoolLocker{
 		pool.shutdownNow();
 	}
 	
-	public void shutdown() throws SGL_Ex_Critic{
+	public void shutdown() throws SLIB_Ex_Critic{
 		
 		shutdown(Long.MAX_VALUE, TimeUnit.DAYS); // avoid time out
 	}
 
-	public void shutdown(long timeout, TimeUnit timeunit) throws SGL_Ex_Critic{
+	public void shutdown(long timeout, TimeUnit timeunit) throws SLIB_Ex_Critic{
 		
 		boolean alreadyShutDown = pool.isShutdown();
 			
@@ -74,7 +74,7 @@ public class PoolWorker extends PoolLocker{
 			pool.awaitTermination(timeout,timeunit); 
 			
 		} catch (InterruptedException e) {
-			new SGL_Ex_Critic(e.getMessage());
+			new SLIB_Ex_Critic(e.getMessage());
 		}
 		finally{
 			if(!alreadyShutDown)
