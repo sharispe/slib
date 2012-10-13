@@ -238,13 +238,13 @@ public class GraphLoader_GAF_2 implements IGraphLoader {
 
                     String[] data = p_tab.split(line);
 
-                    String fragmentPrefix = (String) conf.getParameter("prefix");
-                    if (fragmentPrefix == null) {
-                        fragmentPrefix = "";
+                    String uriPrefix = (String) conf.getParameter("prefix");
+                    if (uriPrefix == null) {
+                        uriPrefix = "";
                     }
 
 
-                    URI entityID = uriManager.createURI(gNS + fragmentPrefix + data[DB_OBJECT_ID]);
+                    URI entityID = uriManager.createURI(uriPrefix + data[DB_OBJECT_ID]);
                     qualifier = data[QUALIFIER];
                     gotermURI = buildURI(data[GOID]);
                     evidenceCode = data[EVIDENCE_CODE];
