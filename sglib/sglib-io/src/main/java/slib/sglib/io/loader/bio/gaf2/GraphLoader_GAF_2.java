@@ -206,6 +206,13 @@ public class GraphLoader_GAF_2 implements IGraphLoader {
 
         logger.info("Loading...");
 
+        String uriPrefix = (String) conf.getParameter("prefix");
+        if (uriPrefix == null) {
+            uriPrefix = g.getURI().getNamespace();
+        }
+        
+        logger.info("Using prefix: "+uriPrefix);
+
         DataRepository uriManager = DataRepository.getSingleton();
 
         boolean validHeader = false;
@@ -238,10 +245,6 @@ public class GraphLoader_GAF_2 implements IGraphLoader {
 
                     String[] data = p_tab.split(line);
 
-                    String uriPrefix = (String) conf.getParameter("prefix");
-                    if (uriPrefix == null) {
-                        uriPrefix = "";
-                    }
 
 
                     URI entityID = uriManager.createURI(uriPrefix + data[DB_OBJECT_ID]);

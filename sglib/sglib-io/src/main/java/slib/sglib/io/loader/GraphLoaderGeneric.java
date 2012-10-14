@@ -67,7 +67,7 @@ public class GraphLoaderGeneric {
 	public static Logger logger = LoggerFactory.getLogger(GraphLoaderGeneric.class);
 
 	public static G populate(GDataConf dataConf, G g) throws SLIB_Exception{
-
+            
 		logger.debug("Populate "+g.getURI()+" based on "+dataConf.getLoc());
 		
 		IGraphLoader gLoader = getLoader(dataConf);
