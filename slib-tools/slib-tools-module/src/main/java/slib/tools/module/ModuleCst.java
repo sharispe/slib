@@ -55,6 +55,7 @@ public abstract class ModuleCst {
 
     public String appName = null;
     public String version = null;
+    public String versionSnapshot = null;
     public String reference = null;
     public String description = null;
     public String contact = null;
@@ -95,6 +96,7 @@ public abstract class ModuleCst {
         this.reference   = config.getString(prefix+".reference");
         this.description = config.getString(prefix+".description");
         this.contact     = config.getString(prefix+".contact");
+        this.versionSnapshot     = config.getString(prefix+".build.snapshot");
 
     }
     
@@ -119,4 +121,9 @@ public abstract class ModuleCst {
     public String getContact() {
         return contact;
     }
+
+    public String getVersionSnapshot() {
+        return versionSnapshot;
+    }
+
 }

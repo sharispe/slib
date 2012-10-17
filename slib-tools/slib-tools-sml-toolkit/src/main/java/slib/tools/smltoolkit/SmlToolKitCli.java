@@ -76,9 +76,6 @@ public class SmlToolKitCli extends CmdHandler{
 	public SmlToolKitCli(String[] args) throws SLIB_Exception {
 
 		super(new SmlToolKitCst() , new SmlToolKitCliCst(), args);
-		
-
-
 	}
 
 
@@ -98,7 +95,7 @@ public class SmlToolKitCli extends CmdHandler{
 				ending(null,true);
 			}
 			else if(argsGeneralCMD.hasOption("version")){
-				ending("version "+cst.version,false);
+				ending("version "+cst.version+" snapshot "+cst.versionSnapshot,false);
 			}
 			else{
 				//-- tool name 

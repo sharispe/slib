@@ -11,7 +11,7 @@
     
     <properties>
         <toolkit.version>${sml-toolkit.version}</toolkit.version>
-        <sml-toolkit.build.snapshot>${maven.build.timestamp}</sml-toolkit.build.snapshots>
+        <toolkit.build.snapshot>${maven.build.timestamp}</toolkit.build.snapshot>
     </properties>
   
     <dependencies>
