@@ -46,6 +46,12 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
+                
+                <dependency>
+                        <groupId>org.apache.lucene</groupId>
+                        <artifactId>lucene-core</artifactId>
+                        <version>4.0.0-BETA</version>
+                </dependency>
 
 
 		<!-- concrete Log4J Implementation for SLF4J API -->

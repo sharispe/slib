@@ -11,6 +11,7 @@
 		<module>slib-tools</module>
 		<module>slib-indexer</module>
 		<module>slib-sml</module>
+                <module>slib-quicktest</module>
 	</modules>
         
         <properties>

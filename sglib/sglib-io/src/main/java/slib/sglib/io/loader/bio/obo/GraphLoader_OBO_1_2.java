@@ -184,9 +184,7 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 	}
 
 	public G load(GraphConf conf) throws SLIB_Exception {
-
-		G g = GraphLoaderGeneric.load(conf);
-		return g;
+		return GraphLoaderGeneric.load(conf);
 	}
 
 

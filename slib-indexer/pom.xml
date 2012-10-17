@@ -1,23 +1,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>slib</artifactId>
-    <groupId>fr.lgi2p.kid</groupId>
-    <version>0.0.3-SNAPSHOT</version>
-    <relativePath>..</relativePath>
-  </parent>
-  <artifactId>slib-indexer</artifactId>
-  <dependencies>
-  	<dependency>
-  		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>sglib-model</artifactId>
-  		<version>0.0.3-SNAPSHOT</version>
-  	</dependency>
-    <dependency>
-      <groupId>fr.lgi2p.kid</groupId>
-      <artifactId>slib-utils</artifactId>
-      <version>0.0.3-SNAPSHOT</version>
-      <type>jar</type>
-    </dependency>
-  </dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>slib</artifactId>
+        <groupId>fr.lgi2p.kid</groupId>
+        <version>0.0.3-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>slib-indexer</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-model</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+        
+
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>slib-utils</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+    
+    
+    
+    </dependencies>
 </project>

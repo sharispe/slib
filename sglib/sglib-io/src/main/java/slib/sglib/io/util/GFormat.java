@@ -44,6 +44,8 @@ public enum GFormat {
 	GAF2,
 	RDF_XML,
 	NTRIPLES,
+        WORDNET_DATA,
+        MESH_XML,
 	CSV;
 	
 
