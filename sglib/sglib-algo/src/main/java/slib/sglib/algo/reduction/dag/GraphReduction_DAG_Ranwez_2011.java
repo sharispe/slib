@@ -60,6 +60,7 @@ import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
+import org.openrdf.model.vocabulary.RDFS;
 
 /**
  * Algorithm used to extract a subgraph from a DAG (Directed Acyclic Graph) <br/>
@@ -93,6 +94,20 @@ public class GraphReduction_DAG_Ranwez_2011 {
 	Set<URI> roots;
 
 	private Set<URI> edgesTypesDirect;
+        
+        /**
+         * Taxonomic reduction
+         * @param graph
+         * @param rootURI
+         * @throws SLIB_Exception 
+         */
+        public GraphReduction_DAG_Ranwez_2011(
+			G graph,
+			URI rootURI
+			) throws SLIB_Exception {
+            
+            this(graph,rootURI,SetUtils.buildSet(RDFS.SUBCLASSOF),SetUtils.buildSet(RDFS.SUBCLASSOF),true);
+        }
 
 
 	/**
@@ -294,8 +309,8 @@ public class GraphReduction_DAG_Ranwez_2011 {
 				for(V r : vrra.get(u)){
 					
 
-					V source = graph_reduction.getV( (URI) u);
-					V target = graph_reduction.getV( (URI) r);
+					V source = graph_reduction.getV( (URI) u.getValue());
+					V target = graph_reduction.getV( (URI) r.getValue());
 
 					graph_reduction.addE(target, source,edgeType);
 					
@@ -350,7 +365,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 			
 //			System.out.println("---> "+v);
 
-			if(selectedURI.contains( (URI) v)){
+			if(selectedURI.contains( (URI) v.getValue())){
 				sd.get(v).add(v);
 //				System.out.println("---> Adding (QUERY) "+v);
 			}
@@ -389,13 +404,15 @@ public class GraphReduction_DAG_Ranwez_2011 {
 	private void checkQueryValidity() throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
 
-		if(selectedURI == null || selectedURI.size() < 2)
-			throw new SLIB_Ex_Warning("Warning: Query skipped, a minimim of two URI have to be specified to build a query");
+		if(selectedURI == null || selectedURI.size() < 2) {
+                throw new SLIB_Ex_Warning("Warning: Query skipped, a minimim of two URI have to be specified to build a query");
+            }
 
 		for (URI uri : selectedURI) {
 
-			if(!graph.containsVertex(uri))
-				throw new SLIB_Ex_Warning("No vertex associated to URI: "+uri);
+			if(!graph.containsVertex(uri)) {
+                        throw new SLIB_Ex_Warning("No vertex associated to URI: "+uri);
+                    }
 		}
 	}
 

@@ -47,7 +47,7 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.indexer.Indexer;
+import slib.indexer.IndexBasic;
 import slib.indexer.IndexerOBO;
 import slib.sglib.algo.reduction.dag.GraphReduction_DAG_Ranwez_2011;
 import slib.sglib.algo.utils.RooterDAG;
@@ -58,6 +58,7 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.plotter.GraphPlotter_Graphviz;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
+import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.repo.impl.DataRepository;
 import slib.sglib.model.voc.SGLVOC;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
@@ -101,7 +102,7 @@ public class OntoFocus {
 		
 		baseGraph 	   = GraphLoaderGeneric.load(conf); 
 		
-		Indexer<URI> indexer = new IndexerOBO(c.ontoFile,baseGraph.getURI());
+		IndexBasic index = new IndexerOBO().buildIndex(c.ontoFile,baseGraph.getURI().stringValue());
 
 		root();
 		loadEtypeConf(); // Load edge Types
@@ -127,9 +128,15 @@ public class OntoFocus {
 					try{
 						i++;
 						logger.info("Reduction "+i+" "+query.getKey());
+                                                
+                                                Set<V> queryAsV = new HashSet<V>();
+                                                
+                                                for(URI u : query.getValue()){
+                                                    queryAsV.add(baseGraph.getV(u));
+                                                }
 						
 						G graph_reduction = gRed.exec(query.getValue(), baseGraph.getURI()+"_reduction_"+i);
-						String gviz = GraphPlotter_Graphviz.plot(graph_reduction,query.getValue(),showLabels,indexer);
+						String gviz = GraphPlotter_Graphviz.plot(graph_reduction,queryAsV,showLabels,index);
 						
 						System.out.println(data.toString());
 						

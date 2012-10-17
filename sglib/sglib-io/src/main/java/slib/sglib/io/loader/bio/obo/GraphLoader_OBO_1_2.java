@@ -147,7 +147,7 @@ import slib.utils.impl.OBOconstants;
 public class GraphLoader_OBO_1_2 implements IGraphLoader{
 
 
-	DataRepository data;
+	DataRepository data = DataRepository.getSingleton();
 	GraphConf conf;
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -179,9 +179,6 @@ public class GraphLoader_OBO_1_2 implements IGraphLoader{
 	Pattern exclamation = Pattern.compile("!");
 	Pattern spaces = Pattern.compile("\\s+");
 
-	public GraphLoader_OBO_1_2(){
-		data = DataRepository.getSingleton();
-	}
 
 	public G load(GraphConf conf) throws SLIB_Exception {
 		return GraphLoaderGeneric.load(conf);
