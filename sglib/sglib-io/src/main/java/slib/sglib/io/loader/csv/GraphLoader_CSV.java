@@ -21,7 +21,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
@@ -30,7 +30,7 @@ public class GraphLoader_CSV implements IGraphLoader{
 	
 	boolean skipHeader = false;
 	
-	DataRepository dataRepo = DataRepository.getSingleton();
+	DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
 
 	HashMap<Integer, CSV_Mapping> mappings = new HashMap<Integer, CSV_Mapping>();
 	HashMap<Integer, CSV_StatementTemplate> statementTemplates = new HashMap<Integer, CSV_StatementTemplate>();

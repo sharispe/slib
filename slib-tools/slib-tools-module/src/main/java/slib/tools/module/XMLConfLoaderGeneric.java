@@ -30,7 +30,8 @@ import slib.sglib.io.loader.csv.StatementTemplate_Constraint_Type;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.i.Parametrable;
@@ -41,7 +42,7 @@ public class XMLConfLoaderGeneric {
 
 	private String xmlFile;
 	private Document document;
-	private DataRepository dataRepo;
+	private DataFactory factory;
 
 
 	private LinkedList<GraphConf> graphConfs;
@@ -59,7 +60,7 @@ public class XMLConfLoaderGeneric {
     
 	static final Map<String, URI> admittedPType = new HashMap<String, URI>();
     static {
-    	admittedPType.put("RDF.TYPE"     	  , RDF.TYPE);
+    	admittedPType.put("RDF.TYPE"          , RDF.TYPE);
     	admittedPType.put("RDFS.SUBCLASSOF"   , RDFS.SUBCLASSOF);
     }
     
@@ -69,7 +70,7 @@ public class XMLConfLoaderGeneric {
 	public XMLConfLoaderGeneric(String xmlFile) throws SLIB_Ex_Critic{
 
 
-		dataRepo = DataRepository.getSingleton();
+		factory = DataFactoryMemory.getSingleton();
 
 		this.xmlFile = xmlFile;
 		graphConfs = new LinkedList<GraphConf>();
@@ -95,11 +96,13 @@ public class XMLConfLoaderGeneric {
 			//------------------------------
 			logger.debug("Loading options");
 
-			if(	opt.getLength() == 1 && opt.item(0) instanceof Element )
-				extractOptConf(GenericConfBuilder.build((Element) opt.item(0)));
+			if(	opt.getLength() == 1 && opt.item(0) instanceof Element ) {
+                        extractOptConf(GenericConfBuilder.build((Element) opt.item(0)));
+                    }
 
-			else if(opt.getLength() > 1)
-				Util.error("Only one "+XmlTags.OPT_TAG+" tag allowed");
+			else if(opt.getLength() > 1) {
+                        Util.error("Only one "+XmlTags.OPT_TAG+" tag allowed");
+                    }
 
 
 
@@ -110,11 +113,13 @@ public class XMLConfLoaderGeneric {
 			logger.debug("Loading variables");
 			NodeList variablesConfig = document.getElementsByTagName(XmlTags.VARIABLES_TAG);
 
-			if(	variablesConfig.getLength() == 1 && variablesConfig.item(0) instanceof Element )
-				loadVariablesConf((Element) variablesConfig.item(0));
+			if(	variablesConfig.getLength() == 1 && variablesConfig.item(0) instanceof Element ) {
+                        loadVariablesConf((Element) variablesConfig.item(0));
+                    }
 
-			else if(variablesConfig.getLength() > 0)
-				Util.error("Only one "+XmlTags.VARIABLES_TAG+" is admitted");
+			else if(variablesConfig.getLength() > 0) {
+                        Util.error("Only one "+XmlTags.VARIABLES_TAG+" is admitted");
+                    }
 
 			//------------------------------
 			//	 Load Name space Option 
@@ -150,8 +155,9 @@ public class XMLConfLoaderGeneric {
 					loadGraphConf( gConf );
 				}
 			}
-			else
-				Util.error(XMLConstUtils.ERROR_NB_GRAPHS_SPEC);
+			else {
+                        Util.error(XMLConstUtils.ERROR_NB_GRAPHS_SPEC);
+                    }
 
 
 			//------------------------------
@@ -190,17 +196,21 @@ public class XMLConfLoaderGeneric {
 			String prefix   = (String) m.getParam(XmlTags.NS_ATTR_PREFIX);
 			String ref = (String) m.getParam(XmlTags.NS_ATTR_REF);
 
-			if(prefix == null)
-				throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_PREFIX+" attribut");
-			else if(ref == null)
-				throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_REF+" attribut associated to variable "+prefix);
+			if(prefix == null) {
+                        throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_PREFIX+" attribut");
+                    }
+			else if(ref == null) {
+                        throw new SLIB_Ex_Critic("Invalid "+XmlTags.NAMESPACE_TAG+" tag, missing a "+XmlTags.NS_ATTR_REF+" attribut associated to variable "+prefix);
+                    }
 
 			logger.info("add namespace prefix : "+prefix+" ref : "+ref);
-			DataRepository.getSingleton().loadNamespacePrefix(prefix, ref);
+			factory.loadNamespacePrefix(prefix, ref);
 		}
 	}
 
 	private void loadGraphConf(Element item) throws SLIB_Ex_Critic {
+            
+            
 		logger.debug("Loading graph conf");
 
 		GraphConf gconf = new GraphConf();
@@ -212,7 +222,7 @@ public class XMLConfLoaderGeneric {
 
 		logger.debug("uri: "+uris);
 
-		URI uri = dataRepo.createURI(uris);
+		URI uri = factory.createURI(uris);
 		gconf.setUri(uri);
 
 
@@ -237,10 +247,11 @@ public class XMLConfLoaderGeneric {
 				String format = conf.getParamAsString("format");
 				logger.debug("- format: "+format);
 
-				GFormat gFormat = XMLAttributMapping.GDataFormatMapping.get(format); 
+				GFormat gFormat = XMLAttributMapping.GDataFormatMapping.get(format.toUpperCase()); 
 
-				if(gFormat == null)
-					throw new SLIB_Ex_Critic("Unknow data format "+format+", valids "+XMLAttributMapping.GDataFormatMapping.keySet());
+				if(gFormat == null) {
+                                throw new SLIB_Ex_Critic("Unknow data format "+format+", valids "+XMLAttributMapping.GDataFormatMapping.keySet());
+                            }
 
 				// Data Location
 
@@ -381,7 +392,7 @@ public class XMLConfLoaderGeneric {
 				if(admittedPType.containsKey(p_string))
 					p = admittedPType.get(p_string);
 				else
-					p = dataRepo.createURI(p_string);
+					p = factory.createURI(p_string);
 				
 				
 				CSV_StatementTemplate m = new CSV_StatementTemplate(s_id, o_id, p);

@@ -1,39 +1,37 @@
 /*
 
-Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
 
-This software is a computer program whose purpose is to 
-process semantic graphs.
+ This software is a computer program whose purpose is to 
+ process semantic graphs.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+ This software is governed by the CeCILL  license under French law and
+ abiding by the rules of distribution of free software.  You can  use, 
+ modify and/ or redistribute the software under the terms of the CeCILL
+ license as circulated by CEA, CNRS and INRIA at the following URL
+ "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+ As a counterpart to the access to the source code and  rights to copy,
+ modify and redistribute granted by the license, users are provided only
+ with a limited warranty  and the software's author,  the holder of the
+ economic rights,  and the successive licensors  have only  limited
+ liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+ In this respect, the user's attention is drawn to the risks associated
+ with loading,  using,  modifying and/or developing or reproducing the
+ software by the user in light of its specific status of free software,
+ that may mean  that it is complicated to manipulate,  and  that  also
+ therefore means  that it is reserved for developers  and  experienced
+ professionals having in-depth computer knowledge. Users are therefore
+ encouraged to load and test the software's suitability as regards their
+ requirements in conditions enabling the security of their systems and/or 
+ data to be ensured and,  more generally, to use and operate it in the 
+ same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+ The fact that you are presently reading this means that you have had
+ knowledge of the CeCILL license and that you accept its terms.
 
  */
-
-
 package slib.sglib.io.loader.bio.obo;
 
 import java.io.BufferedReader;
@@ -63,544 +61,512 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.OBOconstants;
 
 /**
- * TODO update doc
- * Graph Loader used to map an OBO 1.2 specification as a Graph loaded in RAM <br/>
- * <a href="http://www.geneontology.org/GO.format.obo-1_2.shtml">OBO specification</a> <br/>
- * 
- * Compatibility with other format-version than 1.2 is not supported.  <br/>
- * 
- * <b> The mapping consider </b> <br/>
- * <ul>
- * 	<li>[Term] 	as RDF/OWL class mapping to build vertices </li>
- *  <li>[Typedef] as relationships definitions between nodes </li>
- *  <li>"is_a" as the only predefined relationType </li>
- *  <li>[instance] are not loaded </li>
- * </ul>
- * 	Meta informations:    	<br/>
- * <ul>
- *  <li> format-version   : Only required argument of the specification expect 1.2 throw non warning exception (<SGTK_Exception_Warning>) if 1.2 version is not detected </li> 
- * 	<li> default-namespace: the graph URI </li>
- * </ul>
- * 
- * <b> [Term] </b>		<br/>
+ * TODO update doc Graph Loader used to map an OBO 1.2 specification as a Graph
+ * loaded in RAM <br/> <a
+ * href="http://www.geneontology.org/GO.format.obo-1_2.shtml">OBO
+ * specification</a> <br/>
  *
- * Each Term are loaded as a specific vertex in the graph. <br/>
- * A Term is then mapped as a <Vertex> of <IVertexType> equals to <Constants> V_TYPE_CLASS. <br/>
- * Note that obsolete Terms/Typedefs are excluded during graph construction (see below is_obsolete). <br/> <br/>
- * 
+ * Compatibility with other format-version than 1.2 is not supported. <br/>
+ *
+ * <b> The mapping consider </b> <br/> <ul> <li>[Term] as RDF/OWL class mapping
+ * to build vertices </li> <li>[Typedef] as relationships definitions between
+ * nodes </li> <li>"is_a" as the only predefined relationType </li>
+ * <li>[instance] are not loaded </li> </ul> Meta informations: <br/> <ul> <li>
+ * format-version : Only required argument of the specification expect 1.2 throw
+ * non warning exception (<SGTK_Exception_Warning>) if 1.2 version is not
+ * detected </li> <li> default-namespace: the graph URI </li> </ul>
+ *
+ * <b> [Term] </b>	<br/>
+ *
+ * Each Term are loaded as a specific vertex in the graph. <br/> A Term is then
+ * mapped as a <Vertex> of <IVertexType> equals to <Constants> V_TYPE_CLASS.
+ * <br/> Note that obsolete Terms/Typedefs are excluded during graph
+ * construction (see below is_obsolete). <br/> <br/>
+ *
  * Flag considered : <br/>
- *  
- *  <ul>
- *  	<li>  id: 	<URI> 	Loaded as the URI of the current [Term/Class/Vertex] specification </li> 
- *  	<li>  is a: <URI> 	Loaded as an <Edge> of <EdgeType> <Constants> IS_A with currently defined Vertex as source and specified <URI> as target Vertex </li> 
- *  	<li> relationships: <EdgeType> <URI> 
- *  	Loaded as an <Edge> of specified <EdgeType> with source as current Vertex and target specified by the precise <URI>
- *  	The EdgeType have to be defined by a [TypeDef] specification to be taken into account. </li> 
- *  
- *  	<li>  is_obsolete: <boolean> Specifying the validity of the current Term specification </li> 
- *  	<li>  intersection_of/XREF...: These information are not loaded. </li> 
- * </ul>
+ *
+ * <ul> <li> id: <URI> Loaded as the URI of the current [Term/Class/Vertex]
+ * specification </li> <li> is a: <URI> Loaded as an <Edge> of <EdgeType>
+ * <Constants> IS_A with currently defined Vertex as source and specified <URI>
+ * as target Vertex </li> <li> relationships: <EdgeType> <URI> Loaded as an
+ * <Edge> of specified <EdgeType> with source as current Vertex and target
+ * specified by the precise <URI> The EdgeType have to be defined by a [TypeDef]
+ * specification to be taken into account. </li>
+ *
+ * <li> is_obsolete: <boolean> Specifying the validity of the current Term
+ * specification </li> <li> intersection_of/XREF...: These information are not
+ * loaded. </li> </ul>
  *
  * <b>	[Typedef] as <EdgeType> </b> <br/>
- * 
- * Every Typedef definition is loaded as an <EdgeType>.  <br/>
- * This definition is used to specify the type authorized for <Edge> specification <br/>
- * 
- * <ul>
- * 	<li> id: <URI> 
- * 		the URI of the <EdgeType> </li>
- * 
- *  <li> is_transitive: <boolean> 
- *  	Specifying if the relationship have to be considered as transitive </li>
- *  
- *  <li> inverse_of <URI>
- *  	Used to defined the URI of the <EdgeType> to consider as the inverse of the current specified EdgeType
- *  	e.g if an edge type X is defined as the inverse of Y, a relationship of type X defined between A and B
- *  	will lead to the creation of:
- *  		<ul>
- *  			<li> an edge of type X betwween v(A) -> v(B) </li>
- *  			<li> an edge of type Y betwween v(B) -> v(A) </li>
- *  		</ul>
- *	</li>
- *  
- *  <li> is_symmetric <boolean>
- *  	Used to defined an EdgeType as the inverse of itself 
-		e.g if an edge type X is transitive, a relationship defined as an edge of type X betwween v(A) -> v(B) is defined
-		will imply the creation of an edge of type X as v(B) -> v(A) </li>
-
-	<li> is_obsolete: <boolean> 
- *  	Specifying the validity of the current Typedef specification </li>
- *  
- *  <li> transitive_over/XREF...:
- *  	These information are not loaded. </li>
- *  </ul>
- *  TODO : load instances 
+ *
+ * Every Typedef definition is loaded as an <EdgeType>. <br/> This definition is
+ * used to specify the type authorized for <Edge> specification <br/>
+ *
+ * <ul> <li> id: <URI> the URI of the <EdgeType> </li>
+ *
+ * <li> is_transitive: <boolean> Specifying if the relationship have to be
+ * considered as transitive </li>
+ *
+ * <li> inverse_of <URI> Used to defined the URI of the <EdgeType> to consider
+ * as the inverse of the current specified EdgeType e.g if an edge type X is
+ * defined as the inverse of Y, a relationship of type X defined between A and B
+ * will lead to the creation of: <ul> <li> an edge of type X betwween v(A) ->
+ * v(B) </li> <li> an edge of type Y betwween v(B) -> v(A) </li> </ul> </li>
+ *
+ * <li> is_symmetric <boolean> Used to defined an EdgeType as the inverse of
+ * itself e.g if an edge type X is transitive, a relationship defined as an edge
+ * of type X betwween v(A) -> v(B) is defined will imply the creation of an edge
+ * of type X as v(B) -> v(A) </li>
+ *
+ * <li> is_obsolete: <boolean> Specifying the validity of the current Typedef
+ * specification </li>
+ *
+ * <li> transitive_over/XREF...: These information are not loaded. </li> </ul>
+ * TODO : load instances
  *
  */
-public class GraphLoader_OBO_1_2 implements IGraphLoader{
+public class GraphLoader_OBO_1_2 implements IGraphLoader {
+
+    DataFactoryMemory data = DataFactoryMemory.getSingleton();
+    GraphConf conf;
+    Logger logger = LoggerFactory.getLogger(this.getClass());
+    boolean onTermSpec = false;
+    boolean onTypeDef = false;
+    G g;
+    URI graphURI;
+    String filepath;
+    String defaultNamespace;
+    final String format_parser = "1.2";
+    String format_version = "undefined";
+    boolean allow_all_gafVersion;
+    HashMap<String, OboTerm> oboTerms;
+    HashMap<String, OboType> oboTypes;
+    HashMap<String, String> inverseRel;
+    OboTerm oboTermCurrent = null;
+    OboType oboTypeCurrent = null;
+    Pattern colon = Pattern.compile(":");
+    Pattern exclamation = Pattern.compile("!");
+    Pattern spaces = Pattern.compile("\\s+");
+
+    public G load(GraphConf conf) throws SLIB_Exception {
+        return GraphLoaderGeneric.load(conf);
+    }
+
+    private void init(G g, String file, String defaultNamespace) {
+
+        this.g = g;
+        this.graphURI = g.getURI();
+
+        this.filepath = file;
+
+        logger.info("Loading OBO specification from:" + filepath);
+
+        this.defaultNamespace = defaultNamespace;
+
+        format_version = "undefined";
 
 
-	DataRepository data = DataRepository.getSingleton();
-	GraphConf conf;
-	Logger logger = LoggerFactory.getLogger(this.getClass());
+        oboTerms = new HashMap<String, OboTerm>();
+        oboTypes = new HashMap<String, OboType>();
 
-	boolean onTermSpec 	 = false;
-	boolean onTypeDef 	 = false;
+        inverseRel = new HashMap<String, String>();
 
+        oboTermCurrent = null;
+        oboTypeCurrent = null;
+    }
 
-	G g;
+    public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
-	URI graphURI;
+        String defaultNamespace = (String) conf.getParameter("default-namespace");
 
-	String filepath;
-	String defaultNamespace;
+        if (defaultNamespace == null) {
+            defaultNamespace = g.getURI().getNamespace();
+            logger.info("OBO loader set default-namespace " + defaultNamespace);
 
-	final String format_parser  = "1.2";
-	String format_version 		= "undefined";
-	boolean allow_all_gafVersion;
+        }
 
+        init(g, conf.getLoc(), defaultNamespace);
+        loadOboSpec();
 
-	HashMap<String,OboTerm> 	oboTerms;
-	HashMap<String,OboType> 	oboTypes;
+        logger.debug("OBO specification loaded.");
+    }
 
-	HashMap<String,String> 	inverseRel;
+    private void loadOboSpec() throws SLIB_Exception {
 
-	OboTerm   oboTermCurrent = null;
-	OboType   oboTypeCurrent = null;
+        try {
 
-	Pattern colon = Pattern.compile(":");
-	Pattern exclamation = Pattern.compile("!");
-	Pattern spaces = Pattern.compile("\\s+");
-
-
-	public G load(GraphConf conf) throws SLIB_Exception {
-		return GraphLoaderGeneric.load(conf);
-	}
+            FileInputStream fstream = new FileInputStream(filepath);
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
 
-	private void init(G g, String file, String defaultNamespace){
+            boolean metadataLoaded = false;
 
-		this.g = g;
-		this.graphURI = g.getURI();
+            String line, flag, value;
 
-		this.filepath = file;
+            String subClassOfURI = RDFS.SUBCLASSOF.stringValue();
 
-		logger.info("Loading OBO specification from:"+filepath);
+            String[] data;
 
-		this.defaultNamespace = defaultNamespace;
+            String gNamespace = g.getURI().getNamespace();
 
-		format_version 		= "undefined";
+            while ((line = br.readLine()) != null) {
 
+                flag = null;
+                value = null;
+                data = null;
 
-		oboTerms = new HashMap<String, OboTerm>();
-		oboTypes 	= new HashMap<String, OboType>();
+                line = line.trim();
 
-		inverseRel  = new HashMap<String, String>();
+                if (!metadataLoaded) { // loading OBO meta data
 
-		oboTermCurrent = null;
-		oboTypeCurrent = null;
-	}
+                    if (line.equals(OBOconstants.TERM_FLAG) || line.equals(OBOconstants.TYPEDEF_FLAG)) {
 
-	public void populate(GDataConf conf, G g) throws SLIB_Exception {
+                        metadataLoaded = true;
 
-		String defaultNamespace = (String) conf.getParameter("default-namespace");
-		
-		if(defaultNamespace == null){
-			defaultNamespace = g.getURI().getNamespace();
-			logger.info("OBO loader set default-namespace "+defaultNamespace);
-			
-		}
-		
-		init(g,conf.getLoc(),defaultNamespace);
-		loadOboSpec();
+                        // check format-version 
+                        if (!format_version.equals(format_parser) && !allow_all_gafVersion) {
+                            throw new SLIB_Ex_Warning("Parser of format-version '" + format_parser + "' used to load OBO version '" + format_version + "'");
+                        }
 
-		logger.debug("OBO specification loaded.");
-	}
+                        if (line.equals(OBOconstants.TERM_FLAG)) {
+                            onTermSpec = true;
+                        } else {
+                            onTypeDef = true;
+                        }
+                    } else {
+                        data = getDataColonSplit(line);
 
-	private void loadOboSpec() throws SLIB_Exception {
-
-		try {
-
-			FileInputStream fstream = new FileInputStream(filepath);
-			DataInputStream in 		= new DataInputStream(fstream);
-			BufferedReader br 		= new BufferedReader(new InputStreamReader(in));
-
-
-			boolean metadataLoaded = false;
-
-			String line,flag,value;
-
-			String subClassOfURI = RDFS.SUBCLASSOF.stringValue();
-
-			String[] data;
-
-			String gNamespace = g.getURI().getNamespace();
-
-			while ((line = br.readLine()) != null)   {
-
-				flag  = null;
-				value = null;
-				data  = null;
-
-				line = line.trim();
-
-				if(!metadataLoaded){ // loading OBO meta data
-
-					if(line.equals(OBOconstants.TERM_FLAG) || line.equals(OBOconstants.TYPEDEF_FLAG)){
-
-						metadataLoaded = true;
-
-						// check format-version 
-						if(!format_version.equals(format_parser) && !allow_all_gafVersion)
-							throw new SLIB_Ex_Warning("Parser of format-version '"+format_parser+"' used to load OBO version '"+format_version+"'");
-
-						if(line.equals(OBOconstants.TERM_FLAG))
-							onTermSpec = true;
-						else
-							onTypeDef = true;
-					}
-					else{
-						data = getDataColonSplit(line);
-
-						if(data != null){
+                        if (data != null) {
 
 //							if(data[0].equals(OBOconstants.DEF_NAMESPACE_FLAG))
 //								defaultNamespace = data[1];
 //
 //							else 
-								if(data[0].equals(OBOconstants.FORMAT_VERSION_FLAG))
-								format_version = data[1];
-						}
-					}
-				}
-				else{
-					if(onTermSpec){ // loading [Term]
-
-						checkLine(line);
-
-						if(onTermSpec){
-
-							data = getDataColonSplit(line);
-
-							if(data == null || data.length != 2)
-								continue;
-
-							flag  = data[0];
-							value = data[1];
-
-							if( flag.equals(OBOconstants.TERM_ID_FLAG) ){ // id
-
-								oboTermCurrent = new OboTerm();
-								
-								oboTermCurrent.setURIstring( buildURI(value) );
-							}
-							else if( flag.equals(OBOconstants.ISA_FLAG) ){ // is_a
-								oboTermCurrent.addRel(subClassOfURI, buildURI(value) );
-							}
-							// is_obsolete:
-							else if( flag.equals(OBOconstants.OBSOLETE_FLAG) ){ // is_obsolete
-
-								if(value.equals("true"))
-									oboTermCurrent.setObsolete(true);
-							}
-							else if ( flag.equals(OBOconstants.RELATIONSHIP_FLAG) ){ // relationship
-
-								String[] datasub = spaces.split(value);
-
-								String relType   = buildURI( datasub[0].trim() );
-								String targetURI = buildURI( datasub[1].trim() );
-
-								oboTermCurrent.addRel(relType, targetURI);
-							}
-
-						}
-					}
-					else if(onTypeDef){ // Loading [TypeDef]
-
-						checkLine(line);
-
-						if(onTypeDef){
-
-							data = getDataColonSplit(line);
-
-							if(data == null || data.length != 2)
-								continue;
-
-							flag  = data[0];
-							value = data[1];
-
-							// id:
-							if( flag.equals(OBOconstants.TYPEDEF_ID_FLAG) ){
-								oboTypeCurrent = new OboType( buildURI(value) );
-							}
-							// is_transitive:
-							else if( flag.equals(OBOconstants.TYPEDEF_ISTRANSIVE_FLAG) ){
-
-								if(value.equals("true"))
-									oboTypeCurrent.setTransitivity(true);
-							}
-							// inverse_of:
-							else if( flag.equals(OBOconstants.TYPEDEF_INVERSE_OF_FLAG) ){
-
-								String uri_opp = buildURI(value);
-								
-								setOppositeRel(oboTypeCurrent.getURIstring(), uri_opp );
-								setOppositeRel(uri_opp , oboTypeCurrent.getURIstring());
-							}
-							// is_symmetric:
-							else if( flag.equals(OBOconstants.TYPEDEF_SYMMETRIC_FLAG) ){
-
-								if(value.equals("true")){
-									oboTypeCurrent.setSymmetricity(true);
-									setOppositeRel(oboTypeCurrent.getURIstring(), oboTypeCurrent.getURIstring());
-								}
-							}
-							// is_obsolete:
-							else if( flag.equals(OBOconstants.OBSOLETE_FLAG) ){ 
-
-								if(value.equals("true"))
-									oboTypeCurrent.setObsolete(true);
-							}
-						}
-					}
-				}
-			}
-			handleElement();
+                            if (data[0].equals(OBOconstants.FORMAT_VERSION_FLAG)) {
+                                format_version = data[1];
+                            }
+                        }
+                    }
+                } else {
+                    if (onTermSpec) { // loading [Term]
 
-			in.close();
-		} catch (IOException e) {
-			throw new SLIB_Ex_Critic(e.getMessage());
-		}
-		loadGraph();
+                        checkLine(line);
 
-		logger.info("OBO Loading ok.");
-	}
+                        if (onTermSpec) {
 
+                            data = getDataColonSplit(line);
 
+                            if (data == null || data.length != 2) {
+                                continue;
+                            }
 
-	private String buildURI(String value) throws SLIB_Ex_Critic {
-		
-		String info[] = getDataColonSplit(value);
-		
+                            flag = data[0];
+                            value = data[1];
 
-		if(info != null && info.length == 2){
+                            if (flag.equals(OBOconstants.TERM_ID_FLAG)) { // id
 
-			String ns = data.getNamespace(info[0]);
-			if(ns == null)
-				throw new SLIB_Ex_Critic("No namespace associated to prefix "+info[0]+". Cannot load "+value+", please load required namespace prefix");
-			
-			return ns+info[1];
-		}
-		else{
-			return defaultNamespace+value;
-		}
-	}
+                                oboTermCurrent = new OboTerm();
 
-	private void checkLine(String line) throws SLIB_Ex_Critic {
+                                oboTermCurrent.setURIstring(buildURI(value));
+                            } else if (flag.equals(OBOconstants.ISA_FLAG)) { // is_a
+                                oboTermCurrent.addRel(subClassOfURI, buildURI(value));
+                            } // is_obsolete:
+                            else if (flag.equals(OBOconstants.OBSOLETE_FLAG)) { // is_obsolete
 
-		if(line.equals(OBOconstants.TERM_FLAG)){
-			handleElement();
-			onTermSpec = true;
-			onTypeDef  = false;
-		}
-		else if(line.equals(OBOconstants.TYPEDEF_FLAG)){
-			handleElement();
-			onTermSpec = false;
-			onTypeDef  = true;
-		}
-	}
+                                if (value.equals("true")) {
+                                    oboTermCurrent.setObsolete(true);
+                                }
+                            } else if (flag.equals(OBOconstants.RELATIONSHIP_FLAG)) { // relationship
 
-	private void handleElement() throws SLIB_Ex_Critic {
+                                String[] datasub = spaces.split(value);
 
-		if(onTermSpec)
-			handleTerm();
+                                String relType = buildURI(datasub[0].trim());
+                                String targetURI = buildURI(datasub[1].trim());
 
-		else if(onTypeDef)
-			handleTypeDef();
-	}
+                                oboTermCurrent.addRel(relType, targetURI);
+                            }
 
-	private void setOppositeRel(String uri, String oppositeURI) throws SLIB_Ex_Critic {
+                        }
+                    } else if (onTypeDef) { // Loading [TypeDef]
 
-		// Check if opposite have already been specified
-		// and that is opposite is not the one we try to specify
+                        checkLine(line);
 
-		if(		inverseRel.containsKey(uri)  &&
-				!inverseRel.get(uri).equals(oppositeURI)	){
+                        if (onTypeDef) {
 
-			String error = "\nError trying to set [Typedef] '"+uri+"' inverse as '"+oppositeURI+"'"+
-					" because '"+inverseRel.get(uri)+"'"+
-					" was already set as it inverse.\n"+
-					"Please correct [Typedef] '"+uri+"' & "+
-					"[Typedef] '"+oppositeURI+"' specification.";
+                            data = getDataColonSplit(line);
 
-			throw new SLIB_Ex_Critic(error);
-		}
-		inverseRel.put(uri, oppositeURI);
-	}
+                            if (data == null || data.length != 2) {
+                                continue;
+                            }
 
+                            flag = data[0];
+                            value = data[1];
 
-	private void handleTerm() throws SLIB_Ex_Critic {
+                            // id:
+                            if (flag.equals(OBOconstants.TYPEDEF_ID_FLAG)) {
+                                oboTypeCurrent = new OboType(buildURI(value));
+                            } // is_transitive:
+                            else if (flag.equals(OBOconstants.TYPEDEF_ISTRANSIVE_FLAG)) {
 
-		if(onTermSpec){
+                                if (value.equals("true")) {
+                                    oboTypeCurrent.setTransitivity(true);
+                                }
+                            } // inverse_of:
+                            else if (flag.equals(OBOconstants.TYPEDEF_INVERSE_OF_FLAG)) {
 
-			if(oboTerms.containsKey(oboTermCurrent.getURIstring()))
-				throw new SLIB_Ex_Critic("Duplicate entry for [Term] "+oboTermCurrent.getURIstring());
+                                String uri_opp = buildURI(value);
 
-			oboTerms.put(oboTermCurrent.getURIstring(), oboTermCurrent);
-			oboTermCurrent = new OboTerm();
-		}
-	}
+                                setOppositeRel(oboTypeCurrent.getURIstring(), uri_opp);
+                                setOppositeRel(uri_opp, oboTypeCurrent.getURIstring());
+                            } // is_symmetric:
+                            else if (flag.equals(OBOconstants.TYPEDEF_SYMMETRIC_FLAG)) {
 
-	private void handleTypeDef() throws SLIB_Ex_Critic {
+                                if (value.equals("true")) {
+                                    oboTypeCurrent.setSymmetricity(true);
+                                    setOppositeRel(oboTypeCurrent.getURIstring(), oboTypeCurrent.getURIstring());
+                                }
+                            } // is_obsolete:
+                            else if (flag.equals(OBOconstants.OBSOLETE_FLAG)) {
 
-		if(onTypeDef){
-			if(oboTypes.containsKey(oboTypeCurrent.getURIstring()))
-				throw new SLIB_Ex_Critic("Duplicate entry for [Typedef] "+oboTypeCurrent.getURIstring());
+                                if (value.equals("true")) {
+                                    oboTypeCurrent.setObsolete(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            handleElement();
 
-			oboTypes.put(oboTypeCurrent.getURIstring(), oboTypeCurrent);
-			oboTermCurrent = new OboTerm();
-		}
-	}
+            in.close();
+        } catch (IOException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        }
+        loadGraph();
 
+        logger.info("OBO Loading ok.");
+    }
 
-	private String[] getDataColonSplit(String line) {
+    private String buildURI(String value) throws SLIB_Ex_Critic {
 
-		if(line.isEmpty())
-			return null;
+        String info[] = getDataColonSplit(value);
 
-		String data[] = colon.split( exclamation.split(line,2)[0],2 );
-		data[0] = data[0].trim();
 
-		if(data.length > 1)
-			data[1] = data[1].trim();
+        if (info != null && info.length == 2) {
 
-		return data;
-	}
+            String ns = data.getNamespace(info[0]);
+            if (ns == null) {
+                throw new SLIB_Ex_Critic("No namespace associated to prefix " + info[0] + ". Cannot load " + value + ", please load required namespace prefix");
+            }
 
+            return ns + info[1];
+        } else {
+            return defaultNamespace + value;
+        }
+    }
 
-	/**
-	 * Create the graph considering information loaded 
-	 * @throws SGL_Exception
-	 */
-	private void loadGraph() throws SLIB_Exception {
+    private void checkLine(String line) throws SLIB_Ex_Critic {
 
-		// - create vertices -----------------------------------------------
+        if (line.equals(OBOconstants.TERM_FLAG)) {
+            handleElement();
+            onTermSpec = true;
+            onTypeDef = false;
+        } else if (line.equals(OBOconstants.TYPEDEF_FLAG)) {
+            handleElement();
+            onTermSpec = false;
+            onTypeDef = true;
+        }
+    }
 
-		int nbObsolete = 0;
-		int nbObsoleteTypeDef = 0;
+    private void handleElement() throws SLIB_Ex_Critic {
 
-		for(Entry<String, OboTerm> e : oboTerms.entrySet()){
+        if (onTermSpec) {
+            handleTerm();
+        } else if (onTypeDef) {
+            handleTypeDef();
+        }
+    }
 
+    private void setOppositeRel(String uri, String oppositeURI) throws SLIB_Ex_Critic {
 
-			if(!e.getValue().isObsolete()){
+        // Check if opposite have already been specified
+        // and that is opposite is not the one we try to specify
 
-				URI termURI = data.createURI(e.getKey());
+        if (inverseRel.containsKey(uri)
+                && !inverseRel.get(uri).equals(oppositeURI)) {
 
-				VertexTyped v = new VertexTyped(g,termURI, VType.CLASS);
-				g.addV(v);
-			}
-			else
-				nbObsolete++;
-		}
+            String error = "\nError trying to set [Typedef] '" + uri + "' inverse as '" + oppositeURI + "'"
+                    + " because '" + inverseRel.get(uri) + "'"
+                    + " was already set as it inverse.\n"
+                    + "Please correct [Typedef] '" + uri + "' & "
+                    + "[Typedef] '" + oppositeURI + "' specification.";
 
-		Set<String> obsoletesETypes = new HashSet<String>(); 
+            throw new SLIB_Ex_Critic(error);
+        }
+        inverseRel.put(uri, oppositeURI);
+    }
 
-		// create  Edge Type and inverse
-		for(Entry<String, OboType> e : oboTypes.entrySet()){
+    private void handleTerm() throws SLIB_Ex_Critic {
 
-			String eTypeUriString = null;
+        if (onTermSpec) {
 
+            if (oboTerms.containsKey(oboTermCurrent.getURIstring())) {
+                throw new SLIB_Ex_Critic("Duplicate entry for [Term] " + oboTermCurrent.getURIstring());
+            }
 
-			eTypeUriString 	= e.getKey();
-			OboType	type	= e.getValue();
+            oboTerms.put(oboTermCurrent.getURIstring(), oboTermCurrent);
+            oboTermCurrent = new OboTerm();
+        }
+    }
 
-			if(type.isObsolete()){
-				nbObsoleteTypeDef++;
-				obsoletesETypes.add(eTypeUriString);
-				continue;
-			}
-		}
+    private void handleTypeDef() throws SLIB_Ex_Critic {
 
-		// create  Edge Type and inverse only for non obsolete relationships
-		for(Entry<String, OboTerm> entry : oboTerms.entrySet()){
+        if (onTypeDef) {
+            if (oboTypes.containsKey(oboTypeCurrent.getURIstring())) {
+                throw new SLIB_Ex_Critic("Duplicate entry for [Typedef] " + oboTypeCurrent.getURIstring());
+            }
 
-			OboTerm t = entry.getValue();
+            oboTypes.put(oboTypeCurrent.getURIstring(), oboTypeCurrent);
+            oboTermCurrent = new OboTerm();
+        }
+    }
 
-			if(!t.isObsolete()){
+    private String[] getDataColonSplit(String line) {
 
-				for(OboRelationship r : t.getRelationships()){
+        if (line.isEmpty()) {
+            return null;
+        }
 
-					String typeString = r.getTypeUriString();
+        String data[] = colon.split(exclamation.split(line, 2)[0], 2);
+        data[0] = data[0].trim();
 
-					if(!obsoletesETypes.contains(typeString)){
+        if (data.length > 1) {
+            data[1] = data[1].trim();
+        }
 
-						URI srcURI 		   	   = data.createURI(t.getURIstring());
-						URI targetURI 		   = data.createURI(r.getTargetUriString());
+        return data;
+    }
 
-						V src 	 = g.getV(srcURI);
-						V target = g.getV(targetURI);
+    /**
+     * Create the graph considering information loaded
+     *
+     * @throws SGL_Exception
+     */
+    private void loadGraph() throws SLIB_Exception {
 
-						// In some case links are defined
-						// between elements not defined in the graph
-						if(target == null){
-							VertexTyped v = new VertexTyped(g,targetURI, VType.CLASS);
-							target = g.addV(v);
-						}
+        // - create vertices -----------------------------------------------
 
-						URI type 		  = data.eTypes.createPURI(typeString);
+        int nbObsolete = 0;
+        int nbObsoleteTypeDef = 0;
 
-						g.addE(src, target, type);
-					}
-				}
-			}
-		}
+        for (Entry<String, OboTerm> e : oboTerms.entrySet()) {
 
-		logger.info("Term specified : "+oboTerms.size());
-		logger.info("skipping "+nbObsolete+" obsolete Terms");
-		if(nbObsoleteTypeDef != 0)
-			logger.info("skipping "+nbObsoleteTypeDef+" obsolete Type Def");
-	}
 
+            if (!e.getValue().isObsolete()) {
 
+                URI termURI = data.createURI(e.getKey());
 
+                VertexTyped v = new VertexTyped(g, termURI, VType.CLASS);
+                g.addV(v);
+            } else {
+                nbObsolete++;
+            }
+        }
 
-	public boolean isAllow_all_gafVersion() {
-		return allow_all_gafVersion;
-	}
+        Set<String> obsoletesETypes = new HashSet<String>();
 
-	public void setAllow_all_gafVersion(boolean allow_all_gafVersion) {
-		this.allow_all_gafVersion = allow_all_gafVersion;
-	}
+        // create  Edge Type and inverse
+        for (Entry<String, OboType> e : oboTypes.entrySet()) {
 
-	public static void main(String[] args) throws SLIB_Ex_Warning {
+            String eTypeUriString = null;
 
-		//		String path = System.getProperty("user.dir")+"/data/graph/obo/";
-		//
-		//		String go = path+"gene_ontology_ext.obo";
-		//
 
-		//		try {
-		////			DataRepository.getSingleton().loadNamespacePrefix("GO", "http://purl.obolibrary.org/obo/go#");
-		////			DataRepository.getSingleton().loadNamespacePrefix("RO", "http://purl.org/obo/owl/ro#");
-		//
-		//			GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
-		//			GraphConf conf = new GraphConf("http://purl.obolibrary.org/obo/go#", GFormat.OBO, go, null, false);
-		//
-		//			G g = loader.load(conf);
-		//
-		//			System.out.println(g.toString());
-		//
-		//		} catch (SGL_Exception e) {
-		//			e.printStackTrace();
-		//			System.err.println(e.getMessage());
-		//		}
-	}
+            eTypeUriString = e.getKey();
+            OboType type = e.getValue();
 
+            if (type.isObsolete()) {
+                nbObsoleteTypeDef++;
+                obsoletesETypes.add(eTypeUriString);
+                continue;
+            }
+        }
+
+        // create  Edge Type and inverse only for non obsolete relationships
+        for (Entry<String, OboTerm> entry : oboTerms.entrySet()) {
+
+            OboTerm t = entry.getValue();
+
+            if (!t.isObsolete()) {
+
+                for (OboRelationship r : t.getRelationships()) {
+
+                    String typeString = r.getTypeUriString();
+
+                    if (!obsoletesETypes.contains(typeString)) {
+
+                        URI srcURI = data.createURI(t.getURIstring());
+                        URI targetURI = data.createURI(r.getTargetUriString());
+
+                        V src = g.getV(srcURI);
+                        V target = g.getV(targetURI);
+
+                        // In some case links are defined
+                        // between elements not defined in the graph
+                        if (target == null) {
+                            VertexTyped v = new VertexTyped(g, targetURI, VType.CLASS);
+                            target = g.addV(v);
+                        }
+
+                        URI type = data.getPredicateFactory().createPURI(typeString);
+
+                        g.addE(src, target, type);
+                    }
+                }
+            }
+        }
+
+        logger.info("Term specified : " + oboTerms.size());
+        logger.info("skipping " + nbObsolete + " obsolete Terms");
+        if (nbObsoleteTypeDef != 0) {
+            logger.info("skipping " + nbObsoleteTypeDef + " obsolete Type Def");
+        }
+    }
+
+    public boolean isAllow_all_gafVersion() {
+        return allow_all_gafVersion;
+    }
+
+    public void setAllow_all_gafVersion(boolean allow_all_gafVersion) {
+        this.allow_all_gafVersion = allow_all_gafVersion;
+    }
+
+    public static void main(String[] args) throws SLIB_Ex_Warning {
+        //		String path = System.getProperty("user.dir")+"/data/graph/obo/";
+        //
+        //		String go = path+"gene_ontology_ext.obo";
+        //
+        //		try {
+        ////			DataRepository.getSingleton().loadNamespacePrefix("GO", "http://purl.obolibrary.org/obo/go#");
+        ////			DataRepository.getSingleton().loadNamespacePrefix("RO", "http://purl.org/obo/owl/ro#");
+        //
+        //			GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
+        //			GraphConf conf = new GraphConf("http://purl.obolibrary.org/obo/go#", GFormat.OBO, go, null, false);
+        //
+        //			G g = loader.load(conf);
+        //
+        //			System.out.println(g.toString());
+        //
+        //		} catch (SGL_Exception e) {
+        //			e.printStackTrace();
+        //			System.err.println(e.getMessage());
+        //		}
+    }
 }

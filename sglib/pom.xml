@@ -11,6 +11,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>sglib-model</module>
+                <module>sglib-model-impl</module>
 		<module>sglib-algo</module>
 		<module>sglib-io</module>
 		<module>sglib-test</module>

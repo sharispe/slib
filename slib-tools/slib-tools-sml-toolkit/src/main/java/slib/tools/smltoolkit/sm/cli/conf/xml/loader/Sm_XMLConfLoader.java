@@ -1,41 +1,38 @@
 /*
 
-Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
 
-This software is a computer program whose purpose is to 
-process semantic graphs.
+ This software is a computer program whose purpose is to 
+ process semantic graphs.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+ This software is governed by the CeCILL  license under French law and
+ abiding by the rules of distribution of free software.  You can  use, 
+ modify and/ or redistribute the software under the terms of the CeCILL
+ license as circulated by CEA, CNRS and INRIA at the following URL
+ "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+ As a counterpart to the access to the source code and  rights to copy,
+ modify and redistribute granted by the license, users are provided only
+ with a limited warranty  and the software's author,  the holder of the
+ economic rights,  and the successive licensors  have only  limited
+ liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+ In this respect, the user's attention is drawn to the risks associated
+ with loading,  using,  modifying and/or developing or reproducing the
+ software by the user in light of its specific status of free software,
+ that may mean  that it is complicated to manipulate,  and  that  also
+ therefore means  that it is reserved for developers  and  experienced
+ professionals having in-depth computer knowledge. Users are therefore
+ encouraged to load and test the software's suitability as regards their
+ requirements in conditions enabling the security of their systems and/or 
+ data to be ensured and,  more generally, to use and operate it in the 
+ same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+ The fact that you are presently reading this means that you have had
+ knowledge of the CeCILL license and that you accept its terms.
 
  */
-
-
 package slib.tools.smltoolkit.sm.cli.conf.xml.loader;
-
 
 import java.io.File;
 import java.util.Arrays;
@@ -68,889 +65,887 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
-
 public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
+    Logger logger = LoggerFactory.getLogger(Sm_XMLConfLoader.class);
+    public LinkedHashSet<SMconf> gConfPairwise;
+    public LinkedHashSet<SMconf> gConfGroupwise;
+    public LinkedHashSet<ICconf> gConfICs;
+    public LinkedHashSet<Conf> gConfQueries;
+    public LinkedHashSet<OperatorConf> gConfOperators;
+    Integer nbThreads;
+    Integer benchSize;
+    Boolean cachePairwiseResults;
+    Boolean skipEmptyAnnots;
+    Double emptyAnnotsScores;
+    public String graphURI;
 
+    //	private boolean optConfDefined = false;
+    public Sm_XMLConfLoader(String confFile) throws SLIB_Exception {
 
-	Logger   logger = LoggerFactory.getLogger(Sm_XMLConfLoader.class);
+        super(confFile);
 
+        gConfPairwise = new LinkedHashSet<SMconf>();
+        gConfGroupwise = new LinkedHashSet<SMconf>();
+        gConfQueries = new LinkedHashSet<Conf>();
+        gConfICs = new LinkedHashSet<ICconf>();
+        gConfOperators = new LinkedHashSet<OperatorConf>();
 
-	public LinkedHashSet<SMconf>  gConfPairwise;
-	public LinkedHashSet<SMconf>  gConfGroupwise;
-	public LinkedHashSet<ICconf>  gConfICs;
-	public LinkedHashSet<Conf>    gConfQueries;
-	public LinkedHashSet<OperatorConf>    gConfOperators;
+        logger.info("Loading " + Sm_XML_Cst.SML_SM + " Configuration : " + confFile);
+
+        try {
+
+            DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = parser.parse(new File(confFile));
+
+            // check if the XML configuration refers to another XML file
+            NodeList smNode = document.getElementsByTagName(Sm_XML_Cst.SML_TAG);
+
+            if (smNode.getLength() == 1 && smNode.item(0) instanceof Element) {
 
-	Integer nbThreads;
-	Integer benchSize;
-	Boolean cachePairwiseResults;
-	Boolean skipEmptyAnnots;
-	Double  emptyAnnotsScores;
+                Conf gconf = GenericConfBuilder.build(smNode).iterator().next();
+
+                String module = (String) gconf.getParam(Sm_XML_Cst.SML_MODULE);
 
-	public String graphURI;
-	
-	
+                if (module == null || !module.equals(Sm_XML_Cst.SML_SM)) {
+                    Util.error("Please specify a attribut module='sm' to tag " + Sm_XML_Cst.SML_TAG);
+                }
 
+                graphURI = (String) gconf.getParam(XmlTags.GRAPH_ATT);
+
+                if (graphURI == null) {
+                    Util.error("Please specify a attribut graph='graph_uri' to tag " + Sm_XML_Cst.SML_TAG + " specifying which graph must be considered ");
+                }
+
+                String includeFile = (String) gconf.getParam(Sm_XML_Cst.SML_SM_include);
+                if (includeFile != null) {
+                    logger.info("including " + includeFile);
+
+                    DocumentBuilder p = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                    Document dinc = p.parse(new File(includeFile));
+                    loadData(dinc);
+                }
+            } else {
+                if (smNode.getLength() == 0) {
+                    Util.error("A " + Sm_XML_Cst.SML_TAG + " tag must be specified");
+                } else {
+                    Util.error("A unique " + Sm_XML_Cst.SML_TAG + " tag must be specified");
+                }
+            }
 
+            loadData(document);
+            checkData();
 
-	//	private boolean optConfDefined = false;
 
+            logger.info("Configuration loaded... ");
 
-	public Sm_XMLConfLoader(String confFile) throws SLIB_Exception{
+        } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                e.printStackTrace();
+            }
+            throw new SLIB_Exception(e.getMessage());
+        }
+    }
+
+    private void checkData() throws SLIB_Ex_Critic {
+        checkIcs();
+        checkPairwiseMeasures();
+        checkGroupwiseMeasures();
+        checkQueries();
+    }
+
+    private void loadData(Document document) throws SLIB_Ex_Critic {
+
+        NodeList opt = document.getElementsByTagName(Sm_XML_Cst.OPT_MODULE_TAG);
+
+        // opt
+        if (opt.getLength() == 1 && opt.item(0) instanceof Element) {
+            extractOptConf(GenericConfBuilder.build((Element) opt.item(0)));
+        } else if (opt.getLength() > 1) {
+            Util.error("Only one " + Sm_XML_Cst.OPT_MODULE_TAG + " tag allowed");
+        }
+
+
+        NodeList ics = document.getElementsByTagName(Sm_XML_Cst.ICS_TAG);
+
+        for (int i = 0; i < ics.getLength(); i++) {
+            if (ics.item(i) instanceof Element) {
+                loadICs((Element) ics.item(i));
+            }
+        }
+
+        NodeList operators = document.getElementsByTagName(Sm_XML_Cst.OPERATORS_TAG);
+
+        for (int i = 0; i < operators.getLength(); i++) {
+            if (operators.item(i) instanceof Element) {
+                loadOperators((Element) operators.item(i));
+            }
+        }
+
+        NodeList measure = document.getElementsByTagName(Sm_XML_Cst.MEASURES_TAG);
+
+        for (int i = 0; i < measure.getLength(); i++) {
+            if (measure.item(i) instanceof Element) {
+                processMeasureSpec((Element) measure.item(i));
+            }
+        }
+
+        NodeList queries = document.getElementsByTagName(Sm_XML_Cst.QUERIES_TAG);
+        for (int i = 0; i < queries.getLength(); i++) {
+            if (queries.item(i) instanceof Element) {
+                loadQueries((Element) queries.item(i));
+            }
+        }
+    }
+
+    private void checkQueries() throws SLIB_Ex_Critic {
+
+        for (Conf conf : gConfQueries) {
+
+            String type = (String) conf.getParam(XmlTags.TYPE_ATTR);
+            String output = (String) conf.getParam(XmlTags.OUTPUT_ATTR);
+
+            if (output == null) {
+                Util.error("Please specify an output file for each query");
+            }
+
+            if (!(type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)
+                    || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)
+                    || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO_FULL))) {
+                Util.error("Please precise a valid type to all queries, error due to type=" + type);
+            }
+        }
+    }
 
-		super(confFile);
+    private void checkIcs() throws SLIB_Ex_Critic {
 
-		gConfPairwise  = new LinkedHashSet<SMconf>();
-		gConfGroupwise = new LinkedHashSet<SMconf>();
-		gConfQueries   = new LinkedHashSet<Conf>();
-		gConfICs	   = new LinkedHashSet<ICconf>();
-		gConfOperators = new LinkedHashSet<OperatorConf>();
+        for (ICconf m : gConfICs) {
 
-		logger.info("Loading "+Sm_XML_Cst.SML_SM+" Configuration : "+confFile);
+            String flag = m.flag;
+            String id = m.id;
 
-		try {
+            if (SMConstants.IC_FLAGS.contains(flag)) {
 
-			DocumentBuilder parser = DocumentBuilderFactory.newInstance().newDocumentBuilder(); 
-			Document document = parser.parse(new File( confFile )); 
+                String label = m.getLabel();
 
-			// check if the XML configuration refers to another XML file
-			NodeList smNode = document.getElementsByTagName(Sm_XML_Cst.SML_TAG);
+                if (label == null) {
+                    label = id;
+                }
 
-			if(	smNode.getLength() == 1 && smNode.item(0) instanceof Element ){
-				
-				Conf gconf = GenericConfBuilder.build(smNode).iterator().next();
-				
-				String module = (String) gconf.getParam(Sm_XML_Cst.SML_MODULE);
-				
-				if(module == null || !module.equals(Sm_XML_Cst.SML_SM))
-					Util.error("Please specify a attribut module='sm' to tag "+Sm_XML_Cst.SML_TAG);
-				
-				graphURI = (String) gconf.getParam(XmlTags.GRAPH_ATT);
-				
-				if(graphURI == null)
-					Util.error("Please specify a attribut graph='graph_uri' to tag "+Sm_XML_Cst.SML_TAG+" specifying which graph must be considered ");
-				
-				String includeFile = (String) gconf.getParam(Sm_XML_Cst.SML_SM_include);
-				if(includeFile != null){
-					logger.info("including "+includeFile);
+                // Check for duplicate label && id
+                for (ICconf mm : gConfICs) {
+                    if (mm != m && (m.getLabel().equals(mm.label)
+                            || m.getId().equals(mm.id))) {
+
+                        if (m.getId().equals(mm.id)) {
+                            Util.error("Duplicate IC id:" + m.getId());
+                        } else {
+                            Util.error("Duplicate IC label:" + label);
+                        }
+                    }
+                }
+            } else {
+                if (flag == null) {
+                    Util.error("An IC have no flag specified");
+                } else {
+                    Util.error("Unknown IC flag:" + flag);
+                }
+            }
+        }
+        logger.info(gConfICs.size() + " IC conf loaded ");
+    }
+
+    private void loadQueries(Element item) throws SLIB_Ex_Critic {
+        Conf querySet = GenericConfBuilder.build(item);
+        gConfQueries.add(querySet);
+    }
+
+    private void loadICs(Element item) throws SLIB_Ex_Critic {
+        NodeList list = item.getElementsByTagName(Sm_XML_Cst.IC_ATTR);
+        LinkedHashSet<Conf> gConfICsGenerics = GenericConfBuilder.build(list);
+        gConfICs.addAll(buildICconf(gConfICsGenerics));
+    }
+
+    private void loadOperators(Element item) throws SLIB_Ex_Critic {
+        NodeList list = item.getElementsByTagName(Sm_XML_Cst.OPERATOR_TAG);
+        gConfOperators.addAll(buildOperatorconf(GenericConfBuilder.build(list)));
+    }
+
+    private void checkPairwiseMeasures() throws SLIB_Ex_Critic {
+
+        for (SMconf m : gConfPairwise) {
+
+            String id = m.id;
+            String flag = m.flag;
+            String label = m.label;
+
+            if (SMConstants.PAIRWISE_MEASURE_FLAGS.contains(flag)) {
+
+                // --- Check ID
+
+                if (id == null) {
+                    Util.error("Please specify an id tag for all pairwise measure flag:" + flag);
+                }
+
+                // Check for duplicate label
+                for (SMconf mm : gConfPairwise) {
+                    if (mm != m && id.equals(mm.id)) {
+                        Util.error("Duplicate id value for pairwise measure:" + id);
+                    }
+                }
+
+                // --- Check Label
+
+                if (label == null) {
+                    m.label = id;
+                }
+
+
+                // Check for duplicate label
+                for (SMconf mm : gConfPairwise) {
+                    if (mm != m && m.label.equals(mm.label)) {
+                        Util.error("Duplicate label:" + m.label);
+                    }
+                }
 
-					DocumentBuilder p = DocumentBuilderFactory.newInstance().newDocumentBuilder(); 
-					Document dinc = p.parse(new File(includeFile )); 
-					loadData(dinc);
-				}
-			}
-			else{
-				if(smNode.getLength() == 0 )
-					Util.error("A "+Sm_XML_Cst.SML_TAG+" tag must be specified");
-				else
-					Util.error("A unique "+Sm_XML_Cst.SML_TAG+" tag must be specified");
-			}
+
+                if (SMConstants.MEASURE_FLAGS_IC_DEPENDENCY.contains(flag)) {
 
-			loadData(document);
-			checkData();
 
+                    ICconf ic = m.getICconf();
 
-			logger.info("Configuration loaded... ");
+                    if (ic == null || ic.id == null) {
+                        Util.error("Please specify an IC to node based measure: " + m.id);
+                    }
+
+                    // Search corresponding ic specification
+                    boolean valid = false;
+
+                    for (ICconf gc : gConfICs) {
+                        if (gc.getId().equals(ic.id)) {
+                            valid = true;
+                            break;
+                        }
+                    }
+
+                    if (!valid) {
+                        Util.error("Cannot resolve IC '" + ic + "' specified for pairwise measure '" + label + "'");
+                    }
+                }
+
+                if (SMConstants.SIM_FRAMEWORK.containsKey(flag)) {
+                    checkFrameworkMeasure(m);
+                }
+
+            } else {
+                if (flag == null) {
+                    Util.error("A pairwise measure have no specified flag ");
+                } else {
+                    Util.error("Unknown pairwise measure flag:" + flag);
+                }
+            }
+        }
+        logger.info(gConfPairwise.size() + " pairwise measure configurations loaded ");
+    }
 
-		} catch (Exception e) {
-			if(logger.isDebugEnabled())
-				e.printStackTrace();
-			throw new SLIB_Exception(e.getMessage());
-		}
-	}
+    private void checkFrameworkMeasure(SMconf m) throws SLIB_Ex_Critic {
+        if (m.representation == null) {
+            throw new SLIB_Ex_Critic("Please specify a representation (attribut " + Sm_XML_Cst.REPRESENTATION_ATTR + ") associated to measure id " + m.id);
+        }
+
+        if (m.operator == null) {
+            throw new SLIB_Ex_Critic("Please specify an operator engine (attribut " + Sm_XML_Cst.OPERATOR_FLAG_ATTR + " or " + Sm_XML_Cst.OPERATOR_TAG + ", see doc) associated to measure id " + m.id);
+        }
+
+        if (!SMConstants.operators.containsKey(m.operator.flag)) {
+            throw new SLIB_Ex_Critic("Unknown operator flag " + m.operator.flag + " in measure id : " + m.id);
+        }
+    }
+
+    private void checkGroupwiseMeasures() throws SLIB_Ex_Critic {
+
+        for (SMconf m : gConfGroupwise) {
+
+            String id = m.id;
+            String flag = m.flag;
+            String label = m.label;
+            String pairwise_measure = m.pairwise_measure_id;
+
+            if (SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)) {
+
+                if (id == null) {
+                    Util.error("Please specify an id tag for all groupwise measures");
+                }
+
+                // Check Pairwise measure dependency
+
+                if (SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(flag)) {
+                    if (pairwise_measure == null) {
+                        Util.error("Please specify a pairwise measure associated to groupwise measures id=" + id);
+                    }
+
+                    // Check pairwise measure exists
+                    boolean valid = false;
+                    for (SMconf mm : gConfPairwise) {
+                        if (mm.id.equals(pairwise_measure)) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    if (!valid) {
+                        throw new SLIB_Ex_Critic("Cannot refer to unloaded pairwise measure '" + pairwise_measure + "' in groupwise "
+                                + "measure definition id=" + id);
+                    }
+
+                }
 
+                // check IC dependency
 
+                if (SMConstants.MEASURE_FLAGS_IC_DEPENDENCY.contains(flag)) {
 
-	private void checkData() throws SLIB_Ex_Critic {
-		checkIcs();
-		checkPairwiseMeasures();
-		checkGroupwiseMeasures();
-		checkQueries();
-	}
 
+                    ICconf ic = m.getICconf();
 
-	private void loadData(Document document) throws SLIB_Ex_Critic {
+                    if (ic == null || ic.id == null) {
+                        Util.error("Please specify an IC to measure: " + m.id);
+                    }
 
-		NodeList opt = document.getElementsByTagName(Sm_XML_Cst.OPT_MODULE_TAG);
-
-		// opt
-		if(	opt.getLength() == 1 && opt.item(0) instanceof Element ){
-			extractOptConf(GenericConfBuilder.build((Element) opt.item(0)));
-		}
-		else if(opt.getLength() > 1){
-			Util.error("Only one "+Sm_XML_Cst.OPT_MODULE_TAG+" tag allowed");
-		}
-
-
-		NodeList ics = document.getElementsByTagName(Sm_XML_Cst.ICS_TAG);
-
-		for (int i = 0; i < ics.getLength(); i++) {
-			if(ics.item(i) instanceof Element)
-				loadICs((Element) ics.item(i));
-		}
-
-		NodeList operators = document.getElementsByTagName(Sm_XML_Cst.OPERATORS_TAG);
-
-		for (int i = 0; i < operators.getLength(); i++) {
-			if(operators.item(i) instanceof Element)
-				loadOperators((Element) operators.item(i));
-		}
-
-		NodeList measure = document.getElementsByTagName(Sm_XML_Cst.MEASURES_TAG);
+                    // Search corresponding IC specification
+                    boolean valid = false;
 
-		for(int i = 0; i < measure.getLength();i++){
-			if(measure.item(i) instanceof Element)
-				processMeasureSpec((Element)measure.item(i));
-		}
+                    for (ICconf gc : gConfICs) {
+                        if (gc.getId().equals(ic.id)) {
+                            valid = true;
+                            break;
+                        }
+                    }
 
-		NodeList queries = document.getElementsByTagName(Sm_XML_Cst.QUERIES_TAG);
-		for(int i=0;i< queries.getLength();i++){
-			if(queries.item(i) instanceof Element )
-				loadQueries((Element) queries.item(i));
-		}
-	}
+                    if (!valid) {
+                        Util.error("Cannot resolve IC '" + ic + "' specified for graoupwise measure '" + label + "'");
+                    }
+                }
 
+                // Check for duplicate label
+                for (SMconf mm : gConfGroupwise) {
+                    if (mm != m && id.equals(mm.id)) {
+                        Util.error("Duplicate id value for groupwise measure:" + id);
+                    }
+                }
 
-	private void checkQueries() throws SLIB_Ex_Critic {
 
-		for(Conf conf :gConfQueries){
+                if (label == null) {
+                    m.label = id;
+                }
 
-			String type    = (String) conf.getParam(XmlTags.TYPE_ATTR);
-			String output  = (String) conf.getParam(XmlTags.OUTPUT_ATTR);
+                // Check for duplicate label
+                for (SMconf mm : gConfGroupwise) {
+                    if (mm != m && m.label.equals(mm.label)) {
+                        Util.error("Duplicate label:" + m.label);
+                    }
+                }
 
-			if(output == null)
-				Util.error("Please specify an output file for each query");
-			
-			if(!(
-					type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC) || 
-					type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO) ||
-					type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO_FULL)
-					))
-				Util.error("Please precise a valid type to all queries, error due to type="+type);
-		}
-	}
 
 
-	private void checkIcs() throws SLIB_Ex_Critic {
+                if (SMConstants.SIM_FRAMEWORK.containsKey(flag)) {
+                    checkFrameworkMeasure(m);
+                }
+            } else {
+                if (flag == null) {
+                    Util.error("A groupwise measure have no specified flag ");
+                } else {
+                    Util.error("Unknown groupwise measure flag:" + flag);
+                }
+            }
+        }
+        logger.info(gConfGroupwise.size() + " groupwise measure configurations  loaded ");
+    }
 
-		for(ICconf m : gConfICs){
+    private void processMeasureSpec(Element item) throws SLIB_Ex_Critic {
 
-			String flag = m.flag;
-			String id 	= m.id;
-			
-			if(SMConstants.IC_FLAGS.contains(flag)){
+        String type = getAttValue((Element) item, XmlTags.TYPE_ATTR);
 
-				String label = m.getLabel();
-				
-				if(label == null)
-					label = id;
+        if (type != null) {
 
-				// Check for duplicate label && id
-				for(ICconf mm : gConfICs){
-					if(mm != m && ( m.getLabel().equals(mm.label) 
-							||  m.getId().equals(mm.id))){
+            NodeList list = item.getElementsByTagName(Sm_XML_Cst.MEASURE_TAG);
+            LinkedHashSet<Conf> gConf = GenericConfBuilder.build(list);
 
-						if( m.getId().equals(mm.id))
-							Util.error("Duplicate IC id:"+m.getId());
-						else
-							Util.error("Duplicate IC label:"+label);
-					}
-				}
-			}
-			else{
-				if(flag == null)
-					Util.error("An IC have no flag specified");
-				else
-					Util.error("Unknown IC flag:"+flag);
-			}
-		}
-		logger.info(gConfICs.size()+" IC conf loaded ");
-	}
+            if (type.equals(Sm_XML_Cst.TYPE_VALUE_PAIRWISE)) {
+                gConfPairwise.addAll(buildPairwiseConf(gConf));
+            } else if (type.equals(Sm_XML_Cst.TYPE_VALUE_GROUPWISE)) {
+                gConfGroupwise.addAll(buildGroupwiseConf(gConf));
+            } else {
+                Util.error("Unsupported type of measures specified (" + type + ")");
+            }
+        } else {
+            Util.error("Please precise the type of measure associated to 'measures' tag");
+        }
+    }
 
-	private void loadQueries(Element item) throws SLIB_Ex_Critic {
-		Conf querySet = GenericConfBuilder.build(item);
-		gConfQueries.add(querySet);
-	}
+    private LinkedHashSet<SMconf> buildPairwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
+        LinkedHashSet<SMconf> sspPairwiseConf = new LinkedHashSet<SMconf>();
 
-	private void loadICs(Element item) throws SLIB_Ex_Critic {
-		NodeList list = item.getElementsByTagName(Sm_XML_Cst.IC_ATTR);
-		LinkedHashSet<Conf> gConfICsGenerics = GenericConfBuilder.build(list);
-		gConfICs.addAll( buildICconf(gConfICsGenerics));
-	}
+        for (Conf c : gCong) {
 
-	private void loadOperators(Element item) throws SLIB_Ex_Critic {
-		NodeList list = item.getElementsByTagName(Sm_XML_Cst.OPERATOR_TAG);
-		gConfOperators.addAll( buildOperatorconf( GenericConfBuilder.build(list) ));
-	}
+            String id = (String) c.getParam(XmlTags.ID_ATTR);
+            String label = (String) c.getParam(XmlTags.LABEL_ATTR);
 
-	private void checkPairwiseMeasures() throws SLIB_Ex_Critic {
+            if (label == null) {
+                label = id;
+            }
 
-		for(SMconf m : gConfPairwise){
 
-			String id 		= m.id;
-			String flag 	= m.flag;
-			String label	= m.label;
+            String icID = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
 
-			if(SMConstants.PAIRWISE_MEASURE_FLAGS.contains(flag)){
+            logger.debug("Loading measure " + label);
 
-				// --- Check ID
+            if (icID != null && icID.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
 
-				if(id == null)
-					Util.error("Please specify an id tag for all pairwise measure flag:"+flag);
+                if (gConfICs.size() == 0) {
+                    throw new SLIB_Ex_Critic(" Pairwise measure " + label + " requires IC(s) to be defined, none found");
+                }
 
-				// Check for duplicate label
-				for(SMconf mm : gConfPairwise){
-					if(mm != m && id.equals(mm.id))
-						Util.error("Duplicate id value for pairwise measure:"+id);
-				}
+                for (ICconf ic_conf : gConfICs) {
 
-				// --- Check Label
 
-				if(label == null)
-					m.label = id;
+                    String avoided = null;
 
+                    if (ic_conf.getParams() != null) {
+                        avoided = (String) ic_conf.getParams().get(XmlTags.EXCLUDE_AUTO_MEASURE);
+                    }
 
-				// Check for duplicate label
-				for(SMconf mm : gConfPairwise){
-					if(mm != m && m.label.equals(mm.label))
-						Util.error("Duplicate label:"+m.label);
-				}
+                    if (Util.stringToBoolean(avoided)) {
+                        continue;
+                    }
 
+                    String id_tmp = id + "_" + ic_conf.id;
+                    String label_tmp = label;
 
-				if(SMConstants.MEASURE_FLAGS_IC_DEPENDENCY.contains(flag)){
+                    if (label != null) {
+                        label_tmp = label + "_" + ic_conf.id;
+                    }
 
-					
-					ICconf ic = m.getICconf();
+                    c.addParam(XmlTags.ID_ATTR, id_tmp);
+                    c.addParam(XmlTags.LABEL_ATTR, label_tmp);
 
-					if(ic == null || ic.id == null)
-						Util.error("Please specify an IC to node based measure: "+m.id);
+                    c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                    sspPairwiseConf.add(buildPairwiseConf(c));
+                }
+            } else {
+                sspPairwiseConf.add(buildPairwiseConf(c));
+            }
+        }
+        return sspPairwiseConf;
+    }
 
-					// Search corresponding ic specification
-					boolean valid = false;
+    private SMconf buildPairwiseConf(Conf c) throws SLIB_Ex_Critic {
 
-					for (ICconf gc : gConfICs) {
-						if(gc.getId().equals(ic.id)){
-							valid = true;
-							break;
-						}
-					}
+        // Attributes (processed below), not considered as extraParameters
 
-					if(!valid)
-						Util.error("Cannot resolve IC '"+ic+"' specified for pairwise measure '"+label+"'");
-				}
+        String[] defaultAttributs = {
+            XmlTags.ID_ATTR,
+            XmlTags.LABEL_ATTR,
+            Sm_XML_Cst.FLAG_ATTR,
+            Sm_XML_Cst.IC_ATTR,
+            Sm_XML_Cst.REPRESENTATION_ATTR,
+            Sm_XML_Cst.OPERATOR_FLAG_ATTR,
+            Sm_XML_Cst.OPERATOR_ID,
+            Sm_XML_Cst.IC_PROB
+        };
 
-				if(SMConstants.SIM_FRAMEWORK.containsKey(flag))
-					checkFrameworkMeasure(m);
 
-			}
-			else{
-				if(flag == null)
-					Util.error("A pairwise measure have no specified flag ");
-				else
-					Util.error("Unknown pairwise measure flag:"+flag);
-			}
-		}
-		logger.info(gConfPairwise.size()+" pairwise measure configurations loaded ");
-	}
+        String id = (String) c.getParam(XmlTags.ID_ATTR);
+        String label = (String) c.getParam(XmlTags.LABEL_ATTR);
+        String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
+        String icID = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
+        String representation = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
 
 
-	private void checkFrameworkMeasure(SMconf m) throws SLIB_Ex_Critic{
-		if(m.representation == null)
-			throw new SLIB_Ex_Critic("Please specify a representation (attribut "+Sm_XML_Cst.REPRESENTATION_ATTR+") associated to measure id "+m.id);
+        ICconf icConf = null;
 
-		if(m.operator == null)
-			throw new SLIB_Ex_Critic("Please specify an operator engine (attribut "+Sm_XML_Cst.OPERATOR_FLAG_ATTR+" or "+Sm_XML_Cst.OPERATOR_TAG+", see doc) associated to measure id "+m.id);
+        if (icID != null) { // search ic
 
-		if(!SMConstants.operators.containsKey(m.operator.flag))
-			throw new SLIB_Ex_Critic("Unknown operator flag "+m.operator.flag+" in measure id : "+m.id);
-	}
+            icConf = getIC(icID);
 
+            if (icConf == null) {
+                throw new SLIB_Ex_Critic("Cannot locate IC " + icID + " define for pairwise measure " + id);
+            }
+        }
 
 
-	private void checkGroupwiseMeasures() throws SLIB_Ex_Critic {
+        OperatorConf opConf = loadOperatorInfo(c);
 
-		for(SMconf m : gConfGroupwise){
 
-			String id 		= m.id;
-			String flag 	= m.flag;
-			String label	= m.label;
-			String pairwise_measure	= m.pairwise_measure_id;
+        SMconf pc = new SMconf(id, flag, label, icConf, representation, opConf);
 
-			if(SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)){
+        // load IC used to compute prob MICA
+        if (SMConstants.MEASURE_REQUIRE_EXTRA_IC.contains(flag)) {
 
-				if(id == null)
-					Util.error("Please specify an id tag for all groupwise measures");
+            String ic_prob_id = (String) c.getParam(Sm_XML_Cst.IC_PROB);
+            ICconf ic_prob = getIC(ic_prob_id);
 
-				// Check Pairwise measure dependency
-				
-				if(SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(flag)){
-					if(pairwise_measure == null)
-						Util.error("Please specify a pairwise measure associated to groupwise measures id="+id);
+            if (ic_prob == null) {
+                throw new SLIB_Ex_Critic("Cannot locate IC used to compute MICA probability for " + id + ", please define an attribute " + Sm_XML_Cst.IC_PROB + " refering to an IC id ");
+            }
 
-					// Check pairwise measure exists
-					boolean valid = false;
-					for(SMconf mm : gConfPairwise){
-						if(mm.id.equals(pairwise_measure)){
-							valid = true;
-							break;
-						}
-					}
-					if(!valid)
-						throw new SLIB_Ex_Critic("Cannot refer to unloaded pairwise measure '"+pairwise_measure+"' in groupwise " +
-								"measure definition id="+id);
+            pc.addParam(Sm_XML_Cst.IC_PROB, ic_prob);
+        }
 
-				}
-				
-				// check IC dependency
-				
-				if(SMConstants.MEASURE_FLAGS_IC_DEPENDENCY.contains(flag)){
+        pc = addExtraAttributs(defaultAttributs, c, pc);
 
-					
-					ICconf ic = m.getICconf();
-
-					if(ic== null || ic.id == null)
-						Util.error("Please specify an IC to measure: "+m.id);
-
-					// Search corresponding IC specification
-					boolean valid = false;
+        return pc;
+    }
 
-					for (ICconf gc : gConfICs) {
-						if(gc.getId().equals(ic.id)){
-							valid = true;
-							break;
-						}
-					}
+    /**
+     * Load extra parameters. Add to the given object extending {@link Conf}
+     * object all the parameters found in the given {@link Conf} object,
+     * excluding those having a name defined in the array of String
+     *
+     * @param defaultAttributs the name of the attributes to not consider as
+     * extra parameters
+     * @param c the {@link Conf} object containing all the key-value
+     * @param pc the {@link SMconf} object to populate
+     * @return pc populated.
+     */
+    private <C extends Conf> C addExtraAttributs(String[] defaultAttributs, Conf c, C pc) {
 
-					if(!valid)
-						Util.error("Cannot resolve IC '"+ic+"' specified for graoupwise measure '"+label+"'");
-				}
-
-				// Check for duplicate label
-				for(SMconf mm : gConfGroupwise){
-					if(mm != m && id.equals(mm.id))
-						Util.error("Duplicate id value for groupwise measure:"+id);
-				}
-
-
-				if(label == null)
-					m.label = id;
-
-				// Check for duplicate label
-				for(SMconf mm : gConfGroupwise){
-					if(mm != m && m.label.equals(mm.label))
-						Util.error("Duplicate label:"+m.label);
-				}
-
-
-
-				if(SMConstants.SIM_FRAMEWORK.containsKey(flag))
-					checkFrameworkMeasure(m);
-			}
-			else{
-				if(flag == null)
-					Util.error("A groupwise measure have no specified flag ");
-				else
-					Util.error("Unknown groupwise measure flag:"+flag);
-			}
-		}
-		logger.info(gConfGroupwise.size()+" groupwise measure configurations  loaded ");
-	}
+        List<String> def = Arrays.asList(defaultAttributs);
 
+        for (Entry<String, Object> e : c.getParams().entrySet()) {
+            if (!def.contains(e.getKey())) {
+                pc.addParam(e.getKey(), e.getValue());
+            }
+        }
+        return pc;
+    }
 
-	private void processMeasureSpec(Element item) throws SLIB_Ex_Critic {
-		
-		String type = getAttValue((Element)item,XmlTags.TYPE_ATTR);
+    private OperatorConf loadOperatorInfo(Conf c) throws SLIB_Ex_Critic {
 
-		if(type!=null){
+        String id = (String) c.getParam(XmlTags.ID_ATTR);
+        String operator_flag = (String) c.getParam(Sm_XML_Cst.OPERATOR_FLAG_ATTR);
+        String operator_id = (String) c.getParam(Sm_XML_Cst.OPERATOR_ID);
 
-			NodeList list = item.getElementsByTagName(Sm_XML_Cst.MEASURE_TAG);
-			LinkedHashSet<Conf> gConf = GenericConfBuilder.build(list);
+        OperatorConf opConf = null;
 
-			if(type.equals(Sm_XML_Cst.TYPE_VALUE_PAIRWISE))
-				gConfPairwise.addAll( buildPairwiseConf(gConf));
+        if (operator_id == null && operator_flag != null) {
+            opConf = new OperatorConf(operator_flag, operator_flag);
+        } else if (operator_id != null) {
+            opConf = getOperatorConf(operator_id);
 
-			else if(type.equals(Sm_XML_Cst.TYPE_VALUE_GROUPWISE))
-				gConfGroupwise.addAll( buildGroupwiseConf(gConf));
-			else
-				Util.error("Unsupported type of measures specified ("+type+")");
-		}
-		else
-			Util.error("Please precise the type of measure associated to 'measures' tag");
-	}
+            if (opConf == null) {
+                throw new SLIB_Ex_Critic("Cannot refer to unknow operator id  " + operator_id + " in measure id : " + id);
+            }
+        }
+        return opConf;
+    }
 
-	private LinkedHashSet<SMconf> buildPairwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
+    private ICconf getIC(String icID) {
 
-		LinkedHashSet<SMconf> sspPairwiseConf = new LinkedHashSet<SMconf>();
+        for (ICconf ic : gConfICs) {
+            if (ic.id.equals(icID)) {
+                return ic;
+            }
+        }
+        return null;
+    }
 
-		for(Conf c :gCong){
+    private OperatorConf getOperatorConf(String id) {
 
-			String id 	 = (String) c.getParam(XmlTags.ID_ATTR);
-			String label = (String) c.getParam(XmlTags.LABEL_ATTR);
-			
-			if(label == null) label = id;
-			
-			
-			String icID  = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
-			
-			logger.debug("Loading measure "+label);
+        for (OperatorConf i : gConfOperators) {
+            if (i.id.equals(id)) {
+                return i;
+            }
+        }
+        return null;
+    }
 
-			if(icID != null && icID.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)){
+    private LinkedHashSet<SMconf> buildGroupwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
-				if(gConfICs.size() == 0)
-					throw new SLIB_Ex_Critic(" Pairwise measure "+label+" requires IC(s) to be defined, none found");
-					
-				for(ICconf ic_conf : gConfICs){
-					
-					
-					String avoided 	 = null;
-					
-					if(ic_conf.getParams() != null)
-						avoided = (String) ic_conf.getParams().get(XmlTags.EXCLUDE_AUTO_MEASURE);
-					
-					if(Util.stringToBoolean(avoided))
-						continue;
+        LinkedHashSet<SMconf> sspGoupwiseConf = new LinkedHashSet<SMconf>();
 
-					String id_tmp 	 = id+"_"+ic_conf.id;
-					String label_tmp = label;
+        for (Conf c : gCong) {
 
-					if(label != null)
-						label_tmp = label+"_"+ic_conf.id;
+            String id = (String) c.getParam(XmlTags.ID_ATTR);
+            String label = (String) c.getParam(XmlTags.LABEL_ATTR);
+            String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
+            String pairwise_measure = (String) c.getParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
+            String ic_id = (String) c.getParam(Sm_XML_Cst.IC_TAG);
 
-					c.addParam(XmlTags.ID_ATTR		, id_tmp);
-					c.addParam(XmlTags.LABEL_ATTR	, label_tmp);
+            if (SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)
+                    && pairwise_measure != null
+                    && pairwise_measure.equals(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR_VALUE_FULL_LIST)) {
 
-					c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
-					sspPairwiseConf.add( buildPairwiseConf(c));
-				}
-			}
-			else
-				sspPairwiseConf.add( buildPairwiseConf(c));
-		}
-		return sspPairwiseConf;
-	}
+                // Generate mixing strategy configuration for all pairwise measures loaded
 
-	private SMconf buildPairwiseConf(Conf c) throws SLIB_Ex_Critic {
 
-		// Attributes (processed below), not considered as extraParameters
+                for (SMconf pmConf : gConfPairwise) {
 
-		String[] defaultAttributs = {
+                    String id_tmp = id + "_" + pmConf.id;
+                    String label_tmp = null;
 
-				XmlTags.ID_ATTR,
-				XmlTags.LABEL_ATTR,
-				Sm_XML_Cst.FLAG_ATTR,
-				Sm_XML_Cst.IC_ATTR,
-				Sm_XML_Cst.REPRESENTATION_ATTR,
-				Sm_XML_Cst.OPERATOR_FLAG_ATTR,
-				Sm_XML_Cst.OPERATOR_ID,
-				Sm_XML_Cst.IC_PROB
-		}; 
+                    if (label != null) {
+                        label_tmp = label + "_" + pmConf.id;
+                    }
 
+                    c.addParam(XmlTags.ID_ATTR, id_tmp);
+                    c.addParam(XmlTags.LABEL_ATTR, label_tmp);
+                    c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.id);
 
-		String id    			= (String) c.getParam(XmlTags.ID_ATTR);
-		String label 			= (String) c.getParam(XmlTags.LABEL_ATTR);
-		String flag  		    = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-		String icID  			= (String) c.getParam(Sm_XML_Cst.IC_ATTR);
-		String representation   = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
 
 
-		ICconf icConf = null;
+                    if (ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
 
-		if(icID != null){ // search ic
 
-			icConf = getIC(icID);
+                        for (ICconf ic_conf : gConfICs) {
 
-			if(icConf == null)
-				throw new SLIB_Ex_Critic("Cannot locate IC "+icID+" define for pairwise measure "+id);
-		}	
+                            String id_tmp_2 = id_tmp + "_" + ic_conf.id;
+                            String label_tmp_2 = null;
 
+                            if (label_tmp != null) {
+                                label_tmp_2 = label_tmp + "_" + ic_conf.id;
+                            }
 
-		OperatorConf opConf = loadOperatorInfo(c);
+                            c.addParam(XmlTags.ID_ATTR, id_tmp_2);
+                            c.addParam(XmlTags.LABEL_ATTR, label_tmp_2);
 
+                            c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                            sspGoupwiseConf.add(buildGroupwiseConf(c));
+                        }
+                    } else {
+                        sspGoupwiseConf.add(buildGroupwiseConf(c));
+                    }
+                }
 
-		SMconf pc = new SMconf(id, flag, label,icConf,representation,opConf);
+            } else {
 
-		// load IC used to compute prob MICA
-		if(SMConstants.MEASURE_REQUIRE_EXTRA_IC.contains(flag)){
-			
-			String ic_prob_id  = (String) c.getParam(Sm_XML_Cst.IC_PROB);
-			ICconf ic_prob = getIC(ic_prob_id);
+                if (ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
 
-			if(ic_prob == null)
-				throw new SLIB_Ex_Critic("Cannot locate IC used to compute MICA probability for "+id+", please define an attribute "+Sm_XML_Cst.IC_PROB+" refering to an IC id ");
+                    for (ICconf ic_conf : gConfICs) {
 
-			pc.addParam(Sm_XML_Cst.IC_PROB, ic_prob);
-		}
+                        String id_tmp = id + "_" + ic_conf.id;
+                        String label_tmp = label;
 
-		pc = addExtraAttributs(defaultAttributs,c,pc);
+                        if (label != null) {
+                            label_tmp = label + "_" + ic_conf.id;
+                        }
 
-		return pc;
-	}
+                        c.addParam(XmlTags.ID_ATTR, id_tmp);
+                        c.addParam(XmlTags.LABEL_ATTR, label_tmp);
 
+                        c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                        sspGoupwiseConf.add(buildGroupwiseConf(c));
+                    }
+                } else {
+                    sspGoupwiseConf.add(buildGroupwiseConf(c));
+                }
+            }
 
+        }
+        return sspGoupwiseConf;
+    }
 
-	/**
-	 * Load extra parameters.
-	 * Add to the given object extending {@link Conf} object all the parameters 
-	 * found in the given {@link Conf} object, excluding those
-	 * having a name defined in the array of String
-	 * @param defaultAttributs the name of the attributes to not consider as extra parameters
-	 * @param c the {@link Conf} object containing all the key-value
-	 * @param pc the {@link SMconf} object to populate
-	 * @return pc populated.
-	 */
-	private <C extends Conf> C addExtraAttributs(String[] defaultAttributs,Conf c, C pc) {
+    private SMconf buildGroupwiseConf(Conf c) throws SLIB_Ex_Critic {
 
-		List<String> def = Arrays.asList(defaultAttributs);
+        // Attributes (processed below), not considered as extraParameters
 
-		for(Entry<String,Object> e: c.getParams().entrySet()){
-			if(!def.contains(e.getKey()))
-				pc.addParam(e.getKey(), e.getValue());
-		}
-		return pc;
-	}
 
+        String[] defaultAttributs = {
+            XmlTags.ID_ATTR,
+            XmlTags.LABEL_ATTR,
+            Sm_XML_Cst.FLAG_ATTR,
+            Sm_XML_Cst.IC_ATTR,
+            Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,
+            Sm_XML_Cst.REPRESENTATION_ATTR,
+            Sm_XML_Cst.OPERATOR_FLAG_ATTR,
+            Sm_XML_Cst.OPERATOR_ID
+        };
 
+        String id = (String) c.getParam(XmlTags.ID_ATTR);
+        String label = (String) c.getParam(XmlTags.LABEL_ATTR);
+        String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
+        String ic_id = (String) c.getParam(Sm_XML_Cst.IC_TAG);
+        String pairwise_measure = (String) c.getParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
+        String representation = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
 
-	private OperatorConf loadOperatorInfo(Conf c) throws SLIB_Ex_Critic {
+        ICconf icConf = null;
 
-		String id    = (String) c.getParam(XmlTags.ID_ATTR);
-		String operator_flag  = (String) c.getParam(Sm_XML_Cst.OPERATOR_FLAG_ATTR);
-		String operator_id    = (String) c.getParam(Sm_XML_Cst.OPERATOR_ID);
+        if (ic_id != null) { // search ic
 
-		OperatorConf opConf = null;
+            for (ICconf ic : gConfICs) {
+                if (ic.id.equals(ic_id)) {
+                    icConf = ic;
+                    break;
+                }
+            }
+            if (icConf == null) {
+                throw new SLIB_Ex_Critic("Cannot locate IC " + ic_id + " define for groupwise measure " + id);
+            }
 
-		if(operator_id == null && operator_flag != null)
-			opConf = new OperatorConf(operator_flag, operator_flag);
-		else if(operator_id != null){
-			opConf = getOperatorConf(operator_id);
+        }
 
-			if(opConf == null){
-				throw new SLIB_Ex_Critic("Cannot refer to unknow operator id  "+operator_id+" in measure id : "+id);
-			}
-		}
-		return opConf;
-	}
+        OperatorConf opConf = loadOperatorInfo(c);
+        SMconf pc = new SMconf(id, flag, label, icConf, representation, opConf);
+        pc.setPairwise_measure_id(pairwise_measure);
 
+        pc = addExtraAttributs(defaultAttributs, c, pc);
 
+        return pc;
+    }
 
-	private ICconf getIC(String icID) {
+    private void extractOptConf(Conf gc) throws SLIB_Ex_Critic {
 
-		for(ICconf ic: gConfICs){
-			if(ic.id.equals(icID))
-				return ic;
-		}
-		return null;
-	}
+        String benchSize_s = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
+        String cache_pairwise_s = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
+        String skipEmptyAnnots_s = (String) gc.getParam(Sm_XML_Cst.OPT_SKIP_EMPTY_ANNOTS_ATTR);
+        String emptyAnnotsScore_s = (String) gc.getParam(Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR);
 
-	private OperatorConf getOperatorConf(String id) {
 
-		for(OperatorConf i: gConfOperators){
-			if(i.id.equals(id))
-				return i;
-		}
-		return null;
-	}
+        if (benchSize_s != null) {
+            try {
+                benchSize = Integer.parseInt(benchSize_s);
+            } catch (NumberFormatException e) {
+                throw new SLIB_Ex_Critic("Error converting " + Sm_XML_Cst.OPT_BENCH_SIZE_ATTR + " to an integer value ");
+            }
+        }
 
+        if (emptyAnnotsScore_s != null) {
+            try {
+                emptyAnnotsScores = Double.parseDouble(emptyAnnotsScore_s);
+            } catch (NumberFormatException e) {
+                throw new SLIB_Ex_Critic("Error converting " + Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR + " to a numeric value ");
+            }
+        }
 
-	private LinkedHashSet<SMconf> buildGroupwiseConf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
+        if (cache_pairwise_s != null) {
 
-		LinkedHashSet<SMconf> sspGoupwiseConf = new LinkedHashSet<SMconf>();
+            if (Util.stringToBoolean(cache_pairwise_s)) {
+                cachePairwiseResults = true;
+            } else {
+                cachePairwiseResults = false;
+            }
+        }
 
-		for(Conf c :gCong){
+        if (skipEmptyAnnots_s != null) {
+            if (Util.stringToBoolean(skipEmptyAnnots_s)) {
+                skipEmptyAnnots = true;
+            } else {
+                skipEmptyAnnots = false;
+            }
+        }
+    }
 
-			String id     			 = (String) c.getParam(XmlTags.ID_ATTR);
-			String label  			 = (String) c.getParam(XmlTags.LABEL_ATTR);
-			String flag   			 = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-			String pairwise_measure  = (String) c.getParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
-			String ic_id  			 = (String) c.getParam(Sm_XML_Cst.IC_TAG);
+    private LinkedHashSet<ICconf> buildICconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
-			if(
-					SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag) &&
-					pairwise_measure != null && 
-					pairwise_measure.equals(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR_VALUE_FULL_LIST)){
 
-				// Generate mixing strategy configuration for all pairwise measures loaded
+        LinkedHashSet<ICconf> icConfSet = new LinkedHashSet<ICconf>();
 
+        // Attributes (processed below), not considered as extraParameters
 
-				for(SMconf pmConf : gConfPairwise){
+        String[] defaultAttributs = {
+            XmlTags.ID_ATTR,
+            XmlTags.LABEL_ATTR,
+            Sm_XML_Cst.FLAG_ATTR,
+            XmlTags.KB_ATTR
+        };
 
-					String id_tmp = id+"_"+pmConf.id;
-					String label_tmp = null;
+        for (Conf c : gCong) {
 
-					if(label != null)
-						label_tmp = label+"_"+pmConf.id;
+            String id = (String) c.getParam(XmlTags.ID_ATTR);
+            String label = (String) c.getParam(XmlTags.LABEL_ATTR);
+            String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
 
-					c.addParam(XmlTags.ID_ATTR, id_tmp);
-					c.addParam(XmlTags.LABEL_ATTR, label_tmp);
-					c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.id);
-					
-					
-					
-					if(ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)){
+            ICconf ic = null;
 
-						
-						for(ICconf ic_conf : gConfICs){
+            if (SMConstants.SIM_PAIRWISE_DAG_NODE_IC_INTRINSIC.containsKey(flag)) {
+                ic = new IC_Conf_Topo(id, label, flag);
+            } else if (SMConstants.SIM_PAIRWISE_DAG_NODE_IC_ANNOT.containsKey(flag)) {
 
-							String id_tmp_2 	 = id_tmp+"_"+ic_conf.id;
-							String label_tmp_2   = null;
+                ic = new IC_Conf_Corpus(id, label, flag);
+            } else {
+                throw new SLIB_Ex_Critic("Cannot resolve IC flag: " + flag);
+            }
 
-							if(label_tmp != null)
-								label_tmp_2 = label_tmp+"_"+ic_conf.id;
+            ic = addExtraAttributs(defaultAttributs, c, ic);
 
-							c.addParam(XmlTags.ID_ATTR		, id_tmp_2);
-							c.addParam(XmlTags.LABEL_ATTR	, label_tmp_2);
 
-							c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
-							sspGoupwiseConf.add( buildGroupwiseConf(c) );
-						}
-					}
-					else
-						sspGoupwiseConf.add( buildGroupwiseConf(c) );
-				}
+            for (ICconf m : icConfSet) {
+                if (m.id.equals(ic.id)) {
+                    throw new SLIB_Ex_Critic("Duplicate id for IC " + ic.id);
+                }
+            }
+            icConfSet.add(ic);
+        }
+        return icConfSet;
+    }
 
-			}
-			else{
-				
-				if(ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)){
+    private LinkedHashSet<OperatorConf> buildOperatorconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
 
-					for(ICconf ic_conf : gConfICs){
+        String[] defaultAttributs = {
+            XmlTags.ID_ATTR,
+            XmlTags.LABEL_ATTR,
+            Sm_XML_Cst.FLAG_ATTR,
+            Sm_XML_Cst.FLAG_ATTR
+        };
 
-						String id_tmp 	 = id+"_"+ic_conf.id;
-						String label_tmp = label;
+        LinkedHashSet<OperatorConf> operatorConfSet = new LinkedHashSet<OperatorConf>();
 
-						if(label != null)
-							label_tmp = label+"_"+ic_conf.id;
+        for (Conf c : gCong) {
 
-						c.addParam(XmlTags.ID_ATTR		, id_tmp);
-						c.addParam(XmlTags.LABEL_ATTR	, label_tmp);
+            String id = (String) c.getParam(XmlTags.ID_ATTR);
+            String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
 
-						c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
-						sspGoupwiseConf.add( buildGroupwiseConf(c) );
-					}
-				}
-				else
-					sspGoupwiseConf.add( buildGroupwiseConf(c) );
-			}
+            ICconf ic_conf = null;
+            String ic_id = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
 
-		}
-		return sspGoupwiseConf;
-	}
+            if (id == null) {
+                throw new SLIB_Ex_Critic("All operators must have an attribut " + XmlTags.ID_ATTR);
+            } else if (flag == null || !SMConstants.operators.containsKey(flag)) {
+                throw new SLIB_Ex_Critic("Unknown operator " + flag + " for operator " + id);
+            } else if (ic_id != null) {
 
-	private SMconf buildGroupwiseConf(Conf c) throws SLIB_Ex_Critic {
+                for (ICconf i : gConfICs) {
 
-		// Attributes (processed below), not considered as extraParameters
+                    if (i.getId().equals(ic_id)) {
+                        ic_conf = i;
+                        break;
+                    }
+                }
 
+                if (ic_conf == null) {
+                    throw new SLIB_Ex_Critic("Please specify a valid IC id associated to Operator " + id);
+                }
+            }
 
-		String[] defaultAttributs = {
+            // check duplicate 
 
-				XmlTags.ID_ATTR,
-				XmlTags.LABEL_ATTR,
-				Sm_XML_Cst.FLAG_ATTR,
-				Sm_XML_Cst.IC_ATTR,
-				Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,
-				Sm_XML_Cst.REPRESENTATION_ATTR,
-				Sm_XML_Cst.OPERATOR_FLAG_ATTR,
-				Sm_XML_Cst.OPERATOR_ID
-		}; 
+            for (OperatorConf conf : operatorConfSet) {
 
-		String id     			 = (String) c.getParam(XmlTags.ID_ATTR);
-		String label  			 = (String) c.getParam(XmlTags.LABEL_ATTR);
-		String flag   			 = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-		String ic_id  			 = (String) c.getParam(Sm_XML_Cst.IC_TAG);
-		String pairwise_measure  = (String) c.getParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
-		String representation    = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
+                if (conf.id.equals(id)) {
+                    throw new SLIB_Ex_Critic("Duplicate operator id " + id);
+                }
+            }
 
-		ICconf icConf = null;
+            OperatorConf opt = new OperatorConf(flag, id, ic_conf);
+            opt = addExtraAttributs(defaultAttributs, c, opt);
+            operatorConfSet.add(opt);
 
-		if(ic_id != null){ // search ic
+        }
+        return operatorConfSet;
+    }
 
-			for(ICconf ic: gConfICs){
-				if(ic.id.equals(ic_id)){
-					icConf = ic;
-					break;
-				}
-			}
-			if(icConf == null)
-				throw new SLIB_Ex_Critic("Cannot locate IC "+ic_id+" define for groupwise measure "+id);
+    public Integer getBenchSize() {
+        return benchSize;
+    }
 
-		}	
+    public Boolean getCachePairwiseResults() {
+        return cachePairwiseResults;
+    }
 
-		OperatorConf opConf = loadOperatorInfo(c);
-		SMconf pc = new SMconf(id, flag, label,icConf,representation,opConf);
-		pc.setPairwise_measure_id(pairwise_measure);
+    public Boolean getSkipEmptyAnnots() {
+        return skipEmptyAnnots;
+    }
 
-		pc = addExtraAttributs(defaultAttributs,c,pc);
-
-		return pc;
-	}
-
-
-
-	private void extractOptConf(Conf gc) throws SLIB_Ex_Critic {
-
-		String benchSize_s  	   = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
-		String cache_pairwise_s    = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
-		String skipEmptyAnnots_s   = (String) gc.getParam(Sm_XML_Cst.OPT_SKIP_EMPTY_ANNOTS_ATTR);
-		String emptyAnnotsScore_s  = (String) gc.getParam(Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR);
-
-
-		if(benchSize_s != null){
-			try{
-				benchSize = Integer.parseInt(benchSize_s);
-			}
-			catch(NumberFormatException e){
-				throw new SLIB_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_BENCH_SIZE_ATTR+" to an integer value ");
-			}
-		}
-
-		if(emptyAnnotsScore_s != null){
-			try{
-				emptyAnnotsScores = Double.parseDouble(emptyAnnotsScore_s);
-			}
-			catch(NumberFormatException e){
-				throw new SLIB_Ex_Critic("Error converting "+Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR+" to a numeric value ");
-			}
-		}
-
-		if(cache_pairwise_s != null){
-			
-			if(Util.stringToBoolean(cache_pairwise_s))
-				cachePairwiseResults = true;
-			else
-				cachePairwiseResults = false;
-		}
-
-		if(skipEmptyAnnots_s != null){
-			if(Util.stringToBoolean(skipEmptyAnnots_s))
-				skipEmptyAnnots = true;
-			else
-				skipEmptyAnnots = false;
-		}
-	}
-
-	private LinkedHashSet<ICconf> buildICconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
-
-
-		LinkedHashSet<ICconf> icConfSet = new LinkedHashSet<ICconf>();
-
-		// Attributes (processed below), not considered as extraParameters
-
-		String[] defaultAttributs = {
-
-				XmlTags.ID_ATTR,
-				XmlTags.LABEL_ATTR,
-				Sm_XML_Cst.FLAG_ATTR,
-				XmlTags.KB_ATTR
-		}; 
-
-		for(Conf c:gCong){
-
-			String id    = (String) c.getParam(XmlTags.ID_ATTR);
-			String label = (String) c.getParam(XmlTags.LABEL_ATTR);
-			String flag  = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-
-			ICconf ic = null;
-
-			if(SMConstants.SIM_PAIRWISE_DAG_NODE_IC_INTRINSIC.containsKey(flag)){
-				ic = new IC_Conf_Topo(id,label,flag);
-			}
-			else if(SMConstants.SIM_PAIRWISE_DAG_NODE_IC_ANNOT.containsKey(flag)){
-
-				ic = new IC_Conf_Corpus(id,label,flag);
-			}
-			else{
-				throw new SLIB_Ex_Critic("Cannot resolve IC flag: "+flag);
-			}
-
-			ic = addExtraAttributs(defaultAttributs,c,ic);
-			
-			
-			for(ICconf m : icConfSet){
-				if(m.id.equals(ic.id))
-					throw new SLIB_Ex_Critic("Duplicate id for IC "+ic.id);
-			}
-			icConfSet.add(ic);
-		}
-		return icConfSet;
-	}
-
-
-	private LinkedHashSet<OperatorConf> buildOperatorconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
-
-		String[] defaultAttributs = {
-
-				XmlTags.ID_ATTR,
-				XmlTags.LABEL_ATTR,
-				Sm_XML_Cst.FLAG_ATTR,
-				Sm_XML_Cst.FLAG_ATTR
-		}; 
-
-		LinkedHashSet<OperatorConf> operatorConfSet = new LinkedHashSet<OperatorConf>();
-
-		for(Conf c:gCong){
-
-			String id    = (String) c.getParam(XmlTags.ID_ATTR);
-			String flag  = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-
-			ICconf ic_conf = null;
-			String ic_id  	 = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
-
-			if(id == null){
-				throw new SLIB_Ex_Critic("All operators must have an attribut "+XmlTags.ID_ATTR);
-			}
-			else if(flag == null || ! SMConstants.operators.containsKey(flag)){
-				throw new SLIB_Ex_Critic("Unknown operator "+flag+" for operator "+id);
-			}
-			else if(ic_id != null){
-
-				for (ICconf i: gConfICs ) {
-
-					if(i.getId().equals(ic_id)){
-						ic_conf = i;
-						break;
-					}
-				}
-
-				if(ic_conf == null)
-					throw new SLIB_Ex_Critic("Please specify a valid IC id associated to Operator "+id);
-			}
-
-			// check duplicate 
-
-			for (OperatorConf conf: operatorConfSet ) {
-
-				if(conf.id.equals(id))
-					throw new SLIB_Ex_Critic("Duplicate operator id "+id);
-			}
-
-			OperatorConf opt = new OperatorConf(flag, id, ic_conf); 
-			opt = addExtraAttributs(defaultAttributs,c,opt);
-			operatorConfSet.add(opt);
-
-		}
-		return operatorConfSet;
-	}
-
-	public Integer getBenchSize() {
-		return benchSize;
-	}
-
-	public Boolean getCachePairwiseResults() {
-		return cachePairwiseResults;
-	}
-
-
-	public Boolean getSkipEmptyAnnots() {
-		return skipEmptyAnnots;
-	}
-
-
-
-	public Double getEmptyAnnotsScores() {
-		return emptyAnnotsScores;
-	}
-
-
+    public Double getEmptyAnnotsScores() {
+        return emptyAnnotsScores;
+    }
 }

@@ -43,7 +43,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.SmCli;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -83,7 +84,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 			results = new ThreadResultsQueryLoader(queriesBench.size());
 
 
-			DataRepository   df   = DataRepository.getSingleton();
+			DataFactory   factory   = DataFactoryMemory.getSingleton();
 
 			String uriE1s,uriE2s;
 			StringBuilder tmp_buffer = new StringBuilder();
@@ -98,8 +99,8 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 				uriE2s = q.getValue();
 
 				try {
-					uriE1 = df.createURI(uriE1s);
-					uriE2 = df.createURI(uriE2s);
+					uriE1 = factory.createURI(uriE1s);
+					uriE2 = factory.createURI(uriE2s);
 				}
 				catch (IllegalArgumentException e) {
 

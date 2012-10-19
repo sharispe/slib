@@ -30,7 +30,7 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 
 
 public class GSailConnection extends NotifyingSailConnectionBase implements InferencerConnection {
@@ -174,7 +174,7 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		graph.addE( createEdge(subj, pred, obj, contexts));
 
 		if (hasConnectionListeners()) {
-			Statement s = DataRepository.getSingleton().createStatement(subj, pred, obj, null);
+			Statement s = DataFactoryMemory.getSingleton().createStatement(subj, pred, obj, null);
 			notifyStatementAdded(s);
 		}
 
@@ -187,7 +187,7 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		graph.removeE( createEdge(subj, pred, obj, contexts) );
 
 		if (hasConnectionListeners()) {
-			Statement s = DataRepository.getSingleton().createStatement(subj, pred, obj, null);
+			Statement s = DataFactoryMemory.getSingleton().createStatement(subj, pred, obj, null);
 			notifyStatementRemoved(s);
 		}
 		deletion = true;
@@ -293,7 +293,7 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 
 	            E e = iter.next();
 
-	            Statement s = DataRepository.getSingleton().createStatement(
+	            Statement s = DataFactoryMemory.getSingleton().createStatement(
 	            		(Resource) e.getSource().getValue(), 
 	            		(URI) e.getURI(),
 	            		(Value) e.getTarget().getValue(), null);

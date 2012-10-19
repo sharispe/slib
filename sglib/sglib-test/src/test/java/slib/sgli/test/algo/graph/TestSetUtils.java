@@ -46,7 +46,7 @@ import org.junit.Test;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
@@ -56,7 +56,7 @@ public class TestSetUtils {
 	Set<V> setA = new HashSet<V>();
 	Set<V> setB = new HashSet<V>();
 
-	DataRepository data = DataRepository.getSingleton();
+	DataFactoryMemory data = DataFactoryMemory.getSingleton();
 
 	G g1;
 	G g2;

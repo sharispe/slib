@@ -50,7 +50,7 @@ import slib.sglib.algo.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.IPredicateURIRepo;
+import slib.sglib.model.repo.PredicateFactory;
 import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;

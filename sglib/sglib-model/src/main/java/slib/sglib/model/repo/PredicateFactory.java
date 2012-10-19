@@ -36,18 +36,15 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.model.repo;
 
-import org.openrdf.model.ValueFactory;
+import java.util.Set;
 
-/**
- * Interface defining a Data Repository which must be used to 
- * interact with {@link Storage} elements
- * 
- * @author Sebastien Harispe
- *
- */
-public interface IDataRepository extends ValueFactory{
+import org.openrdf.model.URI;
+
+public interface PredicateFactory {
 	
-	public void createNamespace(String nm_s);
-	
+	public URI createPURI(String uri);
+	public boolean add(URI uri);
+
+	Set<URI> getURIs();
 	
 }

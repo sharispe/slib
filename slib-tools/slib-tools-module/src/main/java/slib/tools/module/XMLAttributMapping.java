@@ -8,6 +8,9 @@ import slib.sglib.algo.utils.GActionType;
 import slib.sglib.io.util.GFormat;
 
 public class XMLAttributMapping {
+    
+    
+    
 	
    
     
@@ -15,11 +18,13 @@ public class XMLAttributMapping {
     static {
         Map<String, GFormat> aMap = new HashMap<String, GFormat>();
         
-        aMap.put("obo"  	, GFormat.OBO );
-        aMap.put("rdf_xml"  , GFormat.RDF_XML );
-        aMap.put("ntriples" , GFormat.NTRIPLES );
-        aMap.put("gaf_2"	, GFormat.GAF2);
-        aMap.put("csv"		, GFormat.CSV);
+        aMap.put("OBO"  	, GFormat.OBO );
+        aMap.put("RDF_XML"      , GFormat.RDF_XML );
+        aMap.put("NTRIPLES"     , GFormat.NTRIPLES );
+        aMap.put("GAF_2"	, GFormat.GAF2);
+        aMap.put("CSV"		, GFormat.CSV);
+        aMap.put("MESH_XML"	, GFormat.MESH_XML);
+        aMap.put("SNOMED_CT_RF2" , GFormat.SNOMED_CT_RF2);
         
         GDataFormatMapping = Collections.unmodifiableMap(aMap);
     }

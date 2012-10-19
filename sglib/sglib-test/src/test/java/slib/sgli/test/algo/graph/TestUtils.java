@@ -41,7 +41,7 @@ import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Exception;
 
 public class TestUtils {
@@ -51,7 +51,7 @@ public class TestUtils {
 
 		G g = null;
 		GraphConf conf = new GraphConf();
-		conf.setUri(DataRepository.getSingleton().createURI("http://example/"));
+		conf.setUri(DataFactoryMemory.getSingleton().createURI("http://example/"));
 		conf.addGDataConf(new GDataConf(gFormat, filePath));
 		g = GraphLoaderGeneric.load(conf);
 

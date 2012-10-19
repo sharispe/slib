@@ -34,17 +34,75 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.repo;
+package slib.sglib.model.entity;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.openrdf.model.URI;
 
-public interface IPredicateURIRepo {
-	
-	public URI createPURI(String uri);
-	public boolean add(URI uri);
+import slib.sglib.model.graph.elements.V;
 
-	Set<URI> getURIs();
+/**
+ * Only support a unique relationship between A and B
+ * 
+ * @author Sebastien Harispe
+ *
+ */
+public class EntityBasic implements IEntity{
 	
+	Map<V,URI> annotationsMapping;
+	URI uri;
+	
+	public EntityBasic(URI uri) {
+		this.uri = uri;
+	}
+	
+	public EntityBasic(URI uri, Map<V,URI> annotationsMapping) {
+		this.uri = uri;
+		this.annotationsMapping = annotationsMapping;
+	}
+
+
+	public Map<V,URI> getAnnotationsMapping() {
+		return annotationsMapping;
+	}
+	
+	
+	public void removeAnnotations(V v) {
+		annotationsMapping.remove(v); 
+	}
+
+	public  void removeAnnotations(URI puri){
+		Set<V> toRemove = getAnnotations(puri);
+		
+		for(V v : toRemove)
+			annotationsMapping.remove(v);
+	}
+
+	public Map<V, URI> getAnnotMapping() {
+		return annotationsMapping;
+	}
+
+
+	public Set<V> getAnnotations(URI puri) {
+		Set<V> ok = new HashSet<V>();
+		for(Entry<V, URI> e : annotationsMapping.entrySet()){
+			if(e.getValue().equals(puri))
+				ok.add(e.getKey());
+		}
+		return ok;
+	}
+
+
+	public URI getURI() {
+		return uri;
+	}
+
+	public void addAnnotation(V v, URI puri) {
+		annotationsMapping.put(v, puri);
+	}
+
 }

@@ -27,7 +27,7 @@ import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -42,7 +42,7 @@ public class GraphLoader_Wordnet implements IGraphLoader {
     Map<String, PointerToEdge> pointerSymbolToURIsMap;
     
     
-    DataRepository dataRepo = DataRepository.getSingleton();
+    DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
 
     @Override
     public G load(GraphConf conf) throws SLIB_Exception {
@@ -260,7 +260,7 @@ public class GraphLoader_Wordnet implements IGraphLoader {
     public static void main(String[] args) throws Exception {
 
 
-        URI guri = DataRepository.getSingleton().createURI("http://graph/wordnet/");
+        URI guri = DataFactoryMemory.getSingleton().createURI("http://graph/wordnet/");
         G g = new GraphMemory(guri);
 
         GraphLoader_Wordnet loader = new GraphLoader_Wordnet();

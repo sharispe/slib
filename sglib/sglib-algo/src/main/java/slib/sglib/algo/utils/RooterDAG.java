@@ -44,9 +44,6 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
@@ -103,7 +100,7 @@ public class RooterDAG {
      *
      * @throws SGL_Ex_Critic
      */
-    public static URI rootUnderlyingDAG(G g, Set<URI> etypeDAG, boolean checkUnderlyingDAG, URI rootURI, Direction dir) throws SLIB_Ex_Critic {
+    public static URI rootUnderlyingDAG(G g, Set<URI> etypeDAG, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 
@@ -129,12 +126,7 @@ public class RooterDAG {
             rootURI_ = (URI) roots.iterator().next();
         } else {
             logger.info("Number of roots detected: " + roots.size());
-            rootURI_ = DataRepository.getSingleton().getOrCreateURI(rootURI);
-            V root = new VertexTyped(
-                    g,
-                    rootURI_,
-                    VType.CLASS);
-            g.addV(root);
+            V root = g.createVertex(rootUri);
 
             // add Root -> oldRoots relationships
 
@@ -156,8 +148,8 @@ public class RooterDAG {
      * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
      * @throws SGL_Ex_Critic
      */
-    public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootURI, Direction dir) throws SLIB_Ex_Critic {
-        return rootUnderlyingDAG(g, SetUtils.buildSet(eType), checkUnderlyingDAG, rootURI, dir);
+    public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
+        return rootUnderlyingDAG(g, SetUtils.buildSet(eType), checkUnderlyingDAG, rootUri, dir);
     }
 
     /**
@@ -167,14 +159,14 @@ public class RooterDAG {
      * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
      * @throws SGL_Ex_Critic
      */
-    public static URI rootUnderlyingTaxonomicDAG(G g, URI rootURI) throws SLIB_Ex_Critic {
+    public static URI rootUnderlyingTaxonomicDAG(G g, URI rootUri) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
         logger.info("Rooting taxonomic Graph");
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsRootedTaxonomicDag(g)) {
-            return rootUnderlyingDAG(g, RDFS.SUBCLASSOF, true, rootURI, Direction.IN);
+            return rootUnderlyingDAG(g, RDFS.SUBCLASSOF, true, rootUri, Direction.IN);
         } else {
             return (URI) validator.getRootedTaxonomicDAGRoot(g).getValue();
         }

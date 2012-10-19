@@ -122,7 +122,7 @@ public class VertexTyped extends OProperty implements V{
 		if(labels.length != 0){
 			uris = new HashSet<URI>();
 			for(String l : labels)
-				uris.add(g.getDataRepository().createURI(l));
+				uris.add(g.getDataFactory().createURI(l));
 		}
 		return uris;
 	}

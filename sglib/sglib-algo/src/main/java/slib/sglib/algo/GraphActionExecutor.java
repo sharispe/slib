@@ -39,43 +39,43 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.SGLcst;
-import slib.sglib.model.repo.impl.DataRepository;
 import slib.sglib.model.voc.SGLVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
 import com.tinkerpop.blueprints.Direction;
+import slib.sglib.model.repo.DataFactory;
 
 
 public class GraphActionExecutor {
 
 	static Logger logger = LoggerFactory.getLogger(GraphActionExecutor.class);
 
-	public static void applyAction(GAction action,G g) throws SLIB_Ex_Critic{
+	public static void applyAction(DataFactory factory, GAction action,G g) throws SLIB_Ex_Critic{
 
 		GActionType actionType = action.type;
 
 		if(actionType == GActionType.TRANSITIVE_REDUCTION)
-			transitive_reduction(action,g);
+			transitive_reduction(factory, action,g);
 
 		else if(actionType == GActionType.REROOTING)
-			rerooting(action,g);
+			rerooting(factory, action,g);
 
 		else if(actionType == GActionType.TYPE_VERTICES)
-			type_vertices(action,g);
+			type_vertices(factory, action,g);
 
 		else if(actionType == GActionType.RDFS_INFERENCE)
-			rdfsInference(action,g);
+			rdfsInference(factory, action,g);
 
 
 		else if(actionType == GActionType.VERTICES_REDUCTION)
-			verticeReduction(action,g);
+			verticeReduction(factory, action,g);
 
 		else
 			throw new SLIB_Ex_Critic("Unknow action "+action.type);
 	}
 
-	private static void verticeReduction(GAction action, G g) throws SLIB_Ex_Critic {
+	private static void verticeReduction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 		logger.debug("Starting "+GActionType.VERTICES_REDUCTION);
 
@@ -125,15 +125,15 @@ public class GraphActionExecutor {
 
 				if(voc.trim().equals("RDF")){
 					logger.info("Removing RDF vocabulary");
-					removeVocURIs(getRDFVocURIs(), g);
+					removeVocURIs(factory, getRDFVocURIs(), g);
 				}
 				else if(voc.trim().equals("RDFS")){
 					logger.info("Removing RDFS vocabulary");
-					removeVocURIs(getRDFSVocURIs(), g);
+					removeVocURIs(factory, getRDFSVocURIs(), g);
 				}
 				else if(voc.trim().equals("OWL")){
 					logger.info("Removing OWL vocabulary");
-					removeVocURIs(getOWLVocURIs(), g);
+					removeVocURIs(factory, getOWLVocURIs(), g);
 				}
 			}
 		}
@@ -144,8 +144,6 @@ public class GraphActionExecutor {
 			for(String f : files){
 
 				logger.info("Removing Uris specified in "+f);
-
-				DataRepository dataRepo = DataRepository.getSingleton();
 
 				try {
 
@@ -158,7 +156,7 @@ public class GraphActionExecutor {
 					while ((line = br.readLine()) != null)   {
 
 						line = line.trim();
-						V v = g.getV( dataRepo.createURI(line) );
+						V v = g.getV( factory.createURI(line) );
 						if(v != null) g.removeV(v);
 					}
 					in.close();
@@ -173,7 +171,7 @@ public class GraphActionExecutor {
 
 
 
-	private static void rdfsInference(GAction action, G g) throws SLIB_Ex_Critic{
+	private static void rdfsInference(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic{
 
 		logger.debug("Apply inference engine");
 		Sail sail = new ForwardChainingRDFSInferencer(g);
@@ -187,7 +185,7 @@ public class GraphActionExecutor {
 			con.setAutoCommit(false);
 
 			for(E e : g.getE())
-				con.add(DataRepository.getSingleton().createStatement((Resource)e.getSource().getValue(), e.getURI(),e.getTarget().getValue()));
+				con.add(factory.createStatement((Resource)e.getSource().getValue(), e.getURI(),e.getTarget().getValue()));
 
 			con.commit();
 			con.close();
@@ -298,16 +296,15 @@ public class GraphActionExecutor {
 	 * @param toRemove set of strings corresponding to the URIs to remove
 	 * @param g the graph in which the treatment require to be performed.
 	 */
-	private static void removeVocURIs(String[] toRemove, G g) {
+	private static void removeVocURIs(DataFactory factory, String[] toRemove, G g) {
 
-		DataRepository dataRepo = DataRepository.getSingleton();
 		for(String s : toRemove){
-			V v = g.getV( dataRepo.createURI(s) );
+			V v = g.getV( factory.createURI(s) );
 			if(v != null) g.removeV(v);
 		}
 	}
 
-	private static void type_vertices(GAction action, G g) throws SLIB_Ex_Critic {
+	private static void type_vertices(DataFactory factory,GAction action, G g) throws SLIB_Ex_Critic {
 
 		logger.debug("Start Typing vertices");
 
@@ -324,7 +321,7 @@ public class GraphActionExecutor {
 		logger.debug("End Typing vertices");
 	}
 
-	private static void rerooting(GAction action, G g) throws SLIB_Ex_Critic {
+	private static void rerooting(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 
 		logger.info("Rerooting");
@@ -337,10 +334,12 @@ public class GraphActionExecutor {
 
 		if(rootURIs != null && !rootURIs.isEmpty()){
 
-			if(rootURIs.equals(SGLcst.FICTIVE_ROOT))
-				RooterDAG.rootUnderlyingTaxonomicDAG(g,SGLVOC.UNIVERSAL_ROOT);
+			if(rootURIs.equals(SGLcst.FICTIVE_ROOT)){
+                                URI rootURI = factory.createURI(rootURIs);
+				RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
+                        }
 			else{
-				URI rootURI = DataRepository.getSingleton().createURI(rootURIs);
+				URI rootURI = factory.createURI(rootURIs);
 
 				if(g.getV(rootURI) == null)
 					throw new SLIB_Ex_Critic("Cannot resolve specified root:"+rootURI);
@@ -356,7 +355,7 @@ public class GraphActionExecutor {
 
 	}
 
-	private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
+	private static void transitive_reduction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 		String target = (String) action.getParameter("target");
 
@@ -438,10 +437,10 @@ public class GraphActionExecutor {
 
 	}
 
-	public static void applyActions(Collection<GAction> actions,G g) throws SLIB_Ex_Critic{
+	public static void applyActions(DataFactory factory, Collection<GAction> actions,G g) throws SLIB_Ex_Critic{
 
 		for(GAction action : actions)
-			applyAction(action, g);
+			applyAction(factory,action, g);
 	}
 
 }

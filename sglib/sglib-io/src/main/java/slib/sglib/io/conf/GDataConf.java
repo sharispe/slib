@@ -10,6 +10,10 @@ public class GDataConf extends ParametrableImpl implements CheckableValidity{
 
 	private GFormat format;
 	private String  loc;
+        
+        public GDataConf(GFormat format){
+		this.format = format;
+	}
 	
 	public GDataConf(GFormat format, String loc){
 		this.format = format;

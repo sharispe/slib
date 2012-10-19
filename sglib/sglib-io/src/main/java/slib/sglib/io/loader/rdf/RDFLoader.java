@@ -21,7 +21,7 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.IGraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -71,10 +71,10 @@ public class RDFLoader implements IGraphLoader{
 
 	private void loadFormat(RDFFormat format) throws SLIB_Ex_Critic{
 		if(format.equals(RDFFormat.NTRIPLES)){
-			parser = new NTriplesParser(DataRepository.getSingleton());
+			parser = new NTriplesParser(DataFactoryMemory.getSingleton());
 		}
 		else if(format.equals(RDFFormat.RDFXML)){
-			parser = new RDFXMLParser(DataRepository.getSingleton());
+			parser = new RDFXMLParser(DataFactoryMemory.getSingleton());
 			parser.setStopAtFirstError(false);
 		}
 		else 

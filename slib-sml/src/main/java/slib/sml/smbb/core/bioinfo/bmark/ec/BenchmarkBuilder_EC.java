@@ -57,7 +57,7 @@ import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.entity.EntityBasic;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_EC;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -79,7 +79,7 @@ public class BenchmarkBuilder_EC {
 	HashMap<V, HashSet<String>> prot2ec_mapping;
 	String ec2go_mapping;
 
-	DataRepository uriManager = DataRepository.getSingleton();
+	DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
 	Long random;
 

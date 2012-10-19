@@ -44,7 +44,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.IO_RuntimeException;
 
 
@@ -64,7 +64,7 @@ public class BlastScoreLoader implements Iterator<BlastScoreEntry> {
 	DataInputStream in;
 	String filepath;
 	String line;
-	DataRepository df = DataRepository.getSingleton();
+	DataFactoryMemory df = DataFactoryMemory.getSingleton();
 
 	public BlastScoreLoader(String filepath) throws IOException{
 

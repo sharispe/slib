@@ -358,9 +358,9 @@ public class ValidatorDAG {
      * @return
      * @throws SGL_Ex_Critic
      */
-    public boolean isUniqueRootedDagRoot(G g, URI rootURI, URI edgesType) throws SLIB_Ex_Critic {
+    public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType) throws SLIB_Ex_Critic {
 
-        return isUniqueRootedDagRoot(g, rootURI, SetUtils.buildSet(edgesType), Direction.IN);
+        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(edgesType), Direction.IN);
     }
 
     /**
@@ -369,9 +369,9 @@ public class ValidatorDAG {
      * @return
      * @throws SGL_Ex_Critic
      */
-    public boolean isUniqueRootedTaxonomicDag(G g, URI rootURI) throws SLIB_Ex_Critic {
+    public boolean isUniqueRootedTaxonomicDag(G g, V root) throws SLIB_Ex_Critic {
 
-        return isUniqueRootedDagRoot(g, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
+        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
     }
 
     /**
@@ -383,13 +383,13 @@ public class ValidatorDAG {
      * @return
      * @throws SGL_Ex_Critic
      */
-    public boolean isUniqueRootedDagRoot(G g, URI rootURI, Set<URI> edgesType, Direction dir) throws SLIB_Ex_Critic {
+    public boolean isUniqueRootedDagRoot(G g, V root, Set<URI> edgesType, Direction dir) throws SLIB_Ex_Critic {
 
         if (isDag(g, edgesType, dir)) {
 
             Set<V> roots = getDAGRoots(g, edgesType, dir.opposite());
 
-            if (roots.size() == 1 && roots.iterator().next().getValue().equals(rootURI)) {
+            if (roots.size() == 1 && roots.iterator().next().equals(root)) {
                 return true;
             }
         }

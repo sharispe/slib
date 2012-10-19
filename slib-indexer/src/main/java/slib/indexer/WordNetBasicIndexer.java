@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.UtilDebug;
 
@@ -33,13 +33,13 @@ public class WordNetBasicIndexer{
     
     G graph;
     
-    public WordNetBasicIndexer(G g, String file) throws SLIB_Ex_Critic{
+    public WordNetBasicIndexer(DataFactory factory, G g, String file) throws SLIB_Ex_Critic{
         
         graph = g;
-        populateIndex(file);
+        populateIndex(factory,file);
     } 
 
-    private void populateIndex(String filepath) throws SLIB_Ex_Critic {
+    private void populateIndex(DataFactory factory,String filepath) throws SLIB_Ex_Critic {
         
         logger.info("Populating index from "+filepath);
         
@@ -81,7 +81,7 @@ public class WordNetBasicIndexer{
                 Set<V> synsets = new HashSet<V>();
                 
                 for (int i = 0; i < sense_cnt; i++) {
-                    URI u = DataRepository.getSingleton().createURI(graph.getURI().getNamespace()+""+data[c+i]);
+                    URI u = factory.createURI(graph.getURI().getNamespace()+""+data[c+i]);
 //                    System.out.println(u);
                     
                     V synset= graph.getV(u);

@@ -55,7 +55,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
@@ -91,7 +91,7 @@ public class TestValidatorDAG {
 		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
 		
 		
-		V newRoot = new VertexTyped(g, g.getDataRepository().createURI("http://newURI"), VType.CLASS);
+		V newRoot = new VertexTyped(g, g.getDataFactory().createURI("http://newURI"), VType.CLASS);
 		g.addV(newRoot);
 		
 		roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
@@ -111,7 +111,8 @@ public class TestValidatorDAG {
 
 	@Test
 	public void test_true_dag() throws SLIB_Ex_Critic{
-		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, subClassURis,Direction.IN);
+                V root = new VertexTyped(g, rootURI, VType.CLASS);
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, subClassURis,Direction.IN);
 		assertTrue(isDag);
 	}
 	
@@ -141,7 +142,7 @@ public class TestValidatorDAG {
 		
 		assertTrue(isDag == true);
 		
-		V newRoot = new VertexTyped(g, g.getDataRepository().createURI("http://newURI"), VType.CLASS);
+		V newRoot = new VertexTyped(g, g.getDataFactory().createURI("http://newURI"), VType.CLASS);
 		g.addV(newRoot);
 		
 		isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
@@ -156,7 +157,7 @@ public class TestValidatorDAG {
 		
 		assertTrue(isDag == true);
 		
-		URI newRootURI = DataRepository.getSingleton().createURI(SLIB_UnitTestValues.uriGraph+"new_Root");
+		URI newRootURI = DataFactoryMemory.getSingleton().createURI(SLIB_UnitTestValues.uriGraph+"new_Root");
 		
 		V newRoot = g.addV(new VertexTyped(g,newRootURI, VType.CLASS));
 		
@@ -206,7 +207,8 @@ public class TestValidatorDAG {
 		
 		assertTrue(new ValidatorDAG().isDag(g, RDFS.SUBCLASSOF,Direction.IN) == false);
 		
-		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, RDFS.SUBCLASSOF);
+                V root = new VertexTyped(g, rootURI, VType.CLASS);
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, RDFS.SUBCLASSOF);
 		
 		assertTrue(isDag == false);
 	}

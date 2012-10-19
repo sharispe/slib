@@ -58,7 +58,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
@@ -94,7 +94,7 @@ public class GraphLoader_GAF_2 implements IGraphLoader {
     public final static int GENE_PRODUCT_ISOFORM = 16;
     private G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataRepository data = DataRepository.getSingleton();
+    DataFactoryMemory data = DataFactoryMemory.getSingleton();
     String gNS;
     Pattern colon = Pattern.compile(":");
 
@@ -213,7 +213,7 @@ public class GraphLoader_GAF_2 implements IGraphLoader {
         
         logger.info("Using prefix: "+uriPrefix);
 
-        DataRepository uriManager = DataRepository.getSingleton();
+        DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
         boolean validHeader = false;
         String line, qualifier, gotermURI, evidenceCode, taxon_ids;

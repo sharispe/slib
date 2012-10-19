@@ -37,7 +37,6 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.tools.module;
 
 import org.w3c.dom.Element;
-
 import slib.utils.ex.SLIB_Ex_Critic;
 
 public class XML_ModuleConfLoader {

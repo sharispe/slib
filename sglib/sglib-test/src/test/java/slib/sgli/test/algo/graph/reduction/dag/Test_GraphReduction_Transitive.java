@@ -57,11 +57,13 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
-import slib.sglib.model.voc.SGLVOC;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Exception;
 
 import com.tinkerpop.blueprints.Direction;
+import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.graph.elements.type.VType;
 
 public class Test_GraphReduction_Transitive {
 	
@@ -114,7 +116,7 @@ public class Test_GraphReduction_Transitive {
 
 		String gofilePath 	= SLIB_UnitTestValues.G_GO;
 
-		DataRepository.getSingleton().loadNamespacePrefix("GO", "http://GO#");
+		DataFactoryMemory.getSingleton().loadNamespacePrefix("GO", "http://GO#");
 		GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
 		
 		GraphConf gconf = new GraphConf();
@@ -126,7 +128,7 @@ public class Test_GraphReduction_Transitive {
 
 		System.out.println(g.toString());
 		
-		URI root_uri = DataRepository.getSingleton().createURI(SGLVOC.SLIB_NS, "FICTIVE_ROOT");
+		URI root_uri = DataFactoryMemory.getSingleton().createURI(SLIBVOC.SLIB_NS, "FICTIVE_ROOT");
 		
 		RooterDAG.rootUnderlyingTaxonomicDAG(g, root_uri);
 		

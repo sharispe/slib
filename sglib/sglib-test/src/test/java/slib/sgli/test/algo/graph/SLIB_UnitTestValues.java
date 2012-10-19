@@ -39,7 +39,7 @@ package slib.sgli.test.algo.graph;
 
 import org.openrdf.model.URI;
 
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 
@@ -50,7 +50,7 @@ public class SLIB_UnitTestValues {
 	public static final String G_DAG_BASIC  = path + "sgl/g.sgl";
 	public static final String G_GO 	    = path + "obo/gene_ontology_ext.obo";
 
-	public static final URI uriGraph = DataRepository.getSingleton().createURI("http://g/");
+	public static final URI uriGraph = DataFactoryMemory.getSingleton().createURI("http://g/");
 	
 	public URI G_BASIC_THING;
 	public URI G_BASIC_ANIMAL;
@@ -77,7 +77,7 @@ public class SLIB_UnitTestValues {
 	
 	public int G_DAG_BASIC_MAX_DEPTH 	= 8;
 	
-	DataRepository data = DataRepository.getSingleton();
+	DataFactoryMemory data = DataFactoryMemory.getSingleton();
 	
 	public SLIB_UnitTestValues() throws SLIB_Ex_Critic{
 		

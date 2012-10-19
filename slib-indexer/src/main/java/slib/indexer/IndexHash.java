@@ -38,27 +38,27 @@ import java.util.HashMap;
 import org.openrdf.model.Value;
 import slib.sglib.model.graph.elements.V;
 
-public class IndexBasic {
+public class IndexHash<X> {
 
-    HashMap<Value, Object> mapping = new HashMap<Value, Object>();
+    HashMap<Value, X> mapping = new HashMap<Value, X>();
 
-    public HashMap<Value, Object> getMapping() {
+    public HashMap<Value, X> getMapping() {
         return mapping;
     }
 
-    public Object valuesOf(Value v) {
+    public X valuesOf(Value v) {
         return mapping.get(v);
     }
     
-    public Object valuesOf(V v) {
+    public X valuesOf(V v) {
         return mapping.get(v.getValue());
     }
-
-    public void addValue(Value x, Object o) {
+    
+    public void addValue(Value x, X o) {
         mapping.put(x, o);
     }
 
-    public void addValue(V x, Object o) {
+    public void addValue(V x, X o) {
         mapping.put(x.getValue(), o);
     }
 

@@ -42,26 +42,28 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
 
 public class IndexerOBO {
 
-    DataRepository data = DataRepository.getSingleton();
+    DataFactory factory;
+    
     boolean onTermSpec = false;
     String currentURI = null;
     String currentName = null;
     Pattern colon = Pattern.compile(":");
     Pattern exclamation = Pattern.compile("!");
     Pattern spaces = Pattern.compile("\\s+");
-    IndexBasic index;
+    IndexHash index;
     String defaultNamespace;
 
-    public IndexBasic buildIndex(String filepath, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
         
-        index = new IndexBasic();
+        this.factory = factory;
+        index = new IndexHash();
 
         this.defaultNamespace = defaultNamespace;
         try {
@@ -124,6 +126,7 @@ public class IndexerOBO {
 
                 }
             }
+            if(onTermSpec){ handleTerm(); }
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -155,7 +158,7 @@ public class IndexerOBO {
 
         if (info != null && info.length == 2) {
 
-            String ns = data.getNamespace(info[0]);
+            String ns = factory.getNamespace(info[0]);
             if (ns == null) {
                 throw new SLIB_Ex_Critic("No namespace associated to prefix " + info[0] + ". Cannot load " + value + ", please load required namespace prefix");
             }
@@ -209,9 +212,9 @@ public class IndexerOBO {
 
         if (onTermSpec) {
 
-            index.addValue(data.createURI(currentURI), currentName);
+            index.addValue(factory.createURI(currentURI), currentName);
 
-            currentURI = null;
+            currentURI  = null;
             currentName = null;
         }
     }

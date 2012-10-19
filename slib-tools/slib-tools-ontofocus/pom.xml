@@ -15,7 +15,7 @@
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
-  		<artifactId>sglib-model</artifactId>
+  		<artifactId>sglib-model-impl</artifactId>
   		<version>0.0.3-SNAPSHOT</version>
   	</dependency>
   	<dependency>

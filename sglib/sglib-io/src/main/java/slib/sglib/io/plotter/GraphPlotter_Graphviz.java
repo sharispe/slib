@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-import slib.indexer.IndexBasic;
+import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -57,7 +57,7 @@ public class GraphPlotter_Graphviz {
         return plot(graph, VertexUriColored, showLabels, null);
     }
 
-    public static String plot(G graph, Set<V> VertexColored, boolean showLabels, IndexBasic index) {
+    public static String plot(G graph, Set<V> VertexColored, boolean showLabels, IndexHash index) {
 
         HashMap<URI, String> relColor = new HashMap<URI, String>();
 

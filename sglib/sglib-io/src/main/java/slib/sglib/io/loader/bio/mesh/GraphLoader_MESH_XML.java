@@ -35,7 +35,7 @@ import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -45,7 +45,13 @@ public class GraphLoader_MESH_XML implements IGraphLoader {
     Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
-    DataRepository dataRepo = DataRepository.getSingleton();
+    DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
+    
+    
+    public static final String ARG_PREFIX  = "prefix";
+    
+    
+    String default_namespace;
 
     /**
      * Return parent ID i.e. giving C10.228.140.300.275.500 will return
@@ -85,6 +91,12 @@ public class GraphLoader_MESH_XML implements IGraphLoader {
 
         this.graph = g;
 
+        
+        default_namespace = (String) conf.getParameter(ARG_PREFIX);
+        
+        if(default_namespace == null){
+            default_namespace = graph.getURI().getNamespace();
+        }
 
 
         try {
@@ -138,14 +150,12 @@ public class GraphLoader_MESH_XML implements IGraphLoader {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
         
-        logger.info("Info loaded");
-        System.out.println(g);
+        logger.info("MESH loader - process performed");
     }
 
     private V getOrCreateVertex(String descriptorUI) {
 
-        // @TODO add possibility to set URI prefix
-        String uriConceptAsString = graph.getURI().getNamespace() + descriptorUI;
+        String uriConceptAsString = default_namespace + descriptorUI;
 
         URI uriConcept = dataRepo.createURI(uriConceptAsString);
         V vConcept = graph.getV(uriConcept);

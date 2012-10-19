@@ -50,7 +50,8 @@ import slib.sglib.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SM_Engine;
@@ -80,7 +81,7 @@ public class SmCli implements SmlModuleCLI {
     InstancesAccessor iAccessor;
     public boolean SKIP_EMPTY_ANNOTATION = true;
     public double EMPTY_ANNOTATION_SCORE = 0;
-    DataRepository df = DataRepository.getSingleton();
+    DataFactory factory = DataFactoryMemory.getSingleton();
     G g;
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
@@ -106,8 +107,8 @@ public class SmCli implements SmlModuleCLI {
 
         logger.info("Retrieving the graph " + conf.graphURI);
 
-        URI graphURI = DataRepository.getSingleton().createURI(conf.graphURI);
-        g = DataRepository.getSingleton().getGraph(graphURI);
+        URI graphURI = factory.createURI(conf.graphURI);
+        g = factory.getGraph(graphURI);
 
         if (g == null) {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");

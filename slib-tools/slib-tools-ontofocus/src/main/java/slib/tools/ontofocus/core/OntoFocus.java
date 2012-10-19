@@ -47,7 +47,7 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.indexer.IndexBasic;
+import slib.indexer.IndexHash;
 import slib.indexer.IndexerOBO;
 import slib.sglib.algo.reduction.dag.GraphReduction_DAG_Ranwez_2011;
 import slib.sglib.algo.utils.RooterDAG;
@@ -59,8 +59,12 @@ import slib.sglib.io.plotter.GraphPlotter_Graphviz;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
-import slib.sglib.model.voc.SGLVOC;
+import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.impl.memory.GraphMemory;
+import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.utils.OntoFocusConf;
 import slib.tools.ontofocus.core.utils.QueryEntryURI;
@@ -74,7 +78,7 @@ public class OntoFocus {
 
 	Logger logger = LoggerFactory.getLogger(OntoFocus.class);
 
-	DataRepository data;
+	DataFactory factory;
 	G baseGraph;
 
 	OntoFocusConf c;
@@ -87,7 +91,7 @@ public class OntoFocus {
 	private boolean showLabels = true; // TODO add to configuration parameters
 
 	public OntoFocus(){
-		data = DataRepository.getSingleton();
+		factory = DataFactoryMemory.getSingleton();
 	}
 
 	public void excecute(OntoFocusConf c) throws SLIB_Exception, IOException {
@@ -95,20 +99,19 @@ public class OntoFocus {
 		this.c = c;
 
 		// Load the Graph ------------------------------------------------------------
-
-		URI uriGraph = DataRepository.getSingleton().createURI("http://graph/");
+		URI uriGraph = factory.createURI("http://graph/");
 		GraphConf conf = new GraphConf(uriGraph);
 		conf.addGDataConf(new GDataConf(c.format, c.ontoFile));
 		
 		baseGraph 	   = GraphLoaderGeneric.load(conf); 
 		
-		IndexBasic index = new IndexerOBO().buildIndex(c.ontoFile,baseGraph.getURI().stringValue());
+		IndexHash index = new IndexerOBO().buildIndex(factory, c.ontoFile,baseGraph.getURI().stringValue());
 
 		root();
 		loadEtypeConf(); // Load edge Types
 
-
-		GraphReduction_DAG_Ranwez_2011 gRed = new GraphReduction_DAG_Ranwez_2011(baseGraph, rootURI, admittedRels,  relationshipsToAdd, true);
+                
+		GraphReduction_DAG_Ranwez_2011 gRed = new GraphReduction_DAG_Ranwez_2011(factory, baseGraph, rootURI, admittedRels,  relationshipsToAdd, true);
 
 		// load query URI  & check query size -------------------
 
@@ -134,11 +137,13 @@ public class OntoFocus {
                                                 for(URI u : query.getValue()){
                                                     queryAsV.add(baseGraph.getV(u));
                                                 }
-						
-						G graph_reduction = gRed.exec(query.getValue(), baseGraph.getURI()+"_reduction_"+i);
+                                                
+                                                URI guri_reduction = factory.createURI(baseGraph.getURI()+"_reduction_"+i);
+						G graph_reduction = new GraphMemory(guri_reduction);
+						gRed.exec(query.getValue(), graph_reduction);
 						String gviz = GraphPlotter_Graphviz.plot(graph_reduction,queryAsV,showLabels,index);
 						
-						System.out.println(data.toString());
+						System.out.println(factory.toString());
 						
 						if(c.out == null)
 							logger.info(gviz);
@@ -149,7 +154,7 @@ public class OntoFocus {
 							flushResultOnFile(gviz,out);
 
 							logger.info("Consult result : "+out);
-							logger.info("Number of URI loaded : "+data.getMemURIs().size());
+							logger.info("Number of URI loaded : "+factory.getURIs().size());
 						}
 						
 						//UtilDebug.exit(this);
@@ -172,13 +177,13 @@ public class OntoFocus {
 	private void root() throws SLIB_Ex_Critic {
 
 		if(c.rootURI == null){
-			rootURI = RooterDAG.rootUnderlyingTaxonomicDAG(baseGraph,SGLVOC.UNIVERSAL_ROOT);
+			rootURI = RooterDAG.rootUnderlyingTaxonomicDAG(baseGraph,SLIBVOC.UNIVERSAL_ROOT);
 		}
 		else{
 //			if(data.vTypes.containsLinkedURI(c.rootURI, baseGraph)){// TODO check URI exists
-				rootURI = data.createURI(c.rootURI);
-
-				if(!new ValidatorDAG().isUniqueRootedTaxonomicDag(baseGraph, rootURI))
+				rootURI = factory.createURI(c.rootURI);
+                                V root = new VertexTyped(baseGraph, rootURI, VType.CLASS);
+				if(!new ValidatorDAG().isUniqueRootedTaxonomicDag(baseGraph, root))
 					logger.info("Graph reduction required");
 //			}
 //			else
@@ -205,7 +210,7 @@ public class OntoFocus {
 //				if(!data.containsLinkedValues( uriRel, baseGraph))					
 //					logger.debug("[Edge Type NOT FOUND] exclude relationship '"+s+"'");
 //				else{
-					URI eType = data.eTypes.createPURI(uriRel);
+					URI eType = factory.getPredicateFactory().createPURI(uriRel);
 					logger.debug("include relationship '"+eType+"'");
 					admittedRels.add(eType);
 //				}
@@ -215,13 +220,14 @@ public class OntoFocus {
 		// load direct relationship type to consider
 		Set<URI> relationshipsToAdd = new HashSet<URI>();
 
-		for (URI eType: admittedRels)
-			relationshipsToAdd.add(eType);
+		for (URI eType: admittedRels) {
+                relationshipsToAdd.add(eType);
+            }
 
 		if(c.addR){
 			HashSet<URI> nativeEtypes = new HashSet<URI>(); 
 
-			for(URI eType : data.eTypes.getURIs()){
+			for(URI eType : factory.getPredicateFactory().getURIs()){
 //				if(eType.isNative()) // modified sesame-blueprints refactoring
 					nativeEtypes.add(eType);
 			}
@@ -257,7 +263,7 @@ public class OntoFocus {
 			for(String a : annot){
 //				boolean containAnnot = data.containsLinkedValues(baseGraph.getURI()+a,baseGraph);
 //				if(containAnnot)
-					uris.add( data.createURI(baseGraph.getURI()+a) );
+					uris.add( factory.createURI(baseGraph.getURI()+a) );
 			}
 
 			q = new QueryEntryURI(queryEntry.getKey(), uris);

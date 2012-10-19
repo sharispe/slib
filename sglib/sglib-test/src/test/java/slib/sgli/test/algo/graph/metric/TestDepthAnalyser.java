@@ -49,18 +49,19 @@ import slib.sglib.algo.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 import com.tinkerpop.blueprints.Direction;
+import slib.sglib.model.repo.DataFactory;
 
 public class TestDepthAnalyser {
 
 	G g;
 	DepthAnalyserAG depthAnalyser = null;
 	
-	DataRepository df = DataRepository.getSingleton();
+	DataFactoryMemory df = DataFactoryMemory.getSingleton();
 
 
 	int min_depth_spiderman = 3;
@@ -84,7 +85,8 @@ public class TestDepthAnalyser {
 		testvalues = new SLIB_UnitTestValues();
 		
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
-		depthAnalyser = new DepthAnalyserAG(g, wc);
+                DataFactory factory = DataFactoryMemory.getSingleton();
+		depthAnalyser = new DepthAnalyserAG(factory, g, wc);
 	}
 
 	@Test

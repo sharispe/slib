@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_Pfam;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -84,7 +84,7 @@ public class BenchmarkBuilder_Pfam {
 	Pattern p_tab   = Pattern.compile("\t");
 	Pattern p_comma = Pattern.compile(",");
 
-	DataRepository uriManager = DataRepository.getSingleton();
+	DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
 
 	public void generateBenchmark(
@@ -118,7 +118,7 @@ public class BenchmarkBuilder_Pfam {
 
 			for(String p : e.getValue()){
 				
-				V inst = g.getV(g.getDataRepository().createURI(p));
+				V inst = g.getV(g.getDataFactory().createURI(p));
 				
 				if(inst != null){
 					if(min_annot == null || instancesAccessor.getDirectClass(inst).size() >= min_annot.intValue())

@@ -44,21 +44,21 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sglib.model.repo.IPredicateURIRepo;
-import slib.sglib.model.voc.SGLVOC;
+import slib.sglib.model.repo.PredicateFactory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Ex_Warning;
 
-public class PredicateURIRepo implements IPredicateURIRepo{
+public class PredicateURIRepo implements PredicateFactory{
 
 	private static PredicateURIRepo singleton;
 
-	private DataRepository factory;
+	private DataFactoryMemory factory;
 
 	private Set<URI> pURIs; // predicate URIs 
 	private HashMap<URI, URI > inverses;
 
-	private PredicateURIRepo(DataRepository factory){
+	private PredicateURIRepo(DataFactoryMemory factory){
 
 		this.factory = factory;
 		pURIs 	 = new HashSet<URI>();
@@ -73,7 +73,7 @@ public class PredicateURIRepo implements IPredicateURIRepo{
 		pURIs.add(subClassOf);
 	}
 
-	protected static PredicateURIRepo getInstance(DataRepository factory) {
+	protected static PredicateURIRepo getInstance(DataFactoryMemory factory) {
 		if (singleton == null) {
 			singleton = new PredicateURIRepo(factory);
 		}
@@ -137,7 +137,7 @@ public class PredicateURIRepo implements IPredicateURIRepo{
 
 
 	public URI createInverse(URI eType) throws SLIB_Ex_Critic {
-		URI inverse = load(SGLVOC.SLIB_NS+eType.getLocalName()+"_inverse");
+		URI inverse = load(SLIBVOC.SLIB_NS+eType.getLocalName()+"_inverse");
 		return inverse;
 	}
 

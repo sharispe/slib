@@ -61,8 +61,8 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.weight.GWS;
-import slib.sglib.model.repo.impl.DataRepository;
-import slib.sglib.model.voc.SGLVOC;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sml.sm.core.measures.Sim_Groupwise_AddOn;
 import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
 import slib.sml.sm.core.measures.Sim_Pairwise;
@@ -87,6 +87,8 @@ import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
 import java.lang.reflect.Constructor;
+import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.repo.DataFactory;
 
 /**
  * {@link SM_Engine} is used as an accessor to numerous commonly required
@@ -102,7 +104,7 @@ import java.lang.reflect.Constructor;
 public class SM_Engine {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataRepository df = DataRepository.getSingleton();
+    DataFactory factory = DataFactoryMemory.getSingleton();
     final G graph;
     RVF_TAX ancGetter;
     RVF_TAX descGetter;
@@ -256,7 +258,7 @@ public class SM_Engine {
     public ResultStack<V, Integer> getMaxDepths() throws SLIB_Exception {
 
         if (cache.maxDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
             cache.maxDepths = dephtAnalyser.getVMaxDepths();
         }
 
@@ -271,7 +273,7 @@ public class SM_Engine {
     public ResultStack<V, Integer> getMinDepths() throws SLIB_Exception {
 
         if (cache.minDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
             cache.minDepths = dephtAnalyser.getVMinDepths();
         }
 
@@ -357,8 +359,7 @@ public class SM_Engine {
      */
     public synchronized V getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
-            URI rooturi;
-            rooturi = RooterDAG.rootUnderlyingTaxonomicDAG(graph, SGLVOC.UNIVERSAL_ROOT);
+            URI rooturi = RooterDAG.rootUnderlyingTaxonomicDAG(graph, SLIBVOC.UNIVERSAL_ROOT);
             root = (V) graph.getV(rooturi);
         }
         return root;

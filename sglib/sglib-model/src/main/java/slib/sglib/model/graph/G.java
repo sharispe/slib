@@ -46,9 +46,9 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
-import slib.sglib.model.repo.impl.DataRepository;
 
 import com.tinkerpop.blueprints.Direction;
+import slib.sglib.model.repo.DataFactory;
 
 
 /**
@@ -71,7 +71,7 @@ public interface G extends NotifyingSail{
 	 * e.g. URIs
 	 * @return the {@link DataRepository} used by the graph
 	 */
-	public DataRepository getDataRepository();
+	public DataFactory getDataFactory();
 
 	/**
 	 * Retrieve all edges contained in the graph
@@ -509,5 +509,9 @@ public interface G extends NotifyingSail{
 	public Set<V> getV(V v, URI eType,Direction dir);
 	
 	public URI getURI();
+
+    public V createVertex(Value val);
+    
+    public V createVertex(Value val, VType type);
 
 }

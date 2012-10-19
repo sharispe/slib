@@ -52,8 +52,6 @@ import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.impl.memory.GraphMemory_Abstract;
-import slib.sglib.model.repo.impl.DataRepository;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.ex.SLIB_Ex_Warning;
@@ -61,6 +59,7 @@ import slib.utils.impl.SetUtils;
 
 import com.tinkerpop.blueprints.Direction;
 import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.model.repo.DataFactory;
 
 /**
  * Algorithm used to extract a subgraph from a DAG (Directed Acyclic Graph) <br/>
@@ -80,10 +79,10 @@ public class GraphReduction_DAG_Ranwez_2011 {
 	G graph;
 	G graph_reduction;
 
-	DataRepository data;
+	DataFactory data;
 
 	Set<URI> selectedURI;
-	V		 rootVertex;
+	V rootVertex;
 
 
 	Set<V> 			 verticesRed;
@@ -102,11 +101,12 @@ public class GraphReduction_DAG_Ranwez_2011 {
          * @throws SLIB_Exception 
          */
         public GraphReduction_DAG_Ranwez_2011(
+                        DataFactory factory,
 			G graph,
 			URI rootURI
 			) throws SLIB_Exception {
             
-            this(graph,rootURI,SetUtils.buildSet(RDFS.SUBCLASSOF),SetUtils.buildSet(RDFS.SUBCLASSOF),true);
+            this(factory, graph,rootURI,SetUtils.buildSet(RDFS.SUBCLASSOF),SetUtils.buildSet(RDFS.SUBCLASSOF),true);
         }
 
 
@@ -137,6 +137,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 	 * @throws SGL_Exception
 	 */
 	public GraphReduction_DAG_Ranwez_2011(
+                        DataFactory factory,
 			G graph,
 			URI rootURI, 
 			Set<URI> edgesTypes, 
@@ -145,7 +146,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
 			) throws SLIB_Exception {
 
-		data = DataRepository.getSingleton();
+		data = factory;
 
 		this.edgesTypes  		= edgesTypes;
 		this.edgesTypesDirect   = edgesTypesDirect;
@@ -153,12 +154,18 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
 		this.graph 		 = graph;
 
-		rootVertex 		 = graph.getV(rootURI);
+                if(graph.containsVertex(rootURI)){
+                    rootVertex = graph.getV(rootURI);
+                }
+                else{
+                    rootVertex = graph.createVertex(rootURI);
+                }
+		
 
 		logger.debug("Selected Etypes: "+edgesTypes);
 
-		if(rootVertex == null)
-			throw new SLIB_Ex_Critic("Unable to find Vertex associated to Root URI "+rootURI);
+		if(graph.containsVertex(rootVertex))
+			throw new SLIB_Ex_Critic("Unable to find Vertex associated to Root URI "+rootVertex.getValue());
 
 		if(validateDAGproperty){
 
@@ -180,17 +187,18 @@ public class GraphReduction_DAG_Ranwez_2011 {
 			
 			ValidatorDAG validator = new ValidatorDAG();
 
-			boolean uniqueRoot = validator.isUniqueRootedTaxonomicDag(graph, rootURI);
+			boolean uniqueRoot = validator.isUniqueRootedTaxonomicDag(graph, rootVertex);
 
 			if(!uniqueRoot){
-				logger.info("Specified root is not a unique Root: "+rootURI);
+				logger.info("Specified root is not a unique Root: "+rootVertex.getValue());
 				logger.info("Roots : "+validator.getTaxonomicDAGRoots(graph));
 			}
 		}
 	}
 
-	public G exec(Set<URI> selectedURI, String graphReductionURI) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
+	public void exec(Set<URI> selectedURI, G g_reduction) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
+                this.graph_reduction = g_reduction;
 		this.selectedURI = selectedURI;
 		
 		verticesRed = new HashSet<V>();
@@ -230,9 +238,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 		logger.debug("Reduction Vertices : "+verticesRed.size()+ " ( ~" +vReductionP+"% of "+graph.getURI()+")");
 		logger.debug("Reduction : "+verticesRed);
 
-		URI newGraphURI = data.createURI(graphReductionURI);
-
-		graph_reduction = new GraphMemory_Abstract( newGraphURI );
+		
 		graph_reduction.addV(verticesRed);
 
 		Collections.reverse(traversalOrder);
@@ -244,7 +250,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
 		// set direct edges
 		if(edgesTypesDirect == null)
-			edgesTypesDirect = data.eTypes.getURIs();
+			edgesTypesDirect = data.getPredicateFactory().getURIs();
 
 		logger.debug("Adding direct edges considering "+edgesTypesDirect.size()+" eType(s)");
 		logger.debug(""+edgesTypesDirect);
@@ -269,8 +275,6 @@ public class GraphReduction_DAG_Ranwez_2011 {
 		double eReductionP = 100-(graph_reduction.getE().size()*100/graph.getE().size()); // same for edges
 		logger.debug("Reduction Edges 	 : "+verticesRed.size()+ " ( ~" +(eReductionP)+"% of "+graph.getURI()+")");
 		logger.info("Reduction performed");
-
-		return graph_reduction;
 	}
 
 

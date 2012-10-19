@@ -47,7 +47,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.SmCli;
@@ -93,7 +94,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 			results = new ThreadResultsQueryLoader(queriesBench.size());
 
 
-			DataRepository   df   = DataRepository.getSingleton();
+			DataFactory   df   = DataFactoryMemory.getSingleton();
 
 			String uriE1s,uriE2s;
 			StringBuilder tmp_buffer = new StringBuilder();

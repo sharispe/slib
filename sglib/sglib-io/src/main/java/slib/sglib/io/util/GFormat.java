@@ -46,7 +46,6 @@ public enum GFormat {
 	NTRIPLES,
         WORDNET_DATA,
         MESH_XML,
+        SNOMED_CT_RF2,
 	CSV;
-	
-
 }

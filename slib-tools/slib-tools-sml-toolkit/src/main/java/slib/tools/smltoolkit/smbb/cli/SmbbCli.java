@@ -45,7 +45,7 @@ import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.impl.DataRepository;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.smbb.core.SmbbCst;
 import slib.sml.smbb.core.bioinfo.bmark.ec.BenchmarkBuilder_EC;
 import slib.sml.smbb.core.bioinfo.bmark.kegg.BenchmarkBuilder_Kegg;
@@ -106,8 +106,8 @@ public class SmbbCli implements SmlModuleCLI {
 
 		logger.info("Retrieving the graph "+conf.getGraphURI());
 
-		URI  graphURI = DataRepository.getSingleton().createURI(conf.getGraphURI());
-		g = DataRepository.getSingleton().getGraph(graphURI);
+		URI  graphURI = DataFactoryMemory.getSingleton().createURI(conf.getGraphURI());
+		g = DataFactoryMemory.getSingleton().getGraph(graphURI);
 
 		if(g == null)
 			Util.error("No graph associated to the uri "+conf.getGraphURI()+" was loaded...");
