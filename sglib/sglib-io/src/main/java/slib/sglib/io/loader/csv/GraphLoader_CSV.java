@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
@@ -26,7 +26,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
-public class GraphLoader_CSV implements IGraphLoader{
+public class GraphLoader_CSV implements GraphLoader{
 	
 	boolean skipHeader = false;
 	

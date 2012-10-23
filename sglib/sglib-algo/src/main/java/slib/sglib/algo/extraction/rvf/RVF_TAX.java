@@ -46,9 +46,9 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Object of this class can be used to retrieve the vertices reachable from a particular

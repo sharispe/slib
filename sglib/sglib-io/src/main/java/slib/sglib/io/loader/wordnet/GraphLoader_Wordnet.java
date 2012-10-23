@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -35,7 +35,7 @@ import slib.utils.ex.SLIB_Exception;
  * 
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class GraphLoader_Wordnet implements IGraphLoader {
+public class GraphLoader_Wordnet implements GraphLoader {
 
     private G graph;
     Logger logger = LoggerFactory.getLogger(this.getClass());

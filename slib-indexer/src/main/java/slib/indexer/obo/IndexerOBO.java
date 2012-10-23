@@ -34,7 +34,7 @@
  */
  
  
-package slib.indexer;
+package slib.indexer.obo;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
+import slib.indexer.IndexHash;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;

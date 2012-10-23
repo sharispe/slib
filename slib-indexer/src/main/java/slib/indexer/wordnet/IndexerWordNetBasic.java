@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package slib.indexer;
+package slib.indexer.wordnet;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -26,14 +26,14 @@ import slib.utils.impl.UtilDebug;
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class WordNetBasicIndexer{
+public class IndexerWordNetBasic{
     
     Map<String, Set<V>> stringToSynsetIndex = new HashMap<String, Set<V>>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     
     G graph;
     
-    public WordNetBasicIndexer(DataFactory factory, G g, String file) throws SLIB_Ex_Critic{
+    public IndexerWordNetBasic(DataFactory factory, G g, String file) throws SLIB_Ex_Critic{
         
         graph = g;
         populateIndex(factory,file);

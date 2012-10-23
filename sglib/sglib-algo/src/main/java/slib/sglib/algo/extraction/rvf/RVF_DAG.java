@@ -50,13 +50,13 @@ import slib.sglib.algo.traversal.classical.BFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Object of this class can be used to retrieve the vertices reachable from a particular

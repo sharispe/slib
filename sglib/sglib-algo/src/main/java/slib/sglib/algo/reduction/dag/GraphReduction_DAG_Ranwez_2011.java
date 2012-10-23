@@ -57,8 +57,8 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.DataFactory;
 
 /**

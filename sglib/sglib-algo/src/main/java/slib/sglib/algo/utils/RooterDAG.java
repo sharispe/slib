@@ -44,10 +44,9 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
-
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Object used to root a graph taking into consideration edge types defining
@@ -117,7 +116,7 @@ public class RooterDAG {
         // roots are considered as vertices 
         // - with out edge of type etypeDAG (vertices contained in uDAG)
         // - without out edges of type invEtypeDAG
-        Set<V> roots = new ValidatorDAG().getDAGRoots(g, etypeDAG, dir.opposite());
+        Set<V> roots = new ValidatorDAG().getDAGRoots(g, etypeDAG, dir);
 
         int nbRoot = roots.size();
 
@@ -166,7 +165,7 @@ public class RooterDAG {
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsRootedTaxonomicDag(g)) {
-            return rootUnderlyingDAG(g, RDFS.SUBCLASSOF, true, rootUri, Direction.IN);
+            return rootUnderlyingDAG(g, RDFS.SUBCLASSOF, true, rootUri, Direction.OUT);
         } else {
             return (URI) validator.getRootedTaxonomicDAGRoot(g).getValue();
         }

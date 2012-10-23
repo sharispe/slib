@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package slib.indexer;
+package slib.indexer.snomed_ct;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.indexer.IndexHash;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -39,13 +40,13 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash<Set<String>> buildIndex(DataFactory factory, String description_file, String defaultNamespace) throws SLIB_Exception {
 
         repo = factory;
         logger.info("Building Index");
         logger.info("Description file: " + description_file);
 
-        IndexHash index = new IndexHash();
+        IndexHash<Set<String>> index = new IndexHash<Set<String>>();
 
         FileInputStream fstream;
         try {
@@ -70,17 +71,17 @@ public class IndexerSNOMEDCT_RF2 {
 
                     if (repo.getURI(cURI) != null) {
 
-                        if (index.mapping.containsKey(cURI)) {
+                        if (index.getMapping().containsKey(cURI)) {
 
                             // Check if the String is not already contained in the proposed description
-                            if ( ! ((Set<String>) (index.mapping.get(cURI))).contains(split[DESCRIPTION_TERM]) ) {
-                                ((Set<String>) (index.mapping.get(cURI))).add(split[DESCRIPTION_TERM]);
+                            if ( ! ((Set<String>) (index.getMapping().get(cURI))).contains(split[DESCRIPTION_TERM]) ) {
+                                ((Set<String>) (index.getMapping().get(cURI))).add(split[DESCRIPTION_TERM]);
                             }
 
                         } else {
                             Set<String> d = new HashSet<String>();
                             d.add(split[DESCRIPTION_TERM]);
-                            index.mapping.put(cURI, d);
+                            index.getMapping().put(cURI, d);
                         }
                     }
                 }

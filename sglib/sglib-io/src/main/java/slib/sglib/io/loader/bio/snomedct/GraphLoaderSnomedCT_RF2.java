@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -33,7 +33,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class GraphLoaderSnomedCT_RF2 implements IGraphLoader {
+public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
     public static String ARG_CONCEPT_FILE       = "concept_file";
     public static String ARG_RELATIONSHIP_FILE  = "relationship_file";

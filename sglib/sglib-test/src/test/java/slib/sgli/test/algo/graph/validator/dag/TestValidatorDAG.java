@@ -55,12 +55,11 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
-
-import com.tinkerpop.blueprints.Direction;
 
 public class TestValidatorDAG {
 

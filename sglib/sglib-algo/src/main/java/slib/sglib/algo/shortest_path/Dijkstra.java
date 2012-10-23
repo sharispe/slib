@@ -50,10 +50,9 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.weight.GWS;
 import slib.utils.ex.SLIB_Ex_Critic;
-
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Basic implementation of the shortest path algorithm proposed by Dijkstra

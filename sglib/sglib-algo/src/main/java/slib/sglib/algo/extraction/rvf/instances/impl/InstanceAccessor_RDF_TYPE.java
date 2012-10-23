@@ -8,8 +8,8 @@ import org.openrdf.model.vocabulary.RDF;
 import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 
-import com.tinkerpop.blueprints.Direction;
 
 public class InstanceAccessor_RDF_TYPE implements InstancesAccessor{
 

@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.loader.bio.obo.utils.OboRelationship;
 import slib.sglib.io.loader.bio.obo.utils.OboTerm;
 import slib.sglib.io.loader.bio.obo.utils.OboType;
@@ -132,7 +132,7 @@ import slib.utils.impl.OBOconstants;
  * TODO : load instances
  *
  */
-public class GraphLoader_OBO_1_2 implements IGraphLoader {
+public class GraphLoader_OBO_1_2 implements GraphLoader {
 
     DataFactoryMemory data = DataFactoryMemory.getSingleton();
     GraphConf conf;

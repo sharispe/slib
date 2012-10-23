@@ -50,10 +50,10 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Class used to build or perform a reduction of a DAG.

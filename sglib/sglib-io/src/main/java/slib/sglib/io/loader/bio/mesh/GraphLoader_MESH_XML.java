@@ -8,44 +8,39 @@ package slib.sglib.io.loader.bio.mesh;
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.logging.Level;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
-import slib.sglib.io.util.GFormat;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.graph.impl.memory.GraphMemory;
+import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
-public class GraphLoader_MESH_XML implements IGraphLoader {
+public class GraphLoader_MESH_XML implements GraphLoader {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
-    DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
+    DataFactory factory = DataFactoryMemory.getSingleton();
     
     
     public static final String ARG_PREFIX  = "prefix";
@@ -157,7 +152,7 @@ public class GraphLoader_MESH_XML implements IGraphLoader {
 
         String uriConceptAsString = default_namespace + descriptorUI;
 
-        URI uriConcept = dataRepo.createURI(uriConceptAsString);
+        URI uriConcept = factory.createURI(uriConceptAsString);
         V vConcept = graph.getV(uriConcept);
 
         if (vConcept == null) {

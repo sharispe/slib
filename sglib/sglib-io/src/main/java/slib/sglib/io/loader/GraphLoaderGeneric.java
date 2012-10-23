@@ -72,7 +72,7 @@ public class GraphLoaderGeneric {
 
         logger.debug("Populate " + g.getURI() + " based on " + dataConf.getLoc());
 
-        IGraphLoader gLoader = getLoader(dataConf);
+        GraphLoader gLoader = getLoader(dataConf);
 
         gLoader.populate(dataConf, g);
 
@@ -125,7 +125,7 @@ public class GraphLoaderGeneric {
         }
     }
 
-    private static IGraphLoader getLoader(GDataConf data) throws SLIB_Ex_Critic {
+    private static GraphLoader getLoader(GDataConf data) throws SLIB_Ex_Critic {
 
         if (data.getFormat() == GFormat.OBO) {
             return new GraphLoader_OBO_1_2();

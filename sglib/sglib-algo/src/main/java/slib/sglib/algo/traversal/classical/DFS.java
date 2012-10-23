@@ -50,10 +50,9 @@ import slib.sglib.algo.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.PredicateFactory;
 import slib.utils.impl.SetUtils;
-
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Class used to perform traversal on a graph using Depth First Search Algorithm

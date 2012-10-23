@@ -54,12 +54,12 @@ import slib.sglib.algo.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 
 public class TestReachableVerticesFinder{
 	

@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public interface IGraphLoader {
+public interface GraphLoader {
 	
 	/**
 	 * Load a new Graph considering the given configuration

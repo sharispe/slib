@@ -18,14 +18,14 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
-public class RDFLoader implements IGraphLoader{
+public class RDFLoader implements GraphLoader{
 
 	RDFParser parser = null;
 	

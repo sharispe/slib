@@ -57,8 +57,8 @@ import slib.sglib.model.graph.weight.impl.GWS_impl;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.graph.utils.Direction;
 
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
@@ -142,11 +142,11 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
+    @Override
     public Set<E> getE(Set<URI> types, V v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
-
-
+        
         if (dir == Direction.IN || dir == Direction.BOTH) {
             for (E e : vertexInEdges.get(v)) {
                 if (types == null || types.contains(e.getURI())) {
@@ -175,17 +175,14 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
+    @Override
     public Set<E> getE(URI t, V source, Direction dir) {
         return getE(((Set<URI>) SetUtils.buildSet(t)), source, dir);
     }
 
+    @Override
     public Set<E> getE(Set<URI> eTypes, V v, Set<VType> targetTypes, Direction dir) {
 
-        //		System.out.println("-----");
-        //		System.out.println(eTypes);
-        //		System.out.println(v);
-        //		System.out.println("types "+targetTypes);
-        //		System.out.println(dir);
         Set<E> edgesCol = null;
 
         if (targetTypes == null) {
@@ -208,16 +205,17 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
                     }
                 }
             }
-
         }
 
         return edgesCol;
     }
 
+    @Override
     public Set<E> getE(URI t, V source, VType targetType, Direction dir) {
         return getE(SetUtils.buildSet(t), source, SetUtils.buildSet(targetType), dir);
     }
 
+    @Override
     public Set<E> getE(Set<URI> eTypes, V v, VType targetType, Direction dir) {
 
         Set<E> edgesCol = null;
@@ -250,11 +248,11 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         Set<E> edgesCol = new HashSet<E>();
 
         if (dir == Direction.BOTH || dir == Direction.IN) {
-            edgesCol = vertexInEdges.get(v);
+            edgesCol.addAll(vertexInEdges.get(v));
         }
 
         if (dir == Direction.BOTH || dir == Direction.OUT) {
-            edgesCol = vertexOutEdges.get(v);
+            edgesCol.addAll(vertexOutEdges.get(v));
         }
 
         return edgesCol;

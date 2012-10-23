@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
@@ -64,7 +64,7 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public class GraphLoader_SGL implements IGraphLoader {
+public class GraphLoader_SGL implements GraphLoader {
 
     private static final String EDGE_TYPE_FLAG = "EDGE_TYPE";
     private static final String VERTEX_TYPE_FLAG = "VERTEX_TYPE";

@@ -38,12 +38,12 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.SGLcst;
 import slib.sglib.model.voc.SGLVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
-import com.tinkerpop.blueprints.Direction;
 import slib.sglib.model.repo.DataFactory;
 
 

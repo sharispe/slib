@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
-import slib.sglib.io.loader.IGraphLoader;
+import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
 import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
@@ -73,7 +73,7 @@ import slib.utils.impl.BigFileReader;
  *
  * TODO - Manage multiple organism specification : taxon:1|taxon:1000
  */
-public class GraphLoader_GAF_2 implements IGraphLoader {
+public class GraphLoader_GAF_2 implements GraphLoader {
 
     public final static int DB = 0;
     public final static int DB_OBJECT_ID = 1;

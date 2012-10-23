@@ -50,11 +50,10 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
-
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
@@ -227,7 +226,7 @@ public class ValidatorDAG {
      */
     public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
 
-        Set<V> roots = getDAGRoots(graph, edgeTypes, dir.opposite());
+        Set<V> roots = getDAGRoots(graph, edgeTypes, dir.getOpposite());
 
         if (roots.isEmpty()) // No root No Dag
         {
@@ -279,6 +278,8 @@ public class ValidatorDAG {
 
 
         Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
+        
+        System.out.println("Number of roots "+roots);
 
         if (roots.size() == 1) {
             isDag(g, (URI) roots.iterator().next().getValue(), RDFS.SUBCLASSOF, Direction.IN);
@@ -387,7 +388,7 @@ public class ValidatorDAG {
 
         if (isDag(g, edgesType, dir)) {
 
-            Set<V> roots = getDAGRoots(g, edgesType, dir.opposite());
+            Set<V> roots = getDAGRoots(g, edgesType, dir.getOpposite());
 
             if (roots.size() == 1 && roots.iterator().next().equals(root)) {
                 return true;

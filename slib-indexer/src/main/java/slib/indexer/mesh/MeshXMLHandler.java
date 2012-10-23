@@ -1,4 +1,4 @@
-package slib.sglib.io.loader.bio.mesh;
+package slib.indexer.mesh;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -9,13 +9,13 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class MeshXMLHandler extends DefaultHandler {
 
-    GraphLoader_MESH_XML loader;
+    Indexer_MESH_XML loader;
     public  MeshConcept    concept;
     boolean descriptorName = false;
     boolean descriptorUI   = false;
     boolean treeNumber     = false;
     
-    public MeshXMLHandler(GraphLoader_MESH_XML loader){
+    public MeshXMLHandler(Indexer_MESH_XML loader){
         this.loader = loader;
     }
 
@@ -30,10 +30,12 @@ public class MeshXMLHandler extends DefaultHandler {
             concept = new MeshConcept();
         }
 
+        // define UI only the first UI specified is considered
         if (qName.equalsIgnoreCase("DescriptorUI") && concept.descriptorUI == null) { 
             descriptorUI = true;
         }
 
+        // Define the name of the concept as the first descriptor tag encountred
         if (qName.equalsIgnoreCase("descriptorName") && concept.descriptorName == null) { // define descriptor name
             descriptorName = true;
         }

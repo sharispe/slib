@@ -85,9 +85,9 @@ import slib.utils.impl.MatrixDouble;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
-import com.tinkerpop.blueprints.Direction;
 import java.lang.reflect.Constructor;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.DataFactory;
 
 /**

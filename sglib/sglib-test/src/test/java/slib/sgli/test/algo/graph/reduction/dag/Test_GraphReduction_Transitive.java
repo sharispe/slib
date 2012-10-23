@@ -61,9 +61,9 @@ import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Exception;
 
-import com.tinkerpop.blueprints.Direction;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 
 public class Test_GraphReduction_Transitive {
 	

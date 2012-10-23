@@ -2,14 +2,11 @@ package slib.sglib.model.graph.utils;
 
 import java.util.Map;
 import java.util.Set;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 
-import com.tinkerpop.blueprints.Direction;
 
 /**
  * WalkConstraints interface is used to define methods most of the time required to 

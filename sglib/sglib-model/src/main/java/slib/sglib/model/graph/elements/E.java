@@ -38,10 +38,6 @@ package slib.sglib.model.graph.elements;
 
 import org.openrdf.model.URI;
 
-import com.tinkerpop.blueprints.Edge;
-
-
-
 /**
  * Interface defining a graph edge defined by a source, a target and an type.
  * Note that edges are not expected to be modifiable i.e. there source, target and type must be final 
@@ -49,7 +45,7 @@ import com.tinkerpop.blueprints.Edge;
  * @author Sebastien Harispe
  *
  */
-public interface E extends Edge{
+public interface E{
 
 	public V getSource();
 	public V getTarget();

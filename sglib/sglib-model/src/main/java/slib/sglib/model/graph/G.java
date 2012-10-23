@@ -47,7 +47,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 
-import com.tinkerpop.blueprints.Direction;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.DataFactory;
 
 

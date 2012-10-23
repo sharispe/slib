@@ -11,9 +11,9 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 
-import com.tinkerpop.blueprints.Direction;
 
 public class WalkConstraintTax implements WalkConstraints{
 	

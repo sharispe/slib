@@ -37,9 +37,6 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.model.graph.elements;
 
 import org.openrdf.model.Value;
-
-import com.tinkerpop.blueprints.Vertex;
-
 import slib.sglib.model.graph.elements.type.VType;
 
 /**
@@ -48,7 +45,7 @@ import slib.sglib.model.graph.elements.type.VType;
  * @author Sebastien Harispe
  *
  */
-public interface V extends Vertex{
+public interface V{
 
 	/**
 	 * Access to the {@link VType} of the vertex

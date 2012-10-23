@@ -47,11 +47,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.utils.impl.ResultStack;
-
-import com.tinkerpop.blueprints.Direction;
-
-
 
 public class VectorWeight_Chabalier_2007 {
 	

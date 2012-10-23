@@ -45,12 +45,12 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
-import com.tinkerpop.blueprints.Direction;
 import slib.sglib.model.repo.DataFactory;
 
 /**
