@@ -70,4 +70,5 @@ public class IndexHash<X> {
     public boolean containsIndexFor(V x) {
         return mapping.containsKey(x.getValue());
     }
+
 }

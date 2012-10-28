@@ -16,9 +16,11 @@ public class MeshConcept{
     String descriptorUI;
     String descriptorName;
     Set<String> treeNumberList;
+    Set<String> descriptions; // Term as string
     
     public MeshConcept(){
         treeNumberList = new HashSet<String>();
+        descriptions = new HashSet<String>();
     }
 
     public String getDescriptorUI() {

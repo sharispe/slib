@@ -16,14 +16,9 @@ import java.util.Set;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.indexer.IndexHash;
-import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -64,13 +59,13 @@ public class Indexer_MESH_XML {
         concepts.add(concept);
     }
 
-    public IndexHash<String> buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash<Set<String>> buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
 
         this.factory = factory;
 
         this.default_namespace = defaultNamespace;
 
-        IndexHash<String> index = new IndexHash<String>();
+        IndexHash<Set<String>> index = new IndexHash<Set<String>>();
         try {
             logger.info(" Mesh XML Indexer");
             idToConcepts = new HashMap<String, MeshConcept>();
@@ -93,7 +88,8 @@ public class Indexer_MESH_XML {
 
                 String uriConceptAsString = default_namespace + c.getDescriptorUI();
                 URI uriConcept = factory.createURI(uriConceptAsString);
-                index.addValue(uriConcept, c.getDescriptorName());
+                index.addValue(uriConcept, c.descriptions);
+                index.getMapping().get(uriConcept).add(c.descriptorName);                
             }
 
         } catch (Exception ex) { // sorry
