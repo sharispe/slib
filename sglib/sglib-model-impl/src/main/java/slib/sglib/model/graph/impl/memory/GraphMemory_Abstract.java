@@ -146,7 +146,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     public Set<E> getE(Set<URI> types, V v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
-        
+
         if (dir == Direction.IN || dir == Direction.BOTH) {
             for (E e : vertexInEdges.get(v)) {
                 if (types == null || types.contains(e.getURI())) {
@@ -749,7 +749,11 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
 
         for (URI e : data.getPredicateFactory().getURIs()) {
-            out += "\t" + e + " " + getE(e).size() + "\n";
+
+            long size = getE(e).size();
+            if (size != 0) {
+                out += "\t" + e + " " + size + "\n";
+            }
         }
         return out;
     }
@@ -781,27 +785,24 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     @Override
     public synchronized V createVertex(Value val) {
-        if(!containsVertex(val)){
+        if (!containsVertex(val)) {
             V v = new VertexTyped(this, val, VType.CLASS);
             addV(v);
             return v;
-        }
-        else{
+        } else {
             return getV(val);
         }
-           
+
     }
 
     @Override
     public V createVertex(Value val, VType type) {
-        if(!containsVertex(val)){
+        if (!containsVertex(val)) {
             V v = new VertexTyped(this, val, type);
             addV(v);
             return v;
-        }
-        else{
+        } else {
             return getV(val);
         }
     }
-
 }

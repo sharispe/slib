@@ -106,8 +106,6 @@ public class GraphLoaderGeneric {
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
         }
-
-        logger.info(g.toString());
         
         DataFactory factory = DataFactoryMemory.getSingleton();
 

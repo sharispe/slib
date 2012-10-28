@@ -216,7 +216,7 @@ public class XMLConfLoaderGeneric {
         // Load Data
         String[] graphDataFileDefAtt = {"format", "path"};
 
-        NodeList nListGdata = document.getElementsByTagName(XmlTags.DATA_TAG);
+        NodeList nListGdata = item.getElementsByTagName(XmlTags.DATA_TAG);
 
         if (nListGdata.getLength() == 1 && nListGdata.item(0) instanceof Element) {
 

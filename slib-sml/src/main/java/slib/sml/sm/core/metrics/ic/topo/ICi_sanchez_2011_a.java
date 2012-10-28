@@ -79,7 +79,7 @@ public class ICi_sanchez_2011_a implements ICtopo{
 		for ( V v:allNbAncestors.keySet() ) {
 			
 			nbAncestors = allNbAncestors.get(v).intValue();
-			nbLeaves	= allNbOfReachableLeaves.get(v).intValue();
+			nbLeaves    = allNbOfReachableLeaves.get(v).intValue();
 			
 			x = (double) nbLeaves/nbAncestors + 1;
 			

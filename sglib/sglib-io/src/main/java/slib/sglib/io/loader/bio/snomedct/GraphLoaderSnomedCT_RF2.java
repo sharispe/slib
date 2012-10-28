@@ -73,7 +73,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
         String concept_file      = (String) conf.getParameter(ARG_CONCEPT_FILE);
         String relationship_file = (String) conf.getParameter(ARG_RELATIONSHIP_FILE);
         String prefix = (String) conf.getParameter(ARG_PREFIX);
-
+        
+        logger.info("Loading SNOMED-CT [RF2]      ");
         logger.info("Concept file:      " + concept_file);
         logger.info("Relationship file: " + relationship_file);
 
@@ -159,6 +160,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             }
             logger.info("Number of relationships loaded: " + relationship_count);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
     }

@@ -501,7 +501,7 @@ public class SM_Engine {
     public synchronized ResultStack<V, Double> computeIC(ICconf icConf) throws SLIB_Ex_Critic {
 
         if (icConf == null) {
-            throw new SLIB_Ex_Critic("Unknown IC " + icConf);
+            throw new SLIB_Ex_Critic("IC configuration cannot be set to null... " + icConf);
         }
 
         logger.info("computing IC " + icConf.getId());
@@ -511,7 +511,7 @@ public class SM_Engine {
         }
 
         Class<?> cl;
-        ResultStack<V, Double> results = new ResultStack<V, Double>();
+        ResultStack<V, Double> results;
 
         try {
 
