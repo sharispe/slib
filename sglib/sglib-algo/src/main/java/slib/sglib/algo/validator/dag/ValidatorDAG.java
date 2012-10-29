@@ -69,35 +69,41 @@ public class ValidatorDAG {
     HashMap<V, VColor> verticesColors;
     Direction direction;
     boolean valid;
+    E lastEdge;
+    Path currentPath;
 
     /*---------------------------------------------------------------------*
      *  Algorithm
      *---------------------------------------------------------------------*/
-    public boolean isDag(G graph, Set<URI> rootURIs, Set<URI> edgesTypes, Direction dir) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, Set<URI> startingURIs, Set<URI> edgesTypes, Direction dir) throws SLIB_Ex_Critic {
 
         this.direction = dir;
 
         this.graph = graph;
         this.edgeTypes = edgesTypes;
         this.verticesColors = new HashMap<V, VColor>();
-        this.valid = true;
+        valid = true;
 
-        logger.debug("Cheking DAG property of " + graph.getURI());
-        logger.debug("Graph  : " + graph.getURI());
-        logger.debug("root   : " + rootURIs.size());
-        logger.debug("eTypes : " + edgesTypes);
-        logger.debug("Dir    : " + direction);
+        logger.debug("Cheking DAG property of : " + graph.getURI());
+        logger.debug("Graph                   : " + graph.getURI());
+        logger.debug("starting nodes          : " + startingURIs.size());
+        logger.debug("eTypes                  : " + edgesTypes);
+        logger.debug("Dir                     : " + direction);
 
-        if (rootURIs.size() < 10) {
-            logger.debug("roots  : " + rootURIs);
+        if (startingURIs.size() < 10) {
+            logger.debug("starting vertices : " + startingURIs);
         }
 
 
-        if (rootURIs == null || rootURIs.isEmpty()) {
+        if (startingURIs == null || startingURIs.isEmpty()) {
             return false;
         }
+        
+        currentPath = new Path();
 
-        for (Value rootUri : rootURIs) {
+        for (Value rootUri : startingURIs) {
+
+
             V root = graph.getV(rootUri);
 
             if (root == null) {
@@ -106,34 +112,53 @@ public class ValidatorDAG {
 
             performDFS(root);
         }
+        
+        logger.info("isDag : "+valid);
+        if(!valid){
+            
+            logger.info("current path :"+currentPath.toString());
+            logger.info("Cycle detected adding : "+lastEdge+" to path");
+        }
         return valid;
     }
 
     private void performDFS(V v) {
-
-
+        
         if (!valid) {
             return;
         }
 
-        if (valid && verticesColors.get(v) == VColor.ORANGE) {
-            valid = false;
-        } else if (valid && (!verticesColors.containsKey(v) || verticesColors.get(v) != VColor.RED)) {
+        if (!verticesColors.containsKey(v)) {
 
             verticesColors.put(v, VColor.ORANGE);
+            currentPath.addVertex(v);
 
-            Iterator<E> it = graph.getE(edgeTypes, v, VType.CLASS, direction).iterator();
+            Set<E> edges = graph.getE(edgeTypes, v, VType.CLASS, direction);
 
-            while (it.hasNext()) {
-                if (direction == Direction.IN) {
-                    performDFS(it.next().getSource());
-                } else if (direction == Direction.OUT) {
-                    performDFS(it.next().getTarget());
+
+            for (E e : edges) {
+
+                if (!valid) { return; }
+                
+                V target = e.getSource();
+
+                if (direction == Direction.OUT) {
+                    target = e.getTarget();
                 }
-            }
-        }
 
-        verticesColors.put(v, VColor.RED);
+                if (verticesColors.get(target) != VColor.RED) {
+                    lastEdge = e;
+                    performDFS(target);
+                }
+
+            }
+            if (!valid) { return; }
+            currentPath.removeLastVertex();
+            verticesColors.put(v, VColor.RED);
+
+        } else if (verticesColors.get(v) == VColor.ORANGE){
+            valid = false;
+        }
     }
 
     /*---------------------------------------------------------------------*
@@ -226,20 +251,20 @@ public class ValidatorDAG {
      */
     public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
 
-        Set<V> roots = getDAGRoots(graph, edgeTypes, dir.getOpposite());
+        Set<V> startingNodes = getDAGRoots(graph, edgeTypes, dir.getOpposite());
 
-        if (roots.isEmpty()) // No root No Dag
+        if (startingNodes.isEmpty()) // No root No Dag
         {
             return false;
         }
 
-        HashSet<URI> rootURIs = new HashSet<URI>();
+        HashSet<URI> startingURIs = new HashSet<URI>();
 
-        for (V v : roots) {
-            rootURIs.add((URI) v.getValue());
+        for (V v : startingNodes) {
+            startingURIs.add((URI) v.getValue());
         }
 
-        return isDag(graph, rootURIs, edgeTypes, dir);
+        return isDag(graph, startingURIs, edgeTypes, dir);
     }
 
     /**
@@ -278,8 +303,8 @@ public class ValidatorDAG {
 
 
         Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
-        
-        System.out.println("Number of roots "+roots);
+
+        System.out.println("Number of roots " + roots);
 
         if (roots.size() == 1) {
             isDag(g, (URI) roots.iterator().next().getValue(), RDFS.SUBCLASSOF, Direction.IN);
@@ -396,4 +421,9 @@ public class ValidatorDAG {
         }
         return false;
     }
+
+    public E getLastEdge() {
+        return lastEdge;
+    }
+
 }

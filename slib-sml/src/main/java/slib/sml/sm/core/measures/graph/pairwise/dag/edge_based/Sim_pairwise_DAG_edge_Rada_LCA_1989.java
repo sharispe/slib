@@ -64,8 +64,8 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract{
 		
 		Map<V, Double> minDists_cA = c.getAllShortestPath(a); 
 		Map<V, Double> minDists_cB = c.getAllShortestPath(b); 
-		Set<V> ancestors_A	   = c.getAncestors(a);
-		Set<V> ancestors_B	   = c.getAncestors(b);
+		Set<V> ancestors_A	   = c.getAncestorsInc(a);
+		Set<V> ancestors_B	   = c.getAncestorsInc(b);
 		ResultStack<V,Integer> maxDepths  = c.getMaxDepths();
 		
 		return sim(minDists_cA,minDists_cB,ancestors_A,ancestors_B,maxDepths);

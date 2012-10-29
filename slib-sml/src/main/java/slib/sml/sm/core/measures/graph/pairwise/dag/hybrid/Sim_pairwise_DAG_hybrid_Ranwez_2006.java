@@ -61,8 +61,8 @@ public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract
 	public double sim(V a, V b, SM_Engine c, SMconf conf) {
 		
 		Set<V> hypoAncEx = c.getHypoAncEx(a,b);
-		Set<V> hypoA = c.getDescendants(a);
-		Set<V> hypoB = c.getDescendants(b);
+		Set<V> hypoA = c.getDescendantsInc(a);
+		Set<V> hypoB = c.getDescendantsInc(b);
 		
 		return sim(hypoAncEx, hypoA, hypoB );
 	}

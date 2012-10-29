@@ -59,8 +59,8 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
 	public double sim(V a, V b, SM_Engine c,SMconf conf) {
 		
 		int nbV = c.getNbVertices();
-		Set<V> ancA = c.getAncestors(a);
-		Set<V> ancB = c.getAncestors(b);
+		Set<V> ancA = c.getAncestorsInc(a);
+		Set<V> ancB = c.getAncestorsInc(b);
 		
 		return sim(nbV,ancA, ancB);
 	}

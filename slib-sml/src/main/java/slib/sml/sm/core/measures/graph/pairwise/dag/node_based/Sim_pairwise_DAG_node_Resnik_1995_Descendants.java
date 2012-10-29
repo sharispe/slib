@@ -75,7 +75,7 @@ public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_no
 			}
 		}
 		
-		for(V desc : c.getDescendants(mica))
+		for(V desc : c.getDescendantsInc(mica))
 			sim += c.getIC(conf.getICconf(), desc);
 		return sim;
 	}

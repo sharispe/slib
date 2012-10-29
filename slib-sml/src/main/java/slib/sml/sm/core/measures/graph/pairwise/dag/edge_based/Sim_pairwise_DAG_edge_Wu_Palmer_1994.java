@@ -59,8 +59,8 @@ public class Sim_pairwise_DAG_edge_Wu_Palmer_1994 extends Sim_DAG_edge_abstract{
 
 	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
-		Set<V> ancestors_A = c.getAncestors(a);
-		Set<V> ancestors_B = c.getAncestors(b);
+		Set<V> ancestors_A = c.getAncestorsInc(a);
+		Set<V> ancestors_B = c.getAncestorsInc(b);
 		Map<V, Double> distMin_a = c.getAllShortestPath(a);
 		Map<V, Double> distMin_b = c.getAllShortestPath(b);
 		

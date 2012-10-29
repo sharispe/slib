@@ -74,7 +74,7 @@ public class ICi_probOccurence implements ICtopo{
 	
 	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
 			throws SLIB_Exception {
-		return compute(manager.getAllNbDescendants());
+		return compute(manager.getAllNbDescendantsInc());
 	}
 
 }

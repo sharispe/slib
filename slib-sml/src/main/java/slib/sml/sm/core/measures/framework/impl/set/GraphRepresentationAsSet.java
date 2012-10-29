@@ -69,7 +69,7 @@ public class GraphRepresentationAsSet extends GraphRepresentation {
 		super(resource);
 		
 		if(resource.getType().equals( VType.CLASS))
-			anc = mnger.getAncestors(resource);
+			anc = mnger.getAncestorsInc(resource);
 	}
 	
 

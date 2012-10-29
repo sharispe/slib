@@ -36,8 +36,10 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.algo.extraction.rvf;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -89,7 +91,7 @@ public class RVF{
 	 */
 	public Set<V> getRV(V v){
 		
-		Set<V> rv = new HashSet<V>();
+		List<V> rv = new ArrayList <V>();
 		
 		BFS it = new BFS(g, v, wc);
 		
@@ -98,7 +100,7 @@ public class RVF{
 			V next = it.next();
 			rv.add(next);
 		}
-		return rv;
+		return new HashSet<V>(rv);
 	}
 	
 

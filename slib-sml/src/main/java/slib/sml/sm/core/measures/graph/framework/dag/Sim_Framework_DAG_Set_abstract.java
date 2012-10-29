@@ -51,8 +51,8 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
 
 	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-		Set<V> ancA = c.getAncestors(a);
-		Set<V> ancB = c.getAncestors(b);
+		Set<V> ancA = c.getAncestorsInc(a);
+		Set<V> ancB = c.getAncestorsInc(b);
 
 		return sim(ancA, ancB, conf);
 	}

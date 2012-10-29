@@ -9,7 +9,7 @@ import slib.sglib.model.graph.elements.type.VType;
 
 
 /**
- * WalkConstraints interface is used to define methods most of the time required to 
+ * WalkConstraints interface is used to define methods commonly required to 
  * orient a walk according to some conditions e.g. type of edges admitted (URI) and 
  * the directions which can be used for their traversal, the type of vertices the 
  * walk can traverse, etc.

@@ -140,7 +140,7 @@ public class SM_Engine {
         allRelTypes = new HashSet<URI>();
         allRelTypes.addAll(goToSuperClassETypes);
 
-        ancGetter = new RVF_TAX(g, Direction.OUT);
+        ancGetter  = new RVF_TAX(g, Direction.OUT);
         descGetter = new RVF_TAX(g, Direction.IN);
 
         init();
@@ -172,7 +172,7 @@ public class SM_Engine {
         Set<V> unionAnc = new HashSet<V>();
 
         for (V v : setClasses) {
-            unionAnc = SetUtils.union(unionAnc, getAncestors(v));
+            unionAnc = SetUtils.union(unionAnc, getAncestorsInc(v));
         }
         return unionAnc;
     }
@@ -185,7 +185,7 @@ public class SM_Engine {
      * @param v the considered class
      * @return the set of inclusive ancestors of the given class
      */
-    public Set<V> getAncestors(V v) {
+    public Set<V> getAncestorsInc(V v) {
 
         if (cache.ancestors.get(v) == null) {
             Set<V> anc = ancGetter.getRV(v);
@@ -215,8 +215,8 @@ public class SM_Engine {
      */
     public Set<V> getDisjointCommonAncestors(V c1, V c2) {
 
-        Set<V> ancC1 = getAncestors(c1);
-        Set<V> ancC2 = getAncestors(c2);
+        Set<V> ancC1 = getAncestorsInc(c1);
+        Set<V> ancC2 = getAncestorsInc(c2);
 
         Set<V> commonAncs = SetUtils.intersection(ancC1, ancC2);
 
@@ -225,7 +225,7 @@ public class SM_Engine {
         Map<V, Set<V>> ancestorsMapping = new HashMap<V, Set<V>>();
 
         for (V v : commonAncs) {
-            ancestorsMapping.put(v, getAncestors(v));
+            ancestorsMapping.put(v, getAncestorsInc(v));
         }
 
         Set<V> disjointAncs = new HashSet<V>();
@@ -290,6 +290,10 @@ public class SM_Engine {
      */
     public double getIC(ICconf icConf, V v) throws SLIB_Exception {
 
+        if (icConf == null) {
+            throw new SLIB_Ex_Critic("Specified IC cannot be null");
+        }
+
         if (cache.metrics_results.get(icConf) == null) {
             computeIC(icConf);
         }
@@ -349,7 +353,7 @@ public class SM_Engine {
 
         Dijkstra dijkstra = new Dijkstra(graph, allRelTypes);
 
-        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a), getAllShortestPath(b), getAncestors(a), getAncestors(b), dijkstra);
+        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a), getAllShortestPath(b), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
 
         return msa_pk;
     }
@@ -389,8 +393,8 @@ public class SM_Engine {
      */
     public Set<V> getHypoAncEx(V a, V b) {
 
-        Set<V> anc_a = getAncestors(a);
-        Set<V> anc_b = getAncestors(b);
+        Set<V> anc_a = getAncestorsInc(a);
+        Set<V> anc_b = getAncestorsInc(b);
 
         Set<V> unionAncestors = SetUtils.union(anc_a, anc_b);
         Set<V> interAncestors = SetUtils.union(anc_a, anc_b);
@@ -413,7 +417,7 @@ public class SM_Engine {
      * @param v
      * @return
      */
-    public Set<V> getDescendants(V v) {
+    public Set<V> getDescendantsInc(V v) {
         if (cache.descendants.get(v) == null) {
             Set<V> rv = descGetter.getRV(v);
             cache.descendants.put(v, rv);
@@ -435,7 +439,7 @@ public class SM_Engine {
      */
     public Map<V, Double> computeSemanticContribution(V v) {
         SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestors(v), graph, goToSuperClassETypes);
+        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes);
 
         return sContrib_A;
     }
@@ -447,7 +451,7 @@ public class SM_Engine {
      */
     public double computeSV_Wang_2007(V v) {
         SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestors(v), graph, goToSuperClassETypes);
+        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes);
         double sv_A = SimDagHybridUtil.computeSV_Wang_2007(sContrib_A);
         return sv_A;
     }
@@ -466,25 +470,35 @@ public class SM_Engine {
         }
 
 
-        double ic_mica = IcUtils.searchMax_IC_MICA(getAncestors(a), getAncestors(b), getIC_results(icConf));
-        return ic_mica;
+        return IcUtils.searchMax_IC_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
     public double getP_MICA(ICconf conf, V a, V b) throws SLIB_Exception {
 
-        double prob_mica = IcUtils.searchMin_pOc_MICA(getAncestors(a), getAncestors(b), getIC_results(conf));
+        double prob_mica = IcUtils.searchMin_pOc_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(conf));
         return prob_mica;
     }
 
-    public ResultStack<V, Long> getAllNbDescendants() throws SLIB_Ex_Critic {
+    /**
+     * Compute the number of inclusive descendants
+     *
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public ResultStack<V, Long> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
+
         Map<V, Set<V>> allDescendants = descGetter.getAllRVClass();
         ResultStack<V, Long> allNbDescendants = new ResultStack<V, Long>();
 
         for (V c : graph.getVClass()) {
             int nbDesc = allDescendants.get(c).size();
-            allNbDescendants.add(c, (long) nbDesc);
+            allNbDescendants.add(c, (long) nbDesc); //  getAllRVClass() is inclusive
         }
         return allNbDescendants;
+    }
+
+    public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
+        return descGetter.getAllRVClass();
     }
 
     public ResultStack<V, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
@@ -518,7 +532,7 @@ public class SM_Engine {
 
 
             String icClassName = icConf.getClassName();
-            logger.info("Computing " + icClassName);
+            logger.info("Computing IC " + icClassName);
 
             if (icConf instanceof IC_Conf_Corpus) {
 
@@ -542,6 +556,13 @@ public class SM_Engine {
 
             logger.debug(results.toString());
 
+            logger.info("Checking IC coherency");
+
+            for (Entry<V, Double> e : results.entrySet()) {
+                if (Double.isNaN(e.getValue()) || Double.isInfinite(e.getValue())) {
+                    throw new SLIB_Ex_Critic("Incoherency found in IC " + icConf.className + "\nIC of vertex " + e.getKey() + " is set to " + e.getValue());
+                }
+            }
             return cache.metrics_results.get(icConf);
 
         } catch (Exception e) {
@@ -574,8 +595,8 @@ public class SM_Engine {
         ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
 
         for (V c : graph.getVClass()) {
-            int nbDesc = allAncestors.get(c).size();
-            allNbancestors.add(c, (double) nbDesc);
+            int nbAnc = allAncestors.get(c).size();
+            allNbancestors.add(c, (double) nbAnc);
         }
         return allNbancestors;
     }
@@ -1031,5 +1052,13 @@ public class SM_Engine {
 
     public Set<URI> getGoToSuperClassETypes() {
         return goToSuperClassETypes;
+    }
+
+    public RVF_TAX getAncGetter() {
+        return ancGetter;
+    }
+
+    public RVF_TAX getDescGetter() {
+        return descGetter;
     }
 }

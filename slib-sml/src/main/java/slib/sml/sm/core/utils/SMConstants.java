@@ -415,6 +415,8 @@ public final class SMConstants {
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_GL = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_GL";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL = "SIM_PAIRWISE_DAG_NODE_GL";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL_GRASM = "SIM_PAIRWISE_DAG_NODE_GL_GRASM";
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998 = "SIM_PAIRWISE_DAG_NODE_LIN_1998";
+    
     public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = Sim_pairwise_DAG_node_Tversky_IC.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_LIN_1998 = Sim_pairwise_DAG_node_Lin_1998.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_IC = Sim_pairwise_DAG_node_Jaccard_IC.class.getName();
@@ -438,7 +440,7 @@ public final class SMConstants {
         private static final long serialVersionUID = 1L;
 
         {
-            put("SIM_PAIRWISE_DAG_NODE_LIN_1998", SIM_PAIRWISE_DAG_NODE_LIN_1998);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, SIM_PAIRWISE_DAG_NODE_LIN_1998);
             put("SIM_PAIRWISE_DAG_NODE_TVERSKY_IC", SIM_PAIRWISE_DAG_NODE_TVERSKY_IC);
             put("SIM_PAIRWISE_DAG_NODE_JACCARD_IC", SIM_PAIRWISE_DAG_NODE_JACCARD_IC);
             put("SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC", SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC);

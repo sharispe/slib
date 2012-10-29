@@ -76,7 +76,12 @@ public class RVF_TAX extends RVF_DAG{
 		return getRV(v);
 	}
 
-	
+	/**
+         * Compute all reachable vertices for all vertices
+         * Exclusive process: note that the set of reachable vertices from V does not contain V
+         * @return
+         * @throws SLIB_Ex_Critic 
+         */
 	public Map<V, Set<V>> getAllRVClass() throws SLIB_Ex_Critic {
 		return getAllVertices();
 	}

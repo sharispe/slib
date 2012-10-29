@@ -57,8 +57,8 @@ public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract
 
 	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
-		Set<V> ancestors_A = c.getAncestors(a);
-		Set<V> ancestors_B = c.getAncestors(b);
+		Set<V> ancestors_A = c.getAncestorsInc(a);
+		Set<V> ancestors_B = c.getAncestorsInc(b);
 		ResultStack<V,Integer> maxDepths = c.getMaxDepths();
 		
 		return sim(a,b,ancestors_A,ancestors_B,maxDepths);

@@ -21,8 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
+import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -97,15 +97,15 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         try {
             logger.info("Loading Mesh XML");
             idToConcepts = new HashMap<String, MeshConcept>();
-            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParserFactory parserfactory = SAXParserFactory.newInstance();
             SAXParser saxParser;
 
-            saxParser = factory.newSAXParser();
+            saxParser = parserfactory.newSAXParser();
             saxParser.parse(conf.getLoc(), new MeshXMLHandler(this));
 
 
-            System.out.println("Number of descriptor loaded " + concepts.size());
-            System.out.println("Generating relationships ");
+            logger.info("Number of descriptor loaded " + concepts.size());
+            logger.info("Loading relationships ");
 
             // create relationships 
             for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {

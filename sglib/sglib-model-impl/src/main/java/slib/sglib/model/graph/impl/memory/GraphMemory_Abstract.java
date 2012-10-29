@@ -38,31 +38,29 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.openrdf.model.ValueFactory;
 import org.openrdf.sail.NotifyingSailConnection;
 import org.openrdf.sail.SailException;
 import org.openrdf.sail.helpers.NotifyingSailBase;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
+import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.graph.weight.impl.GWS_impl;
+import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.SetUtils;
 
-import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.graph.utils.Direction;
-
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
-    private DataFactoryMemory data;
+    private DataFactory data;
     private HashMap<Value, V> vMapping;	// value Mapping
     private Set<V> vertices;
     private Set<E> edges;
@@ -83,7 +81,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     }
 
     @Override
-    public DataFactoryMemory getDataFactory() {
+    public DataFactory getDataFactory() {
         return data;
     }
 
@@ -218,7 +216,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     @Override
     public Set<E> getE(Set<URI> eTypes, V v, VType targetType, Direction dir) {
 
-        Set<E> edgesCol = null;
+        Set<E> edgesCol;
 
         if (targetType == null) {
             edgesCol = getE(eTypes, v, dir);
@@ -233,7 +231,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
                     }
                 }
             } else if (dir == Direction.OUT || dir == Direction.BOTH) {
-                for (E e : vertexInEdges.get(v)) {
+                for (E e : vertexOutEdges.get(v)) {
                     if (eTypes == null || eTypes.contains(e.getURI())) {
                         edgesCol.add(e);
                     }
@@ -243,6 +241,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
+    @Override
     public Set<E> getE(V v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
@@ -258,40 +257,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
-    public Set<E> getE(V v, VType type) {
-
-        Set<E> edgesCol = new HashSet<E>();
-
-        Set<E> edges = getE(v, Direction.BOTH);
-        if (type == null) {
-            edgesCol = edges;
-        } else {
-            for (E e : edges) {
-                if (e.getURI().equals(type)) {
-                    edgesCol.add(e);
-                }
-            }
-        }
-        return edgesCol;
-    }
-
-    public Set<E> getE(V v, Set<VType> types) {
-
-        Set<E> edgesCol = new HashSet<E>();
-
-        Set<E> edges = getE(v, Direction.BOTH);
-        if (types == null) {
-            edgesCol = edges;
-        } else {
-            for (E e : edges) {
-                if (types.contains(e.getURI())) {
-                    edgesCol.add(e);
-                }
-            }
-        }
-        return edgesCol;
-    }
-
+    @Override
     public void addE(E e) {
 
         if (!edges.contains(e)) {
@@ -304,22 +270,26 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         }
     }
 
+    @Override
     public Set<V> getV() {
         return vertices;
     }
 
+    @Override
     public void addE(V src, V target, URI type) {
 
         E e = new EdgeTyped(src, target, type);
         addE(e);
     }
 
+    @Override
     public void addEdges(Set<E> edges) {
         for (E e : edges) {
             addE(e);
         }
     }
 
+    @Override
     public void removeE(E e) {
 
         if (e == null) {
@@ -331,6 +301,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         vertexInEdges.get(e.getTarget()).remove(e);
     }
 
+    @Override
     public void removeE(URI t) {
 
         Iterator<E> iter = edges.iterator();
@@ -345,6 +316,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         }
     }
 
+    @Override
     public void removeE(Set<E> e) {
 
         for (E edge : e) {
@@ -352,6 +324,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         }
     }
 
+    @Override
     public V addV(V v) {
 
         if (!vMapping.containsKey(v.getValue())) {
@@ -364,12 +337,14 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return vMapping.get(v.getValue());
     }
 
+    @Override
     public void addV(Set<V> vertices) {
         for (V v : vertices) {
             addV(v);
         }
     }
 
+    @Override
     public void removeV(V v) {
 
 
@@ -394,12 +369,14 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         vMapping.remove(v.getValue());
     }
 
+    @Override
     public void removeV(Set<V> setV) {
         for (V v : setV) {
             removeV(v);
         }
     }
 
+    @Override
     public boolean containsEdge(V v1, V v2, Direction dir) {
 
         if (dir == Direction.OUT || dir == Direction.BOTH) {
@@ -421,6 +398,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return false;
     }
 
+    @Override
     public boolean containsEdge(V source, V target, Direction dir, URI type) {
 
         if (dir == Direction.OUT || dir == Direction.BOTH) {
@@ -444,6 +422,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return false;
     }
 
+    @Override
     public boolean containsEdgeOfType(URI t) {
 
         if (t == null) {
@@ -470,14 +449,17 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return vMapping.size();
     }
 
+    @Override
     public long getNumberEdges() {
         return edges.size();
     }
 
+    @Override
     public boolean containsVertex(Value uri) {
         return vMapping.containsKey(uri);
     }
 
+    @Override
     public Set<E> getE(Set<URI> c) {
 
         if (c == null) {
@@ -494,6 +476,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
+    @Override
     public void setEdgeTypeWeight(URI eType, double w, boolean propagate) {
 
         for (E e : edges) {
@@ -516,97 +499,109 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         initDataStructures();
     }
 
+    @Override
     public double getEdgeTypeWeight(URI eType) {
         return ws.getWeight(eType);
     }
 
+    @Override
     public double getEdgeWeight(E e) {
         return ws.getWeight(e);
     }
 
+    @Override
     public void setEdgeWeight(E e, double w) {
         ws.setWeight(e, w);
     }
 
+    @Override
     public GWS getWeightingScheme() {
         return ws;
     }
 
+    @Override
     public void setWeightingScheme(GWS ws) {
         this.ws = ws;
     }
 
+    @Override
     public Set<V> getV(VType type) {
 
         if (type == null) {
             return this.vertices;
         }
 
-        Set<V> vertices = new HashSet<V>();
+        Set<V> vs = new HashSet<V>();
 
         for (V v : this.vertices) {
             if (v.getType().equals(type)) {
-                vertices.add(v);
+                vs.add(v);
             }
         }
-        return vertices;
+        return vs;
     }
 
+    @Override
     public Set<V> getV(Set<VType> types) {
 
         if (types == null) {
             return this.vertices;
         }
 
-        Set<V> vertices = new HashSet<V>();
+        Set<V> vSel = new HashSet<V>();
 
         for (V v : this.vertices) {
             if (types.contains(v.getType())) {
-                vertices.add(v);
+                vSel.add(v);
             }
         }
-        return vertices;
+        return vSel;
 
     }
 
+    @Override
     public Set<V> getVClass() {
 
-        Set<V> vertices = new HashSet<V>();
+        Set<V> vSel = new HashSet<V>();
 
         for (V v : this.vertices) {
             if (v.getType() != null && v.getType() == VType.CLASS) {
-                vertices.add(v);
+                vSel.add(v);
             }
         }
-        return vertices;
+        return vSel;
     }
 
+    @Override
     public long getNumberVClass() {
         return getVClass().size();
     }
 
+    @Override
     public Set<V> getV_NoEdgeType(URI edgeType, Direction dir) {
         return getV_NoEdgeType(SetUtils.buildSet(edgeType), dir);
     }
 
+    @Override
     public Set<V> getV_NoEdgeType(Set<URI> edgeTypes, Direction dir) {
         return getV_NoEdgeType(null, edgeTypes, dir);
     }
 
+    @Override
     public Set<V> getV_NoEdgeType(VType type, Set<URI> eTypes, Direction dir) {
 
         Set<V> valid = new HashSet<V>();
 
-        Set<V> vertices = getV(type);
+        Set<V> vSel = getV(type);
 
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
-            for (V v : vertices) {
-                HashSet<E> edges = vertexOutEdges.get(v);
+            for (V v : vSel) {
+                HashSet<E> edgesSel = vertexOutEdges.get(v);
 
                 boolean isValid = true;
 
-                for (E e : edges) {
+                for (E e : edgesSel) {
                     if (eTypes == null
                             || eTypes.contains(e.getURI())) {
 
@@ -621,7 +616,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         }
         if (dir == Direction.IN || dir == Direction.BOTH) {
 
-            for (V v : vertices) {
+            for (V v : vSel) {
                 HashSet<E> edges = vertexInEdges.get(v);
 
                 boolean isValid = true;
@@ -648,19 +643,21 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         System.out.println("Edges: " + getE().size());
     }
 
+    @Override
     public URI getURI() {
         return uri;
     }
 
+    @Override
     public Set<V> getV(V v, Set<URI> buildUris, Direction dir) {
 
-        Set<V> vertices = new HashSet<V>();
+        Set<V> vSelected = new HashSet<V>();
 
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
             for (E e : vertexOutEdges.get(v)) {
                 if (buildUris == null || buildUris.contains(e.getURI())) {
-                    vertices.add(e.getTarget());
+                    vSelected.add(e.getTarget());
                 }
             }
         }
@@ -668,11 +665,11 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
             for (E e : vertexInEdges.get(v)) {
                 if (buildUris == null || buildUris.contains(e.getURI())) {
-                    vertices.add(e.getTarget());
+                    vSelected.add(e.getTarget());
                 }
             }
         }
-        return vertices;
+        return vSelected;
     }
 
     @Override
@@ -699,6 +696,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return vert;
     }
 
+    @Override
     public Set<E> getE(V v, WalkConstraints wc) {
         Set<E> validEdges = getE(wc.getAcceptedWalks_DIR_IN(), v, wc.getAcceptedVTypes(), Direction.IN);
         validEdges.addAll(getE(wc.getAcceptedWalks_DIR_OUT(), v, wc.getAcceptedVTypes(), Direction.OUT));
@@ -708,6 +706,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     /**
      * TODO optimize to avoid source/target lookup
      */
+    @Override
     public Set<V> getV(V v, WalkConstraints wc) {
         Set<E> validEdges = getE(wc.getAcceptedWalks_DIR_IN(), v, wc.getAcceptedVTypes(), Direction.IN);
         validEdges.addAll(getE(wc.getAcceptedWalks_DIR_OUT(), v, wc.getAcceptedVTypes(), Direction.OUT));
@@ -716,7 +715,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
         for (E e : validEdges) {
 
-            V t = null;
+            V t;
             if (v.equals(e.getTarget())) {
                 t = e.getSource();
             } else {

@@ -35,12 +35,10 @@
 package slib.sglib.algo.utils;
 
 import java.util.Set;
-
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
@@ -122,7 +120,7 @@ public class RooterDAG {
 
         if (nbRoot == 1) {
             logger.info("Rooting skipped : Graph already rooted");
-            rootURI_ = (URI) roots.iterator().next();
+            rootURI_ = (URI) roots.iterator().next().getValue();
         } else {
             logger.info("Number of roots detected: " + roots.size());
             V root = g.createVertex(rootUri);

@@ -102,6 +102,6 @@ public class ICi_zhou_2008 implements ICtopo{
 		if(conf.containsParam("k"))
 			k = Double.parseDouble((String) conf.getParam("k"));
 			
-		return compute(manager.getMaxDepths(),manager.getAllNbDescendants());
+		return compute(manager.getMaxDepths(),manager.getAllNbDescendantsInc());
 	}
 }

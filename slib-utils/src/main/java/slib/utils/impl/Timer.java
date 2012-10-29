@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 public class Timer {
 
     long start = 0;
-    long stop = 0;
+    long stop  = 0;
     Logger logger = LoggerFactory.getLogger(Timer.class);
 
     public void start() {
@@ -35,7 +35,7 @@ public class Timer {
 
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         logger.info("Start Time: " + dateFormat.format(new Date(start)));
-        logger.info("End Time: " + dateFormat.format(new Date(stop)));
+        logger.info("End Time  : " + dateFormat.format(new Date(stop)));
         logger.info("Total Time: " + dateFormat.format(new Date(diff)));
     }
 }

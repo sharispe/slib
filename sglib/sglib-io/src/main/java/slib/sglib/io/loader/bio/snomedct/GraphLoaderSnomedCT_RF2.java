@@ -17,8 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
+import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -119,7 +119,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             in.close();
 
             logger.info("Number of concepts loaded " + conceptMap.size());
-            logger.info("\nRelationship file: " + relationship_file);
+            logger.info("Relationship file: " + relationship_file);
 
             fstream = new FileInputStream(relationship_file);
 
