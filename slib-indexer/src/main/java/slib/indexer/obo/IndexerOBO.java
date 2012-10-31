@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
+import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -213,7 +214,8 @@ public class IndexerOBO {
 
         if (onTermSpec) {
 
-            index.addValue(factory.createURI(currentURI), currentName);
+            IndexElementBasic i = new IndexElementBasic(currentName);
+            index.addValue(factory.createURI(currentURI), i);
 
             currentURI  = null;
             currentName = null;

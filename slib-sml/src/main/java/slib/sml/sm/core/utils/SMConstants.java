@@ -226,6 +226,7 @@ public final class SMConstants {
     //-------------------------------------------------------------------------------
     // Groupwise
     //-------------------------------------------------------------------------------
+    // Indirect measures i.e. Aggregation Strategies (Composite)
     public static final String SIM_GROUPWISE_MAX_NORMALIZED_GOSIM = Sim_groupwise_MAX_NORMALIZED_GOSIM.class.getName();
     public static final String SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM = Sim_groupwise_MAX_NORMALIZED_GOSIM.class.getName();
     public static final String SIM_GROUPWISE_AVERAGE = Sim_groupwise_Average.class.getName();
@@ -234,21 +235,36 @@ public final class SMConstants {
     public static final String SIM_GROUPWISE_MAX = Sim_groupwise_Max.class.getName();
     public static final String SIM_GROUPWISE_MIN = Sim_groupwise_Min.class.getName();
     public static final String SIM_GROUPWISE_RANDOM = Sim_groupwise_Random.class.getName();
+    // Flags
+    public static final String FLAG_SIM_GROUPWISE_MAX = "SIM_GROUPWISE_MAX";
+    public static final String FLAG_SIM_GROUPWISE_MIN = "SIM_GROUPWISE_MIN";
+    public static final String FLAG_SIM_GROUPWISE_MAX_NORMALIZED_GOSIM = "SIM_GROUPWISE_MAX_NORMALIZED_GOSIM";
+    public static final String FLAG_SIM_GROUPWISE_AVERAGE = "SIM_GROUPWISE_AVERAGE";
+    public static final String FLAG_SIM_GROUPWISE_BMM = "SIM_GROUPWISE_BMM";
+    public static final String FLAG_SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM = "SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM";
+    public static final String FLAG_SIM_GROUPWISE_BMA = "SIM_GROUPWISE_BMA";
     public static final Map<String, String> SIM_GROUPWISE_ADD_ON = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
         {
-            put("SIM_GROUPWISE_MAX", SIM_GROUPWISE_MAX);
-            put("SIM_GROUPWISE_MAX_NORMALIZED_GOSIM", SIM_GROUPWISE_MAX_NORMALIZED_GOSIM);
-
-            put("SIM_GROUPWISE_MIN", SIM_GROUPWISE_MIN);
-            put("SIM_GROUPWISE_AVERAGE", SIM_GROUPWISE_AVERAGE);
-            put("SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM", SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM);
-            put("SIM_GROUPWISE_BMA", SIM_GROUPWISE_BEST_MATCH_AVERAGE);
-            put("SIM_GROUPWISE_BMM", SIM_GROUPWISE_BEST_MATCH_MAX);
+            put(FLAG_SIM_GROUPWISE_MAX, SIM_GROUPWISE_MAX);
+            put(FLAG_SIM_GROUPWISE_MAX_NORMALIZED_GOSIM, SIM_GROUPWISE_MAX_NORMALIZED_GOSIM);
+            put(FLAG_SIM_GROUPWISE_MIN, SIM_GROUPWISE_MIN);
+            put(FLAG_SIM_GROUPWISE_AVERAGE, SIM_GROUPWISE_AVERAGE);
+            put(FLAG_SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM, SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM);
+            put(FLAG_SIM_GROUPWISE_BMA, SIM_GROUPWISE_BEST_MATCH_AVERAGE);
+            put(FLAG_SIM_GROUPWISE_BMM, SIM_GROUPWISE_BEST_MATCH_MAX);
         }
     };
-    public static final String SIM_GROUPWISE_DAG_GIC_FLAG = "SIM_GROUPWISE_DAG_GIC";
+    //Direct groupwise measures
+    public static final String FLAG_SIM_GROUPWISE_DAG_GIC = "SIM_GROUPWISE_DAG_GIC";
+    public static final String FLAG_SIM_GROUPWISE_DAG_LEE_2004 = "SIM_GROUPWISE_DAG_LEE_2004";
+    public static final String FLAG_SIM_GROUPWISE_DAG_LP = "SIM_GROUPWISE_DAG_LP";
+    public static final String FLAG_SIM_GROUPWISE_DAG_NTO = "SIM_GROUPWISE_DAG_NTO";
+    public static final String FLAG_SIM_GROUPWISE_DAG_TO = "SIM_GROUPWISE_DAG_TO";
+    public static final String FLAG_SIM_GROUPWISE_DAG_UI = "SIM_GROUPWISE_DAG_UI";
+    public static final String FLAG_SIM_GROUPWISE_DAG_ALI_DEANE = "SIM_GROUPWISE_DAG_ALI_DEANE";
+    public static final String FLAG_SIM_GROUPWISE_SVM = "SIM_GROUPWISE_SVM";
     public static final String SIM_GROUPWISE_DAG_GIC = Sim_groupwise_DAG_GIC.class.getName();
     public static final String SIM_GROUPWISE_DAG_LEE_2004 = Sim_groupwise_DAG_Lee_2004.class.getName();
     public static final String SIM_GROUPWISE_DAG_LP = Sim_groupwise_DAG_LP.class.getName();
@@ -261,14 +277,14 @@ public final class SMConstants {
         private static final long serialVersionUID = 1L;
 
         {
-            put(SIM_GROUPWISE_DAG_GIC_FLAG, SIM_GROUPWISE_DAG_GIC);
-            put("SIM_GROUPWISE_DAG_LEE_2004", SIM_GROUPWISE_DAG_LEE_2004);
-            put("SIM_GROUPWISE_DAG_LP", SIM_GROUPWISE_DAG_LP);
-            put("SIM_GROUPWISE_DAG_NTO", SIM_GROUPWISE_DAG_NTO);
-            put("SIM_GROUPWISE_DAG_TO", SIM_GROUPWISE_DAG_TO);
-            put("SIM_GROUPWISE_DAG_UI", SIM_GROUPWISE_DAG_UI);
-            put("SIM_GROUPWISE_DAG_ALI_DEANE", SIM_GROUPWISE_DAG_ALI_DEANE);
-            put("SIM_GROUPWISE_SVM", SIM_GROUPWISE_SVM); // TODO move groupwise standalone
+            put(FLAG_SIM_GROUPWISE_DAG_GIC, SIM_GROUPWISE_DAG_GIC);
+            put(FLAG_SIM_GROUPWISE_DAG_LEE_2004, SIM_GROUPWISE_DAG_LEE_2004);
+            put(FLAG_SIM_GROUPWISE_DAG_LP, SIM_GROUPWISE_DAG_LP);
+            put(FLAG_SIM_GROUPWISE_DAG_NTO, SIM_GROUPWISE_DAG_NTO);
+            put(FLAG_SIM_GROUPWISE_DAG_TO, SIM_GROUPWISE_DAG_TO);
+            put(FLAG_SIM_GROUPWISE_DAG_UI, SIM_GROUPWISE_DAG_UI);
+            put(FLAG_SIM_GROUPWISE_DAG_ALI_DEANE, SIM_GROUPWISE_DAG_ALI_DEANE);
+            put(FLAG_SIM_GROUPWISE_SVM, SIM_GROUPWISE_SVM); // TODO move groupwise standalone
             putAll(SIM_FRAMEWORK_DAG_SET_BASED);
         }
     };
@@ -416,7 +432,6 @@ public final class SMConstants {
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL = "SIM_PAIRWISE_DAG_NODE_GL";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL_GRASM = "SIM_PAIRWISE_DAG_NODE_GL_GRASM";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998 = "SIM_PAIRWISE_DAG_NODE_LIN_1998";
-    
     public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = Sim_pairwise_DAG_node_Tversky_IC.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_LIN_1998 = Sim_pairwise_DAG_node_Lin_1998.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_IC = Sim_pairwise_DAG_node_Jaccard_IC.class.getName();
@@ -564,7 +579,7 @@ public final class SMConstants {
         private static final long serialVersionUID = 1L;
 
         {
-            add(SIM_GROUPWISE_DAG_GIC_FLAG);
+            add(FLAG_SIM_GROUPWISE_DAG_GIC);
             addAll(SIM_PAIRWISE_DAG_NODE_BASED.keySet());
         }
     };

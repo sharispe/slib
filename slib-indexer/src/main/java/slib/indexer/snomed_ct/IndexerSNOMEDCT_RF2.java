@@ -15,6 +15,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.DataFactory;
@@ -42,13 +43,13 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash<Set<String>> buildIndex(DataFactory factory, String description_file, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace) throws SLIB_Exception {
 
         repo = factory;
         logger.info("Building Index");
         logger.info("Description file: " + description_file);
 
-        IndexHash<Set<String>> index = new IndexHash<Set<String>>();
+        IndexHash index = new IndexHash();
 
         FileInputStream fstream;
         try {
@@ -75,15 +76,13 @@ public class IndexerSNOMEDCT_RF2 {
 
                         if (index.getMapping().containsKey(cURI)) {
 
-                            // Check if the String is not already contained in the proposed description
-                            if (!((Set<String>) (index.getMapping().get(cURI))).contains(split[DESCRIPTION_TERM])) {
-                                ((Set<String>) (index.getMapping().get(cURI))).add(split[DESCRIPTION_TERM]);
-                            }
+                            index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
+
 
                         } else {
-                            Set<String> d = new HashSet<String>();
-                            d.add(split[DESCRIPTION_TERM]);
-                            index.getMapping().put(cURI, d);
+                            IndexElementBasic i = new IndexElementBasic(split[DESCRIPTION_CONCEPT_ID]);
+                            i.addDescription(split[DESCRIPTION_TERM]);
+                            index.getMapping().put(cURI, i);
                         }
                     }
                 }
@@ -111,11 +110,11 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash<Set<String>> buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph) throws SLIB_Exception {
 
         logger.info("Building Index");
-        IndexHash<Set<String>> index = buildIndex(factory, description_file, defaultNamespace);
-        
+        IndexHash index = buildIndex(factory, description_file, defaultNamespace);
+
         logger.info("Cleaning Index");
         Set<Value> toRemove = new HashSet<Value>();
         for (Value k : index.getMapping().keySet()) {

@@ -77,7 +77,6 @@ public class IcUtils {
                 mica = v;
             }
         }
-        System.out.println("MICA "+mica+"\t"+IcUtils.class.getName());
         return mica;
     }
 

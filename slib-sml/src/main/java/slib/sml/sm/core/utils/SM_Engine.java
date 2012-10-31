@@ -728,7 +728,7 @@ public class SM_Engine {
             Set<V> setB) throws SLIB_Ex_Critic {
 
         double sim = -Double.MAX_VALUE;
-
+        
 
         try {
 

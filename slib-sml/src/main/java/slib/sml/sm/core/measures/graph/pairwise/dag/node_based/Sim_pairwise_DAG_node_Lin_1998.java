@@ -63,10 +63,6 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract{
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
 		double ic_MICA = c.getIC_MICA(conf.getICconf(),a,b);
-                
-                System.out.println(a+"\t"+ic_a);
-                System.out.println(b+"\t"+ic_b);
-                System.out.println("MICA \t"+ic_MICA);
 				
 		return sim(ic_a,ic_b,ic_MICA);
 	}

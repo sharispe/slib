@@ -41,8 +41,8 @@ import slib.sglib.model.graph.G;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- * Interface defining a Data Repository which must be used to interact with
- * {@link Storage} elements
+ * Interface defining a Data Factory which must be used to interact with elements
+ * such as Graphs, URIs or Mapping.
  *
  * @author Sebastien Harispe
  *

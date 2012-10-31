@@ -304,7 +304,7 @@ public class ValidatorDAG {
 
         Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
 
-        System.out.println("Number of roots " + roots);
+        logger.info("Number of roots " + roots.size());
 
         if (roots.size() == 1) {
             isDag(g, (URI) roots.iterator().next().getValue(), RDFS.SUBCLASSOF, Direction.IN);

@@ -77,7 +77,7 @@ public interface G extends NotifyingSail {
 
     /**
      * Retrieve all edges involving a specific vertex considering a particular
-     * direction  {@link Direction}
+     * direction null     {@link Direction}
 	 * {@link Direction#OUT} all edges for which the specified vertex is the
      * source {@link Direction#IN} all edges for which the specified vertex is
      * the target {@link Direction#BOTH} all edges involving the specified
@@ -526,6 +526,12 @@ public interface G extends NotifyingSail {
 
     public URI getURI();
 
+    /**
+     * Create a vertex associated to the given graph
+     *
+     * @param val the Value associated to the vertex
+     * @return the created vertex
+     */
     public V createVertex(Value val);
 
     public V createVertex(Value val, VType type);
