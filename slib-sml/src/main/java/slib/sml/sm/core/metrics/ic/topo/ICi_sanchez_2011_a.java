@@ -100,7 +100,7 @@ public class ICi_sanchez_2011_a implements ICtopo{
 	public ResultStack<V,Double> compute(IC_Conf_Topo conf, SM_Engine manager)
 			throws SLIB_Exception {
 		
-		ResultStack<V,Double> allNbAncestors 		 	= manager.getAllNbAncestors();
+		ResultStack<V,Double> allNbAncestors          = manager.getAllNbAncestors();
 		ResultStack<V,Double> allNbReachableLeaves    = manager.getAllNbReachableLeaves();
 		return compute(allNbReachableLeaves,allNbAncestors);
 	}

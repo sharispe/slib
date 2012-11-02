@@ -34,6 +34,7 @@
  */
 package slib.sml.sm.core.utils;
 
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -41,14 +42,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.metric.DepthAnalyserAG;
 import slib.sglib.algo.shortest_path.Dijkstra;
@@ -60,7 +59,9 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
+import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.weight.GWS;
+import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.sml.sm.core.measures.Sim_Groupwise_AddOn;
@@ -80,15 +81,9 @@ import slib.sml.sm.core.metrics.ic.utils.IcUtils;
 import slib.sml.sm.core.metrics.vector.VectorWeight_Chabalier_2007;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.MatrixDouble;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
-
-import java.lang.reflect.Constructor;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.repo.DataFactory;
 
 /**
  * {@link SM_Engine} is used as an accessor to numerous commonly required
@@ -140,7 +135,7 @@ public class SM_Engine {
         allRelTypes = new HashSet<URI>();
         allRelTypes.addAll(goToSuperClassETypes);
 
-        ancGetter  = new RVF_TAX(g, Direction.OUT);
+        ancGetter = new RVF_TAX(g, Direction.OUT);
         descGetter = new RVF_TAX(g, Direction.IN);
 
         init();
@@ -566,7 +561,9 @@ public class SM_Engine {
             return cache.metrics_results.get(icConf);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            if (logger.isDebugEnabled()) {
+                e.printStackTrace();
+            }
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
@@ -728,7 +725,7 @@ public class SM_Engine {
             Set<V> setB) throws SLIB_Ex_Critic {
 
         double sim = -Double.MAX_VALUE;
-        
+
 
         try {
 
@@ -967,13 +964,6 @@ public class SM_Engine {
         return m;
     }
 
-    public boolean isComputed(String icID) {
-        if (cache.metrics_results.get(icID) == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 
     public boolean isCachePairwiseResults() {
         return cachePairwiseResults;

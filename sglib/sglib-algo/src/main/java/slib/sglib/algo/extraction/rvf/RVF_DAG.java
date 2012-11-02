@@ -205,7 +205,7 @@ public class RVF_DAG extends RVF {
         while (it.hasNext()) {
 
             V next = it.next();
-            if (g.getE(wc.getAcceptedPredicates(), next, wc.getAcceptedVTypes(), Direction.OUT).size() == 0) {
+            if (g.getE(wc.getAcceptedPredicates(), next, wc.getAcceptedVTypes(), Direction.OUT).isEmpty()) {
                 terminalVertice.add(next);
             }
         }
@@ -221,9 +221,11 @@ public class RVF_DAG extends RVF {
      * from the key Set<V>
      */
     public HashMap<V, Set<V>> getTerminalVertices() {
+        
+        logger.info("Retrieving all reachable leaves");
 
         HashMap<V, Set<V>> allReachableLeaves = new HashMap<V, Set<V>>();
-        HashMap<V, Integer> inDegrees = new HashMap<V, Integer>();
+        HashMap<V, Integer> inDegrees     = new HashMap<V, Integer>();
         HashMap<V, Integer> inDegreesDone = new HashMap<V, Integer>();
 
         // Retrieve all leaves
@@ -233,7 +235,7 @@ public class RVF_DAG extends RVF {
 
             allReachableLeaves.put(v, new HashSet<V>());
 
-            int inDegree = g.getE(wc.getAcceptedPredicates(), v, wc.getAcceptedVTypes(), Direction.OUT).size();
+            int inDegree = g.getE(wc.getAcceptedPredicates(), v, wc.getAcceptedVTypes(), Direction.IN).size();
 
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
@@ -243,13 +245,15 @@ public class RVF_DAG extends RVF {
                 allReachableLeaves.get(v).add(v);
             }
         }
+        
+        logger.info("Propagation of leave counts start from "+queue.size()+" leaves");
 
 
-        while (queue.size() != 0) {
+        while (!queue.isEmpty()) {
             V v = queue.get(0);
             queue.remove(0);
 
-            Set<E> edges = g.getE(wc.getAcceptedPredicates(), v, Direction.IN);
+            Set<E> edges = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT);
 
             for (E e : edges) {
 

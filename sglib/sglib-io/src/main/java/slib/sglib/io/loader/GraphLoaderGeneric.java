@@ -52,6 +52,7 @@ import slib.sglib.io.loader.bio.snomedct.GraphLoaderSnomedCT_RF2;
 import slib.sglib.io.loader.csv.GraphLoader_CSV;
 import slib.sglib.io.loader.rdf.RDFLoader;
 import slib.sglib.io.loader.sgl.GraphLoader_SGL;
+import slib.sglib.io.loader.slibformat.GraphLoader_SLIB;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
@@ -106,7 +107,7 @@ public class GraphLoaderGeneric {
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
         }
-        
+
         DataFactory factory = DataFactoryMemory.getSingleton();
 
         GraphActionExecutor.applyActions(factory, graphConf.getActions(), g);
@@ -139,11 +140,12 @@ public class GraphLoaderGeneric {
             return new GraphLoader_CSV();
         } else if (data.getFormat() == GFormat.SNOMED_CT_RF2) {
             return new GraphLoaderSnomedCT_RF2();
-        } 
-        else if (data.getFormat() == GFormat.MESH_XML){
+        } else if (data.getFormat() == GFormat.SLIB) {
+            return new GraphLoader_SLIB();
+        } else if (data.getFormat()
+                == GFormat.MESH_XML) {
             return new GraphLoader_MESH_XML();
-        }
-        else {
+        } else {
             throw new SLIB_Ex_Critic("Unknown Graph format " + data.getFormat());
         }
     }

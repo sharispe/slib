@@ -85,7 +85,6 @@ public class ValidatorDAG {
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
-        logger.debug("Graph                   : " + graph.getURI());
         logger.debug("starting nodes          : " + startingURIs.size());
         logger.debug("eTypes                  : " + edgesTypes);
         logger.debug("Dir                     : " + direction);
@@ -110,7 +109,9 @@ public class ValidatorDAG {
                 throw new SLIB_Ex_Critic("Vertex '" + rootUri + "' not found in " + graph.getURI());
             }
 
-            performDFS(root);
+            if(valid){
+                performDFS(root);
+            }
         }
         
         logger.info("isDag : "+valid);
@@ -273,8 +274,6 @@ public class ValidatorDAG {
      * types and direction </li> </ul>
      *
      * Do not check if the graph is a DAG
-     *
-     * TODO change Set<URI> etypes,Direction dir to {@link WalkConstraints}
      *
      * @param g the graph on which the root vertices need to be retrieve
      * @param etypes e.g. if taxonomic graph use SUPERCLASSOF

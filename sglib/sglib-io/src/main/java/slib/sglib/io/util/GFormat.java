@@ -47,5 +47,6 @@ public enum GFormat {
         WORDNET_DATA,
         MESH_XML,
         SNOMED_CT_RF2,
-	CSV;
+	CSV,
+        SLIB;
 }
