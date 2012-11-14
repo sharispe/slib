@@ -187,31 +187,31 @@ public class RVF_DAG extends RVF {
         return allVertices;
     }
 
-    /**
-     * Return the set of terminal vertices (leaves) reachable for a specified
-     * vertex
-     *
-     * @param v the source vertex
-     * @return the set of terminal vertices as Set<V>
-     */
-    public Set<V> getTerminalVertices(V v) {
-
-        logger.info("Get Reachable Terminal vertices for " + v);
-
-        Set<V> terminalVertice = new HashSet<V>();
-
-        BFS it = new BFS(g, v, wc);
-
-        while (it.hasNext()) {
-
-            V next = it.next();
-            if (g.getE(wc.getAcceptedPredicates(), next, wc.getAcceptedVTypes(), Direction.OUT).isEmpty()) {
-                terminalVertice.add(next);
-            }
-        }
-
-        return terminalVertice;
-    }
+//    /**
+//     * Return the set of terminal vertices (leaves) reachable for a specified
+//     * vertex
+//     *
+//     * @param v the source vertex
+//     * @return the set of terminal vertices as Set<V>
+//     */
+//    public Set<V> getTerminalVertices(V v) {
+//
+//        logger.info("Get Reachable Terminal vertices for " + v);
+//
+//        Set<V> terminalVertice = new HashSet<V>();
+//
+//        BFS it = new BFS(g, v, wc);
+//
+//        while (it.hasNext()) {
+//
+//            V next = it.next();
+//            if (g.getE(wc.getAcceptedPredicates(), next, wc.getAcceptedVTypes(), Direction.OUT).isEmpty()) {
+//                terminalVertice.add(next);
+//            }
+//        }
+//
+//        return terminalVertice;
+//    }
 
     /**
      * Return the set of terminal vertices (leaves) reachable for all vertices
@@ -246,22 +246,25 @@ public class RVF_DAG extends RVF {
             }
         }
         
-        logger.info("Propagation of leave counts start from "+queue.size()+" leaves");
-
-
+        logger.info("Propagation of leave counts start from "+queue.size()+" leaves on "+g.getV().size()+" concepts");
+        
+        long c = 0;
+        
         while (!queue.isEmpty()) {
+            
             V v = queue.get(0);
             queue.remove(0);
-
             Set<E> edges = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT);
 
+            //logger.info(c+"/"+g.getV().size()+" "+v.getValue().stringValue());
+            c++;
+            
             for (E e : edges) {
 
                 V target = e.getTarget();
                 int degreeDone = inDegreesDone.get(target).intValue();
 
-                Set<V> reachableLeavesTmp = allReachableLeaves.get(target);
-                allReachableLeaves.put(target, SetUtils.union(reachableLeavesTmp, allReachableLeaves.get(v)));
+                allReachableLeaves.put(target, SetUtils.union(allReachableLeaves.get(target), allReachableLeaves.get(v)));
 
                 inDegreesDone.put(target, degreeDone + 1);
 
@@ -280,7 +283,6 @@ public class RVF_DAG extends RVF {
         for (V v : g.getV(wc.getAcceptedVTypes())) {
             allVertices.add(v, (long) 1);
         }
-
         return propagateNbOccurences(allVertices);
     }
 
@@ -353,8 +355,6 @@ public class RVF_DAG extends RVF {
                 }
             }
         }
-
-
         return nbOcc_prop;
     }
 }

@@ -34,10 +34,7 @@
  */
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
@@ -47,10 +44,23 @@ import slib.utils.ex.SLIB_Exception;
  * Lexical Taxonomy. In In International Conference Research on Computational
  * Linguistics (ROCLING X). 1997, cmp-lg/970:15.
  *
+ * Adaptation of JC in order to normalized values between [0,1] ﻿based on :
+ * 
+ * Applying Normalization discussed in 1. Seco N, Veale T, Hayes J: An Intrinsic
+ * Information Content Metric for Semantic Similarity in WordNet. In 16th
+ * European Conference on Artificial Intelligence. IOS Press; 2004, 16:1–5.
+ *
+ * Which is a reformulation of:
+ * 
+ * Pesquita C, Faria D, Bastos H, et al.: Metrics for GO based protein semantic
+ * similarity: a systematic evaluation. BMC bioinformatics 2008, 9 Suppl 5:S4.s
+ *
+ * The normalization makes sens only if IC of compared concepts are normalized [0;1]
+ * 
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm implements Sim_DAG_node_abstract {
 
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
@@ -58,11 +68,19 @@ public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_ab
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
         double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
+        
         return sim(ic_a, ic_b, ic_MICA);
     }
 
-    
+    /**
+     * @param ic_a
+     * @param ic_b
+     * @param ic_MICA
+     * @return
+     */
     public double sim(double ic_a, double ic_b, double ic_MICA) {
-        return ic_a + ic_b - 2 * ic_MICA;
+
+        double jc = 1. - ( ic_a + ic_b - 2. * ic_MICA )/ 2.;
+        return jc;
     }
 }

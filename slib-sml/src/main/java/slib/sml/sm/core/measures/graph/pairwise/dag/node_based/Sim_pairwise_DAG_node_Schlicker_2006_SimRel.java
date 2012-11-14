@@ -54,8 +54,9 @@ public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node
 		
 		ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
 		
-		if(confic == null)
-			throw new SLIB_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
+		if(confic == null) {
+                throw new SLIB_Ex_Critic("Measure "+this.getClass().getSimpleName()+" requires a parameter: "+Sim_pairwise_DAG_node_Constants.IC_PROB);
+            }
 		
 		double p_MICA  = c.getP_MICA( confic, a,b);
 		
@@ -64,7 +65,7 @@ public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) {
+	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) throws SLIB_Ex_Critic {
 		
 		Sim_pairwise_DAG_node_Lin_1998 simLin = new Sim_pairwise_DAG_node_Lin_1998();
 		

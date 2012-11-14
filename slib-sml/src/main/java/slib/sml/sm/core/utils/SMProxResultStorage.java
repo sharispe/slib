@@ -48,6 +48,7 @@ public class SMProxResultStorage {
     Map<V, ConcurrentHashMap<V, Double>> shortestPath;
     Map<V, Set<V>> ancestors;
     Map<V, Set<V>> descendants;
+    Map<V, Set<V>> reachableLeaves;
     ResultStack<V, Long> nbPathLeadingToAllVertices;
     // Depth
     ResultStack<V, Integer> maxDepths;
@@ -64,6 +65,7 @@ public class SMProxResultStorage {
         metrics_results = new ConcurrentHashMap<ICconf, ResultStack<V, Double>>();
         ancestors = new ConcurrentHashMap<V, Set<V>>();
         descendants = new ConcurrentHashMap<V, Set<V>>();
+        reachableLeaves = new ConcurrentHashMap<V, Set<V>>();
         shortestPath = new ConcurrentHashMap<V, ConcurrentHashMap<V, Double>>();
         pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>>();
         nbOccurrencePropagatted = new ResultStack<V, Long>();

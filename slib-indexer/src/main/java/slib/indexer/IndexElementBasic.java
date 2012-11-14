@@ -35,6 +35,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import org.openrdf.model.Value;
 
 /**
  *
@@ -42,15 +43,17 @@ import java.util.Set;
  */
 public class IndexElementBasic implements IndexedElement{
     
+    Value associatedValue;
     String preferredDescription;
     Set<String> descriptions;
     
-    public IndexElementBasic(){
+    public IndexElementBasic(Value v){
+        associatedValue = v;
         this.descriptions = new HashSet<String>();
     }
 
-    public IndexElementBasic(String d) {
-        this();
+    public IndexElementBasic(Value v, String d) {
+        this(v);
         this.preferredDescription = d;
         this.descriptions.add(d);
     }
@@ -86,6 +89,11 @@ public class IndexElementBasic implements IndexedElement{
     @Override
     public void addDescriptions(String[] d) {
        descriptions.addAll(Arrays.asList(d));
+    }
+
+    @Override
+    public Value getValue() {
+        return associatedValue;
     }
     
 }

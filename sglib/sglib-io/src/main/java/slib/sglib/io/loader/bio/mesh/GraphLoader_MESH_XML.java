@@ -33,6 +33,7 @@ import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.UtilDebug;
 
 public class GraphLoader_MESH_XML implements GraphLoader {
 
@@ -41,11 +42,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
     DataFactory factory = DataFactoryMemory.getSingleton();
-    
-    
-    public static final String ARG_PREFIX  = "prefix";
-    
-    
+    public static final String ARG_PREFIX = "prefix";
     String default_namespace;
 
     /**
@@ -86,10 +83,10 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
         this.graph = g;
 
-        
+
         default_namespace = (String) conf.getParameter(ARG_PREFIX);
-        
-        if(default_namespace == null){
+
+        if (default_namespace == null) {
             default_namespace = graph.getURI().getNamespace();
         }
 
@@ -117,26 +114,34 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                 V vConcept = getOrCreateVertex(c.descriptorUI);
 
 
-                for (String idParent : c.treeNumberList) {
+                for (String treeNumber : c.treeNumberList) {
 
-                    String parentId = getParentId(idParent);
+                    String parentId = getParentId(treeNumber);
 
                     if (parentId != null) { // roots
 
-
                         MeshConcept parent = idToConcepts.get(parentId);
 
-
                         if (parent == null) {
-                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + idParent);
+                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber);
                         } else {
-                            
+
                             //System.out.println("\t" + parentId + "\t" + parent.descriptorUI);
                             V vParent = getOrCreateVertex(parent.descriptorUI);
                             E edge = new EdgeTyped(vConcept, vParent, RDFS.SUBCLASSOF);
-                            
+
                             g.addE(edge);
                         }
+                    } else {
+//                        logger.debug("Creating Tree root");
+//                        logger.debug("ID ROOT : " + treeNumber);
+
+                        char localNameTreeRoot = treeNumber.charAt(0);
+                        
+                        V vParent = getOrCreateVertex(localNameTreeRoot+"");
+                        E edge = new EdgeTyped(vConcept, vParent, RDFS.SUBCLASSOF);
+
+                        g.addE(edge);
                     }
                 }
             }
@@ -144,7 +149,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         } catch (Exception ex) { // sorry
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
-        
+
         logger.info("MESH loader - process performed");
     }
 
@@ -160,5 +165,4 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         }
         return vConcept;
     }
-        
 }

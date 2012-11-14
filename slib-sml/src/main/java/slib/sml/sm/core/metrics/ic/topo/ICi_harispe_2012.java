@@ -46,17 +46,28 @@ import slib.utils.impl.ResultStack;
 
 /**
  *
+ * Modification of Sanchez et al. IC in order to authorize various non uniformity of ICs among the leafs
+ * 
+ *  IC(u) = -log(  ( leavesInc(u) / ancsInc(u) ) / (MAX_LEAVES)) 
+ * 
+ *  with leaves(u) a function computing the set of reachable leaves from a concept
+ *  considering (in opposition to the Sanchez et al. definition) that the function 
+ *  leavesInc(c) = |{c}| when c is a root.
+ *  MAX_LEAVES the number of leaves in the graph i.e. the number of leaves reachable from the root 
+ *  ancsInc, the number of inclusive ancestors of a node
+ * 
+ *  Original definition 
+ *  IC(u) = -log(  ( leaves(u) / ancsInc(u) +1 ) / (MAX_LEAVES + 1)) 
+ * 
+ * 
+ *  See Sanchez et al for original definition
  * ﻿Sanchez D, Batet M, Isern D: Ontology-based information content computation.
- * Knowledge-Based Systems 2011, 24:297-303.
- *
- * formula equation 10 p 300
- *
- * IC inner expression range : ]0,1] IC value : [0,...[
-
- *
+ *  Knowledge-Based Systems 2011, 24:297-303.
+ * 
+ * 
  * @author Sebastien Harispe
  */
-public class ICi_sanchez_2011_a implements ICtopo {
+public class ICi_harispe_2012 implements ICtopo {
     
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -71,27 +82,21 @@ public class ICi_sanchez_2011_a implements ICtopo {
 
         for (V v : allNbAncestors.keySet()) {
 
-            nbAncestorsInc   = allNbAncestors.get(v).doubleValue();
+            nbAncestorsInc = allNbAncestors.get(v).doubleValue();
             nbLeavesExclusif = allNbOfReachableLeaves.get(v).doubleValue();
 
             cur_ic = compute(nbLeavesExclusif, nbAncestorsInc, max_leaves);
-            
-            //logger.info(v+" --> "+cur_ic);
-            
-            
             results.add(v, cur_ic);            
         }
-
         return results;
     }
     
     public double compute(double nbLeaves, double nbAncestors, double maxLeaves){
         
+        double x = nbLeaves / nbAncestors;
         
-        //logger.info("NB leaves "+nbLeaves);
-        double x = nbLeaves / nbAncestors + 1.;
-        
-        return -( Math.log(x / (maxLeaves + 1.) )  / Math.log(2)); //base as defined by Sanchez et al. i.e. from private communication
+        return -(Math.log(x)/Math.log(2)); 
+        // as proposed by Sanchez et al. i.e. from private communication
         
         //return -Math.log(x / (maxLeaves +1.)); // base e
     }
@@ -105,20 +110,6 @@ public class ICi_sanchez_2011_a implements ICtopo {
         ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestors();
         ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();
         
-        // getAllNbReachableLeaves() is inclusive and Sanchez measure require excluvive i.e.
-        // if a concept is a leaf it must not be contained in the set of reachable leaves
-        
-        Set<V> leaves = manager.getLeaves();
-        
-        ResultStack<V, Double> correctedNbReachableLeaves = new ResultStack<V, Double>();
-        for(Map.Entry<V,Double> e : allNbReachableLeaves.entrySet()){
-            correctedNbReachableLeaves.add(e.getKey(), e.getValue());
-        }
-        for(V v : leaves){
-            double corrected = correctedNbReachableLeaves.get(v)-1;
-            correctedNbReachableLeaves.add(v, corrected);
-        }
-        
-        return compute(correctedNbReachableLeaves, allNbAncestors);
+        return compute(allNbReachableLeaves, allNbAncestors);
     }
 }

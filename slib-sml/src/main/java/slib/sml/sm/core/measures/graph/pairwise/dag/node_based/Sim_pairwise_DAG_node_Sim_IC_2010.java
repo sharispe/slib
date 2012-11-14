@@ -39,6 +39,7 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 
@@ -64,7 +65,7 @@ public class Sim_pairwise_DAG_node_Sim_IC_2010 implements Sim_DAG_node_abstract{
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica) {
+	public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
 		
 		Sim_pairwise_DAG_node_Lin_1998 simLin = new Sim_pairwise_DAG_node_Lin_1998();
 		

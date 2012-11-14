@@ -33,6 +33,7 @@ package slib.indexer;
 
 import java.util.Collection;
 import java.util.Set;
+import org.openrdf.model.Value;
 
 /**
  *
@@ -40,11 +41,16 @@ import java.util.Set;
  */
 public interface IndexedElement {
     
-    public void setPreferredDescription(String d);
+    
     public void addDescription(String d);
     public void addDescriptions(Collection<String> d);
     public Set<String> getDescriptions();
+    
+    public Value getValue();
     public String getPreferredDescription();
+    public void setPreferredDescription(String d);
+    
+    
     public void addDescriptions(String[] d);
     
     

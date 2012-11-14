@@ -34,10 +34,8 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import org.openrdf.model.URI;
+import java.util.Map;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -62,32 +60,26 @@ public class ICi_seco_2004 implements ICtopo {
 
         double x, cur_ic, nbDesc;
 
-        double setSize = allNbOfDescendants.size();
+        double setSize = allNbOfDescendants.size(); // i.e. number of concepts in the processed graph
 
         for (V v : allNbOfDescendants.keySet()) {
 
             nbDesc = allNbOfDescendants.get(v).doubleValue();
 
-            x = Math.log(nbDesc) / Math.log(setSize);
+            // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
+            // the nominator and thus obtain log(0) for a leaf.
+            // In our case the beahaviour is the same as in the original formulation
+            
+            x = Math.log10(nbDesc) / Math.log10(setSize);
             cur_ic = 1. - x;
+
             if (Double.isNaN(cur_ic) || Double.isInfinite(cur_ic)) {
                 throw new SLIB_Ex_Critic("Incoherency found in IC " + this.getClass() + "\n"
-                        + "IC of vertex " + v + " is set to " + x+"\n"
-                        + "Number of Descendants: "+nbDesc+"\n"
-                        + "SetSize: "+setSize+"\n"
+                        + "IC of vertex " + v + " is set to " + x + "\n"
+                        + "Number of Descendants: " + nbDesc + "\n"
+                        + "SetSize: " + setSize + "\n"
                         + "");
             }
-
-            URI micaURI = DataFactoryMemory.getSingleton().createURI("http://biograph/snomed-ct/70104002");
-
-            if (v.getValue().equals(micaURI)) {
-
-                System.out.println("\t" + v);
-                System.out.println("\t\t nbDesc: " + nbDesc);
-                System.out.println("\t\t x: " + x);
-                System.out.println("\t\t cur_ic: " + cur_ic);
-            }
-
             results.add(v, cur_ic);
         }
 
@@ -95,8 +87,9 @@ public class ICi_seco_2004 implements ICtopo {
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-            throws SLIB_Exception {
+    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager) throws SLIB_Exception {
+
+        // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
         return compute(manager.getAllNbDescendantsInc());
     }
 }

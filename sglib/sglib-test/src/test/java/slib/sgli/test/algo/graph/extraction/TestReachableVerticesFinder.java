@@ -36,16 +36,13 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sgli.test.algo.graph.extraction;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-
 import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
 import slib.sgli.test.algo.graph.TestUtils;
 import slib.sglib.algo.extraction.rvf.RVF_DAG;

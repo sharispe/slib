@@ -42,6 +42,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
+import org.openrdf.model.URI;
 import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.DataFactory;
@@ -214,8 +215,10 @@ public class IndexerOBO {
 
         if (onTermSpec) {
 
-            IndexElementBasic i = new IndexElementBasic(currentName);
-            index.addValue(factory.createURI(currentURI), i);
+            URI uri = factory.createURI(currentURI);
+            
+            IndexElementBasic i = new IndexElementBasic(uri,currentName);
+            index.addValue(uri, i);
 
             currentURI  = null;
             currentName = null;

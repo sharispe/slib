@@ -89,6 +89,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_3W_IC;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_IC;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jiang_Conrath_1997;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Lin_1998;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Lin_1998_GraSM;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Mazandu_2012;
@@ -435,7 +436,8 @@ public final class SMConstants {
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_IC = "SIM_PAIRWISE_DAG_NODE_JACCARD_IC";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC = "SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC";
-    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997 = "SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997";
+    public static final String FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997 = "DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997";
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM = "SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS";
@@ -448,6 +450,7 @@ public final class SMConstants {
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_IC = Sim_pairwise_DAG_node_Jaccard_IC.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC = Sim_pairwise_DAG_node_Jaccard_3W_IC.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997 = Sim_pairwise_DAG_node_Jiang_Conrath_1997.class.getName();
+    public static final String SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM = Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = Sim_pairwise_DAG_node_Resnik_1995.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS = Sim_pairwise_DAG_node_Resnik_1995_Ancestors.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS = Sim_pairwise_DAG_node_Resnik_1995_Descendants.class.getName();
@@ -462,6 +465,8 @@ public final class SMConstants {
     public static final String SIM_PAIRWISE_DAG_NODE_LIN_1998_GraSM = Sim_pairwise_DAG_node_Lin_1998_GraSM.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_MAZANDU_2012 = Sim_pairwise_DAG_node_Mazandu_2012.class.getName();
     public static final String SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = Sim_pairwise_DAG_node_Sim_IC_2010.class.getName();
+    
+    
     public static final Map<String, String> SIM_PAIRWISE_DAG_NODE_BASED = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -470,7 +475,8 @@ public final class SMConstants {
             put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_IC);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC);
-            put(FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997, SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);
+            put(FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997, SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM, SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995, SIM_PAIRWISE_DAG_NODE_RESNIK_1995);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS, SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS, SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS);

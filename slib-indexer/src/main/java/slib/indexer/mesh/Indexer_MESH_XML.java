@@ -90,10 +90,8 @@ public class Indexer_MESH_XML {
                 String uriConceptAsString = default_namespace + c.getDescriptorUI();
                 URI uriConcept = factory.createURI(uriConceptAsString);
                 
-                IndexElementBasic i = new IndexElementBasic();
+                IndexElementBasic i = new IndexElementBasic(uriConcept,c.descriptorName);
                 i.addDescriptions(c.descriptions);
-                i.setPreferredDescription(c.descriptorName);
-                i.addDescription(c.descriptorName);
                 
                 index.addValue(uriConcept, i);
                                 

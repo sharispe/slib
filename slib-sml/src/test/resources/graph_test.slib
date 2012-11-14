@@ -1,0 +1,34 @@
+http://graph/C_0 
+http://graph/C_12
+http://graph/C_15
+http://graph/C_20
+http://graph/C_16
+http://graph/C_17
+http://graph/C_18
+http://graph/C_19
+
+http://graph/C_1	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_0
+http://graph/C_2	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_0
+http://graph/C_3	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_0
+http://graph/C_4	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_1
+http://graph/C_5	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_1
+http://graph/C_6	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_3
+http://graph/C_7	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_2
+http://graph/C_8	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_2
+http://graph/C_8	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_6
+http://graph/C_9	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_6
+http://graph/C_9	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_5
+http://graph/C_9	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_4
+http://graph/C_10	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_7
+http://graph/C_11	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_7
+http://graph/C_12	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_8
+http://graph/C_12	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_9
+http://graph/C_13	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_10
+http://graph/C_14	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_9
+http://graph/C_15	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_5
+http://graph/C_16	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_11
+http://graph/C_16	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_10
+http://graph/C_17	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_14
+http://graph/C_18	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_14
+http://graph/C_19	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_13
+http://graph/C_20	http://www.w3.org/2000/01/rdf-schema#subClassOf	http://graph/C_7

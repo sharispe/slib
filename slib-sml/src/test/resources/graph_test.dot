@@ -1,0 +1,41 @@
+
+digraph unix {
+	size="6,6";
+	rankdir=BT;
+	node [color=lightblue2, style=filled];
+	"C_0" [color=red];
+	"C_12" [color=orange];
+	"C_15" [color=orange];
+	"C_20" [color=orange];
+	"C_16" [color=orange];
+	"C_17" [color=orange];
+	"C_18" [color=orange];
+	"C_19" [color=orange];
+	
+	
+	"C_1" -> "C_0"
+	"C_2" -> "C_0"
+	"C_3" -> "C_0"
+	"C_4" -> "C_1"
+	"C_5" -> "C_1"
+	"C_6" -> "C_3"
+	"C_7" -> "C_2"
+	"C_8" -> "C_2"
+	"C_8" -> "C_6"
+	"C_9" -> "C_6"
+	"C_9" -> "C_5"
+	"C_9" -> "C_4"
+	"C_10" -> "C_7"
+	"C_11" -> "C_7"
+	"C_12" -> "C_8"
+	"C_12" -> "C_9"
+	"C_13" -> "C_10"
+	"C_14" -> "C_9"
+	"C_15" -> "C_5"
+	"C_16" -> "C_11"
+	"C_16" -> "C_10"
+	"C_17" -> "C_14"
+	"C_18" -> "C_14"
+	"C_19" -> "C_13"
+	"C_20" -> "C_7"
+}

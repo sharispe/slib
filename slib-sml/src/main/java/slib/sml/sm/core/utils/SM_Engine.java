@@ -122,6 +122,8 @@ public class SM_Engine {
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_AddOn> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Standalone> groupwiseStandaloneMeasures;
+    
+    ResultStack<V, Double> allNbReachableLeaves;
 
     public SM_Engine(ValidatorDAG validatorDag, G g,
             Set<URI> setEtypes_a) throws SLIB_Ex_Critic {
@@ -369,7 +371,7 @@ public class SM_Engine {
      * @return
      * @throws SGL_Ex_Critic
      */
-    public Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
+    public synchronized Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
             Dijkstra dijkstra = new Dijkstra(graph, allRelTypes);
@@ -412,7 +414,7 @@ public class SM_Engine {
      * @param v
      * @return
      */
-    public Set<V> getDescendantsInc(V v) {
+    public synchronized Set<V> getDescendantsInc(V v) {
         if (cache.descendants.get(v) == null) {
             Set<V> rv = descGetter.getRV(v);
             cache.descendants.put(v, rv);
@@ -550,7 +552,7 @@ public class SM_Engine {
             cache.metrics_results.put(icConf, results);
 
             logger.debug(results.toString());
-
+            
             logger.info("Checking IC coherency");
 
             for (Entry<V, Double> e : results.entrySet()) {
@@ -568,22 +570,53 @@ public class SM_Engine {
         }
     }
 
+    /**
+     * Inclusive i.e. a leaf will contain itself in it set of reachable leaves
+     *
+     * @return
+     */
+    public synchronized Map<V, Set<V>> getReachableLeaves() {
+
+        if(cache.reachableLeaves.isEmpty()){
+            cache.reachableLeaves = descGetter.getTerminalVertices();
+        }
+        return cache.reachableLeaves;
+        
+    }
+
+    /**
+     * Inclusive i.e. a leaf will contain itself in it set of reachable leaves
+     *
+     * @return
+     */
+    public Set<V> getLeaves() {
+        return graph.getV_NoEdgeType(goToSuperClassETypes, Direction.IN);
+    }
+
     public ResultStack<V, Double> getAllNbReachableLeaves() {
 
         logger.debug("Computing Nb Reachable Leaves : start");
+        
+        
 
-        HashMap<V, Set<V>> allReachableLeaves = descGetter.getTerminalVertices();
-        ResultStack<V, Double> allNbReachableLeaves = new ResultStack<V, Double>();
+        if (allNbReachableLeaves == null) {
 
-        for (V c : graph.getVClass()) {
+            HashMap<V, Set<V>> allReachableLeaves = descGetter.getTerminalVertices();
+            ResultStack<V, Double> allNbReachableLeaves = new ResultStack<V, Double>();
 
-            int nbDesc = allReachableLeaves.get(c).size();
-            allNbReachableLeaves.add(c, (double) nbDesc);
+            for (V c : graph.getVClass()) {
+
+                int nbLeaves = allReachableLeaves.get(c).size();
+                allNbReachableLeaves.add(c, (double) nbLeaves);
+            }
+            
+            this.allNbReachableLeaves =  allNbReachableLeaves;
         }
+
 
         logger.debug("Computing Nb Reachable Leaves : end");
 
-        return allNbReachableLeaves;
+        return this.allNbReachableLeaves;
     }
 
     public ResultStack<V, Double> getAllNbAncestors() throws SLIB_Ex_Critic {
@@ -964,7 +997,6 @@ public class SM_Engine {
         return m;
     }
 
-
     public boolean isCachePairwiseResults() {
         return cachePairwiseResults;
     }
@@ -1050,5 +1082,14 @@ public class SM_Engine {
 
     public RVF_TAX getDescGetter() {
         return descGetter;
+    }
+
+    /**
+     * Set the ICS stored for the given IC configuration to the specified set of values.
+     * @param icConf
+     * @param ics 
+     */
+    public void setICSvalues(ICconf icConf, ResultStack<V, Double> ics) {
+        cache.metrics_results.put(icConf, ics);
     }
 }
