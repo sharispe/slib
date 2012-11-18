@@ -49,11 +49,15 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
+
+
 
         repo = factory;
         logger.info("Building Index");
         logger.info("Description file: " + description_file);
+        logger.info("EXCLUDE_INACTIVE_DESCRIPTIONS: " + EXCLUDE_INACTIVE_DESCRIPTIONS);
+        logger.info("EXCLUDE_OLD_DESCRIPTIONS: " + EXCLUDE_OLD_DESCRIPTIONS);
 
         IndexHash index = new IndexHash();
 
@@ -71,41 +75,56 @@ public class IndexerSNOMEDCT_RF2 {
             String line;
             String[] split;
 
+            boolean header = true;
+            boolean added = false;
+
 
             while ((line = br.readLine()) != null) {
+
+                if (header) {
+                    header = false;
+                    continue;
+                }
+                added = false;
 
                 split = p_tab.split(line);
 
                 boolean active = split[DESCRIPTION_ACTIVE].trim().equals("1");
 
-                if (active) {
-
-
+                if (active || !EXCLUDE_INACTIVE_DESCRIPTIONS) {
 
                     URI cURI = repo.createURI(defaultNamespace + split[DESCRIPTION_CONCEPT_ID]);
-
 
                     if (repo.getURI(cURI) != null) { // the concept is loaded in the repository
 
                         Date date = formatter.parse(split[DESCRIPTION_DATE]);
-                        
+
                         if (!index.getMapping().containsKey(cURI)) { // we add the entry to the collection
 
                             IndexElementBasic i = new IndexElementBasic(cURI, split[DESCRIPTION_TERM]);
                             index.getMapping().put(cURI, i);
                             lastValidDesc.put(cURI, date);
-                            
+                            added = true;
+
                         } else {
-                            
-                            index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
-                            
                             // we reload the preferred description if the one processed is more recent
                             if (!lastValidDesc.get(cURI).after(date)) {
                                 index.getMapping().get(cURI).setPreferredDescription(split[DESCRIPTION_TERM]);
+                                index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
+                                added = true;
+                            }
+
+                            if (!EXCLUDE_OLD_DESCRIPTIONS) {
+                                index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
+                                added = true;
                             }
                         }
                     }
                 }
+
+//                if(added){
+//                    logger.debug("Loading "+split[DESCRIPTION_TERM]+ " [inactive "+active+"]");
+//                }
             }
             in.close();
 
@@ -130,10 +149,10 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
 
         logger.info("Building Index");
-        IndexHash index = buildIndex(factory, description_file, defaultNamespace);
+        IndexHash index = buildIndex(factory, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS, EXCLUDE_OLD_DESCRIPTIONS);
 
         logger.info("Cleaning Index");
         Set<Value> toRemove = new HashSet<Value>();
