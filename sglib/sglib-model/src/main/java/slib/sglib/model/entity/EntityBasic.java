@@ -40,9 +40,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.elements.V;
 
 /**

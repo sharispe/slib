@@ -51,12 +51,10 @@ import slib.sglib.model.repo.DataFactory;
  * {@link V}, a set of oriented edges {@link E}. A default weighting scheme
  * {@link GWS} is also associated to the graph in order to define default edge
  * weights.
+ * The interface extends NotifyingSail e.g. in order to be able to use
+ * Sesame inferencer among the model in use.
  *
  * @author Sebastien Harispe
- *
- * @see Storage
- * @see V
- * @see E
  */
 public interface G extends NotifyingSail {
 

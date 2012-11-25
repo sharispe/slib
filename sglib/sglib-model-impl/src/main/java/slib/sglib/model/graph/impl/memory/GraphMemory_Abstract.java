@@ -55,12 +55,11 @@ import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.graph.weight.impl.GWS_impl;
 import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.SetUtils;
 
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
-    private DataFactory data;
+    private DataFactory factory;
     private HashMap<Value, V> vMapping;	// value Mapping
     private Set<V> vertices;
     private Set<E> edges;
@@ -69,29 +68,27 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     private GWS ws;
     private URI uri;
 
-    public GraphMemory_Abstract(URI uri) {
+    public GraphMemory_Abstract(DataFactory factory, URI uri) {
 
         this.uri = uri;
-        data = DataFactoryMemory.getSingleton();
-
-
+        this.factory = factory;
         ws = new GWS_impl();
-
         initDataStructures();
     }
 
     @Override
     public DataFactory getDataFactory() {
-        return data;
+        return factory;
     }
 
     private void initDataStructures() {
 
         vMapping = new HashMap<Value, V>();
         vertices = new HashSet<V>();
-        edges = new HashSet<E>();
+        edges    = new HashSet<E>();
         vertexOutEdges = new HashMap<V, HashSet<E>>();
-        vertexInEdges = new HashMap<V, HashSet<E>>();
+        vertexInEdges  = new HashMap<V, HashSet<E>>();
+        factory.addGraph(this);
     }
 
     @Override
@@ -181,14 +178,14 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     @Override
     public Set<E> getE(Set<URI> eTypes, V v, Set<VType> targetTypes, Direction dir) {
 
-        Set<E> edgesCol = null;
+        Set<E> edgesCol;
 
         if (targetTypes == null) {
             edgesCol = getE(eTypes, v, dir);
         } else {
 
             edgesCol = new HashSet<E>();
-
+            
             if (dir == Direction.BOTH || dir == Direction.OUT) {
                 for (E e : getE(eTypes, v, Direction.OUT)) {
                     if (targetTypes.contains(e.getTarget().getType())) {
@@ -266,13 +263,13 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
             edges.add(e);
             vertexOutEdges.get(e.getSource()).add(e);
             vertexInEdges.get(e.getTarget()).add(e);
-            data.getPredicateFactory().add(e.getURI());
+            factory.getPredicateFactory().add(e.getURI());
         }
     }
 
     @Override
     public Set<V> getV() {
-        return vertices;
+        return new HashSet<V>(vertices);
     }
 
     @Override
@@ -528,7 +525,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     public Set<V> getV(VType type) {
 
         if (type == null) {
-            return this.vertices;
+            return new HashSet<V>(vertices);
         }
 
         Set<V> vs = new HashSet<V>();
@@ -545,7 +542,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     public Set<V> getV(Set<VType> types) {
 
         if (types == null) {
-            return this.vertices;
+            return new HashSet<V>(vertices);
         }
 
         Set<V> vSel = new HashSet<V>();
@@ -747,7 +744,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         out += "Edges 	  : " + edges.size() + "\n\n";
 
 
-        for (URI e : data.getPredicateFactory().getURIs()) {
+        for (URI e : factory.getPredicateFactory().getURIs()) {
 
             long size = getE(e).size();
             if (size != 0) {
@@ -769,7 +766,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     @Override
     public ValueFactory getValueFactory() {
-        return data;
+        return factory;
     }
 
     @Override

@@ -113,6 +113,8 @@ public class SmCli implements SmlModuleCLI {
         if (g == null) {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");
         }
+        
+        logger.info("Graph information:\n"+g.toString());
 
         simManager = new SM_Engine(g);
 
