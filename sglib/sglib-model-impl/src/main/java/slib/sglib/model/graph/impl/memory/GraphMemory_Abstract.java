@@ -37,6 +37,7 @@ package slib.sglib.model.graph.impl.memory;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
@@ -55,16 +56,17 @@ import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.graph.weight.impl.GWS_impl;
 import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.SetUtils;
 
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     private DataFactory factory;
-    private HashMap<Value, V> vMapping;	// value Mapping
+    private Map<Value, V> vMapping;	// value Mapping
     private Set<V> vertices;
     private Set<E> edges;
-    private HashMap<V, HashSet<E>> vertexOutEdges;
-    private HashMap<V, HashSet<E>> vertexInEdges;
+    private Map<V, HashSet<E>> vertexOutEdges;
+    private Map<V, HashSet<E>> vertexInEdges;
     private GWS ws;
     private URI uri;
 
@@ -271,6 +273,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     public Set<V> getV() {
         return new HashSet<V>(vertices);
     }
+    
 
     @Override
     public void addE(V src, V target, URI type) {
@@ -434,14 +437,17 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return false;
     }
 
+    @Override
     public boolean containsVertex(V v) {
         return vMapping.containsKey(v.getValue());
     }
 
+    @Override
     public V getV(Value value) {
         return vMapping.get(value);
     }
 
+    @Override
     public long getNumberVertices() {
         return vMapping.size();
     }
@@ -761,7 +767,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
      */
     @Override
     public boolean isWritable() throws SailException {
-        return true; // ?
+        return true; 
     }
 
     @Override
@@ -776,7 +782,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     @Override
     protected void shutDownInternal() throws SailException {
-        // do nothing ?
+        // do nothing 
     }
 
     @Override

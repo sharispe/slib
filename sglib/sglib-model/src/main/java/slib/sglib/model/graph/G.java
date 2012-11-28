@@ -355,6 +355,9 @@ public interface G extends NotifyingSail {
 
     /**
      * @return A set of Vertex containing all vertices of the graph
+     * The returned set is not data structure in used for internal storage.
+     * In other terms, removing a vertex from the returned set of vertices doesn't
+     * delete the vertex from the graph
      */
     public Set<V> getV();
 
