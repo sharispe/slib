@@ -175,10 +175,11 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
 			boolean isDag = vdag.isDag(graph,edgesTypes, Direction.IN);// (graph, rootURI , edgesTypeInverse);
 
-			if(!isDag)
-				throw new SLIB_Ex_Critic(
-						"Treatment can only be performed on a DAG, traversal "+
-						"respecting your parameters define a cyclic graph.");
+			if(!isDag) {
+                        throw new SLIB_Ex_Critic(
+                                        "Treatment can only be performed on a DAG, traversal "+
+                                        "respecting your parameters define a cyclic graph.");
+                    }
 
 
 			// TODO REDUCE the graph

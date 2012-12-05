@@ -3,6 +3,7 @@ package slib.sglib.algo.inf;
 import org.openrdf.model.Literal;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
@@ -38,8 +39,9 @@ public class TypeInferencer {
 					toResolve++;
 				}
 			}
-			else
-				toResolve++;
+			else {
+                        toResolve++;
+                    }
 		}
 		
 		logger.info("Type to resolve "+toResolve);
@@ -64,11 +66,13 @@ public class TypeInferencer {
 				//				System.out.println(s+" "+o);
 				//				System.out.println(s.getType()+" "+o.getType());
 
-				if(s.getType() == VType.UNDEFINED && (inferenceTypeInner(true,e) == true))
-					infCurrentIt++;
+				if(s.getType() == VType.UNDEFINED && (inferenceTypeInner(true,e) == true)) {
+                                infCurrentIt++;
+                            }
 
-				if(o.getType() == VType.UNDEFINED && (inferenceTypeInner(false,e) == true))
-					infCurrentIt++;
+				if(o.getType() == VType.UNDEFINED && (inferenceTypeInner(false,e) == true)) {
+                                infCurrentIt++;
+                            }
 
 				//				System.out.println(s.getType()+" "+o.getType());
 				//				System.out.println(done);
@@ -83,15 +87,17 @@ public class TypeInferencer {
 			toResolve-=infCurrentIt;
 			logger.debug("Inference made "+infCurrentIt);
 
-			if(infCurrentIt == 0)
-				stable = true;
+			if(infCurrentIt == 0) {
+                        stable = true;
+                    }
 		}
 		logger.info("Final undefined: "+toResolve+"/"+total);
 
 		if(toResolve != 0){
 			for (V v : g.getV()) {
-				if(v.getType() == VType.UNDEFINED)
-					logger.debug(v.getType()+""+"\t\t"+v.getValue());
+				if(v.getType() == VType.UNDEFINED) {
+                                logger.debug(v.getType()+""+"\t\t"+v.getValue());
+                            }
 				
 			}
 		}
@@ -116,7 +122,7 @@ public class TypeInferencer {
 
 				Value oURI = e.getTarget().getValue();
 
-				if(!oURI.equals(RDFS.CLASS) && !oURI.equals(RDFS.RESOURCE) && !oURI.equals(RDF.PROPERTY)){
+				if(!(oURI.equals(RDFS.CLASS) || oURI.equals(OWL.CLASS)) && !oURI.equals(RDFS.RESOURCE) && !oURI.equals(RDF.PROPERTY)){
 					type = VType.INSTANCE;
 				}
 			}

@@ -1,10 +1,6 @@
 package slib.sglib.io.loader.rdf;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -51,7 +47,7 @@ public class RDFLoader implements GraphLoader {
 
         logger.info("Populate graph " + g.getURI());
         load(g, conf.getLoc());
-        logger.info("Graph " + g.getURI() + "populated by RDF data ");
+        logger.info("Graph " + g.getURI() + " populated by RDF data ");
 
     }
 
@@ -81,7 +77,7 @@ public class RDFLoader implements GraphLoader {
     public void load(G g, String file) throws SLIB_Ex_Critic {
 
 
-        RDFHandler rdfHandler = new SglRdfHandler(g);
+        RDFHandler rdfHandler = new SlibRdfHandler(g);
         try {
             parser.setRDFHandler(rdfHandler);
             FileReader reader = new FileReader(file);

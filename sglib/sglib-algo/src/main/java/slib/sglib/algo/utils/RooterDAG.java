@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
+import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -97,7 +98,7 @@ public class RooterDAG {
      *
      * @throws SGL_Ex_Critic
      */
-    public static URI rootUnderlyingDAG(G g, Set<URI> etypeDAG, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
+    public static URI rootUnderlyingDAG(G g, URI etypeDAG, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 
@@ -124,17 +125,26 @@ public class RooterDAG {
         } else {
             logger.info("Number of roots detected: " + roots.size());
             V root = g.createVertex(rootUri);
-
-            // add Root -> oldRoots relationships
-
-            for (URI type : etypeDAG) {
-                for (V v : roots) {
-                    g.addE(v, root, type);
-                }
+            
+            if(roots.contains(root)){
+                roots.remove(root);
             }
 
-            logger.info("Rooting performed");
+            rootURI_ = rootUri;
+            // add Root -> oldRoots relationships
+
+            long c = 0;
+
+            for (V v : roots) {
+                c++;
+                g.addE(v, root, etypeDAG);
+            }
+            
+            
+            logger.info("Rooting performed using " + rootURI_ + " as root " + c + " edges created");
+            logger.debug(" Contains Rooted taxonomic DAG " + validator.containsRootedTaxonomicDag(g));
         }
+
         return rootURI_;
     }
 
@@ -145,10 +155,9 @@ public class RooterDAG {
      * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
      * @throws SGL_Ex_Critic
      */
-    public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
-        return rootUnderlyingDAG(g, SetUtils.buildSet(eType), checkUnderlyingDAG, rootUri, dir);
-    }
-
+//    public static URI rootUnderlyingDAG(G g, URI eType, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
+//        return rootUnderlyingDAG(g, SetUtils.buildSet(eType), checkUnderlyingDAG, rootUri, dir);
+//    }
     /**
      * Shortcut of {@link RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)}
      * only considering Taxonomic relationships i.e SUBCLASSOF/SUPERCLASSOF
@@ -159,7 +168,7 @@ public class RooterDAG {
     public static URI rootUnderlyingTaxonomicDAG(G g, URI rootUri) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
-        logger.info("Rooting taxonomic Graph");
+        logger.info("Rooting taxonomic Graph using " + rootUri);
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsRootedTaxonomicDag(g)) {

@@ -34,9 +34,10 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import java.util.Map;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
+import slib.sml.sm.core.utils.MathSML;
+import slib.sml.sm.core.utils.SMParams;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -52,6 +53,8 @@ import slib.utils.impl.ResultStack;
  * @author Sebastien Harispe
  */
 public class ICi_seco_2004 implements ICtopo {
+    
+    Double logbase = null;
 
     public ResultStack<V, Double> compute(ResultStack<V, Long> allNbOfDescendants) throws SLIB_Exception {
 
@@ -69,12 +72,16 @@ public class ICi_seco_2004 implements ICtopo {
             // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
             // the nominator and thus obtain log(0) for a leaf.
             // In our case the beahaviour is the same as in the original formulation
-            
-            x = Math.log10(nbDesc) / Math.log10(setSize);
+
+            x = MathSML.log(nbDesc, logbase) / MathSML.log(setSize, logbase);
             cur_ic = 1. - x;
 
             if (Double.isNaN(cur_ic) || Double.isInfinite(cur_ic)) {
-                throw new SLIB_Ex_Critic("Incoherency found in IC " + this.getClass() + "\n"
+                throw new SLIB_Ex_Critic(
+                        "Incoherency found in IC " + this.getClass() + "\n"
+                        + "Log base       " + logbase +"\n"
+                        + "Log nbDesc     " + MathSML.log(nbDesc, logbase)  + "\n"
+                        + "Log Set size   " + MathSML.log(setSize, logbase) + "\n"
                         + "IC of vertex " + v + " is set to " + x + "\n"
                         + "Number of Descendants: " + nbDesc + "\n"
                         + "SetSize: " + setSize + "\n"
@@ -88,6 +95,10 @@ public class ICi_seco_2004 implements ICtopo {
 
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager) throws SLIB_Exception {
+
+        if (conf.containsParam(SMParams.LOG_BASE.toString())) {
+            logbase = conf.getParamAsDouble(SMParams.LOG_BASE.toString());
+        }
 
         // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
         return compute(manager.getAllNbDescendantsInc());

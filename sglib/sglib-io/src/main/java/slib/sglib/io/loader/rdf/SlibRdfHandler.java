@@ -11,13 +11,13 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.EdgeTyped;
 import slib.sglib.model.graph.elements.impl.VertexTyped;
 
-public class SglRdfHandler implements RDFHandler {
+public class SlibRdfHandler implements RDFHandler {
 
     G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     int count = 0;
 
-    public SglRdfHandler(G g) {
+    public SlibRdfHandler(G g) {
         this.g = g;
     }
 
@@ -43,6 +43,8 @@ public class SglRdfHandler implements RDFHandler {
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
 
+        //logger.debug(st.toString());
+        
         V subject = g.getV(st.getSubject());
         V object = g.getV(st.getObject());
 

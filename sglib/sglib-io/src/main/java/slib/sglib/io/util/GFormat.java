@@ -39,7 +39,6 @@ package slib.sglib.io.util;
 public enum GFormat {
 
 	OBO,
-	OWL,
 	SGL,
 	GAF2,
 	RDF_XML,

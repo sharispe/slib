@@ -50,7 +50,7 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 
 	public static final String   appCmdName 	  	= "OntoFocus.jar ";
 	public static final GFormat   format_default  	= GFormat.OBO;
-	public static final GFormat[] acceptedFormats 	= {GFormat.OBO, GFormat.OWL};
+	public static final GFormat[] acceptedFormats 	= {GFormat.OBO, GFormat.RDF_XML};
 	
 	public static boolean debugMode  = false;
 	public static boolean addRelsVal = false;

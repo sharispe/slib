@@ -40,6 +40,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
+import slib.sml.sm.core.utils.MathSML;
+import slib.sml.sm.core.utils.SMParams;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
@@ -52,13 +54,14 @@ import slib.utils.impl.ResultStack;
  * formula equation 10 p 300
  *
  * IC inner expression range : ]0,1] IC value : [0,...[
-
+ *
  *
  * @author Sebastien Harispe
  */
 public class ICi_sanchez_2011_a implements ICtopo {
-    
+
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    Double logbase = null;
 
     public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves,
             ResultStack<V, Double> allNbAncestors) throws SLIB_Exception {
@@ -71,54 +74,63 @@ public class ICi_sanchez_2011_a implements ICtopo {
 
         for (V v : allNbAncestors.keySet()) {
 
-            nbAncestorsInc   = allNbAncestors.get(v).doubleValue();
+            nbAncestorsInc = allNbAncestors.get(v).doubleValue();
             nbLeavesExclusif = allNbOfReachableLeaves.get(v).doubleValue();
 
             cur_ic = compute(nbLeavesExclusif, nbAncestorsInc, max_leaves);
-            
+
             //logger.info(v+" --> "+cur_ic);
-            
-            
-            results.add(v, cur_ic);            
+
+
+            results.add(v, cur_ic);
         }
 
         return results;
     }
-    
-    public double compute(double nbLeaves, double nbAncestors, double maxLeaves){
-        
-        
+
+    /**
+     * Private due to log base
+     *
+     * @param nbLeaves
+     * @param nbAncestors
+     * @param maxLeaves
+     * @return
+     */
+    private double compute(double nbLeaves, double nbAncestors, double maxLeaves) {
+
         //logger.info("NB leaves "+nbLeaves);
         double x = nbLeaves / nbAncestors + 1.;
-        
-        return -( Math.log(x / (maxLeaves + 1.) )  / Math.log(2)); //base as defined by Sanchez et al. i.e. from private communication
-        
-        //return -Math.log(x / (maxLeaves +1.)); // base e
+
+        return -MathSML.log(x / (maxLeaves + 1.), logbase);
     }
 
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Exception {
-        
-        
+
+
+        if (conf.containsParam(SMParams.LOG_BASE.toString())) {
+            logbase = conf.getParamAsDouble(SMParams.LOG_BASE.toString());
+        }
+
 
         ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestors();
         ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();
-        
+
         // getAllNbReachableLeaves() is inclusive and Sanchez measure require excluvive i.e.
         // if a concept is a leaf it must not be contained in the set of reachable leaves
-        
+
         Set<V> leaves = manager.getLeaves();
-        
+
         ResultStack<V, Double> correctedNbReachableLeaves = new ResultStack<V, Double>();
-        for(Map.Entry<V,Double> e : allNbReachableLeaves.entrySet()){
+        for (Map.Entry<V, Double> e : allNbReachableLeaves.entrySet()) {
             correctedNbReachableLeaves.add(e.getKey(), e.getValue());
         }
-        for(V v : leaves){
-            double corrected = correctedNbReachableLeaves.get(v)-1;
+        for (V v : leaves) {
+            double corrected = correctedNbReachableLeaves.get(v) - 1;
             correctedNbReachableLeaves.add(v, corrected);
         }
-        
+
         return compute(correctedNbReachableLeaves, allNbAncestors);
     }
 }

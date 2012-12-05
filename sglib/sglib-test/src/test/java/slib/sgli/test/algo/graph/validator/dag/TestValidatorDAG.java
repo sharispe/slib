@@ -64,7 +64,6 @@ import slib.utils.impl.SetUtils;
 public class TestValidatorDAG {
 
 	G g;
-	Set<URI> subClassURis;
 	URI rootURI;
 	SLIB_UnitTestValues testValues;
 
@@ -74,8 +73,6 @@ public class TestValidatorDAG {
 		rootURI = testValues.G_BASIC_THING;
 
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
-		subClassURis = new HashSet<URI>();
-		subClassURis.add(RDFS.SUBCLASSOF);
 	}
 	
 	@Test
@@ -102,7 +99,7 @@ public class TestValidatorDAG {
 
 		System.out.println(g.toString());
 		
-		Set<V> roots = new ValidatorDAG().getDAGRoots(g,subClassURis,Direction.OUT);
+		Set<V> roots = new ValidatorDAG().getDAGRoots(g,RDFS.SUBCLASSOF,Direction.OUT);
 		
 		assertTrue(roots.size() == 1);
 		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
@@ -111,7 +108,7 @@ public class TestValidatorDAG {
 	@Test
 	public void test_true_dag() throws SLIB_Ex_Critic{
                 V root = new VertexTyped(g, rootURI, VType.CLASS);
-		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, subClassURis,Direction.IN);
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, RDFS.SUBCLASSOF,Direction.IN);
 		assertTrue(isDag);
 	}
 	
@@ -163,7 +160,7 @@ public class TestValidatorDAG {
 		g.addE(g.getV(testValues.G_BASIC_FICTIV_ORGANISM),newRoot, RDFS.SUBCLASSOF);
 		g.addE(newRoot, g.getV(testValues.G_BASIC_FICTIV_ORGANISM), RDFS.SUBCLASSOF);
 		
-		isDag = new ValidatorDAG().isDag(g, SetUtils.buildSet(RDFS.SUBCLASSOF),Direction.IN);
+		isDag = new ValidatorDAG().isDag(g, RDFS.SUBCLASSOF,Direction.IN);
 		assertTrue(isDag == false);
 		
 		isDag = new ValidatorDAG().containsTaxonomicDag(g);

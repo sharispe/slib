@@ -97,7 +97,7 @@ public class ValidatorDAG {
         if (startingURIs == null || startingURIs.isEmpty()) {
             return false;
         }
-        
+
         currentPath = new Path();
 
         for (Value rootUri : startingURIs) {
@@ -109,22 +109,22 @@ public class ValidatorDAG {
                 throw new SLIB_Ex_Critic("Vertex '" + rootUri + "' not found in " + graph.getURI());
             }
 
-            if(valid){
+            if (valid) {
                 performDFS(root);
             }
         }
-        
-        logger.info("isDag : "+valid);
-        if(!valid){
-            
-            logger.info("current path :"+currentPath.toString());
-            logger.info("Cycle detected adding : "+lastEdge+" to path");
+
+        logger.info("isDag : " + valid);
+        if (!valid) {
+
+            logger.info("current path :" + currentPath.toString());
+            logger.info("Cycle detected adding : " + lastEdge + " to path");
         }
         return valid;
     }
 
     private void performDFS(V v) {
-        
+
         if (!valid) {
             return;
         }
@@ -139,8 +139,10 @@ public class ValidatorDAG {
 
             for (E e : edges) {
 
-                if (!valid) { return; }
-                
+                if (!valid) {
+                    return;
+                }
+
                 V target = e.getSource();
 
                 if (direction == Direction.OUT) {
@@ -153,11 +155,13 @@ public class ValidatorDAG {
                 }
 
             }
-            if (!valid) { return; }
+            if (!valid) {
+                return;
+            }
             currentPath.removeLastVertex();
             verticesColors.put(v, VColor.RED);
 
-        } else if (verticesColors.get(v) == VColor.ORANGE){
+        } else if (verticesColors.get(v) == VColor.ORANGE) {
             valid = false;
         }
     }
@@ -284,6 +288,10 @@ public class ValidatorDAG {
 
         Set<V> roots = g.getV_NoEdgeType(VType.CLASS, etypes, dir);
         return roots;
+    }
+
+    public Set<V> getDAGRoots(G g, URI etypes, Direction dir) {
+        return getDAGRoots(g, SetUtils.buildSet(etypes), dir);
     }
 
     /**
@@ -421,8 +429,12 @@ public class ValidatorDAG {
         return false;
     }
 
+    public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType, Direction dir) throws SLIB_Ex_Critic {
+
+        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(edgesType), dir);
+    }
+
     public E getLastEdge() {
         return lastEdge;
     }
-
 }

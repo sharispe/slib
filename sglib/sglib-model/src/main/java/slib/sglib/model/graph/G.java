@@ -528,8 +528,9 @@ public interface G extends NotifyingSail {
     public URI getURI();
 
     /**
-     * Create a vertex associated to the given graph
-     *
+     * If a vertex associated to the given value already exists it will be returned
+     * Otherwise Create a vertex associated to the given graph, the vertex type is set as VTYPE.CLASS
+     * 
      * @param val the Value associated to the vertex
      * @return the created vertex
      */

@@ -56,7 +56,6 @@ import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.graph.weight.impl.GWS_impl;
 import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.SetUtils;
 
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
