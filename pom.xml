@@ -2,6 +2,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.lgi2p.kid</groupId>
+    <name>slib</name>
     <artifactId>slib</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -76,6 +77,7 @@
                     <configuration>
                         <use>false</use>
                         <excludePackageNames>slib.quicktest.*:sglib.gui.*</excludePackageNames>
+                        <stylesheet>maven</stylesheet>
                     </configuration>
                     <executions>
                         <execution>
