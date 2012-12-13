@@ -59,7 +59,7 @@ import slib.sglib.model.repo.DataFactory;
 public interface G extends NotifyingSail {
 
     /**
-     * Access to the singleton {@link DataRepository} used to create the
+     * Access to the singleton DataFactory used to create the
      * information associated to the basic element of the graph e.g. URIs
      *
      * @return the {@link DataRepository} used by the graph
@@ -75,7 +75,7 @@ public interface G extends NotifyingSail {
 
     /**
      * Retrieve all edges involving a specific vertex considering a particular
-     * direction null     {@link Direction}
+     * direction {@link Direction}
 	 * {@link Direction#OUT} all edges for which the specified vertex is the
      * source {@link Direction#IN} all edges for which the specified vertex is
      * the target {@link Direction#BOTH} all edges involving the specified
@@ -383,7 +383,7 @@ public interface G extends NotifyingSail {
     /**
      * Return the set of vertices contained in the underlying taxonomic graph
      * Shortcut of {@link G#getV(VType)} with {@link VType} equals to
-     * {@link VTypeGeneric#CLASS}
+     * Class
      *
      * @return The set of {@link VClass} contained in the graph i.e. the
      * vertices composing the underlying taxonomic graph
@@ -398,7 +398,7 @@ public interface G extends NotifyingSail {
     public long getNumberVertices();
 
     /**
-     * Return the number of vertices of type {@link VTypeGeneric#CLASS}
+     * Return the number of vertices of type CLASS
      *
      * @return number of vertices composing the underlying taxonomic graph
      */

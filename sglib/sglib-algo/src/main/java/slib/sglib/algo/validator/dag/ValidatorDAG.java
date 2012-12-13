@@ -257,6 +257,8 @@ public class ValidatorDAG {
     public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
 
         Set<V> startingNodes = getDAGRoots(graph, edgeTypes, dir.getOpposite());
+        
+        logger.info("Starting process from "+startingNodes.size()+" vertices");
 
         if (startingNodes.isEmpty()) // No root No Dag
         {

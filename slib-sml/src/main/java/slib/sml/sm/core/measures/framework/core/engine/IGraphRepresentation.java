@@ -38,15 +38,14 @@ package slib.sml.sm.core.measures.framework.core.engine;
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.Value;
-
 import slib.sglib.model.graph.elements.V;
 
 
 
 /**
  * Interface of a Graph Representation associated to a {@link V}
- * As an example a {@link VClass} can be seen as the graph induced by its inclusive ancestors
- * or only by the set of {@link VClass} vertices corresponding to its ancestors.
+ * As an example a concept can be seen as the graph induced by its inclusive ancestors
+ * or only by the set of vertices corresponding to its ancestors.
  * 
  * @author Sebastien Harispe
  *
@@ -56,7 +55,7 @@ public interface IGraphRepresentation{
 	/**
 	 * Evaluate if the given graph representation supports the given Resource i.e.
 	 * if the resource can be represented by this graph representation. 
-	 * Some graph representation are only supported for {@link VClass} resource.
+	 * Some graph representation are only supported for V.
 	 * 
 	 * @param resource the {@link Resource} to evaluate
 	 * @return true if the given {@link Resource} can be represented by the {@link IGraphRepresentation}

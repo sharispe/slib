@@ -41,15 +41,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.SetUtils;
 
 /**
  * Object used to root a graph taking into consideration edge types defining
- * roots {@link URICommon#UNIVERSAL_ROOT} can be used as a generic root.
+ * roots.
  *
  * @author Sebastien Harispe
  *
@@ -87,7 +85,7 @@ public class RooterDAG {
      * The inverse of etypeDAG is used to detect uDAG roots.
      * @param checkUnderlyingDAG if true DAG conformity of the underlying graph
      * induced by etypeDAG is checked. If checkUnderlyingDAG is set to true and
-     * uDAG DAG property is not validated an {@link SGL_Ex_Critic} exception is
+     * uDAG DAG property is not validated an critical exception is
      * thrown.
      * @param rootURI the URI of the vertex to consider as root if rooting
      * requires to be performed. If the URI is not associated to graph vertex

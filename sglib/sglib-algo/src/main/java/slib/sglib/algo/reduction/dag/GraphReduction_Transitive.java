@@ -39,11 +39,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.traversal.classical.DFS;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
@@ -55,7 +53,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  * Class used to perform a transitive reduction of a DAG see
- * {@link http://en.wikipedia.org/wiki/Transitive_reduction}
+ * http://en.wikipedia.org/wiki/Transitive_reduction
  *
  * @author Sebastien Harispe
  *
@@ -71,7 +69,7 @@ public class GraphReduction_Transitive {
      *
      * @param graph the graph on which the transitive reduction needs to be
      * performed
-     * @throws SGL_Ex_Critic if the given graph is not a rooted Graph
+     * @throws critical exception if the given graph is not a rooted Graph
      * considering SUBCLASSOF relationships
      * @return the set of edges removed.
      */

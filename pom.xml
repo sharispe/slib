@@ -1,75 +1,97 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>fr.lgi2p.kid</groupId>
-	<artifactId>slib</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
-	<packaging>pom</packaging>
-	<modules>
-		<module>sglib</module>
-		<module>slib-utils</module>
-		<module>slib-tools</module>
-		<module>slib-indexer</module>
-		<module>slib-sml</module>
-                <module>slib-quicktest</module>
-	</modules>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.lgi2p.kid</groupId>
+    <artifactId>slib</artifactId>
+    <version>0.0.3-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <modules>
+        <module>sglib</module>
+        <module>slib-utils</module>
+        <module>slib-tools</module>
+        <module>slib-indexer</module>
+        <module>slib-sml</module>
+        <module>slib-quicktest</module>
+    </modules>
         
-        <properties>
-            <slib.version>0.0.2-SNAPSHOT</slib.version>
-            <sml-toolkit.version>0.0.3</sml-toolkit.version>
-            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-            <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        </properties>
+    <properties>
+        <slib.version>0.0.2-SNAPSHOT</slib.version>
+        <sml-toolkit.version>0.0.3</sml-toolkit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
 
-	<dependencyManagement>
+    <dependencyManagement>
 
-		<dependencies>
+        <dependencies>
                     
                     
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.5.6</version>
-				<scope>compile</scope>
-			</dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.5.6</version>
+                <scope>compile</scope>
+            </dependency>
 
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>4.0</version>
-				<type>jar</type>
-				<scope>test</scope>
-				<optional>true</optional>
-			</dependency>
-
-
-			<!-- concrete Log4J Implementation for SLF4J API -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.6</version>
-				<scope>runtime</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.0</version>
+                <type>jar</type>
+                <scope>test</scope>
+                <optional>true</optional>
+            </dependency>
 
 
-	<build>
+            <!-- concrete Log4J Implementation for SLF4J API -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.5.6</version>
+                <scope>runtime</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-					<configuration>
-						<source>1.6</source>
-						<target>1.6</target>
-					</configuration>
-				</plugin>
 
-			</plugins>
-		</pluginManagement>
+    <build>
 
-	</build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5.1</version>
+                    <configuration>
+                        <source>1.6</source>
+                        <target>1.6</target>
+                    </configuration>
+                </plugin>
+                                
+                                
+                                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.9</version>
+                    <configuration>
+                        <use>false</use>
+                        <excludePackageNames>slib.quicktest.*:sglib.gui.*</excludePackageNames>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>aggregate</id>
+                            <goals>
+                                <goal>aggregate</goal>
+                            </goals>
+                            <phase>site</phase>
+                        </execution>
+                    </executions>
+                </plugin>
+      
+
+            </plugins>
+        </pluginManagement>
+
+    </build>
 
 </project>

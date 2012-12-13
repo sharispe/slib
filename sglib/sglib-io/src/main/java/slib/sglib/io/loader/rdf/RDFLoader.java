@@ -9,6 +9,7 @@ import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.ntriples.NTriplesParser;
 import org.openrdf.rio.rdfxml.RDFXMLParser;
+import org.openrdf.rio.turtle.TurtleParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +59,11 @@ public class RDFLoader implements GraphLoader {
             loadFormat(RDFFormat.RDFXML);
         } else if (format == GFormat.NTRIPLES) {
             loadFormat(RDFFormat.NTRIPLES);
-        } else {
+        } 
+        else if (format == GFormat.TURTLE) {
+            loadFormat(RDFFormat.TURTLE);
+        }
+        else {
             throw new SLIB_Ex_Critic("Unsupported RDF format " + format);
         }
     }
@@ -69,7 +74,12 @@ public class RDFLoader implements GraphLoader {
         } else if (format.equals(RDFFormat.RDFXML)) {
             parser = new RDFXMLParser(DataFactoryMemory.getSingleton());
             parser.setStopAtFirstError(false);
-        } else {
+        } 
+        else if (format.equals(RDFFormat.TURTLE)) {
+            parser = new TurtleParser(DataFactoryMemory.getSingleton());
+            //parser.setStopAtFirstError(false);
+        }
+        else {
             throw new SLIB_Ex_Critic("Unsupported RDF format " + format);
         }
     }

@@ -47,9 +47,9 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Graph representation as a set of {@link VClass} corresponding to the set of {@link VClass}
+ * Graph representation as a set of vertices corresponding to the set of concepts
  * contained in the graph induced by the inclusive ancestors of a {@link V}.
- * If the given {@link Resource} is a {@link VClass} the graph representation corresponds to the set of
+ * If the given {@link Resource} is a V the graph representation corresponds to the set of
  * vertices containing the inclusive ancestors of the given class.
  * 
  * @author Sebastien Harispe

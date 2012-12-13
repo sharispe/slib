@@ -94,7 +94,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     @Override
     public Set<E> getE() {
-        return edges;
+        return new HashSet(edges);
     }
 
     @Override

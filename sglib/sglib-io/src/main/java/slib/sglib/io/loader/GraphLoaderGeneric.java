@@ -136,14 +136,17 @@ public class GraphLoaderGeneric {
             return new RDFLoader(RDFFormat.RDFXML);
         } else if (data.getFormat() == GFormat.NTRIPLES) {
             return new RDFLoader(RDFFormat.NTRIPLES);
-        } else if (data.getFormat() == GFormat.CSV) {
+        } 
+        else if (data.getFormat() == GFormat.TURTLE) {
+            return new RDFLoader(RDFFormat.TURTLE);
+        } 
+        else if (data.getFormat() == GFormat.CSV) {
             return new GraphLoader_CSV();
         } else if (data.getFormat() == GFormat.SNOMED_CT_RF2) {
             return new GraphLoaderSnomedCT_RF2();
         } else if (data.getFormat() == GFormat.SLIB) {
             return new GraphLoader_SLIB();
-        } else if (data.getFormat()
-                == GFormat.MESH_XML) {
+        } else if (data.getFormat() == GFormat.MESH_XML) {
             return new GraphLoader_MESH_XML();
         } else {
             throw new SLIB_Ex_Critic("Unknown Graph format " + data.getFormat());

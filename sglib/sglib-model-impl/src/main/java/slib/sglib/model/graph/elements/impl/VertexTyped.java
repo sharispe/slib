@@ -1,7 +1,6 @@
 package slib.sglib.model.graph.elements.impl;
 
 import org.openrdf.model.Value;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
@@ -34,7 +33,7 @@ public class VertexTyped extends OProperty implements V {
     }
 
     /**
-     * If the specified type is null {@value VType#UNDEFINED} is used
+     * If the specified type is null Undefined is used
      */
     public void setType(VType type) {
 

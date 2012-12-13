@@ -64,7 +64,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
 
 /**
- * GAF 2 parser used to construct a {@link KnowledgeBase} from a GAF 2.0
+ * GAF 2 parser used to construct a graph from a GAF 2.0
  * annotation file
  *
  * The parser consider considering GAF 2.0 specification provided at

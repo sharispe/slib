@@ -41,7 +41,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 public class Util {
 
 	/**
-	 * Only throw a {@link SGL_Ex_Critic} passing the given message
+	 * Only throw a critical exception passing the given message
 	 * @param message the message used
 	 * @throws SGL_Ex_Critic
 	 */
