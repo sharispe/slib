@@ -295,9 +295,10 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
             return;
         }
 
-        edges.remove(e);
-        vertexOutEdges.get(e.getSource()).remove(e);
-        vertexInEdges.get(e.getTarget()).remove(e);
+        if(edges.remove(e)){
+            vertexOutEdges.get(e.getSource()).remove(e);
+            vertexInEdges.get(e.getTarget()).remove(e);
+        }
     }
 
     @Override

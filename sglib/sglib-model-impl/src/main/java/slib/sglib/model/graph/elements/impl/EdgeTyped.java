@@ -38,7 +38,6 @@ package slib.sglib.model.graph.elements.impl;
 
 
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.impl.abs.EdgeTypedAbstract;
 
