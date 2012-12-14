@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -14,10 +13,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-
 import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
-import org.openrdf.model.impl.LiteralImpl;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.repository.Repository;
 import org.openrdf.repository.RepositoryConnection;
@@ -27,10 +24,8 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.inf.TypeInferencer;
-import slib.sglib.algo.reduction.dag.GraphReduction_DAG;
 import slib.sglib.algo.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.algo.utils.GAction;
 import slib.sglib.algo.utils.GActionType;
@@ -40,12 +35,10 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.SGLcst;
-import slib.sglib.model.voc.SGLVOC;
+import slib.sglib.model.graph.utils.SGLIBcst;
+import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
-
-import slib.sglib.model.repo.DataFactory;
 
 public class GraphActionExecutor {
 
@@ -261,7 +254,7 @@ public class GraphActionExecutor {
 
             URI rootURI = factory.createURI(rootURIs);
 
-            if (rootURIs.equals(SGLcst.FICTIVE_ROOT)) {
+            if (rootURIs.equals(SGLIBcst.FICTIVE_ROOT)) {
                 g.createVertex(rootURI);
 
             }

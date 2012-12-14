@@ -40,7 +40,9 @@ import org.openrdf.model.Value;
 import slib.sglib.model.graph.elements.type.VType;
 
 /**
- * Interface defining a vertex of a graph
+ * Interface defining a vertex.
+ * A vertex is only characterized by a value, i.e. the equals method must only be based on this value.
+ * To each vertex is associated a unique type VType defining if the vertex is a CLASS, an INSTANCE or an UNDEFINED...
  * 
  * @author Sebastien Harispe
  *
@@ -48,26 +50,24 @@ import slib.sglib.model.graph.elements.type.VType;
 public interface V{
 
 	/**
-	 * Access to the {@link VType} of the vertex
-	 * @return the type of the vertex
+	 * @return the type of the vertex.
 	 */
 	public VType getType();
 	
 	/**
-	 * Set the {@link VType} of the vertex
+	 * Set the type of the vertex.
 	 */
 	public void  setType(VType nType);
 	
 	/**
-	 * Access to the {@link Value} associated to the vertex
-	 * @return the associated {@link Value}
+	 * @return the associated Value.
 	 */
 	public Value getValue();
 	
 	/**
 	 * Vertex equals method must delegate to {@link Value#equals(Object)}
 	 * @param o an Object
-	 * @return true if the Vertex equals the given object considering it given {@link Value} if one exists
+	 * @return true if the Vertex equals the given object.
 	 */
 	@Override
 	public boolean equals(Object o);

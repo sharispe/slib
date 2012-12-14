@@ -39,17 +39,29 @@ package slib.sglib.model.graph.elements;
 import org.openrdf.model.URI;
 
 /**
- * Interface defining a graph edge defined by a source, a target and an type.
- * Note that edges are not expected to be modifiable i.e. there source, target and type must be final 
+ * Interface defining an edge defined by a source, a target and an type.
+ * Otherwise stated, an edge can be viewed as a statement subject, predicate, object.
+ * 
+ * Note that edges are not expected to be modifiable i.e. there source, target and type must be final.
+ * Therefore no setters must be specified for the source, the target and the predicate of the edge.
  * 
  * @author Sebastien Harispe
- *
  */
 public interface E{
 
+        /**
+         * @return the vertex corresponding to the source of the edge. 
+         */
 	public V getSource();
-	public V getTarget();
 	
+        /**
+         * @return the vertex corresponding to the target of the edge. 
+         */
+        public V getTarget();
+	
+        /**
+         * @return the predicate URI of the edge.
+         */
 	public URI getURI();
 	
 }

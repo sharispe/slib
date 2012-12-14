@@ -10,9 +10,13 @@ import slib.sglib.model.graph.elements.type.VType;
 
 /**
  * WalkConstraints interface is used to define methods commonly required to 
- * orient a walk according to some conditions e.g. type of edges admitted (URI) and 
- * the directions which can be used for their traversal, the type of vertices the 
- * walk can traverse, etc.
+ * orient a walk according to some conditions. 
+ * The conditions can be based on:
+ * <ul>
+ *      <li>the admitted predicate URIs</li>
+ *      <li>the direction of the edges</li>
+ *      <li>the type of vertices</li>
+ * </ul> 
  * 
  * @author Sebastien Harispe
  *

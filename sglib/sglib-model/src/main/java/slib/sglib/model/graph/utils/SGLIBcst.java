@@ -34,24 +34,10 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.voc;
+package slib.sglib.model.graph.utils;
 
-import org.openrdf.model.URI;
-import org.openrdf.model.impl.URIImpl;
+public class SGLIBcst {
+	
+	public static final String FICTIVE_ROOT = "__FICTIVE__";
 
-public class SGLVOC {
-
-	public final static  String SLIB_NS = "http://www.lgi2p.ema.fr/";
-	
-	
-	public final static URI UNIVERSAL_ROOT 		= new URIImpl(SLIB_NS+"Thing");
-	
-	public final static URI V_TYPE_CLASS_URI 	= new URIImpl(SLIB_NS+"class");
-	public final static URI V_TYPE_INSTANCE_URI = new URIImpl(SLIB_NS+"instance");
-	public final static URI V_TYPE_LITERAL_URI  = new URIImpl(SLIB_NS+"literal");
-	
-	
-	public final static URI SGLVOC_HAS_ANNOTATION  = new URIImpl(SLIB_NS+"has_annotation");
-	
-	
 }

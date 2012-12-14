@@ -37,9 +37,10 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.model.graph.elements.type;
 
 
-
+/**
+ * Enumeration defining various types which can be used to characterized a vertex.
+ * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ */
 public enum VType{
-
 	PROPERTY, CLASS, INSTANCE, LITERAL, UNDEFINED;
-
 }
