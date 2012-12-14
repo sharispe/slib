@@ -5,7 +5,7 @@ See the dedicated website  for more information about the Semantic Measures Libr
 http://www.lgi2p.ema.fr/kid/tools/sml/
 
 Code Snippets:
-    SMComputation: Quick example showing the computation of semantic similarity using the library. 
+* SMComputation: Quick example showing the computation of semantic similarity using the library. 
 
 
 
