@@ -81,8 +81,8 @@ public class SMComputation {
         System.out.println(graph.toString());
         
         /*
-        * The graph doesn't contains classes
-        * We explicitly specify that all vertices are classes/
+        * The graph doesn't contain classes.
+        * We therefore explicitly specify that vertices are classes.
         * This is required to retrieve the ancestors/descendants of a vertex and to use the engine used to perform semantic measures computation.
         * Note that some loaders automatically type vertices, which is not the case of the Ntriple loader.  
         * Reasoners coupled with rules can also be used to perform this treatment if you deal
