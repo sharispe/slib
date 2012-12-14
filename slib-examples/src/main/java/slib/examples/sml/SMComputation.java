@@ -31,35 +31,104 @@
  */
 package slib.examples.sml;
 
+import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
+import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.impl.memory.GraphMemory;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
+import slib.sml.sm.core.utils.SMConstants;
+import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
  *
  * Example of Semantic measure computation
+ * Note that you can set the LOG level in the file log4j.xml 
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class SMComputation {
     
-    public static void main(String[] a) throws SLIB_Exception{
+    public static void main(String[] params) throws SLIB_Exception{
         
-        // We create a data factory
+        
         DataFactory factory = DataFactoryMemory.getSingleton();
         
         URI graph_uri = factory.createURI("http://graph/");
         
         G graph = new GraphMemory(graph_uri);
         
-        GDataConf conf = new GDataConf(GFormat.NTRIPLES, System.getProperty("user.dir")+"/src/main/resources/graph_test.nt");
-        GraphLoaderGeneric.populate(conf, graph);
+        GDataConf graphconf = new GDataConf(GFormat.NTRIPLES, System.getProperty("user.dir")+"/src/main/resources/graph_test.nt");
+        GraphLoaderGeneric.populate(graphconf, graph);
         
+        // General information about the graph
         System.out.println(graph.toString());
+        
+        /*
+        * The graph contains no class vertex
+        * We explicitly specify that vertices are classes/
+        * This is required to retrieve the ancestors/descendants of a vertex.
+        * Note that some loader automatically type vertices, which is not the case for the Ntriple loader.  
+        * Reasoners coupled with rules can also be used to perform this treatment if you deal
+        * with a semantic graph containing literal, instances...
+        */
+        for(V v : graph.getV()){
+            v.setType(VType.CLASS);
+            System.out.println("\t"+v.getValue()+"\t"+v.getType());
+        }
+        System.out.println(graph.toString());
+        
+        
+        
+        SM_Engine engine = new SM_Engine(graph);
+        
+        // Retrieve the inclusive ancestors of a vertex
+        URI whale_uri = factory.createURI("http://graph/class/Whale");
+        V whale = graph.getV(whale_uri);
+        Set<V> whaleAncs = engine.getAncestorsInc(whale);
+        
+        System.out.println("Whale ancestors:");
+        for(V a : whaleAncs){
+            System.out.println("\t"+a);
+        }
+        
+        // Retrieve the inclusive descendants of a vertex
+        Set<V> whaleDescs = engine.getDescendantsInc(whale);
+        
+        System.out.println("Whale descendants:");
+        for(V a : whaleDescs){
+            System.out.println("\t"+a);
+        }
+        
+        /*
+         * Now the Semantic similarity computation
+         * We will use an Lin measure using the information content 
+         * definition proposed by Sanchez et al.
+         * 
+         */
+        
+        // First we define the information content (IC) we will use
+        ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011_a);
+        
+        // Then we define the Semantic measure configuration
+        SMconf smConf = new SMconf("Lin", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998);
+        smConf.setICconf(icConf);
+        
+        // Finally, we compute the similarity between the concepts Horse and Whale
+        V horse = graph.getV(factory.createURI("http://graph/class/Horse"));
+        
+        double sim = engine.computePairwiseSim(smConf, whale, horse);
+        System.out.println("Sim Whale/Horse: "+sim);
+        System.out.println("Sim Horse/Horse: "+engine.computePairwiseSim(smConf, horse, horse));
+        
+        
     }
 }

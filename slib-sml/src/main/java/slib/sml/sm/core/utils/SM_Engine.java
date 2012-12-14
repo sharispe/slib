@@ -128,7 +128,7 @@ public class SM_Engine {
     public SM_Engine(ValidatorDAG validatorDag, G g,
             Set<URI> setEtypes_a) throws SLIB_Ex_Critic {
 
-        this.graph = g;
+        this.graph     = g;
         this.validator = validatorDag;
 
         this.goToSuperClassETypes = setEtypes_a;
