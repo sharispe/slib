@@ -590,7 +590,7 @@ public class SM_Engine {
      * @return
      */
     public Set<V> getLeaves() {
-        return graph.getV_NoEdgeType(goToSuperClassETypes, Direction.IN);
+        return graph.getV_NoEdgeType(VType.CLASS,goToSuperClassETypes, Direction.IN);
     }
 
     public ResultStack<V, Double> getAllNbReachableLeaves() {
