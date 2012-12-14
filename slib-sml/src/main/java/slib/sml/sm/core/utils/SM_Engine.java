@@ -86,12 +86,8 @@ import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
- * {@link SM_Engine} is used as an accessor to numerous commonly required
- * methods for SMs computation. Depending on the tuning of the engine some
- * caching system can be taken into account in order to boost some process.
- *
- * A {@link SM_Engine} instance is used by SMs in order to access the ancestors
- * or descendants of particular vertices.
+ * This class is used facilitate the access of commonly required methods for SMs computation. 
+ * Depending on the tuning of the engine some caching systems can be taken into account in order to boost some process and avoid to recompute some results.
  *
  * @author Sebastien Harispe
  *
@@ -159,10 +155,9 @@ public class SM_Engine {
     /**
      * Compute the union of the inclusive ancestors of a set of classes
      *
-     * @NOT_CACHED
+     * NOT_CACHED
      * @param setClasses the set of classes considered
      * @return the union of the inclusive ancestors of the given classes
-     * @see SM_manager#getAncestors(V);
      */
     public Set<V> getAncestors(Set<V> setClasses) {
 
@@ -175,10 +170,10 @@ public class SM_Engine {
     }
 
     /**
-     * Return inclusive ancestors of a class as a set of {@link V} i.e v its
+     * Return inclusive ancestors of a class as a set of vertices i.e v its
      * exclusive ancestors.
      *
-     * @CACHED
+     * CACHED
      * @param v the considered class
      * @return the set of inclusive ancestors of the given class
      */
@@ -204,7 +199,8 @@ public class SM_Engine {
     }
 
     /**
-     * Compute disjoint ancestors. TO OPTIMIZE
+     * Compute disjoint ancestors. 
+     * TO OPTIMIZE
      *
      * @param c1
      * @param c2
@@ -248,9 +244,10 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED
+     * CACHED
      *
-     * @return @throws SGL_Ex_Critic
+     * @return a resultStack containing the maximal depths 
+     * @throws SGL_Ex_Critic
      */
     public ResultStack<V, Integer> getMaxDepths() throws SLIB_Exception {
 
@@ -263,9 +260,10 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED
+     * CACHED
      *
-     * @return @throws SGL_Ex_Critic
+     * @return a resultStack containing the minimal depths  
+     * @throws SGL_Ex_Critic
      */
     public ResultStack<V, Integer> getMinDepths() throws SLIB_Exception {
 
@@ -278,11 +276,11 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED
+     * CACHED
      *
      * @param icLabel
      * @param v
-     * @return
+     * @return the information content of the specified vertex.
      * @throws SGL_Ex_Critic
      */
     public double getIC(ICconf icConf, V v) throws SLIB_Exception {
@@ -299,9 +297,10 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED
+     * CACHED
      *
-     * @return @throws SGL_Ex_Critic
+     * @return the maximal depth of the graph. 
+     * @throws SGL_Ex_Critic
      */
     public int getMaxDepth() throws SLIB_Exception {
 
@@ -323,7 +322,7 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED ! Be careful modification of RelTypes requires cache clearing
+     * CACHED ! Be careful modification of RelTypes requires cache clearing
      * @param a
      * @param b
      * @return
@@ -340,7 +339,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED
+     * NOT_CACHED
      * @param a
      * @param b
      * @return
@@ -367,8 +366,9 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED @param a
-     * @return
+     * CACHED @param a
+     * @return a map containing the weight of the shortest path linking a the given vertex.
+     * 
      * @throws SGL_Ex_Critic
      */
     public synchronized Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
@@ -383,7 +383,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED
+     * NOT_CACHED
      * @param a
      * @param b
      * @return
@@ -409,7 +409,7 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED Return a set of vertices corresponding to the inclusive
+     * CACHED Return a set of vertices corresponding to the inclusive
      * descendants of a term t i.e t + descendants of t
      * @param v
      * @return
@@ -423,14 +423,14 @@ public class SM_Engine {
     }
 
     //	/**
-    //	 * @NOT_CACHED
+    //	 * NOT_CACHED
     //	 * @return
     //	 */
     //	public HashMap< V,Collection<V> > getAllHypo(){
     //		return rvfDesc.getAllVertices();
     //	}
     /**
-     * @NOT_CACHED
+     * NOT_CACHED
      * @param v
      * @return
      */
@@ -442,7 +442,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED
+     * NOT_CACHED
      * @param v
      * @return
      */
@@ -454,7 +454,7 @@ public class SM_Engine {
     }
 
     /**
-     * @CACHED @param a
+     * CACHED @param a
      * @param b
      * @return
      * @throws SGL_Exception_Warning
@@ -636,7 +636,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED by default
+     * NOT_CACHED by default
      */
     public double computePairwiseSim(SMconf pairwiseConf, V a, V b) throws SLIB_Ex_Critic {
 
@@ -750,7 +750,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED
+     * NOT_CACHED
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
@@ -790,7 +790,7 @@ public class SM_Engine {
     }
 
     /**
-     * @NOT_CACHED TODO add measure caching
+     * NOT_CACHED TODO add measure caching
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,

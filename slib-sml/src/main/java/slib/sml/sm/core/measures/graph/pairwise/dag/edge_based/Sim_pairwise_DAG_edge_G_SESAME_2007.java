@@ -38,7 +38,6 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import java.util.Map;
 import java.util.Set;
-
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.utils.SM_Engine;
@@ -52,8 +51,6 @@ import slib.utils.impl.SetUtils;
  * TODO Check approximation using depth of concepts
  * 
  * @author Sebastien Harispe
- *
- * @param <V>
  */
 public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract{
 

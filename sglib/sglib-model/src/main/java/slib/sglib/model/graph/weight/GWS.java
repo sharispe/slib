@@ -37,7 +37,6 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.model.graph.weight;
 
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.elements.E;
 
 
@@ -76,9 +75,10 @@ public interface GWS {
 	
 	/**
 	 * 
+         * Must propagate the modification are propagated to each edge of the specified predicate.
+         * 
 	 * @param e
 	 * @param w
-	 * @param propagate the modification are propagated to each edge of the corresponding {@link EType}
 	 */
 	void   setWeight(URI e, double w);
 

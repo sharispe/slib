@@ -34,7 +34,7 @@ public interface WalkConstraints {
 	/**
 	 * The method defines the behavior of a walk reaching the given edge.
 	 * Return true if the walk must continues (false if the walk must stop).
-	 * @param v the vertex to evaluates
+	 * @param e the vertex to evaluates
 	 * @param dir the direction of the edge
 	 * @return a boolean value defining if the walk must continue (true:yes, false:no)
 	 */
@@ -56,19 +56,21 @@ public interface WalkConstraints {
 
 	/**
 	 * Add the current type of vertex as admitted
+         * @param type the type of vertex to add.
 	 */
 	public void addAcceptedVType(VType type);
 	
 	
 	/**
 	 * Return the set of VTypes the object admits 
-	 * @param uri the URI of the predicate of interest
 	 * @return set of VTypes admitted or empty set
 	 */
 	public Set<VType> getAcceptedVTypes();
 	
 	/**
-	 * Add the current Traversal in the mapping of admitted traversal
+	 * Add the current Traversal in the mapping of admitted traversal.
+         * @param pred the predicate URI.
+         * @param dir the accepted direction corresponding to the given predicate.
 	 */
 	public void addAcceptedTraversal(URI pred, Direction dir);
 	

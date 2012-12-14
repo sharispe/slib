@@ -36,9 +36,7 @@ package slib.sglib.model.entity;
 
 import java.util.Map;
 import java.util.Set;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.elements.V;
 
 /**
@@ -82,9 +80,9 @@ public interface IEntity {
      *
      * @param annotationURI identifier of the annotation to remove to the entity
      * collection
-     * @boolean return true if the annotation was removed
+     * @return return true if the annotation was removed
      */
-    public void removeAnnotations(URI puri);
+    public void removeAnnotations(URI annotationURI);
 
     public void addAnnotation(V v, URI puri);
 
@@ -93,7 +91,7 @@ public interface IEntity {
      *
      * @param annotationURI identifier of the annotation to remove to the entity
      * collection
-     * @boolean return true if the annotation was removed
+     * @return true if the annotation was removed
      */
     public void removeAnnotations(V v);
 

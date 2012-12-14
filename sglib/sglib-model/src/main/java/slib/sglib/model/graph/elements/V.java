@@ -65,7 +65,7 @@ public interface V{
 	public Value getValue();
 	
 	/**
-	 * Vertex equals method must delegate to {@link Value#equals(Object)}
+	 * Vertex equals method must delegate to the equals method defined in the Value class.
 	 * @param o an Object
 	 * @return true if the Vertex equals the given object.
 	 */

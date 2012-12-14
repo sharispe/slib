@@ -147,7 +147,7 @@ public interface G extends NotifyingSail {
      * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
      * 
      * @param t the set of predicate URIs to consider.
-     * @param v the vertex of interest
+     * @param source the vertex of interest
      * @param dir the direction to consider
      * @return a set of edges respecting the given constraint (empty Set if no results)
      */
@@ -185,7 +185,7 @@ public interface G extends NotifyingSail {
      * If a parameter is set to null, the constraint is relaxed considering this parameter.
      * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
      * 
-     * @param t the set of predicate URIs of the edges of interest.
+     * @param pTypes the set of predicate URIs of the edges of interest.
      * @param v the vertex of interest.
      * @param type the vertex type.
      * @param dir the direction to consider.
@@ -207,7 +207,7 @@ public interface G extends NotifyingSail {
      * 
      * @param pTypes the set of predicate URIs of the edges of interest.
      * @param v the vertex of interest.
-     * @param type the vertex type.
+     * @param vTypes the vertex type.
      * @param dir the direction to consider.
      * @return a set of edges respecting the given constraint (empty Set if no results)
      */
