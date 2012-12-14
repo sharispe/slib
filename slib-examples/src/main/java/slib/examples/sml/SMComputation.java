@@ -52,9 +52,9 @@ import slib.utils.ex.SLIB_Exception;
 /**
  *
  * Example of a Semantic measure computation using the Semantic Measures Library.
- * In this snippet the we estimate the similarity of two concepts expressed in a semantic graph.
+ * In this snippet we estimate the similarity of two concepts expressed in a semantic graph.
  * The semantic graph is expressed in Ntriples.
- * The similarity is estimated using Lin's commonly used measure.
+ * The similarity is estimated using Lin's measure.
  * 
  * More information at http://www.lgi2p.ema.fr/kid/tools/sml/
  * 
@@ -82,7 +82,7 @@ public class SMComputation {
         
         /*
         * The graph doesn't contain classes.
-        * We therefore explicitly specify that vertices are classes.
+        * We therefore explicitly specify that all vertices composing the graph must be considered as classes.
         * This is required to retrieve the ancestors/descendants of a vertex and to use the engine used to perform semantic measures computation.
         * Note that some loaders automatically type vertices, which is not the case of the Ntriple loader.  
         * Reasoners coupled with rules can also be used to perform this treatment if you deal
