@@ -1,0 +1,3 @@
+<http://graph/class/Mammal> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Animal> .
+<http://graph/class/Human> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .
+<http://graph/class/Whale> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .

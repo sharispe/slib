@@ -1,2 +1,6 @@
-Slib
-====
+Slib - Semantic Library
+========================
+
+
+
+

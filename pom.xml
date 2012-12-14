@@ -13,6 +13,7 @@
         <module>slib-indexer</module>
         <module>slib-sml</module>
         <module>slib-quicktest</module>
+        <module>slib-examples</module>
     </modules>
         
     <properties>
