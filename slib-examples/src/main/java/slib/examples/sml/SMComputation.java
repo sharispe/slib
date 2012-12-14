@@ -51,8 +51,15 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * Example of Semantic measure computation
- * Note that you can set the LOG level in the file log4j.xml 
+ * Example of a Semantic measure computation using the Semantic Measures Library.
+ * In this snippet the we estimate the similarity of two concepts expressed in a semantic graph.
+ * The semantic graph is expressed in Ntriples.
+ * The similarity is estimated using Lin's commonly used measure.
+ * 
+ * More information at http://www.lgi2p.ema.fr/kid/tools/sml/
+ * 
+ * Note that you can set the LOG level in specified in log4j.xml, e.g. in root element, change value="INFO" to value="DEBUG"
+ * 
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class SMComputation {
@@ -128,7 +135,5 @@ public class SMComputation {
         double sim = engine.computePairwiseSim(smConf, whale, horse);
         System.out.println("Sim Whale/Horse: "+sim);
         System.out.println("Sim Horse/Horse: "+engine.computePairwiseSim(smConf, horse, horse));
-        
-        
     }
 }
