@@ -73,19 +73,21 @@ public class SMComputation {
         
         G graph = new GraphMemory(graph_uri);
         
-        GDataConf graphconf = new GDataConf(GFormat.NTRIPLES, System.getProperty("user.dir")+"/src/main/resources/graph_test.nt");
+        String fpath = System.getProperty("user.dir")+"/src/main/resources/graph_test.nt";
+        GDataConf graphconf = new GDataConf(GFormat.NTRIPLES, fpath);
         GraphLoaderGeneric.populate(graphconf, graph);
         
         // General information about the graph
         System.out.println(graph.toString());
         
         /*
-        * The graph contains no class vertex
-        * We explicitly specify that vertices are classes/
-        * This is required to retrieve the ancestors/descendants of a vertex.
-        * Note that some loader automatically type vertices, which is not the case for the Ntriple loader.  
+        * The graph doesn't contains classes
+        * We explicitly specify that all vertices are classes/
+        * This is required to retrieve the ancestors/descendants of a vertex and to use the engine used to perform semantic measures computation.
+        * Note that some loaders automatically type vertices, which is not the case of the Ntriple loader.  
         * Reasoners coupled with rules can also be used to perform this treatment if you deal
         * with a semantic graph containing literal, instances...
+        * Let's keep it simple.
         */
         for(V v : graph.getV()){
             v.setType(VType.CLASS);
