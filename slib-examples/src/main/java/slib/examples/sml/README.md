@@ -4,7 +4,7 @@ Semantic Measures Library: Snippets
 See the dedicated website  for more information about the Semantic Measures Library
 http://www.lgi2p.ema.fr/kid/tools/sml/
 
-Code Snippets:
+##Code Snippets:
 
 **General**
 - GraphExample: Creation of a semantic graph
