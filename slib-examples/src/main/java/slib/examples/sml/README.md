@@ -7,7 +7,7 @@ http://www.lgi2p.ema.fr/kid/tools/sml/
 Code Snippets:
 
 **General**
-- GraphExample: Create a semantic graph
+- GraphExample: Creation of a semantic graph
 - SMComputation: Quick example showing the computation of a semantic similarity using the library. 
 
 **Gene Ontology**
