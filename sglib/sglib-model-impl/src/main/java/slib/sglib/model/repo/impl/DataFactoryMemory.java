@@ -38,9 +38,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.PredicateFactory;
@@ -71,6 +69,7 @@ public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
      * @return the {@link DataRepository} singleton
      */
     public static DataFactoryMemory getSingleton() {
+        
         if (repository == null) {
             repository = new DataFactoryMemory();
         }
@@ -78,10 +77,13 @@ public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
     }
 
     private DataFactoryMemory() {
-        eTypes = PredicateURIRepo.getInstance(this);
-        namespaces = new HashSet<String>();
+        
+        System.out.println("Create DataFactoryMemory "+this.getClass());
+        
+        eTypes           = PredicateURIRepo.getInstance(this);
+        namespaces       = new HashSet<String>();
         namespacesPrefix = new HashMap<String, String>();
-        graphs = new HashMap<URI, G>();
+        graphs           = new HashMap<URI, G>();
     }
 
     @Override

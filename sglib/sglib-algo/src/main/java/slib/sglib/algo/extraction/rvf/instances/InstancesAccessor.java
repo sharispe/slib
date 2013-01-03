@@ -1,7 +1,6 @@
 package slib.sglib.algo.extraction.rvf.instances;
 
 import java.util.Set;
-
 import slib.sglib.model.graph.elements.V;
 
 public interface InstancesAccessor extends VirtualInstancesAccessor{

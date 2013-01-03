@@ -14,10 +14,11 @@
         <module>slib-sml</module>
         <module>slib-quicktest</module>
         <module>slib-examples</module>
+        <module>slib-dist</module>
     </modules>
         
     <properties>
-        <slib.version>0.0.2-SNAPSHOT</slib.version>
+        <slib.version>0.0.3-SNAPSHOT</slib.version>
         <sml-toolkit.version>0.0.3</sml-toolkit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -90,6 +91,36 @@
                         </execution>
                     </executions>
                 </plugin>
+                
+       
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+
+                <configuration>
+                    <finalName>slib-${slib.version}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest></manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <phase>package</phase><!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+           
+
+
+
       
 
             </plugins>
