@@ -1,4 +1,4 @@
-package slib.sglib.model.graph.impl.memory;
+package slib.sglib.model.impl.graph.memory;
 
 import info.aduna.iteration.CloseableIteration;
 
@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.EdgeTyped;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.graph.elements.EdgeTyped;
+import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 
 
 public class GSailConnection extends NotifyingSailConnectionBase implements InferencerConnection {

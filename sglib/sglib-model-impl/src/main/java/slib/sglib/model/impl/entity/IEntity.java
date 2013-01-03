@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.entity;
+package slib.sglib.model.impl.entity;
 
 import java.util.Map;
 import java.util.Set;

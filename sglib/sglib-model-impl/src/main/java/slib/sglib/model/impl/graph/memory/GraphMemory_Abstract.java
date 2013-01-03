@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sglib.model.graph.impl.memory;
+package slib.sglib.model.impl.graph.memory;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -48,13 +48,13 @@ import org.openrdf.sail.helpers.NotifyingSailBase;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.EdgeTyped;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
+import slib.sglib.model.impl.graph.elements.EdgeTyped;
+import slib.sglib.model.impl.graph.elements.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
-import slib.sglib.model.graph.weight.impl.GWS_impl;
+import slib.sglib.model.impl.graph.weight.GWS_impl;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.impl.SetUtils;
 

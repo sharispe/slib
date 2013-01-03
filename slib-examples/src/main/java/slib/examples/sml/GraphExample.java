@@ -37,13 +37,13 @@ import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.EdgeTyped;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.graph.impl.memory.GraphMemory;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.impl.graph.elements.EdgeTyped;
+import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.memory.GraphMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 

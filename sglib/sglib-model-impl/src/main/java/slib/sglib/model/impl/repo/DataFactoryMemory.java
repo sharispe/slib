@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sglib.model.repo.impl;
+package slib.sglib.model.impl.repo;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -77,8 +77,6 @@ public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
     }
 
     private DataFactoryMemory() {
-        
-        System.out.println("Create DataFactoryMemory "+this.getClass());
         
         eTypes           = PredicateURIRepo.getInstance(this);
         namespaces       = new HashSet<String>();

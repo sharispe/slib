@@ -1,4 +1,4 @@
-package slib.sglib.model.graph.elements.impl;
+package slib.sglib.model.impl.graph.elements;
 
 import org.openrdf.model.Value;
 import slib.sglib.model.graph.G;

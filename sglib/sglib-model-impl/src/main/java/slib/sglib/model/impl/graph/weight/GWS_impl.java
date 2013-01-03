@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.graph.weight.impl;
+package slib.sglib.model.impl.graph.weight;
 
 import java.util.HashMap;
 import java.util.Map;

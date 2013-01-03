@@ -45,8 +45,8 @@ import org.junit.Test;
 
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 

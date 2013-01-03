@@ -8,42 +8,13 @@
     </parent>
     <artifactId>sglib-model-impl</artifactId>
   
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-		
-        <repository>
-            <id>aduna-repo</id>
-            <name>Aduna repository</name>
-            <url>http://repo.aduna-software.org/maven2/releases</url>
-        </repository>
-    </repositories>
-  
     <dependencies>
 
-            
-            
-        <dependency>
-            <groupId>org.openrdf.sesame</groupId>
-            <artifactId>sesame-runtime</artifactId>
-            <version>2.6.9</version>
-        </dependency>
-        <!--
-       	<dependency>
-              		<groupId>com.tinkerpop.blueprints</groupId>
-              		<artifactId>blueprints-core</artifactId>
-              		<version>2.1.0</version>
-       	</dependency>
-        -->
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model</artifactId>
             <version>0.0.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
-    <name>sglib-model-impl</name>
+ 
 </project>

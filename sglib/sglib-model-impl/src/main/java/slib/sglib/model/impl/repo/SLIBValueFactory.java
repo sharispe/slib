@@ -1,4 +1,4 @@
-package slib.sglib.model.repo.impl;
+package slib.sglib.model.impl.repo;
 
 import java.math.BigInteger;
 import java.util.Collections;

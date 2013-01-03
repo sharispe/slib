@@ -57,13 +57,12 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Exception;
 
-import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.voc.SLIBVOC;
 
 public class Test_GraphReduction_Transitive {
 	

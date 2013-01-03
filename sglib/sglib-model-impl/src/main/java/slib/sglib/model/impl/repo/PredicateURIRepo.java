@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sglib.model.repo.impl;
+package slib.sglib.model.impl.repo;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -43,7 +43,7 @@ import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.PredicateFactory;
-import slib.sglib.model.voc.SLIBVOC;
+import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Ex_Warning;
 
@@ -53,6 +53,7 @@ public class PredicateURIRepo implements PredicateFactory {
     private DataFactory factory;
     private Set<URI> pURIs; // predicate URIs 
     private Map<URI, URI> inverses;
+
 
     private PredicateURIRepo(DataFactory factory) {
 

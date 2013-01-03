@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sglib.model.graph.elements.impl.abs;
+package slib.sglib.model.impl.graph.elements.abs;
 
 import org.openrdf.model.URI;
 

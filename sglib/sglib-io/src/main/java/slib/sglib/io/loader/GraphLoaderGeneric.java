@@ -55,9 +55,9 @@ import slib.sglib.io.loader.sgl.GraphLoader_SGL;
 import slib.sglib.io.loader.slibformat.GraphLoader_SLIB;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.impl.memory.GraphMemory;
+import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 

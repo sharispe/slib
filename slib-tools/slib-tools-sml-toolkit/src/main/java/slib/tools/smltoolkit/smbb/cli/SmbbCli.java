@@ -45,7 +45,7 @@ import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sml.smbb.core.SmbbCst;
 import slib.sml.smbb.core.bioinfo.bmark.ec.BenchmarkBuilder_EC;
 import slib.sml.smbb.core.bioinfo.bmark.kegg.BenchmarkBuilder_Kegg;

@@ -43,8 +43,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 
-import slib.sglib.model.repo.impl.DataFactoryMemory;
 import slib.utils.impl.IO_RuntimeException;
 
 

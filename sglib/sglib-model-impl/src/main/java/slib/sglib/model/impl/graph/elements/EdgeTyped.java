@@ -34,12 +34,12 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.graph.elements.impl;
+package slib.sglib.model.impl.graph.elements;
 
 
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.abs.EdgeTypedAbstract;
+import slib.sglib.model.impl.graph.elements.abs.EdgeTypedAbstract;
 
 public class EdgeTyped extends EdgeTypedAbstract{
 

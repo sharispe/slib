@@ -32,11 +32,11 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sglib.model.graph.impl.memory;
+package slib.sglib.model.impl.graph.memory;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 
 public class GraphMemory extends GraphMemory_Abstract {
 

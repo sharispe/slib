@@ -38,7 +38,6 @@ package slib.sgli.test.algo.graph.validator.dag;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Test;
@@ -52,14 +51,13 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.impl.EdgeTyped;
-import slib.sglib.model.graph.elements.impl.VertexTyped;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.graph.elements.EdgeTyped;
+import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.SetUtils;
 
 public class TestValidatorDAG {
 

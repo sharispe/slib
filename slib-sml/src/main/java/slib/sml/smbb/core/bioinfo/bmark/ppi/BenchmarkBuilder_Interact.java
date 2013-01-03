@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.Interaction;
 import slib.sml.smbb.core.bioinfo.bmark.ppi.utils.InteractionSet;
 import slib.sml.smbb.core.bioinfo.i_o.loader.mitab.MITAB25_reader;

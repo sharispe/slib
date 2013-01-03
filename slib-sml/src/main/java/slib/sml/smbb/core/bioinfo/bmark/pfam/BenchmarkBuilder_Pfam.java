@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.impl.DataFactoryMemory;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sml.smbb.core.conf.xml.utils.SmbbConf_GO_Pfam;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;

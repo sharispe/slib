@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sglib.model.voc;
+package slib.sglib.model.impl.voc;
 
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
