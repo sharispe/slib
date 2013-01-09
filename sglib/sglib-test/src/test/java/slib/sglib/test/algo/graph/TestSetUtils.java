@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sgli.test.algo.graph;
+package slib.sglib.test.algo.graph;
 
 import static org.junit.Assert.assertTrue;
 

@@ -126,7 +126,6 @@ public class RVF_DAG extends RVF {
 //            logger.debug("Processing " + current);
 
             queue.remove(0);
-            allVertices.get(current).add(current);
 
             Set<E> edges = g.getE(current, oppositeWC);
 
@@ -149,6 +148,7 @@ public class RVF_DAG extends RVF {
 
                 // union
                 Set<V> union = SetUtils.union(allVertices.get(current), allVertices.get(dest));
+                union.add(current);
                 allVertices.put(dest, union);
 
 
@@ -158,6 +158,8 @@ public class RVF_DAG extends RVF {
 //                    logger.debug("*** Adding "+dest);
                 }
             }
+            
+            //logger.debug("*** Done "+current+"\t"+allVertices.get(current));
         }
 
         //TOREMOVE 

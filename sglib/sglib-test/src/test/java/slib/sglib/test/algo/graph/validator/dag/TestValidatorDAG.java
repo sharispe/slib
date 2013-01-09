@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sgli.test.algo.graph.validator.dag;
+package slib.sglib.test.algo.graph.validator.dag;
 
 import static org.junit.Assert.assertTrue;
 
@@ -44,8 +44,8 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
-import slib.sgli.test.algo.graph.TestUtils;
+import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
+import slib.sglib.test.algo.graph.TestUtils;
 import slib.sglib.algo.validator.dag.ValidatorDAG;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;

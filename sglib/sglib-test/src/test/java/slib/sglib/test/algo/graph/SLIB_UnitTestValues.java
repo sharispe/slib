@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sgli.test.algo.graph;
+package slib.sglib.test.algo.graph;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.impl.repo.DataFactoryMemory;

@@ -275,6 +275,8 @@ public class TestGraphEngine {
 
         for (V v : graph.getV()) {
             Set<URI> ancestorsURIsExpected = ancestors.get((URI) v.getValue());
+            System.out.println(v);
+            System.out.println(ancestorsURIsExpected.size()+" == "+nbAncestors.get(v));
             assertTrue(ancestorsURIsExpected.size() == nbAncestors.get(v));
         }
     }
@@ -284,7 +286,7 @@ public class TestGraphEngine {
 
         Set<V> leavesGraph = engine.getLeaves();
 
-        logger.info("" + leavesGraph.size() + "\t" + leavesGraph);
+        //logger.info("" + leavesGraph.size() + "\t" + leavesGraph);
         //TODO check equality
         assertTrue(leavesGraph.size() == 7);
     }

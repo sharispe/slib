@@ -76,11 +76,16 @@ public class IcUtils {
         while (it.hasNext()) {
 
             V v = it.next();
-            if (max < icResults.get(v)) {
+            if (mica == null || max < icResults.get(v)) {
                 max = icResults.get(v);
                 mica = v;
             }
         }
+        
+        System.out.println(ancA);
+        System.out.println(ancB);
+        System.out.println("Intersection "+intersec);
+        System.out.println("MICA: "+mica);
         return mica;
     }
 
@@ -88,16 +93,18 @@ public class IcUtils {
      *
      * @param ancA
      * @param ancB
-     * @param icResults
+     * @param icScores
      * @return
      * @throws SLIB_Exception  
      */
-    public static double searchMax_IC_MICA(Set<V> ancA,
+    public static Double searchMax_IC_MICA(Set<V> ancA,
             Set<V> ancB,
-            ResultStack<V, Double> icResults) throws SLIB_Exception {
+            ResultStack<V, Double> icScores) throws SLIB_Exception {
         
-        V mica = searchMICA(ancA, ancB, icResults);
-        return icResults.get(mica);
+        V mica = searchMICA(ancA, ancB, icScores);
+        
+        
+        return icScores.get(mica);
     }
 
     /**

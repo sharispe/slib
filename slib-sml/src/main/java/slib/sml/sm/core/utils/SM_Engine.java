@@ -701,6 +701,8 @@ public class SM_Engine {
         ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
 
         for (V c : graph.getVClass()) {
+            System.out.println(""+c);
+            System.out.println(allAncestors.get(c));
             int nbAnc = allAncestors.get(c).size();
             allNbancestors.add(c, (double) nbAnc + 1 ); // getAllRVClass() is exlusive
         }

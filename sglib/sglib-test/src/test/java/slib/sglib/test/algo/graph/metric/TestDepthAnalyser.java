@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sgli.test.algo.graph.metric;
+package slib.sglib.test.algo.graph.metric;
 
 import static org.junit.Assert.assertTrue;
 
@@ -42,8 +42,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.vocabulary.RDFS;
 
-import slib.sgli.test.algo.graph.SLIB_UnitTestValues;
-import slib.sgli.test.algo.graph.TestUtils;
+import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
+import slib.sglib.test.algo.graph.TestUtils;
 import slib.sglib.algo.metric.DepthAnalyserAG;
 import slib.sglib.algo.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
