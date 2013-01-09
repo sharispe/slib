@@ -8,6 +8,10 @@ import java.io.InputStreamReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author seb
+ */
 public class TreadIO extends Thread{
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -16,7 +20,14 @@ public class TreadIO extends Thread{
 	int b_id;
 	int b_number;
 	
-	public TreadIO(InputStream inputstream,boolean isErrorIO,int b_id,int b_numbers){
+	/**
+     *
+     * @param inputstream
+     * @param isErrorIO
+     * @param b_id
+     * @param b_numbers
+     */
+    public TreadIO(InputStream inputstream,boolean isErrorIO,int b_id,int b_numbers){
 		this.inputstream = inputstream;
 		this.isErrorIO = isErrorIO;
 		this.b_id 	  = b_id;

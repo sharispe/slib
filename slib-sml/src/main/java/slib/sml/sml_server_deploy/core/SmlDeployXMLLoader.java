@@ -28,6 +28,13 @@ import slib.sml.sml_server_deploy.core.utils.Command;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
+
+
+
+/**
+ *
+ * @author seb
+ */
 public class SmlDeployXMLLoader {
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -40,7 +47,13 @@ public class SmlDeployXMLLoader {
 	LinkedList<CmdProfile>  cmdProfilesCollection;
 	LinkedList<Benchmark>   benchmarksList;
 
-	public CmdExecutor loadConf(String xmlFile) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param xmlFile
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public CmdExecutor loadConf(String xmlFile) throws SLIB_Ex_Critic{
 
 		executor = new CmdExecutor();
 
@@ -513,7 +526,13 @@ public class SmlDeployXMLLoader {
 		return gConfSet;
 	}
 
-	public String getAttValue(Element e, String a){
+	/**
+     *
+     * @param e
+     * @param a
+     * @return
+     */
+    public String getAttValue(Element e, String a){
 
 		String value = null;
 
@@ -523,7 +542,14 @@ public class SmlDeployXMLLoader {
 		return value;
 	}
 
-	public static void main(String[] args) throws SLIB_Ex_Critic, IOException, InterruptedException {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Ex_Critic
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public static void main(String[] args) throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		SmlDeployXMLLoader loader = new SmlDeployXMLLoader();
 
@@ -533,9 +559,6 @@ public class SmlDeployXMLLoader {
 	}
 
 }
-
-
-
 final class MyEntry implements Map.Entry<String, String> {
 
 	private final String key;

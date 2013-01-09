@@ -52,11 +52,19 @@ import slib.utils.ex.SLIB_Exception;
  * 
  * @author Sebastien Harispe
  *
- * @param <V>
  */
 public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 		int maxDepth   = c.getMaxDepth();
 

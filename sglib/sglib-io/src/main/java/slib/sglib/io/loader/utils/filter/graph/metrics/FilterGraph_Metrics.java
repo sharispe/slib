@@ -40,17 +40,30 @@ import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class FilterGraph_Metrics extends FilterGraph {
 
 	boolean removeEmpty = true;
 	String  metric	    = null;
 	double  value;
 	
-	public FilterGraph_Metrics(String id) {
+	/**
+     *
+     * @param id
+     */
+    public FilterGraph_Metrics(String id) {
 		super(id, FilterGraph_Metrics_cst.TYPE);
 	}
 	
-	public FilterGraph_Metrics(Conf conf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param conf
+     * @throws SLIB_Ex_Critic
+     */
+    public FilterGraph_Metrics(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 		
 		String removeEmptys = (String) conf.getParam(FilterGraph_Metrics_cst.REMOVE_EMPTY);
@@ -92,27 +105,51 @@ public class FilterGraph_Metrics extends FilterGraph {
 		return out;
 	}
 
-	public boolean isRemoveEmpty() {
+	/**
+     *
+     * @return
+     */
+    public boolean isRemoveEmpty() {
 		return removeEmpty;
 	}
 
-	public void setRemoveEmpty(boolean removeEmpty) {
+	/**
+     *
+     * @param removeEmpty
+     */
+    public void setRemoveEmpty(boolean removeEmpty) {
 		this.removeEmpty = removeEmpty;
 	}
 
-	public String getMetric() {
+	/**
+     *
+     * @return
+     */
+    public String getMetric() {
 		return metric;
 	}
 
-	public void setMetric(String metric) {
+	/**
+     *
+     * @param metric
+     */
+    public void setMetric(String metric) {
 		this.metric = metric;
 	}
 
-	public double getValue() {
+	/**
+     *
+     * @return
+     */
+    public double getValue() {
 		return value;
 	}
 
-	public void setValue(double value) {
+	/**
+     *
+     * @param value
+     */
+    public void setValue(double value) {
 		this.value = value;
 	}
 	

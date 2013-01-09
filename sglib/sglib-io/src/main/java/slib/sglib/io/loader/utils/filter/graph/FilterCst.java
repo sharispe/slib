@@ -39,8 +39,15 @@ package slib.sglib.io.loader.utils.filter.graph;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
 import slib.sglib.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics_cst;
 
+/**
+ *
+ * @author seb
+ */
 public class FilterCst {
 
-	public static String[] supportedTypes = {FilterGraph_GAF2_cst.TYPE,FilterGraph_Metrics_cst.TYPE};
+	/**
+     *
+     */
+    public static String[] supportedTypes = {FilterGraph_GAF2_cst.TYPE,FilterGraph_Metrics_cst.TYPE};
 	
 }

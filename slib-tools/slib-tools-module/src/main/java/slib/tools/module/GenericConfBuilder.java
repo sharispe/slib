@@ -11,6 +11,10 @@ import org.w3c.dom.NodeList;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class GenericConfBuilder {
 	
 	static  final Pattern patternRgx = Pattern.compile("\\{([^\\{^\\}]*)\\}");
@@ -22,7 +26,7 @@ public class GenericConfBuilder {
 	 * @param v the original string
 	 * @return the string impacted by the loaded pattern
 	 * @see {@link GlobalConfPattern}
-	 * @throws SGL_Ex_Critic if a non existing pattern is used
+         * @throws SLIB_Ex_Critic 
 	 */
 	public static String applyGlobalPatterns(String v) throws SLIB_Ex_Critic{
 
@@ -60,7 +64,13 @@ public class GenericConfBuilder {
 	}
 	
 	
-	public static Conf build(Element e) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param e
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static Conf build(Element e) throws SLIB_Ex_Critic {
 		Conf m = new Conf();
 
 		for(int j = 0; j< e.getAttributes().getLength();j++){
@@ -75,7 +85,13 @@ public class GenericConfBuilder {
 	}
 	
 	
-	public static LinkedHashSet<Conf> build(NodeList list) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param list
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static LinkedHashSet<Conf> build(NodeList list) throws SLIB_Ex_Critic {
 
 		LinkedHashSet<Conf> gConfSet = new LinkedHashSet<Conf>();
 

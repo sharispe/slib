@@ -90,6 +90,7 @@ public class DFS implements GraphTraversal {
      * native edge types.
      *
      * TODO Use WalkConstraint
+     * @param dir  
      */
     public DFS(G g, Set<V> sources, Set<URI> edgesTypes, Direction dir) {
         init(g, sources, edgesTypes, dir);
@@ -101,6 +102,7 @@ public class DFS implements GraphTraversal {
      * @param g
      * @param source
      * @param etype
+     * @param dir  
      */
     public DFS(G g, V source, URI etype, Direction dir) {
         this(g, SetUtils.buildSet(source), SetUtils.buildSet(etype), dir);
@@ -112,6 +114,7 @@ public class DFS implements GraphTraversal {
      * @param g
      * @param source
      * @param edgesTypes
+     * @param dir  
      */
     public DFS(G g, V source, Set<URI> edgesTypes, Direction dir) {
         this(g, SetUtils.buildSet(source), edgesTypes, dir);
@@ -176,10 +179,18 @@ public class DFS implements GraphTraversal {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean hasNext() {
         return current_id > 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public V next() {
         removePerformed = false;
         current_id--;

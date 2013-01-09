@@ -37,6 +37,10 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.io.loader.bio.obo.utils;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OboType {
 
 	private String 		uri;
@@ -44,46 +48,85 @@ public class OboType {
 	private boolean isSymmetric  = false;
 	boolean isObsolete = false;
 	
-	public OboType(){};
+	/**
+     *
+     */
+    public OboType(){};
 	
 	
-	public OboType(String uri){
+	/**
+     *
+     * @param uri
+     */
+    public OboType(String uri){
 		this.uri 	= uri;
 	}
 	
 	
-	public String getURIstring() {
+	/**
+     *
+     * @return
+     */
+    public String getURIstring() {
 		return uri;
 	}
 
-	public void setURIstring(String uri) {
+	/**
+     *
+     * @param uri
+     */
+    public void setURIstring(String uri) {
 		this.uri = uri;
 	}
 	
-	public boolean isTransitive(){
+	/**
+     *
+     * @return
+     */
+    public boolean isTransitive(){
 		return isTransitive;
 	}
 	
 	
-	public void setTransitivity(boolean val){
+	/**
+     *
+     * @param val
+     */
+    public void setTransitivity(boolean val){
 		isTransitive = val;
 	}
 
-	public void setSymmetricity(boolean b) {
+	/**
+     *
+     * @param b
+     */
+    public void setSymmetricity(boolean b) {
 		isSymmetric = b;
 	}
 	
-	public boolean isSymmetric(){
+	/**
+     *
+     * @return
+     */
+    public boolean isSymmetric(){
 		return isSymmetric;
 	}
 
 
-	public boolean isObsolete() {
+	/**
+     *
+     * @return
+     */
+    public boolean isObsolete() {
 		return isObsolete;
 	}
 
 
-	public void setObsolete(boolean isObsolete) {
+	/**
+     *
+     * @param isObsolete
+     */
+    public void setObsolete(boolean isObsolete) {
 		this.isObsolete = isObsolete;
 	}
 	

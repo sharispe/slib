@@ -38,6 +38,10 @@ import org.openrdf.model.URI;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphMemory extends GraphMemory_Abstract {
 
     /**

@@ -39,15 +39,30 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
+    /**
+     *
+     */
     public static String ARG_CONCEPT_FILE = "concept_file";
+    /**
+     *
+     */
     public static String ARG_RELATIONSHIP_FILE = "relationship_file";
+    /**
+     *
+     */
     public static String ARG_PREFIX = "prefix";
+    /**
+     *
+     */
     public static String ID_SUBCLASSOF_SNOMED = "116680003";
     
     HashMap<String, V> conceptMap = new HashMap<String, V>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Pattern p_tab = Pattern.compile("\\t");
     DataFactoryMemory repo = DataFactoryMemory.getSingleton();
+    /**
+     *
+     */
     public static Map<String, URI> idMapping = new HashMap<String, URI>() {
         {
             put(ID_SUBCLASSOF_SNOMED, RDFS.SUBCLASSOF);
@@ -233,21 +248,39 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
         }
     }
 
+    /**
+     *
+     */
     public class SnomedCT_concept {
 
         String id;
         V vertex;
 
+        /**
+         *
+         * @param id
+         * @param v
+         */
         public SnomedCT_concept(String id, V v) {
             this.id = id;
             this.vertex = v;
         }
 
+        /**
+         *
+         * @return
+         */
         public V getVertex() {
             return vertex;
         }
     }
 
+    /**
+     *
+     * @param a
+     * @throws SLIB_Exception
+     * @throws ParseException
+     */
     public static void main(String[] a) throws SLIB_Exception, ParseException {
 
 

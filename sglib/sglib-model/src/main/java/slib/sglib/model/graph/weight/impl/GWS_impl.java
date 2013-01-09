@@ -57,33 +57,63 @@ public class GWS_impl implements GWS{
 	Map<URI, Double> eTypeWeights;
 	Map<E, Double> eWeights;
 	
-	public GWS_impl(){}
+	/**
+     *
+     */
+    public GWS_impl(){}
 
-	public GWS_impl(double defaultWeight){
+	/**
+     *
+     * @param defaultWeight
+     */
+    public GWS_impl(double defaultWeight){
 		this.defaultWeight = defaultWeight;
 	}
 
-	public double getDefaultWeight() {
+	/**
+     *
+     * @return
+     */
+    public double getDefaultWeight() {
 		return defaultWeight;
 	}
 
-	public void setDefaultWeight(double w) {
+	/**
+     *
+     * @param w
+     */
+    public void setDefaultWeight(double w) {
 		defaultWeight = w;	
 	}
 	
-	public boolean existsWeight(E e) {
+	/**
+     *
+     * @param e
+     * @return
+     */
+    public boolean existsWeight(E e) {
 		if(eWeights != null && eWeights.containsKey(e))
 			return true;
 		return false;
 	}
 
-	public void addWeight(E e,double w) {
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    public void addWeight(E e,double w) {
 		if(eWeights == null)
 			eWeights = new HashMap<E, Double>();
 		eWeights.put(e, w);
 	}
 
-	public double getWeight(E e){
+	/**
+     *
+     * @param e
+     * @return
+     */
+    public double getWeight(E e){
 
 		Double w;
 
@@ -106,25 +136,45 @@ public class GWS_impl implements GWS{
 		return w;
 	}
 
-	public void setWeight(E e, double w) {
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    public void setWeight(E e, double w) {
 		if(eWeights == null)
 			eWeights = new HashMap<E, Double>();
 		eWeights.put(e, w);
 	}
 	
-	public boolean existsWeight(URI e) {
+	/**
+     *
+     * @param e
+     * @return
+     */
+    public boolean existsWeight(URI e) {
 		if(eTypeWeights != null && eTypeWeights.containsKey(e))
 			return true;
 		return false;
 	}
 
-	public void addWeight(URI e,double w) {
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    public void addWeight(URI e,double w) {
 		if(eTypeWeights == null)
 			eTypeWeights = new HashMap<URI, Double>();
 		eTypeWeights.put(e,w);
 	}
 
-	public double getWeight(URI e){
+	/**
+     *
+     * @param e
+     * @return
+     */
+    public double getWeight(URI e){
 		Double w;
 
 		w = eTypeWeights.get(e);

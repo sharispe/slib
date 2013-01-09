@@ -3,38 +3,71 @@ package slib.sml.sml_server_deploy.core.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ *
+ * @author seb
+ */
 public class Command {
 	
 	Map<String,String> defaultVariables = new HashMap<String,String>();
 	String name;
 	String commandPattern;
 	
-	public Command(String name,String commandPattern){
+	/**
+     *
+     * @param name
+     * @param commandPattern
+     */
+    public Command(String name,String commandPattern){
 		this.name = name;
 		this.commandPattern = commandPattern;
 	}
 
-	public Map<String, String> getDefaultVariables() {
+	/**
+     *
+     * @return
+     */
+    public Map<String, String> getDefaultVariables() {
 		return defaultVariables;
 	}
 
-	public void setDefaultVariables(Map<String, String> defaultVariables) {
+	/**
+     *
+     * @param defaultVariables
+     */
+    public void setDefaultVariables(Map<String, String> defaultVariables) {
 		this.defaultVariables = defaultVariables;
 	}
 
-	public String getName() {
+	/**
+     *
+     * @return
+     */
+    public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	/**
+     *
+     * @param name
+     */
+    public void setName(String name) {
 		this.name = name;
 	}
 
-	public String getCommandPattern() {
+	/**
+     *
+     * @return
+     */
+    public String getCommandPattern() {
 		return commandPattern;
 	}
 
-	public void setCommandPattern(String commandPattern) {
+	/**
+     *
+     * @param commandPattern
+     */
+    public void setCommandPattern(String commandPattern) {
 		this.commandPattern = commandPattern;
 	}
 	

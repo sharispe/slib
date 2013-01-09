@@ -69,8 +69,7 @@ public class GraphReduction_Transitive {
      *
      * @param graph the graph on which the transitive reduction needs to be
      * performed
-     * @throws critical exception if the given graph is not a rooted Graph
-     * considering SUBCLASSOF relationships
+     * @throws SLIB_Ex_Critic 
      * @return the set of edges removed.
      */
     public static Set<E> process(G graph) throws SLIB_Ex_Critic {
@@ -92,8 +91,8 @@ public class GraphReduction_Transitive {
      * vertex as root only taxonomic relationships are considered i.e
      * SUBCLASSOF, SUPERCLASSOF.
      *
-     * @param graph the graph on which the transitive reduction needs to be
-     * performed
+     * @param g 
+     * @param src 
      * @return the set of edges removed.
      */
     public static Set<E> process(G g, V src) {

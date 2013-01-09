@@ -45,9 +45,22 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_groupwise_Random implements Sim_Groupwise_Standalone{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf)
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf)
 			throws SLIB_Exception {
 		
 		Random r = new Random();

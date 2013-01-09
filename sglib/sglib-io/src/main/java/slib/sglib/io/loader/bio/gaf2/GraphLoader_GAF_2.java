@@ -64,8 +64,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
 
 /**
- * GAF 2 parser used to construct a graph from a GAF 2.0
- * annotation file
+ * GAF 2 parser used to construct a graph from a GAF 2.0 annotation file
  *
  * The parser consider considering GAF 2.0 specification provided at
  * http://wiki.geneontology.org/index.php/GO_Consortium_web_GAF2.0_documentation
@@ -75,22 +74,73 @@ import slib.utils.impl.BigFileReader;
  */
 public class GraphLoader_GAF_2 implements GraphLoader {
 
+    /**
+     *
+     */
     public final static int DB = 0;
+    /**
+     *
+     */
     public final static int DB_OBJECT_ID = 1;
+    /**
+     *
+     */
     public final static int DB_OBJECT_SYMBOL = 2;
+    /**
+     *
+     */
     public final static int QUALIFIER = 3;
+    /**
+     *
+     */
     public final static int GOID = 4;
+    /**
+     *
+     */
     public final static int REFERENCE = 5;
+    /**
+     *
+     */
     public final static int EVIDENCE_CODE = 6;
+    /**
+     *
+     */
     public final static int WITH = 7;
+    /**
+     *
+     */
     public final static int ASPECT = 8;
+    /**
+     *
+     */
     public final static int DB_OBJECT_NAME = 9;
+    /**
+     *
+     */
     public final static int DB_OBJECT_SYNONYM = 10;
+    /**
+     *
+     */
     public final static int DB_OBJECT_TYPE = 11;
+    /**
+     *
+     */
     public final static int TAXON = 12;
+    /**
+     *
+     */
     public final static int DATE = 13;
+    /**
+     *
+     */
     public final static int ASSIGNED_BY = 14;
+    /**
+     *
+     */
     public final static int ANNOTATION_XP = 15;
+    /**
+     *
+     */
     public final static int GENE_PRODUCT_ISOFORM = 16;
     private G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -118,10 +168,8 @@ public class GraphLoader_GAF_2 implements GraphLoader {
      * @param graph a graph defining the concepts to consider, can be set to
      * null if no mapping restriction have to be take into account If a graph is
      * specified only annotation corresponding a graph Node will be loaded.
+     * @throws SLIB_Ex_Critic
      *
-     * @return a knowledge base
-     *
-     * @throws SGL_Ex_Critic
      */
     @Override
     public void populate(GDataConf conf, G graph) throws SLIB_Ex_Critic {
@@ -210,8 +258,8 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         if (uriPrefix == null) {
             uriPrefix = g.getURI().getNamespace();
         }
-        
-        logger.info("Using prefix: "+uriPrefix);
+
+        logger.info("Using prefix: " + uriPrefix);
 
         DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 

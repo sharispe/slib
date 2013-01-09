@@ -60,7 +60,16 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		Map<V, Double> minDists_cA = c.getAllShortestPath(a); 
 		Map<V, Double> minDists_cB = c.getAllShortestPath(b); 
@@ -72,7 +81,17 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract{
 	}
 	
 	
-	public double sim(	Map<V, Double> minDists_cA, 
+	/**
+     *
+     * @param minDists_cA
+     * @param minDists_cB
+     * @param ancestors_A
+     * @param ancestors_B
+     * @param maxDepths
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(	Map<V, Double> minDists_cA, 
 						Map<V, Double> minDists_cB, 
 						Set<V> ancestors_A,
 						Set<V> ancestors_B,

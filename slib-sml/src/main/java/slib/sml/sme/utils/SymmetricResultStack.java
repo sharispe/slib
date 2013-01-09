@@ -40,18 +40,32 @@ import java.util.HashMap;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class SymmetricResultStack {
 
 	String methods;
 	HashMap<String, HashMap<String, Double>> results;
 	
 	
-	public SymmetricResultStack(String meth) {
+	/**
+     *
+     * @param meth
+     */
+    public SymmetricResultStack(String meth) {
 		this.methods = meth;
 		results = new HashMap<String, HashMap<String,Double>>();
 	}
 	
-	public void addResult(String o1, String o2, Double score){
+	/**
+     *
+     * @param o1
+     * @param o2
+     * @param score
+     */
+    public void addResult(String o1, String o2, Double score){
 		
 		if(results.containsKey(o1)){
 			results.get(o1).put(o2, score);
@@ -65,7 +79,14 @@ public class SymmetricResultStack {
 		}
 	}
 	
-	public double getSim(String o1, String o2) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param o1
+     * @param o2
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double getSim(String o1, String o2) throws SLIB_Ex_Critic{
 		
 		if(results.containsKey(o1) && results.get(o1).containsKey(o2)){
 			return results.get(o1).get(o2);

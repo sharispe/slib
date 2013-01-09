@@ -40,11 +40,29 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
+/**
+ *
+ * @author seb
+ */
 public interface PredicateFactory {
 	
-	public URI createPURI(String uri);
-	public boolean add(URI uri);
+	/**
+     *
+     * @param uri
+     * @return
+     */
+    public URI createPURI(String uri);
+	/**
+     *
+     * @param uri
+     * @return
+     */
+    public boolean add(URI uri);
 
-	Set<URI> getURIs();
+	/**
+     *
+     * @return
+     */
+    Set<URI> getURIs();
 	
 }

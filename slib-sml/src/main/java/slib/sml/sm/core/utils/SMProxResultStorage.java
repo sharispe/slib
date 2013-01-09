@@ -41,6 +41,10 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public class SMProxResultStorage {
 
     Map<ICconf, ResultStack<V, Double>> metrics_results;
@@ -54,12 +58,21 @@ public class SMProxResultStorage {
     ResultStack<V, Integer> maxDepths;
     ResultStack<V, Integer> minDepths;
     Integer maxDepth;
+    /**
+     *
+     */
     public ResultStack<V, Long> nbOccurrencePropagatted;
 
+    /**
+     *
+     */
     public SMProxResultStorage() {
         this.clearCache();
     }
 
+    /**
+     *
+     */
     public void clearCache() {
 
         metrics_results = new ConcurrentHashMap<ICconf, ResultStack<V, Double>>();

@@ -49,12 +49,33 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class InstancesAccessorGeneric implements InstancesAccessor {
 
+    /**
+     *
+     */
     public G graph;
+    /**
+     *
+     */
     public RVF_TAX taxFinder;
+    /**
+     *
+     */
     public Map<V, Set<V>> instancesToClasses; // direct, i.e. without inference
+    /**
+     *
+     */
     public Map<V, Set<V>> classesToInstances; // direct, i.e. without inference
+    /**
+     *
+     */
     public Map<V, Set<V>> descendants;
 
+    /**
+     *
+     * @param graph
+     * @param instancesToDirectClasses
+     * @throws SLIB_Ex_Critic
+     */
     public InstancesAccessorGeneric(G graph, Map<V, Set<V>> instancesToDirectClasses) throws SLIB_Ex_Critic {
         this.graph = graph;
         this.instancesToClasses = instancesToDirectClasses;

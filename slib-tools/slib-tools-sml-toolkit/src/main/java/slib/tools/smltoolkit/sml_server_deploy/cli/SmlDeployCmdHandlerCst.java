@@ -44,41 +44,69 @@ import org.apache.commons.cli.OptionBuilder;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 
+/**
+ *
+ * @author seb
+ */
 public class SmlDeployCmdHandlerCst extends ToolCmdHandlerCst {
 
 	
 
 	
-	public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SML_DEPLOY;
-	public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
-	public static boolean debugMode  = false;
+	/**
+     *
+     */
+    public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SML_DEPLOY;
+	/**
+     *
+     */
+    public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
+	/**
+     *
+     */
+    public static boolean debugMode  = false;
 	
 	/*
 	 * Error messages  
 	 */
 	
-	public static final String errorMissingXMLconf = "[ERROR] Please specify an Xml configuration file";
+	/**
+     *
+     */
+    public static final String errorMissingXMLconf = "[ERROR] Please specify an Xml configuration file";
 			
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 			= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option help 			= new Option( "help", "print this message" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option xmlconf  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "Xml configuration file (required)" )
 	.create( "xmlconf" );
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option restrictions_benchmarks  = OptionBuilder.withArgName( "string" )
 	.hasArg()
 	.withDescription( "benchmarks id(s) of the benchmark you want to process (use comma as separator). " +
 			"If no restrictions are precised all benchmark will be performed (optional)" )
 	.create( "b_restrictions" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option restrictions_profiles  = OptionBuilder.withArgName( "string" )
 	.hasArg()
 	.withDescription( "profile types you want to process (use comma as separator). " +
@@ -88,7 +116,10 @@ public class SmlDeployCmdHandlerCst extends ToolCmdHandlerCst {
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		optionsOrder.put(xmlconf, optionsOrder.size());
@@ -97,7 +128,10 @@ public class SmlDeployCmdHandlerCst extends ToolCmdHandlerCst {
 		optionsOrder.put(help, optionsOrder.size());
 	 }
 	
-	public SmlDeployCmdHandlerCst() {
+	/**
+     *
+     */
+    public SmlDeployCmdHandlerCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 	

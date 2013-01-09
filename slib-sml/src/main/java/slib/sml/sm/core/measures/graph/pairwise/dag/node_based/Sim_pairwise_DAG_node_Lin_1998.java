@@ -53,6 +53,15 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     
     boolean preventIncoherency = true;
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -63,6 +72,14 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
         return sim(ic_a, ic_b, ic_MICA);
     }
 
+    /**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
 
         double lin = 0.;
@@ -80,6 +97,10 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     }
     
     
+    /**
+     *
+     * @param preventIncoherency
+     */
     public void setPreventIncoherency(boolean preventIncoherency){
         this.preventIncoherency = preventIncoherency;
     }

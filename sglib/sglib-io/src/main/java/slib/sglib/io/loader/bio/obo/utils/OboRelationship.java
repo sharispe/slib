@@ -37,32 +37,60 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.io.loader.bio.obo.utils;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OboRelationship {
 
 	private String	    targetUriString;
 	private String	    typeUriString;
 	
-	public OboRelationship(){};
+	/**
+     *
+     */
+    public OboRelationship(){};
 	
-	public OboRelationship(String typeUriString,String targetUriString){
+	/**
+     *
+     * @param typeUriString
+     * @param targetUriString
+     */
+    public OboRelationship(String typeUriString,String targetUriString){
 		this.targetUriString  = targetUriString;
 		this.typeUriString    = typeUriString;
 	}
 	
-	public String getTargetUriString() {
+	/**
+     *
+     * @return
+     */
+    public String getTargetUriString() {
 		return targetUriString;
 	}
 	
-	public void setTargetUriString(String targetURI) {
+	/**
+     *
+     * @param targetURI
+     */
+    public void setTargetUriString(String targetURI) {
 		this.targetUriString = targetURI;
 	}
 
-	public void setTypeUriString(String typeURI) {
+	/**
+     *
+     * @param typeURI
+     */
+    public void setTypeUriString(String typeURI) {
 		this.typeUriString = typeURI;
 	}
 	
 
-	public String getTypeUriString() {
+	/**
+     *
+     * @return
+     */
+    public String getTypeUriString() {
 		return typeUriString;
 	}
 

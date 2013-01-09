@@ -44,9 +44,23 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_Framework_Commonalities extends Sim_Framework{
 
-	public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param rep_a
+     * @param rep_b
+     * @param c
+     * @param operators
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
 
 		if(!operators.validateRules(rep_a, rep_b, c))
 			return operators.getRulesInvalidatedScore();

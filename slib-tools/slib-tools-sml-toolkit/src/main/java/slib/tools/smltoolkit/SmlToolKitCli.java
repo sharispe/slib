@@ -60,12 +60,20 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class SmlToolKitCli extends CmdHandler {
 
+    /**
+     *
+     */
     public String tool = null;
     static Logger logger = LoggerFactory.getLogger(SmlToolKitCli.class);
     String[] argsTool;
     String[] argsGeneral;
     CommandLine argsGeneralCMD;
 
+    /**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
     public SmlToolKitCli(String[] args) throws SLIB_Exception {
 
         super(new SmlToolKitCst(), new SmlToolKitCliCst(), args);
@@ -161,6 +169,10 @@ public class SmlToolKitCli extends CmdHandler {
         argsGeneral = argsGeneral_.toArray(strArrayb);
     }
 
+    /**
+     *
+     * @param args
+     */
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 

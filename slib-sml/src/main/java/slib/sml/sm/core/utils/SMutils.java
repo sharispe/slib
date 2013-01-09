@@ -39,10 +39,22 @@ package slib.sml.sm.core.utils;
 import slib.sglib.model.graph.elements.V;
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class SMutils {
 	
 	
-	public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a,V b, Object value) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param pairwiseConf
+     * @param a
+     * @param b
+     * @param value
+     * @throws SLIB_Ex_Critic
+     */
+    public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a,V b, Object value) throws SLIB_Ex_Critic{
 		
 		throw new SLIB_Ex_Critic("Critical error. \n" +
 				"A result produced by the pairwise measure "+pairwiseConf.flag+" was not a number "+value+" (NaN/Infinity). \n" +
@@ -52,7 +64,16 @@ public class SMutils {
 				"Please report the bug to the developpers\n");
 	}
 
-	public static void throwArithmeticCriticalException(SMconf m, SMconf p, V e1,
+	/**
+     *
+     * @param m
+     * @param p
+     * @param e1
+     * @param e2
+     * @param value
+     * @throws SLIB_Ex_Critic
+     */
+    public static void throwArithmeticCriticalException(SMconf m, SMconf p, V e1,
 			V e2, Object value) throws SLIB_Ex_Critic {
 		throw new SLIB_Ex_Critic("Critical error. \n" +
 				"A result produced by the measure "+m.flag+" was not a number "+value+" (NaN/infinity). \n" +

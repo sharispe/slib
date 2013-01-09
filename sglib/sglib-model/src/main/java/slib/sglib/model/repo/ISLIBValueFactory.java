@@ -13,5 +13,10 @@ import org.openrdf.model.ValueFactory;
  */
 public interface ISLIBValueFactory extends ValueFactory{
     
+    /**
+     *
+     * @param uri
+     * @return
+     */
     public URI getURI(URI uri);
 }

@@ -59,13 +59,27 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
     
     double k = 0.5;
     
+    /**
+     *
+     */
     public ICi_zhou_2008() {
     }
     
+    /**
+     *
+     * @param k
+     */
     public ICi_zhou_2008(double k) {
         this.k = k;
     }
     
+    /**
+     *
+     * @param alldepths
+     * @param allNbDescendants
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Integer> alldepths,
             ResultStack<V, Long> allNbDescendants) throws SLIB_Ex_Critic {
         

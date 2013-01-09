@@ -36,12 +36,22 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.smbb.core.conf.xml.utils;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConfXmlCst {
 	
-	public final static String tag  = "smbb";
+	/**
+     *
+     */
+    public final static String tag  = "smbb";
 
 	
 	// Errors
-	final public static String ERROR_NB_TAG = "Please specify a "+tag+" module configuration (only one admitted)";
+	/**
+     *
+     */
+    final public static String ERROR_NB_TAG = "Please specify a "+tag+" module configuration (only one admitted)";
 
 }

@@ -43,16 +43,35 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_node_abstract{
 	
-	public static final String alpha_param_name = "alpha";
-	public static final String beta_param_name  = "beta";
+	/**
+     *
+     */
+    public static final String alpha_param_name = "alpha";
+	/**
+     *
+     */
+    public static final String beta_param_name  = "beta";
 	
 	private double alpha = 0.5;
 	private double beta  = 0.5;
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -80,7 +99,18 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @param p_mica
+     * @param alpha
+     * @param beta
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {
 		
 		Sim_pairwise_DAG_node_Tversky_IC m = new Sim_pairwise_DAG_node_Tversky_IC(alpha,beta);
 		

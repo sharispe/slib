@@ -43,6 +43,10 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
+/**
+ *
+ * @author seb
+ */
 public class IcUtils {
 
     /**
@@ -86,8 +90,7 @@ public class IcUtils {
      * @param ancB
      * @param icResults
      * @return
-     * @throws SLIB_Ex_Critic if the intersection is empty or the result stack
-     * is null
+     * @throws SLIB_Exception  
      */
     public static double searchMax_IC_MICA(Set<V> ancA,
             Set<V> ancB,
@@ -97,6 +100,14 @@ public class IcUtils {
         return icResults.get(mica);
     }
 
+    /**
+     *
+     * @param ancA
+     * @param ancB
+     * @param icResults
+     * @return
+     * @throws SLIB_Exception
+     */
     public static double searchMin_pOc_MICA(
             Set<V> ancA,
             Set<V> ancB,

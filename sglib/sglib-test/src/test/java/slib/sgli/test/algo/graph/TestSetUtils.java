@@ -50,6 +50,10 @@ import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
+/**
+ *
+ * @author seb
+ */
 public class TestSetUtils {
 
 
@@ -74,7 +78,11 @@ public class TestSetUtils {
 	int c2_intersection = 0;
 	int c2_union		= 6;
 
-	public TestSetUtils() throws SLIB_Ex_Critic{
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public TestSetUtils() throws SLIB_Ex_Critic{
 
 	}
 
@@ -167,36 +175,54 @@ public class TestSetUtils {
 
 
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void c2_intersection(){
 		populate_c2();
 		assertTrue(SetUtils.intersection(setA, setB).size() == c2_intersection);
 	}
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void c2_union(){
 		populate_c2();
 		assertTrue(SetUtils.union(setA, setB).size() == c2_union);
 	}
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void c1_intersection(){
 		populate_c1();
 		assertTrue(SetUtils.intersection(setA, setB).size() == c1_intersection);
 	}
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void c1_union(){
 		populate_c1();
 		assertTrue(SetUtils.union(setA, setB).size() == c1_union);
 	}
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void emptySetsIntersection(){
 		assertTrue(SetUtils.intersection(setA, setB).size() == 0);
 	}
 
-	@Test
+	/**
+     *
+     */
+    @Test
 	public void emptySetsUnion(){
 		assertTrue(SetUtils.union(setA, setB).size() == 0);
 	}

@@ -7,6 +7,10 @@ import java.util.Map;
 import slib.sglib.algo.utils.GActionType;
 import slib.sglib.io.util.GFormat;
 
+/**
+ *
+ * @author seb
+ */
 public class XMLAttributMapping {
     
     
@@ -14,6 +18,9 @@ public class XMLAttributMapping {
 	
    
     
+    /**
+     *
+     */
     public static final Map<String, GFormat> GDataFormatMapping;
     static {
         Map<String, GFormat> aMap = new HashMap<String, GFormat>();
@@ -29,6 +36,9 @@ public class XMLAttributMapping {
         GDataFormatMapping = Collections.unmodifiableMap(aMap);
     }
     
+    /**
+     *
+     */
     public static final Map<String, GActionType> GActionTypeMapping;
     static {
         Map<String, GActionType> aMap = new HashMap<String, GActionType>();

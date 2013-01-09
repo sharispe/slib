@@ -38,6 +38,10 @@ package slib.sml.smbb.core.bioinfo.bmark.seqsim.core;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public interface IblastScoreAcessor {
 	
 	/**
@@ -45,7 +49,7 @@ public interface IblastScoreAcessor {
 	 * @param protA URI
 	 * @param protB URI
 	 * @return associated blast score
-	 * @throws SGL_Ex_Critic if the score is not found
+         * @throws SLIB_Ex_Critic 
 	 */
 	public double getBlastScore(String protA,String protB) throws SLIB_Ex_Critic;
 

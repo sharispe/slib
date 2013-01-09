@@ -7,23 +7,36 @@ import java.util.TimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author seb
+ */
 public class Timer {
 
     long start = 0;
     long stop  = 0;
     Logger logger = LoggerFactory.getLogger(Timer.class);
 
+    /**
+     *
+     */
     public void start() {
         logger.info("Start Timer");
         start = System.currentTimeMillis();
         stop = 0;
     }
 
+    /**
+     *
+     */
     public void stop() {
         logger.info("Stop Timer");
         stop = System.currentTimeMillis();
     }
 
+    /**
+     *
+     */
     public void elapsedTime() {
 
         if (stop == 0) {

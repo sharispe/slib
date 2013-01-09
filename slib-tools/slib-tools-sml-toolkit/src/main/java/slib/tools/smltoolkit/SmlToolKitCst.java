@@ -51,10 +51,17 @@ public class SmlToolKitCst extends ModuleCst {
          * See properties file and POM for constant values
          */
         public static final String   properties_file_name   = "sml-toolkit-constants.properties";
-        public static final String   properties_prefix      = "sml-toolkit";
+        /**
+     *
+     */
+    public static final String   properties_prefix      = "sml-toolkit";
 	
 	
-	public SmlToolKitCst() throws SLIB_Ex_Critic {
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public SmlToolKitCst() throws SLIB_Ex_Critic {
 		super(properties_file_name,properties_prefix);
 	}
 

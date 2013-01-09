@@ -5,6 +5,10 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
+/**
+ *
+ * @author seb
+ */
 public class CSV_StatementTemplate{
 
 	int src_id;
@@ -13,7 +17,13 @@ public class CSV_StatementTemplate{
 	
 	Set<CSV_StatementTemplate_Constraint> constraints;
 
-	public CSV_StatementTemplate(int src_id, int target_id, URI predicate){
+	/**
+     *
+     * @param src_id
+     * @param target_id
+     * @param predicate
+     */
+    public CSV_StatementTemplate(int src_id, int target_id, URI predicate){
 		this.src_id     = src_id;
 		this.target_id  = target_id;
 		this.predicate  = predicate;
@@ -21,7 +31,11 @@ public class CSV_StatementTemplate{
 		constraints = new HashSet<CSV_StatementTemplate_Constraint>();
 	}
 	
-	public void addConstraint(CSV_StatementTemplate_Constraint c){
+	/**
+     *
+     * @param c
+     */
+    public void addConstraint(CSV_StatementTemplate_Constraint c){
 		constraints.add(c);
 	}
 }

@@ -43,23 +43,47 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SetUtils {
 	
-	public static <X> Set<X> union(Collection<X> a, Collection<X> b){
+	/**
+     *
+     * @param <X>
+     * @param a
+     * @param b
+     * @return
+     */
+    public static <X> Set<X> union(Collection<X> a, Collection<X> b){
 		
 		Set<X> union = new HashSet<X>(a);
 		union.addAll(b);
 		return union;
 	}
 
-	public static <X> Set<X> intersection(Collection<X> anc_setA, Collection<X> anc_setB) {
+	/**
+     *
+     * @param <X>
+     * @param anc_setA
+     * @param anc_setB
+     * @return
+     */
+    public static <X> Set<X> intersection(Collection<X> anc_setA, Collection<X> anc_setB) {
 		
 		Set<X> inter 	 = new HashSet<X>(anc_setA);
 		inter.retainAll(anc_setB);
 		return inter;
 	}
 
-	public static <X> double getMax(HashMap<X, Integer> nbOccurrence) {
+	/**
+     *
+     * @param <X>
+     * @param nbOccurrence
+     * @return
+     */
+    public static <X> double getMax(HashMap<X, Integer> nbOccurrence) {
 		
 		double max = -Double.MAX_VALUE;
 		
@@ -73,7 +97,8 @@ public class SetUtils {
 	/**
 	 * Build a Set<X> containing the given object of type X
 	 * If the object is null, null is returned
-	 * @param o
+         * @param <X> 
+         * @param o
 	 * @return a Set<X> containing the given object of type X or null
 	 */
 	public static <X> Set<X> buildSet(X o) {

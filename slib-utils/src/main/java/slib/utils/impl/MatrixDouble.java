@@ -104,13 +104,23 @@ public class MatrixDouble<C,R>{
 		}
 	}
 
-	public Double[] getColumn(C r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public Double[] getColumn(C r){
 		if(isInColumnIndex(r))
 			return matrix[columnIndex.get(r)];
 		return null;
 	}
 
-	public Double[] getRow(R r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public Double[] getRow(R r){
 
 		if(!isInRowIndex(r))
 			return null;
@@ -125,13 +135,26 @@ public class MatrixDouble<C,R>{
 		return row;
 	}
 	
-	public Double getValueCheckIndex(C colResource,R rowResource){
+	/**
+     *
+     * @param colResource
+     * @param rowResource
+     * @return
+     */
+    public Double getValueCheckIndex(C colResource,R rowResource){
 		if(isInColumnIndex(colResource) && isInRowIndex(rowResource))
 			return matrix[columnIndex.get(colResource)][rowIndex.get(rowResource)];
 		return null;
 	}
 
-	public Double getValue(C colResource,R rowResource) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param colResource
+     * @param rowResource
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public Double getValue(C colResource,R rowResource) throws SLIB_Ex_Critic{
 		try{
 			return matrix[columnIndex.get(colResource)][rowIndex.get(rowResource)];
 		}
@@ -140,32 +163,64 @@ public class MatrixDouble<C,R>{
 		}
 	}
 
-	public void setValue(C colResource,R rowResource, Double value){
+	/**
+     *
+     * @param colResource
+     * @param rowResource
+     * @param value
+     */
+    public void setValue(C colResource,R rowResource, Double value){
 		matrix[columnIndex.get(colResource)][rowIndex.get(rowResource)] = value;
 	}
 
-	public boolean isInRowIndex(R r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public boolean isInRowIndex(R r){
 		
 		return rowIndex.keySet().contains(r);
 	}
 
-	public boolean isInColumnIndex(C r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public boolean isInColumnIndex(C r){
 		return columnIndex.keySet().contains(r);
 	}
 
-	public int getNbColumns(){
+	/**
+     *
+     * @return
+     */
+    public int getNbColumns(){
 		return columnIndex.size();
 	}
 
-	public int getNbRows(){
+	/**
+     *
+     * @return
+     */
+    public int getNbRows(){
 		return rowIndex.size();
 	}
 
-	public boolean isSquare(){
+	/**
+     *
+     * @return
+     */
+    public boolean isSquare(){
 		return columnIndex.size() == rowIndex.size();
 	}
 
-	public Double getMax() {
+	/**
+     *
+     * @return
+     */
+    public Double getMax() {
 		Double max = null;
 		
 		for (int i = 0; i < matrix.length; i++) {
@@ -178,7 +233,13 @@ public class MatrixDouble<C,R>{
 		return max;
 	}
 	
-	public Double getMaxColumn(C v) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param v
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public Double getMaxColumn(C v) throws SLIB_Ex_Critic{
 		
 		if(! isInColumnIndex(v))
 			throw new SLIB_Ex_Critic("Unable to locate "+v+"in column index");
@@ -192,7 +253,13 @@ public class MatrixDouble<C,R>{
 		return max;
 	}
 	
-	public Double getMaxRow(R v) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param v
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public Double getMaxRow(R v) throws SLIB_Ex_Critic{
 		
 		if(! isInRowIndex(v))
 			throw new SLIB_Ex_Critic("Unable to locate "+v+"in row index");
@@ -244,7 +311,11 @@ public class MatrixDouble<C,R>{
 		
 	}
 	
-	public Double[][] getMatrix(){
+	/**
+     *
+     * @return
+     */
+    public Double[][] getMatrix(){
 		return matrix;
 	}
 	

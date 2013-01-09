@@ -39,11 +39,24 @@ package slib.sglib.io.loader.utils.filter.graph.gaf2;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public class FilterGraph_GAF2_cst{
 
-	public static String TYPE = "GAF2";
+	/**
+     *
+     */
+    public static String TYPE = "GAF2";
 	
-	public static final String TAXONS_IDS = "tax_ids";
-	public static final String REMOVE_EC  = "remove_ec";
+	/**
+     *
+     */
+    public static final String TAXONS_IDS = "tax_ids";
+	/**
+     *
+     */
+    public static final String REMOVE_EC  = "remove_ec";
 	
 }

@@ -50,6 +50,10 @@ import slib.sml.sme.utils.SymmetricResultStack;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.BigFileReader;
 
+/**
+ *
+ * @author seb
+ */
 public class DiscriminativePowerComputer {
 
     Logger logger = LoggerFactory.getLogger(DiscriminativePowerComputer.class);
@@ -58,12 +62,26 @@ public class DiscriminativePowerComputer {
     HashMap<String, HashSet<String>> clanProteins;  // key: clan id value: set of protein id
     HashMap<String, String> protClanMapping; 		// key: prot id value: clan id
     LinkedHashMap<String, SymmetricResultStack> methResults;
+    /**
+     *
+     */
     public static double max_value_default = 1000;
     double max_value = max_value_default;
 
+    /**
+     *
+     */
     public DiscriminativePowerComputer() {
     }
 
+    /**
+     *
+     * @param clansfile
+     * @param protComparison
+     * @param max_value
+     * @param out
+     * @throws SLIB_Ex_Critic
+     */
     public void compute(String clansfile, String protComparison,
             Double max_value, String out) throws SLIB_Ex_Critic {
 
@@ -124,6 +142,11 @@ public class DiscriminativePowerComputer {
         }
     }
 
+    /**
+     *
+     * @param infile
+     * @throws SLIB_Ex_Critic
+     */
     public void loadingScore(String infile) throws SLIB_Ex_Critic {
         logger.info("Loading Sims  from: " + infile);
 
@@ -161,6 +184,14 @@ public class DiscriminativePowerComputer {
         }
     }
 
+    /**
+     *
+     * @param methID
+     * @param o1
+     * @param o2
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public double getResult(String methID, String o1, String o2) throws SLIB_Ex_Critic {
 
         if (methResults.containsKey(methID)) {
@@ -169,6 +200,13 @@ public class DiscriminativePowerComputer {
         throw new SLIB_Ex_Critic("Cannot find result stack for " + methID);
     }
 
+    /**
+     *
+     * @param methID
+     * @param clan
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public double computeIntraSetSim(String methID, String clan) throws SLIB_Ex_Critic {
 
         ArrayList<String> allProtClan = new ArrayList<String>(clanProteins.get(clan));
@@ -187,6 +225,14 @@ public class DiscriminativePowerComputer {
         return intraSetSim;
     }
 
+    /**
+     *
+     * @param methID
+     * @param clan_a
+     * @param clan_b
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public double computeInterSetSim(String methID, String clan_a, String clan_b) throws SLIB_Ex_Critic {
 
         ArrayList<String> allProtClan_a = new ArrayList<String>(clanProteins.get(clan_a));
@@ -207,6 +253,13 @@ public class DiscriminativePowerComputer {
         return interSetSim;
     }
 
+    /**
+     *
+     * @param methID
+     * @param clan
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public double computeDiscriminativePower(String methID, String clan) throws SLIB_Ex_Critic {
 
         int p = clanProteins.keySet().size() - 1;
@@ -230,6 +283,11 @@ public class DiscriminativePowerComputer {
         return dp;
     }
 
+    /**
+     *
+     * @param outfile
+     * @throws SLIB_Ex_Critic
+     */
     public void computeAllDiscriminativePower(String outfile) throws SLIB_Ex_Critic {
 
         try {
@@ -263,6 +321,11 @@ public class DiscriminativePowerComputer {
         }
     }
 
+    /**
+     *
+     * @param args
+     * @throws SLIB_Ex_Critic
+     */
     public static void main(String[] args) throws SLIB_Ex_Critic {
 
         String dir = System.getProperty("user.dir");

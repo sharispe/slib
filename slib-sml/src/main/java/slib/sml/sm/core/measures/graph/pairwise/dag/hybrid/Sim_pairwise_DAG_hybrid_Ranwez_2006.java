@@ -58,7 +58,15 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract{
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) {
 		
 		Set<V> hypoAncEx = c.getHypoAncEx(a,b);
 		Set<V> hypoA = c.getDescendantsInc(a);
@@ -68,7 +76,14 @@ public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract
 	}
 	
 
-	public double sim(Set<V> hypoAncEx, 
+	/**
+     *
+     * @param hypoAncEx
+     * @param hypoA
+     * @param hypoB
+     * @return
+     */
+    public double sim(Set<V> hypoAncEx, 
 			Set<V> hypoA,
 			Set<V> hypoB ) {
 

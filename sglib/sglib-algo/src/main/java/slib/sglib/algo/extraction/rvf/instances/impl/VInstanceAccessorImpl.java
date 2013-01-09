@@ -5,14 +5,29 @@ import java.util.Map;
 import slib.sglib.algo.extraction.rvf.instances.VirtualInstancesAccessor;
 import slib.sglib.model.graph.elements.V;
 
+/**
+ *
+ * @author seb
+ */
 public class VInstanceAccessorImpl implements VirtualInstancesAccessor{
 
 	
-	public Map<V,Long> nbDirectInstances;
-	public Map<V,Long> nbInferredInstances;
+	/**
+     *
+     */
+    public Map<V,Long> nbDirectInstances;
+	/**
+     *
+     */
+    public Map<V,Long> nbInferredInstances;
 	
 	
-	public VInstanceAccessorImpl( Map<V,Long> nbDirectInstances,  Map<V,Long> nbInferredInstances){
+	/**
+     *
+     * @param nbDirectInstances
+     * @param nbInferredInstances
+     */
+    public VInstanceAccessorImpl( Map<V,Long> nbDirectInstances,  Map<V,Long> nbInferredInstances){
 		
 		this.nbDirectInstances   = nbDirectInstances;
 		this.nbInferredInstances = nbInferredInstances;

@@ -41,13 +41,32 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.impl.OProperty;
 
+/**
+ *
+ * @author seb
+ */
 public class EdgeTypedAbstract extends OProperty implements E {
 
+    /**
+     *
+     */
     protected final V source;
+    /**
+     *
+     */
     protected final V target;
+    /**
+     *
+     */
     protected final URI uri;
 
     
+    /**
+     *
+     * @param source
+     * @param target
+     * @param uri
+     */
     public EdgeTypedAbstract(V source, V target, URI uri) {
 
         this.source = source;
@@ -117,6 +136,11 @@ public class EdgeTypedAbstract extends OProperty implements E {
         return source.getValue().stringValue() + "\t" + uri.stringValue() + "\t" + target.getValue().stringValue();
     }
 
+    /**
+     *
+     * @param direction
+     * @return
+     */
     public V getVertex(Direction direction) {
         if (direction.equals(Direction.IN)) {
             return source;
@@ -126,10 +150,18 @@ public class EdgeTypedAbstract extends OProperty implements E {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLabel() {
         return uri.stringValue();
     }
 
+    /**
+     *
+     * @return
+     */
     public Object getId() {
         return source + "-" + uri + "->" + target;
     }

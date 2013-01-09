@@ -8,10 +8,18 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 
+/**
+ *
+ * @author seb
+ */
 public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
     G graph;
 
+    /**
+     *
+     * @param graph
+     */
     public InstanceAccessor_RDF_TYPE(G graph) {
         this.graph = graph;
     }

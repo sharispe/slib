@@ -47,32 +47,78 @@ import slib.sml.smutils.SQLiteUtils;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 
+/**
+ *
+ * @author seb
+ */
 public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 
 	
 
-	public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SMUTILS;
-	public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
-	public static boolean 		 debugMode  = false;
+	/**
+     *
+     */
+    public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SMUTILS;
+	/**
+     *
+     */
+    public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
+	/**
+     *
+     */
+    public static boolean 		 debugMode  = false;
 	
 	
 	
-	public static final String   process_resultMerger = "result_merger";
-	public static final String   process_sqlLiteUtils = "SQLiteUtils";
+	/**
+     *
+     */
+    public static final String   process_resultMerger = "result_merger";
+	/**
+     *
+     */
+    public static final String   process_sqlLiteUtils = "SQLiteUtils";
 	
-	public static final String  sqlLiteUtils_create = "create";
-	public static final String  sqlLiteUtils_drop   = "drop";
-	public static final String  sqlLiteUtils_dropColumns = "dropColumns";
-	public static final String  sqlLiteUtils_merge  = "merge";
-	public static final String  sqlLiteUtils_flush  = "flush";
-	public static final String  sqlLiteUtils_rename = "rename";
-	public static final String  sqlLiteUtils_info   = "info";
-	public static final String  sqlLiteUtils_copy   = "copy";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_create = "create";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_drop   = "drop";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_dropColumns = "dropColumns";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_merge  = "merge";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_flush  = "flush";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_rename = "rename";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_info   = "info";
+	/**
+     *
+     */
+    public static final String  sqlLiteUtils_copy   = "copy";
 	
 	
 	
 	
-	public static String cmd_examples = 
+	/**
+     *
+     */
+    public static String cmd_examples = 
 			"Command line examples \n" +
 			
 			process_sqlLiteUtils+"\n" +
@@ -116,22 +162,40 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 	
 	
 	
-	public static final String[] acceptedProcesses 	= {process_resultMerger,process_sqlLiteUtils};
-	public static final String[] acceptedActionSQLite  = {sqlLiteUtils_copy,sqlLiteUtils_create,sqlLiteUtils_drop,sqlLiteUtils_dropColumns,sqlLiteUtils_merge,sqlLiteUtils_flush,sqlLiteUtils_rename,sqlLiteUtils_info};
+	/**
+     *
+     */
+    public static final String[] acceptedProcesses 	= {process_resultMerger,process_sqlLiteUtils};
+	/**
+     *
+     */
+    public static final String[] acceptedActionSQLite  = {sqlLiteUtils_copy,sqlLiteUtils_create,sqlLiteUtils_drop,sqlLiteUtils_dropColumns,sqlLiteUtils_merge,sqlLiteUtils_flush,sqlLiteUtils_rename,sqlLiteUtils_info};
 	/*
 	 * Error messages  
 	 */
 	
-	public static final String errorMissingProcess = "[ERROR] Please specify a process to perform, available "+Arrays.toString(acceptedProcesses);
+	/**
+     *
+     */
+    public static final String errorMissingProcess = "[ERROR] Please specify a process to perform, available "+Arrays.toString(acceptedProcesses);
 	
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 			= new Option( "help", "print this message" );
-	public static Option examples 		= new Option( "ex", "print command line examples" );
+	/**
+     *
+     */
+    public static Option help 			= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option examples 		= new Option( "ex", "print command line examples" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option process  = OptionBuilder.withArgName( "process" )
 	.hasArg()
 	.withDescription( "process to perform (required) "+Arrays.toString(acceptedProcesses) )
@@ -143,56 +207,83 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 	 * sqliteUtils
 	 */
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option action  = OptionBuilder.withArgName( "action" )
 	.hasArg()
 	.withDescription( "action to perform (required for "+process_sqlLiteUtils+") "+Arrays.toString(acceptedActionSQLite) )
 	.create( "action" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option db_A  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "database A (required for "+process_sqlLiteUtils+")" )
 	.create( "db_A" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option db_B  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "database B (optional for "+process_sqlLiteUtils+" action "+sqlLiteUtils_merge+")" )
 	.create( "db_B" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option db_M  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "database M merge (optional for "+process_sqlLiteUtils+" action "+sqlLiteUtils_merge+")" )
 	.create( "db_M" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option table_A  = OptionBuilder.withArgName( "table name" )
 	.hasArg()
 	.withDescription( "table A (required for "+process_sqlLiteUtils+")" )
 	.create( "table_A" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option table_B  = OptionBuilder.withArgName( "table name " )
 	.hasArg()
 	.withDescription( "table B (required for "+process_sqlLiteUtils+" action "+sqlLiteUtils_merge+")")
 	.create( "table_B" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option table_M  = OptionBuilder.withArgName( "table name" )
 	.hasArg()
 	.withDescription( "table M merge (required for "+process_sqlLiteUtils+" action "+sqlLiteUtils_merge+")" )
 	.create( "table_M" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option colsToremove  = OptionBuilder.withArgName( "column names" )
 	.hasArg()
 	.withDescription( "columns to remove separated by comma (required for "+process_sqlLiteUtils+" action "+sqlLiteUtils_dropColumns+")" )
 	.create( "colsToremove" );
 	
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option BATCH_LIMIT  = OptionBuilder.withArgName( "integer" )
 	.hasArg()
 	.withDescription( "BATCH_LIMIT defines the number of queries to be loaded " +
@@ -202,7 +293,10 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 			" default "+SQLiteUtils.BATCH_LIMIT )
 	.create( "BATCH_LIMIT" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option BATCH_LIMIT_MATRIX_LINE  
 	= OptionBuilder.withArgName( "integer" )
 	.hasArg()
@@ -217,31 +311,46 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 	 * result Merger
 	 */
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option file_A  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "semantic measures result file A (required for "+process_resultMerger+" and "+process_sqlLiteUtils+" actions "+sqlLiteUtils_create+", "+sqlLiteUtils_flush+")" )
 	.create( "file_A" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option file_B  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "semantic measures result file B (required for "+process_resultMerger+")" )
 	.create( "file_B" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option output  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "output file (required for "+process_resultMerger+")" )
 	.create( "output" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option tmp_dir  = OptionBuilder.withArgName( "directory" )
 	.hasArg()
 	.withDescription( "temporary directory. Specify an existing directory path if you want to process large files. Input files will be splitted in numerous tiny files in the specified directory ("+process_resultMerger+" optional)" )
 	.create( "tmp_dir" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option split_size  = OptionBuilder.withArgName( "integer" )
 	.hasArg()
 	.withDescription( "Integer value. Define Number of line contained by splitted file ("+process_resultMerger+" optional, default "+ResultsMerger.splitSize_default+" )" )
@@ -254,7 +363,10 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		
@@ -283,7 +395,10 @@ public class SmUtilsCmdHandlerCst extends ToolCmdHandlerCst{
 
 	
 	
-	public SmUtilsCmdHandlerCst() {
+	/**
+     *
+     */
+    public SmUtilsCmdHandlerCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 }

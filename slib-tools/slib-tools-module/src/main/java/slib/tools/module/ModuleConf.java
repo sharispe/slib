@@ -52,8 +52,8 @@ public interface ModuleConf {
 	 * Check if the current configuration is valid i.e. if the module depending
 	 * on this configuration can be call using this parameterized configuration.
 	 * 
-	 * @return true if the configuration is valid.
-	 * @throws SGL_Ex_Critic
+         * @return true if the configuration is valid.
+         * @throws SLIB_Ex_Critic  
 	 */
 	public boolean isValid() throws SLIB_Ex_Critic;
 }

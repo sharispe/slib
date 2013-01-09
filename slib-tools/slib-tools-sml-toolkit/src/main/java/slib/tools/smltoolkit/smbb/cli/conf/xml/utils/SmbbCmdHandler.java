@@ -48,16 +48,28 @@ import slib.tools.smltoolkit.smbb.cli.SmbbToolKitCst;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbCmdHandler  extends CmdHandler {
 
 	
-	public String  xmlConfFile;
+	/**
+     *
+     */
+    public String  xmlConfFile;
 
 
 	static Logger logger = LoggerFactory.getLogger(SmbbCmdHandler.class);
 	
 
-	public SmbbCmdHandler(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public SmbbCmdHandler(String[] args) throws SLIB_Exception {
 		super(new SmbbToolKitCst(), new SmbbCmdHandlerCst(), args);
 	}
 
@@ -90,7 +102,11 @@ public class SmbbCmdHandler  extends CmdHandler {
 
 
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		try {
 			SmbbCmdHandler 	    c = new SmbbCmdHandler(args);

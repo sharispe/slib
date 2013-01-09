@@ -43,6 +43,11 @@ import java.util.Set;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 
+/**
+ *
+ * @author seb
+ * @param <N>
+ */
 public class MatrixDynamic<N extends Number>{
 	
 	HashMap<Object,Integer> columnIndex;
@@ -50,7 +55,12 @@ public class MatrixDynamic<N extends Number>{
 	
 	ArrayList<ArrayList<N>> matrix;
 	
-	public MatrixDynamic(Set<Object> columResources,Set<Object> rowResources){
+	/**
+     *
+     * @param columResources
+     * @param rowResources
+     */
+    public MatrixDynamic(Set<Object> columResources,Set<Object> rowResources){
 		
 		columnIndex = new HashMap<Object, Integer>(columResources.size());
 		rowIndex 	= new HashMap<Object, Integer>(rowIndex.size());
@@ -76,11 +86,21 @@ public class MatrixDynamic<N extends Number>{
 		}
 	}
 	
-	public ArrayList<N> getColumn(Object r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public ArrayList<N> getColumn(Object r){
 		return matrix.get(columnIndex.get(r));
 	}
 	
-	public ArrayList<N> getRow(Object r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public ArrayList<N> getRow(Object r){
 		
 		if(!rowIndex.keySet().contains(r))
 			return null;
@@ -92,35 +112,75 @@ public class MatrixDynamic<N extends Number>{
 		return row;
 	}
 	
-	public N getValue(Object colResource,Object rowResource){
+	/**
+     *
+     * @param colResource
+     * @param rowResource
+     * @return
+     */
+    public N getValue(Object colResource,Object rowResource){
 		return matrix.get(columnIndex.get(colResource)).get(rowIndex.get(rowResource));
 	}
 	
-	public void setValue(Object colResource,Object rowResource, N value){
+	/**
+     *
+     * @param colResource
+     * @param rowResource
+     * @param value
+     */
+    public void setValue(Object colResource,Object rowResource, N value){
 		matrix.get(columnIndex.get(colResource)).set(rowIndex.get(rowResource),value);
 	}
 	
-	public boolean isInRowIndex(Object r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public boolean isInRowIndex(Object r){
 		return rowIndex.keySet().contains(r);
 	}
 	
-	public boolean isInColumnIndex(Object r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public boolean isInColumnIndex(Object r){
 		return columnIndex.keySet().contains(r);
 	}
 	
-	public boolean isInIndexed(Object r){
+	/**
+     *
+     * @param r
+     * @return
+     */
+    public boolean isInIndexed(Object r){
 		return isInRowIndex(r) || isInColumnIndex(r);
 	}
 	
-	public int getNbColumns(){
+	/**
+     *
+     * @return
+     */
+    public int getNbColumns(){
 		return columnIndex.size();
 	}
 	
-	public int getNbRows(){
+	/**
+     *
+     * @return
+     */
+    public int getNbRows(){
 		return rowIndex.size();
 	}
 	
-	public void addColumn(Object r) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param r
+     * @throws SLIB_Ex_Critic
+     */
+    public void addColumn(Object r) throws SLIB_Ex_Critic{
 		if(columnIndex.containsKey(r))
 			throw new SLIB_Ex_Critic("Column "+r+"already exists");
 		
@@ -135,7 +195,12 @@ public class MatrixDynamic<N extends Number>{
 		matrix.add(column);
 	}
 	
-	public void addRow(Object r) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param r
+     * @throws SLIB_Ex_Critic
+     */
+    public void addRow(Object r) throws SLIB_Ex_Critic{
 		if(rowIndex.containsKey(r))
 			throw new SLIB_Ex_Critic("Row "+r+"already exists");
 		
@@ -146,7 +211,11 @@ public class MatrixDynamic<N extends Number>{
 			matrix.get(i).add(null);
 	}
 	
-	public boolean isSquare(){
+	/**
+     *
+     * @return
+     */
+    public boolean isSquare(){
 		return columnIndex.size() == rowIndex.size();
 	}
 }

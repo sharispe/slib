@@ -44,16 +44,29 @@ import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class FilterGraph_GAF2 extends FilterGraph {
 
 	HashSet<String> taxons;
 	HashSet<String> excludedEC;
 	
-	public FilterGraph_GAF2(String id) {
+	/**
+     *
+     * @param id
+     */
+    public FilterGraph_GAF2(String id) {
 		super(id, FilterGraph_GAF2_cst.TYPE);
 	}
 	
-	public FilterGraph_GAF2(Conf conf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param conf
+     * @throws SLIB_Ex_Critic
+     */
+    public FilterGraph_GAF2(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 		
 		String taxids = (String) conf.getParam(FilterGraph_GAF2_cst.TAXONS_IDS);
@@ -68,39 +81,63 @@ public class FilterGraph_GAF2 extends FilterGraph {
 	}
 	
 	
-	public void addTaxons(String t){
+	/**
+     *
+     * @param t
+     */
+    public void addTaxons(String t){
 		
 		if(taxons == null)
 			taxons = new HashSet<String>();
 		taxons.add(t);
 	}
 	
-	public void addECtoExclude(String ec){
+	/**
+     *
+     * @param ec
+     */
+    public void addECtoExclude(String ec){
 		
 		if(excludedEC == null)
 			excludedEC = new HashSet<String>();
 		excludedEC.add(ec);
 	}
 	
-	public void addECtoExclude(Collection<String> t){
+	/**
+     *
+     * @param t
+     */
+    public void addECtoExclude(Collection<String> t){
 		
 		if(excludedEC == null)
 			excludedEC = new HashSet<String>();
 		excludedEC.addAll(t);
 	}
 	
-	public void addTaxons(Collection<String> t){
+	/**
+     *
+     * @param t
+     */
+    public void addTaxons(Collection<String> t){
 		
 		if(taxons == null)
 			taxons = new HashSet<String>();
 		taxons.addAll(t);
 	}
 	
-	public HashSet<String> getTaxons(){
+	/**
+     *
+     * @return
+     */
+    public HashSet<String> getTaxons(){
 		return taxons;
 	}
 
-	public HashSet<String> getExcludedEC(){
+	/**
+     *
+     * @return
+     */
+    public HashSet<String> getExcludedEC(){
 		return excludedEC;
 	}
 	

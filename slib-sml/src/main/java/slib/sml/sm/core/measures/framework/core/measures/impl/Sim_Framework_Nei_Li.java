@@ -45,10 +45,24 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_Framework_Nei_Li extends Sim_Framework{
 	
 
-	public double compute(GraphRepresentation a, GraphRepresentation b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param operators
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double compute(GraphRepresentation a, GraphRepresentation b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
 		
 		if(!operators.validateRules(a, b, c))
 			return operators.getRulesInvalidatedScore();

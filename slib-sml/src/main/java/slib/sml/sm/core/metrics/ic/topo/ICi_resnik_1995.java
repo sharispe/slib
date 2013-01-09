@@ -63,6 +63,12 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_resnik_1995 extends LogBasedMetric implements ICtopo {
 
+    /**
+     *
+     * @param nbPLeadingToAllVertex
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> nbPLeadingToAllVertex) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> rtemp = ProbOccurence.compute(nbPLeadingToAllVertex, 0);

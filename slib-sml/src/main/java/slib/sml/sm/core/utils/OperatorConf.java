@@ -39,18 +39,42 @@ package slib.sml.sm.core.utils;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class OperatorConf extends Conf{
 	
-	public String flag;
-	public String id;
-	public ICconf ic;
+	/**
+     *
+     */
+    public String flag;
+	/**
+     *
+     */
+    public String id;
+	/**
+     *
+     */
+    public ICconf ic;
 	
-	public OperatorConf(String flag, String id){
+	/**
+     *
+     * @param flag
+     * @param id
+     */
+    public OperatorConf(String flag, String id){
 		this.flag = flag;
 		this.id = id;
 	}
 	
-	public OperatorConf(String flag, String id,ICconf ic ){
+	/**
+     *
+     * @param flag
+     * @param id
+     * @param ic
+     */
+    public OperatorConf(String flag, String id,ICconf ic ){
 		this.flag = flag;
 		this.id = id;
 		this.ic = ic;

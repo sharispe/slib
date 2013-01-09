@@ -38,35 +38,73 @@ import java.util.HashMap;
 import org.openrdf.model.Value;
 import slib.sglib.model.graph.elements.V;
 
+/**
+ *
+ * @author seb
+ */
 public class IndexHash {
 
     HashMap<Value, IndexedElement> mapping = new HashMap<Value, IndexedElement>();
 
+    /**
+     *
+     * @return
+     */
     public HashMap<Value, IndexedElement> getMapping() {
         return mapping;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public IndexedElement valuesOf(Value v) {
         return mapping.get(v);
     }
     
+    /**
+     *
+     * @param v
+     * @return
+     */
     public IndexedElement valuesOf(V v) {
         return mapping.get(v.getValue());
     }
     
+    /**
+     *
+     * @param x
+     * @param o
+     */
     public void addValue(Value x, IndexedElement o) {
         mapping.put(x, o);
     }
 
+    /**
+     *
+     * @param x
+     * @param o
+     */
     public void addValue(V x, IndexedElement o) {
         mapping.put(x.getValue(), o);
     }
 
         
+    /**
+     *
+     * @param x
+     * @return
+     */
     public boolean containsIndexFor(Value x) {
         return mapping.containsKey(x);
     }
     
+    /**
+     *
+     * @param x
+     * @return
+     */
     public boolean containsIndexFor(V x) {
         return mapping.containsKey(x.getValue());
     }

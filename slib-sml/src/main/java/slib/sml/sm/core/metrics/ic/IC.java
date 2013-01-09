@@ -42,8 +42,19 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public interface IC {
 	
-	public ResultStack<V,Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;
+	/**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public ResultStack<V,Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;
 
 }

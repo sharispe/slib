@@ -50,7 +50,16 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_pairwise_DAG_node_Jaccard_3W_IC implements Sim_DAG_node_abstract{
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -59,7 +68,14 @@ public class Sim_pairwise_DAG_node_Jaccard_3W_IC implements Sim_DAG_node_abstrac
 		return sim(ic_a,ic_b,ic_MICA);
 	}
 
-	public double sim(double ic_a, double ic_b, double ic_mica) {
+	/**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @return
+     */
+    public double sim(double ic_a, double ic_b, double ic_mica) {
 		
 
 		double j = 0;

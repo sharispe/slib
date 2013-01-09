@@ -64,6 +64,13 @@ public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     *
+     * @param allNbOfReachableLeaves
+     * @param allNbAncestors
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves,
             ResultStack<V, Double> allNbAncestors) throws SLIB_Ex_Critic {
 
@@ -113,7 +120,7 @@ public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
         setLogBase(conf);
 
 
-        ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestors();
+        ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestorsInc();
         ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();
 
         // getAllNbReachableLeaves() is inclusive and Sanchez measure require excluvive i.e.

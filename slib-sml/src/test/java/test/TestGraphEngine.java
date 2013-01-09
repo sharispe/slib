@@ -271,7 +271,7 @@ public class TestGraphEngine {
     @Test
     public void test_ancestor_count() throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> nbAncestors = engine.getAllNbAncestors();
+        ResultStack<V, Double> nbAncestors = engine.getAllNbAncestorsInc();
 
         for (V v : graph.getV()) {
             Set<URI> ancestorsURIsExpected = ancestors.get((URI) v.getValue());

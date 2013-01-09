@@ -36,17 +36,54 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.io.util;
 
+/**
+ *
+ * @author seb
+ */
 public enum GFormat {
 
-	OBO,
-	SGL,
-	GAF2,
-	RDF_XML,
-	NTRIPLES,
-        WORDNET_DATA,
-        MESH_XML,
-        SNOMED_CT_RF2,
-	CSV,
-        SLIB, 
-        TURTLE;
+	/**
+     *
+     */
+    OBO,
+	/**
+     *
+     */
+    SGL,
+	/**
+     *
+     */
+    GAF2,
+	/**
+     *
+     */
+    RDF_XML,
+	/**
+     *
+     */
+    NTRIPLES,
+        /**
+     *
+     */
+    WORDNET_DATA,
+        /**
+     *
+     */
+    MESH_XML,
+        /**
+     *
+     */
+    SNOMED_CT_RF2,
+	/**
+     *
+     */
+    CSV,
+        /**
+     *
+     */
+    SLIB, 
+        /**
+     *
+     */
+    TURTLE;
 }

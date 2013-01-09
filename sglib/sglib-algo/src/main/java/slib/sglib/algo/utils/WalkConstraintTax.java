@@ -12,6 +12,10 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 
+/**
+ *
+ * @author seb
+ */
 public class WalkConstraintTax implements WalkConstraints {
 
     Map<URI, Direction> acceptedWalksIN  = new HashMap<URI, Direction>();
@@ -42,6 +46,10 @@ public class WalkConstraintTax implements WalkConstraints {
         return out;
     }
 
+    /**
+     *
+     * @param walkRules
+     */
     public WalkConstraintTax(Map<URI, Direction> walkRules) {
         for (Entry<URI, Direction> e : walkRules.entrySet()) {
 
@@ -62,6 +70,11 @@ public class WalkConstraintTax implements WalkConstraints {
         validVTypes.add(VType.CLASS);
     }
 
+    /**
+     *
+     * @param acceptedPredicate
+     * @param dir
+     */
     public WalkConstraintTax(URI acceptedPredicate, Direction dir) {
         if (dir == Direction.IN || dir == Direction.BOTH) {
             acceptedWalksIN.put(acceptedPredicate, dir);

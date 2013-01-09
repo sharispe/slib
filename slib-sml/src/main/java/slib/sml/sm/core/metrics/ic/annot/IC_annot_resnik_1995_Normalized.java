@@ -64,6 +64,12 @@ import slib.utils.impl.ResultStack;
  */
 public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements ICcorpus {
 
+    /**
+     *
+     * @param nbOccurences
+     * @return
+     * @throws SLIB_Exception
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurences) throws SLIB_Exception {
 
         ResultStack<V, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
@@ -88,6 +94,13 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
         return results;
     }
 
+    /**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);

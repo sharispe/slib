@@ -41,9 +41,23 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public interface ISim_Framework {
 
-	public double sim(V a, 
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param operator
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, 
 			V b, 
 			SM_Engine c, 
 			RepresentationOperators operator, 

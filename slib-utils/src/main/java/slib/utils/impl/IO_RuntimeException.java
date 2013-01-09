@@ -46,7 +46,11 @@ public class IO_RuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public IO_RuntimeException(String string) {
+	/**
+     *
+     * @param string
+     */
+    public IO_RuntimeException(String string) {
 		super(string);
 	}
 

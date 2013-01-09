@@ -49,7 +49,16 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 		Sim_pairwise_DAG_edge_Rada_1989 sRada = new Sim_pairwise_DAG_edge_Rada_1989();
 		
@@ -61,7 +70,13 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
 		return sim(sp,maxDepth);
 	}
 
-	public double sim(Double shortestPath, double depth_max){
+	/**
+     *
+     * @param shortestPath
+     * @param depth_max
+     * @return
+     */
+    public double sim(Double shortestPath, double depth_max){
 
 
 		// add +1 to the path to avoid infinity value if sim(a,a)

@@ -61,14 +61,31 @@ import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphLoaderGeneric {
 
+    /**
+     *
+     */
     public static GFormat[] supportedFormat = {
         GFormat.OBO, GFormat.GAF2, GFormat.NTRIPLES, GFormat.RDF_XML,
         GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV
     };
+    /**
+     *
+     */
     public static Logger logger = LoggerFactory.getLogger(GraphLoaderGeneric.class);
 
+    /**
+     *
+     * @param dataConf
+     * @param g
+     * @return
+     * @throws SLIB_Exception
+     */
     public static G populate(GDataConf dataConf, G g) throws SLIB_Exception {
 
         logger.debug("Populate " + g.getURI() + " based on " + dataConf.getLoc());
@@ -80,6 +97,11 @@ public class GraphLoaderGeneric {
         return g;
     }
 
+    /**
+     *
+     * @param uri
+     * @return
+     */
     public static G createGraph(URI uri) {
 
         logger.debug("Create graph " + uri);
@@ -95,7 +117,7 @@ public class GraphLoaderGeneric {
      *
      * @param graphConf
      * @return
-     * @throws SGL_Exception
+     * @throws SLIB_Exception
      */
     public static G load(GraphConf graphConf) throws SLIB_Exception {
 
@@ -117,6 +139,11 @@ public class GraphLoaderGeneric {
         return g;
     }
 
+    /**
+     *
+     * @param graphConfs
+     * @throws SLIB_Exception
+     */
     public static void load(Collection<GraphConf> graphConfs) throws SLIB_Exception {
 
         for (GraphConf conf : graphConfs) {
@@ -136,11 +163,9 @@ public class GraphLoaderGeneric {
             return new RDFLoader(RDFFormat.RDFXML);
         } else if (data.getFormat() == GFormat.NTRIPLES) {
             return new RDFLoader(RDFFormat.NTRIPLES);
-        } 
-        else if (data.getFormat() == GFormat.TURTLE) {
+        } else if (data.getFormat() == GFormat.TURTLE) {
             return new RDFLoader(RDFFormat.TURTLE);
-        } 
-        else if (data.getFormat() == GFormat.CSV) {
+        } else if (data.getFormat() == GFormat.CSV) {
             return new GraphLoader_CSV();
         } else if (data.getFormat() == GFormat.SNOMED_CT_RF2) {
             return new GraphLoaderSnomedCT_RF2();
@@ -154,34 +179,23 @@ public class GraphLoaderGeneric {
     }
 
     /**
-     * TODO modify to apply actions
      *
-     * @param graphConf
-     * @param g
-     * @throws SGL_Ex_Critic
+     * @param format
+     * @return
      */
-//	private static void performPOSTprocess(GraphConf graphConf, G g) throws SGL_Ex_Critic {
-//
-//
-//		// DAG checking
-//
-//		if(graphConf.dag == false)
-//			logger.info("skipping DAG checking");
-//		else{
-//			logger.info("Checking DAG restriction ");
-//
-//			ValidatorDAG dagVal = new ValidatorDAG();
-//
-//			if(! dagVal.containsRootedTaxonomicDag(g))
-//				throw new SGL_Ex_Critic("Require rooted DAG");
-//		}
-//
-//		logger.debug("Graph information: "+g.toString());
-//	}
     public static boolean supportFormat(String format) {
-        return Arrays.asList(supportedFormat).contains(format);
+        for (GFormat f : supportedFormat) {
+            if (f.toString().equals(format))  {
+                return true;
+            }
+        }
+        return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public static GFormat[] getSupportedFormat() {
         return supportedFormat;
     }

@@ -71,28 +71,38 @@ public interface IEntity{
 	
 		/**
 		 * To retrieve the annotations characterizing the entity
-		 * @return a Set of annotation objects
+                 * @param puri 
+                 * @return a Set of annotation objects
 		 */
 		public Set<V> getAnnotations(URI puri);
 		
 		/**
 		 * Remove a particular Annotation associated to the Entity
-		 * @param annotationURI identifier of the annotation to remove to the entity collection
-		 * @boolean return true if the annotation was removed
+                 * @param puri 
+                 * @boolean return true if the annotation was removed
 		 */
 		public void removeAnnotations(URI puri);
 		
 
-		public void addAnnotation(V v, URI puri);
+		/**
+     *
+     * @param v
+     * @param puri
+     */
+    public void addAnnotation(V v, URI puri);
 	
 		/**
 		 * Remove a particular Annotation associated to the Entity
-		 * @param annotationURI identifier of the annotation to remove to the entity collection
-		 * @boolean return true if the annotation was removed
+                 * @param v 
+                 * @boolean return true if the annotation was removed
 		 */
 		public void removeAnnotations(V v);
 		
-		public URI getURI();
+		/**
+     *
+     * @return
+     */
+    public URI getURI();
 		
 		/**
 		 * Vertex equals method must delegate to {@link URI#equals(Object)}

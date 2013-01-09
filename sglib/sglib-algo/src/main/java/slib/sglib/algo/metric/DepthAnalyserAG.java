@@ -70,8 +70,9 @@ public class DepthAnalyserAG {
      * Create a DepthAnalyserAG object considering a particular acyclic graph
      * and set of edge types Note that graph acyclicity is not evaluated.
      *
+     * @param factory 
      * @param g The graph to consider
-     * @param setEdgeTypes the set of edge types to consider to evaluate depth
+     * @param wc 
      */
     public DepthAnalyserAG(DataFactory factory, G g, WalkConstraints wc) {
 
@@ -164,7 +165,7 @@ public class DepthAnalyserAG {
 
     /**
      * @return a ResultStack containing the maximal depth of each vertex.
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic  
      */
     public ResultStack<V, Integer> getVMaxDepths() throws SLIB_Ex_Critic {
 
@@ -174,7 +175,7 @@ public class DepthAnalyserAG {
 
     /**
      * @return a ResultStack containing the minimal depth of each vertex.
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public ResultStack<V, Integer> getVMinDepths() throws SLIB_Ex_Critic {
 
@@ -186,7 +187,7 @@ public class DepthAnalyserAG {
      * @return a HashMap representing the distribution of each represented
      * minimal depths. key Integer the depth, value the number of vertices with
      * the corresponding depth
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Exception  
      */
     public HashMap<Integer, Integer> getMinDepthsDistribution() throws SLIB_Exception {
 
@@ -201,7 +202,7 @@ public class DepthAnalyserAG {
      * @return a HashMap representing the distribution of each represented
      * maximal depths. key Integer the depth, value the number of vertices with
      * the corresponding depth
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Exception 
      */
     public HashMap<Integer, Integer> getMaxDepthsDistribution() throws SLIB_Exception {
 

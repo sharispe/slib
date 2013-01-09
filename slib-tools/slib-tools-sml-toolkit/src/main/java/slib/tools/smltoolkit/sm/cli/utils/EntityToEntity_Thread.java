@@ -54,6 +54,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 import slib.utils.threads.PoolWorker;
 
+/**
+ *
+ * @author seb
+ */
 public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader> {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -66,6 +70,13 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
     G g;
     private int nbMeasures;
 
+    /**
+     *
+     * @param poolWorker
+     * @param queriesBench
+     * @param sspM
+     * @param nbMeasures
+     */
     public EntityToEntity_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, int nbMeasures) {
 
         this.poolWorker = poolWorker;

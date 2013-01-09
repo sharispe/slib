@@ -38,6 +38,10 @@ import slib.utils.i.Parametrable;
 import slib.utils.impl.Util;
 import slib.utils.threads.ThreadManager;
 
+/**
+ *
+ * @author seb
+ */
 public class XMLConfLoaderGeneric {
 
     private String xmlFile;
@@ -61,6 +65,11 @@ public class XMLConfLoaderGeneric {
         admittedPType.put("RDFS.SUBCLASSOF", RDFS.SUBCLASSOF);
     }
 
+    /**
+     *
+     * @param xmlFile
+     * @throws SLIB_Ex_Critic
+     */
     public XMLConfLoaderGeneric(String xmlFile) throws SLIB_Ex_Critic {
 
 
@@ -513,10 +522,18 @@ public class XMLConfLoaderGeneric {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedList<GraphConf> getGraphConfs() {
         return graphConfs;
     }
 
+    /**
+     *
+     * @return
+     */
     public LinkedHashSet<Filter> getFilters() {
         return filters;
     }

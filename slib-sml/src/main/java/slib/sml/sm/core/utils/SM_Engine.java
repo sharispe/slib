@@ -48,6 +48,8 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.extraction.rvf.AncestorEngine;
+import slib.sglib.algo.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.metric.DepthAnalyserAG;
 import slib.sglib.algo.shortest_path.Dijkstra;
@@ -86,8 +88,10 @@ import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
- * This class is used facilitate the access of commonly required methods for SMs computation. 
- * Depending on the tuning of the engine some caching systems can be taken into account in order to boost some process and avoid to recompute some results.
+ * This class is used facilitate the access of commonly required methods for SMs
+ * computation. Depending on the tuning of the engine some caching systems can
+ * be taken into account in order to boost some process and avoid to recompute
+ * some results.
  *
  * @author Sebastien Harispe
  *
@@ -97,8 +101,8 @@ public class SM_Engine {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     DataFactory factory = DataFactoryMemory.getSingleton();
     final G graph;
-    RVF_TAX ancGetter;
-    RVF_TAX descGetter;
+    AncestorEngine ancGetter;
+    DescendantEngine descGetter;
     Set<URI> allRelTypes;
     /**
      * Set of URI associated to the predicates admitted to perform bottom up
@@ -118,13 +122,19 @@ public class SM_Engine {
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_AddOn> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Standalone> groupwiseStandaloneMeasures;
-    
     ResultStack<V, Double> allNbReachableLeaves;
 
+    /**
+     *
+     * @param validatorDag
+     * @param g
+     * @param setEtypes_a
+     * @throws SLIB_Ex_Critic
+     */
     public SM_Engine(ValidatorDAG validatorDag, G g,
             Set<URI> setEtypes_a) throws SLIB_Ex_Critic {
 
-        this.graph     = g;
+        this.graph = g;
         this.validator = validatorDag;
 
         this.goToSuperClassETypes = setEtypes_a;
@@ -133,8 +143,8 @@ public class SM_Engine {
         allRelTypes = new HashSet<URI>();
         allRelTypes.addAll(goToSuperClassETypes);
 
-        ancGetter = new RVF_TAX(g, Direction.OUT);
-        descGetter = new RVF_TAX(g, Direction.IN);
+        ancGetter = new AncestorEngine(g);
+        descGetter = new DescendantEngine(g);
 
         init();
     }
@@ -148,6 +158,11 @@ public class SM_Engine {
         groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Standalone>();
     }
 
+    /**
+     *
+     * @param g
+     * @throws SLIB_Exception
+     */
     public SM_Engine(G g) throws SLIB_Exception {
         this(new ValidatorDAG(), g, SetUtils.buildSet(RDFS.SUBCLASSOF));
     }
@@ -156,10 +171,11 @@ public class SM_Engine {
      * Compute the union of the inclusive ancestors of a set of classes
      *
      * NOT_CACHED
+     *
      * @param setClasses the set of classes considered
      * @return the union of the inclusive ancestors of the given classes
      */
-    public Set<V> getAncestors(Set<V> setClasses) {
+    public Set<V> getAncestorsInc(Set<V> setClasses) {
 
         Set<V> unionAnc = new HashSet<V>();
 
@@ -174,18 +190,25 @@ public class SM_Engine {
      * exclusive ancestors.
      *
      * CACHED
+     *
      * @param v the considered class
      * @return the set of inclusive ancestors of the given class
      */
     public Set<V> getAncestorsInc(V v) {
 
         if (cache.ancestors.get(v) == null) {
-            Set<V> anc = ancGetter.getRV(v);
+            Set<V> anc = ancGetter.getAncestors(v);
+            anc.add(v);
             cache.ancestors.put(v, anc);
         }
         return cache.ancestors.get(v);
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     public Set<V> getParents(V v) {
 
         Set<E> edges = graph.getE(goToSuperClassETypes, v, Direction.OUT);
@@ -199,8 +222,7 @@ public class SM_Engine {
     }
 
     /**
-     * Compute disjoint ancestors. 
-     * TO OPTIMIZE
+     * Compute disjoint ancestors. TO OPTIMIZE
      *
      * @param c1
      * @param c2
@@ -246,8 +268,8 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @return a resultStack containing the maximal depths 
-     * @throws SGL_Ex_Critic
+     * @return a resultStack containing the maximal depths
+     * @throws SLIB_Ex_Critic 
      */
     public ResultStack<V, Integer> getMaxDepths() throws SLIB_Ex_Critic {
 
@@ -262,8 +284,8 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @return a resultStack containing the minimal depths  
-     * @throws SGL_Ex_Critic
+     * @return a resultStack containing the minimal depths
+     * @throws SLIB_Ex_Critic 
      */
     public ResultStack<V, Integer> getMinDepths() throws SLIB_Ex_Critic {
 
@@ -278,10 +300,10 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @param icLabel
+     * @param icConf 
      * @param v
      * @return the information content of the specified vertex.
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Exception  
      */
     public double getIC(ICconf icConf, V v) throws SLIB_Exception {
 
@@ -299,8 +321,8 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @return the maximal depth of the graph. 
-     * @throws SGL_Ex_Critic
+     * @return the maximal depth of the graph.
+     * @throws SLIB_Exception  
      */
     public int getMaxDepth() throws SLIB_Exception {
 
@@ -323,10 +345,11 @@ public class SM_Engine {
 
     /**
      * CACHED ! Be careful modification of RelTypes requires cache clearing
+     *
      * @param a
      * @param b
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public double getShortestPath(V a, V b) throws SLIB_Ex_Critic {
 
@@ -340,10 +363,11 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED
+     *
      * @param a
      * @param b
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public V getMSA(V a, V b) throws SLIB_Ex_Critic {
 
@@ -355,7 +379,8 @@ public class SM_Engine {
     }
 
     /**
-     * @throws SGL_Ex_Critic
+     * @return
+     * @throws SLIB_Ex_Critic  
      */
     public synchronized V getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
@@ -366,10 +391,13 @@ public class SM_Engine {
     }
 
     /**
-     * CACHED @param a
-     * @return a map containing the weight of the shortest path linking a the given vertex.
-     * 
-     * @throws SGL_Ex_Critic
+     * CACHED
+     *
+     * @param a
+     * @return a map containing the weight of the shortest path linking a the
+     * given vertex.
+     *
+     * @throws SLIB_Ex_Critic 
      */
     public synchronized Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
 
@@ -384,6 +412,7 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED
+     *
      * @param a
      * @param b
      * @return
@@ -411,12 +440,14 @@ public class SM_Engine {
     /**
      * CACHED Return a set of vertices corresponding to the inclusive
      * descendants of a term t i.e t + descendants of t
+     *
      * @param v
      * @return
      */
     public synchronized Set<V> getDescendantsInc(V v) {
         if (cache.descendants.get(v) == null) {
-            Set<V> rv = descGetter.getRV(v);
+            Set<V> rv = descGetter.getDescendants(v);
+            rv.add(v);
             cache.descendants.put(v, rv);
         }
         return cache.descendants.get(v);
@@ -431,6 +462,7 @@ public class SM_Engine {
     //	}
     /**
      * NOT_CACHED
+     *
      * @param v
      * @return
      */
@@ -443,6 +475,7 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED
+     *
      * @param v
      * @return
      */
@@ -454,11 +487,13 @@ public class SM_Engine {
     }
 
     /**
-     * CACHED @param a
+     * CACHED
+     *
+     * @param icConf 
+     * @param a
      * @param b
      * @return
-     * @throws SGL_Exception_Warning
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Exception 
      */
     public double getIC_MICA(ICconf icConf, V a, V b) throws SLIB_Exception {
 
@@ -470,6 +505,14 @@ public class SM_Engine {
         return IcUtils.searchMax_IC_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
+    /**
+     *
+     * @param conf
+     * @param a
+     * @param b
+     * @return
+     * @throws SLIB_Exception
+     */
     public double getP_MICA(ICconf conf, V a, V b) throws SLIB_Exception {
 
         double prob_mica = IcUtils.searchMin_pOc_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(conf));
@@ -484,20 +527,35 @@ public class SM_Engine {
      */
     public ResultStack<V, Long> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allDescendants = descGetter.getAllRVClass();
+        Map<V, Set<V>> allDescendants = descGetter.getAllDescendants();
         ResultStack<V, Long> allNbDescendants = new ResultStack<V, Long>();
 
         for (V c : graph.getVClass()) {
             int nbDesc = allDescendants.get(c).size();
-            allNbDescendants.add(c, (long) nbDesc); //  getAllRVClass() is inclusive
+            allNbDescendants.add(c, (long) nbDesc+1); //  getAllDescendants() is exlusive
         }
         return allNbDescendants;
     }
 
+    /**
+     * @TODO add caching
+     * @return
+     * @throws SLIB_Ex_Critic 
+     */
     public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
-        return descGetter.getAllRVClass();
+        Map<V, Set<V>> descs = descGetter.getAllRVClass();
+        for(V v : descs.keySet()){
+            descs.get(v).add(v);
+        }
+        return descs;
     }
 
+    /**
+     *
+     * @param icConf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
 
 
@@ -509,6 +567,12 @@ public class SM_Engine {
         return cache.metrics_results.get(icConf);
     }
 
+    /**
+     *
+     * @param icConf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public synchronized ResultStack<V, Double> computeIC(ICconf icConf) throws SLIB_Ex_Critic {
 
         if (icConf == null) {
@@ -534,12 +598,12 @@ public class SM_Engine {
             if (icConf instanceof IC_Conf_Corpus) {
 
                 IC_Conf_Corpus icConfCorpus = (IC_Conf_Corpus) icConf;
-                
+
                 cl = Class.forName(icClassName);
                 Constructor<?> co = cl.getConstructor();
                 ICcorpus o = (ICcorpus) co.newInstance();
 
-                results = o.compute(icConfCorpus,this);
+                results = o.compute(icConfCorpus, this);
             } else {
 
                 IC_Conf_Topo icConfTopo = (IC_Conf_Topo) icConf;
@@ -554,7 +618,7 @@ public class SM_Engine {
             cache.metrics_results.put(icConf, results);
 
             logger.debug(results.toString());
-            
+
             logger.info("Checking IC coherency");
 
             for (Entry<V, Double> e : results.entrySet()) {
@@ -579,11 +643,11 @@ public class SM_Engine {
      */
     public synchronized Map<V, Set<V>> getReachableLeaves() {
 
-        if(cache.reachableLeaves.isEmpty()){
+        if (cache.reachableLeaves.isEmpty()) {
             cache.reachableLeaves = descGetter.getTerminalVertices();
         }
         return cache.reachableLeaves;
-        
+
     }
 
     /**
@@ -592,14 +656,18 @@ public class SM_Engine {
      * @return
      */
     public Set<V> getLeaves() {
-        return graph.getV_NoEdgeType(VType.CLASS,goToSuperClassETypes, Direction.IN);
+        return graph.getV_NoEdgeType(VType.CLASS, goToSuperClassETypes, Direction.IN);
     }
 
+    /**
+     *
+     * @return
+     */
     public ResultStack<V, Double> getAllNbReachableLeaves() {
 
         logger.debug("Computing Nb Reachable Leaves : start");
-        
-        
+
+
 
         if (allNbReachableLeaves == null) {
 
@@ -611,8 +679,8 @@ public class SM_Engine {
                 int nbLeaves = allReachableLeaves.get(c).size();
                 allNbReachableLeaves.add(c, (double) nbLeaves);
             }
-            
-            this.allNbReachableLeaves =  allNbReachableLeaves;
+
+            this.allNbReachableLeaves = allNbReachableLeaves;
         }
 
 
@@ -621,24 +689,39 @@ public class SM_Engine {
         return this.allNbReachableLeaves;
     }
 
-    public ResultStack<V, Double> getAllNbAncestors() throws SLIB_Ex_Critic {
+    /**
+     * Inclusive process
+     *
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public ResultStack<V, Double> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allAncestors = ancGetter.getAllRVClass();
+        Map<V, Set<V>> allAncestors = ancGetter.getAllAncestors();
         ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
 
         for (V c : graph.getVClass()) {
             int nbAnc = allAncestors.get(c).size();
-            allNbancestors.add(c, (double) nbAnc);
+            allNbancestors.add(c, (double) nbAnc + 1 ); // getAllRVClass() is exlusive
         }
         return allNbancestors;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getNbVertices() {
         return graph.getV().size();
     }
 
     /**
      * NOT_CACHED by default
+     * @param pairwiseConf 
+     * @param a 
+     * @param b 
+     * @return 
+     * @throws SLIB_Ex_Critic 
      */
     public double computePairwiseSim(SMconf pairwiseConf, V a, V b) throws SLIB_Ex_Critic {
 
@@ -753,6 +836,11 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED
+     * @param confGroupwise 
+     * @param setA
+     * @param setB 
+     * @return
+     * @throws SLIB_Ex_Critic  
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
@@ -793,6 +881,12 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED TODO add measure caching
+     * @param confGroupwise 
+     * @param confPairwise 
+     * @param setB 
+     * @param setA 
+     * @return
+     * @throws SLIB_Ex_Critic  
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,
@@ -833,6 +927,11 @@ public class SM_Engine {
         return sim;
     }
 
+    /**
+     *
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Long> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
 
         if (cache.nbPathLeadingToAllVertices == null) {
@@ -845,6 +944,10 @@ public class SM_Engine {
 //	public VirtualInstancesAccessor getInstanceAccessor(){
 //		return iAccessorCorpus;
 //	}
+    /**
+     *
+     * @return
+     */
     public ResultStack<V, Long> getNbInstancesInferredPropFromCorpus() {
 
         HashMap<V, Set<V>> linkedEntities = new HashMap<V, Set<V>>();
@@ -953,7 +1056,7 @@ public class SM_Engine {
      * Topological propagation considering one occurrence per term
      *
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Exception 
      */
     public ResultStack<V, Long> getNbOccurrenceProp() throws SLIB_Exception {
 
@@ -978,8 +1081,9 @@ public class SM_Engine {
      *
      * @param setA
      * @param setB
+     * @param pairwiseConf 
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public MatrixDouble<V, V> getMatrixScore(
             Set<V> setA,
@@ -999,21 +1103,40 @@ public class SM_Engine {
         return m;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isCachePairwiseResults() {
         return cachePairwiseResults;
     }
 
+    /**
+     *
+     * @param cachePairwiseResults
+     */
     public void setCachePairwiseResults(boolean cachePairwiseResults) {
         logger.info("Pairwise results caching set to " + cachePairwiseResults);
         this.cachePairwiseResults = cachePairwiseResults;
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public ResultStack<V, Double> getSvalues(V a) {
 
         throw new UnsupportedOperationException();
 
     }
 
+    /**
+     *
+     * @param set
+     * @param groupwiseconf
+     * @return
+     */
     public ResultStack<V, Double> getVector(Set<V> set, SMconf groupwiseconf) {
 
         if (vectorWeights == null) {
@@ -1066,30 +1189,54 @@ public class SM_Engine {
 //				}
 //		}
 //	}
+    /**
+     *
+     * @param a
+     * @param conf
+     * @return
+     */
     public GraphRepresentation getRepresentation(V a, SMconf conf) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     *
+     * @return
+     */
     public G getGraph() {
         return graph;
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<URI> getGoToSuperClassETypes() {
         return goToSuperClassETypes;
     }
 
-    public RVF_TAX getAncGetter() {
+    /**
+     *
+     * @return
+     */
+    public AncestorEngine getAncGetter() {
         return ancGetter;
     }
 
-    public RVF_TAX getDescGetter() {
+    /**
+     *
+     * @return
+     */
+    public DescendantEngine getDescGetter() {
         return descGetter;
     }
 
     /**
-     * Set the ICS stored for the given IC configuration to the specified set of values.
+     * Set the ICS stored for the given IC configuration to the specified set of
+     * values.
+     *
      * @param icConf
-     * @param ics 
+     * @param ics
      */
     public void setICSvalues(ICconf icConf, ResultStack<V, Double> ics) {
         cache.metrics_results.put(icConf, ics);

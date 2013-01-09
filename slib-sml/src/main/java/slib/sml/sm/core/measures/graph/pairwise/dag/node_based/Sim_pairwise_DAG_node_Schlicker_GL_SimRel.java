@@ -43,14 +43,30 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_abstract{
 	
-	public static final String beta_param_name = "beta";
+	/**
+     *
+     */
+    public static final String beta_param_name = "beta";
 	
 	private double beta  = 0.;
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -75,7 +91,17 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
 
 	
 	
-	public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @param p_mica
+     * @param beta
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
 		
 		double den = (  (ic_a - ic_mica) + (ic_b - ic_mica) + (2. - beta) * ic_mica );
 		double j = 0;

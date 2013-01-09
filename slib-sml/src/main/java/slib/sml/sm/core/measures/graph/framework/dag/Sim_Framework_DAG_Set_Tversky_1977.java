@@ -52,13 +52,23 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_abstract{
 	
-	public static final String k_param_name = "k";
+	/**
+     *
+     */
+    public static final String k_param_name = "k";
 	
 	private double k = 0.5;
 
-	public Sim_Framework_DAG_Set_Tversky_1977() {}
+	/**
+     *
+     */
+    public Sim_Framework_DAG_Set_Tversky_1977() {}
 	
-	public Sim_Framework_DAG_Set_Tversky_1977(double k){
+	/**
+     *
+     * @param k
+     */
+    public Sim_Framework_DAG_Set_Tversky_1977(double k){
 		this.k = k;
 	}
 
@@ -87,11 +97,19 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
 		return tversky;
 	}
 
-	public double getK() {
+	/**
+     *
+     * @return
+     */
+    public double getK() {
 		return k;
 	}
 
-	public void setK(double k) {
+	/**
+     *
+     * @param k
+     */
+    public void setK(double k) {
 		this.k = k;
 	}
 	

@@ -40,12 +40,23 @@ import slib.tools.module.ModuleCst;
 import slib.tools.smltoolkit.SmlToolKitCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class SmeToolKitCst extends ModuleCst {
 	
-        public static final String   properties_prefix   = "sml-toolkit-sme";
+        /**
+     *
+     */
+    public static final String   properties_prefix   = "sml-toolkit-sme";
 	
 	
-	public SmeToolKitCst() throws SLIB_Ex_Critic {
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public SmeToolKitCst() throws SLIB_Ex_Critic {
 		super(SmlToolKitCst.properties_file_name,properties_prefix);
 	}
 

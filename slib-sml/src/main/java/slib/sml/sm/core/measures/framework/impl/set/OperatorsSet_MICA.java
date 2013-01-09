@@ -56,7 +56,11 @@ import slib.utils.ex.SLIB_Exception;
 public class OperatorsSet_MICA extends OperatorsSet{
 
 	
-	public OperatorsSet_MICA(OperatorConf conf) {
+	/**
+     *
+     * @param conf
+     */
+    public OperatorsSet_MICA(OperatorConf conf) {
 		super(conf);
 	}
 
@@ -66,7 +70,9 @@ public class OperatorsSet_MICA extends OperatorsSet{
 	 * as the the maximal cardinality of their disjoint common ancestors (dca).
 	 * Contrary to {@link OperatorsSet_MICA} the aggregation operator is max and not average
 	 * 
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	@Override
 	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 		

@@ -3,10 +3,18 @@ package slib.sglib.algo.extraction.rvf.instances;
 import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 
+/**
+ *
+ * @author seb
+ */
 public interface InstancesAccessor extends VirtualInstancesAccessor{
 	
 	
-	public Set<V> getInstances();
+	/**
+     *
+     * @return
+     */
+    public Set<V> getInstances();
 	
 	/**
 	 * Access to the set of vertex considered as instance of a class 
@@ -26,6 +34,11 @@ public interface InstancesAccessor extends VirtualInstancesAccessor{
 	public Set<V> getDirectInstances(V v);
 	
 	
-	public Set<V> getDirectClass(V v);
+	/**
+     *
+     * @param v
+     * @return
+     */
+    public Set<V> getDirectClass(V v);
 	
 }

@@ -48,7 +48,16 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_edge_Resnik_1995 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c,SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c,SMconf conf) throws SLIB_Exception {
 		
 		Sim_pairwise_DAG_edge_Rada_LCA_1989 simRadaLCA = new Sim_pairwise_DAG_edge_Rada_LCA_1989();
 		double min_path_lca = simRadaLCA.sim(a, b, c, conf);
@@ -59,7 +68,13 @@ public class Sim_pairwise_DAG_edge_Resnik_1995 extends Sim_DAG_edge_abstract{
 	}
 	
 
-	public double sim(double min_path_lca,double max_depth){
+	/**
+     *
+     * @param min_path_lca
+     * @param max_depth
+     * @return
+     */
+    public double sim(double min_path_lca,double max_depth){
 		
 		
 		double resnik = (2 * max_depth - min_path_lca) / (2 * max_depth);

@@ -1,6 +1,14 @@
 package slib.utils.i;
 
+/**
+ *
+ * @author seb
+ */
 public interface CheckableValidity {
 
-	public boolean isValid();
+	/**
+     *
+     * @return
+     */
+    public boolean isValid();
 }

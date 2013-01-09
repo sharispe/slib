@@ -40,6 +40,10 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public interface Sim_DAG_node_abstract extends Sim_Pairwise_DAG{
 	
 }

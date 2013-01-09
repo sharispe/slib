@@ -14,14 +14,31 @@ package slib.sml.sm.core.measures.string;
  */
 public class LevenshteinSimilarity extends LevenshteinDistance{
     
+    /**
+     *
+     * @param normalize
+     */
     public LevenshteinSimilarity(boolean normalize){
         super(normalize);
     }
     
+    /**
+     *
+     * @param insP
+     * @param delP
+     * @param mismatchP
+     * @param normalize
+     */
     public LevenshteinSimilarity(double insP, double delP, double mismatchP, boolean normalize){
         super(insP, delP, mismatchP, normalize);
     }
     
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     public double sim(String a, String b){
         
         if(this.norm) {

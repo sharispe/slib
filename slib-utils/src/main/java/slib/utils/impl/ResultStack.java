@@ -41,16 +41,29 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ * @param <X>
+ * @param <N>
+ */
 public class ResultStack<X, N extends Number> {
 
     String label;
     Map<X, N> values;
     double max;
 
+    /**
+     *
+     */
     public ResultStack() {
         this("undefined label");
     }
 
+    /**
+     *
+     * @param map
+     */
     public ResultStack(Map<X, N> map) {
         this();
 
@@ -69,6 +82,11 @@ public class ResultStack<X, N extends Number> {
         max = -Double.MAX_VALUE;
     }
 
+    /**
+     *
+     * @param v
+     * @param val
+     */
     public void add(X v, N val) {
         values.put(v, val);
 
@@ -105,6 +123,10 @@ public class ResultStack<X, N extends Number> {
         return values.containsKey(v);
     }
 
+    /**
+     *
+     * @param v
+     */
     public void remove(X v) {
 
         N val = values.get(v);
@@ -119,10 +141,18 @@ public class ResultStack<X, N extends Number> {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMax() {
         return max;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMin() {
 
         double min = Double.MAX_VALUE;
@@ -138,6 +168,10 @@ public class ResultStack<X, N extends Number> {
         return min;
     }
 
+    /**
+     *
+     * @return
+     */
     public double getMinSupNil() {
 
         double min = Double.MAX_VALUE;
@@ -169,26 +203,49 @@ public class ResultStack<X, N extends Number> {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLabel() {
         return label;
     }
 
+    /**
+     *
+     * @return
+     */
     public Map<X, N> getValues() {
         return values;
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<X> keySet() {
         return values.keySet();
     }
 
+    /**
+     *
+     * @return
+     */
     public int size() {
         return values.keySet().size();
     }
 
+    /**
+     *
+     * @return
+     */
     public Set<Entry<X, N>> entrySet() {
         return values.entrySet();
     }
 
+    /**
+     *
+     */
     public void printValues() {
         for (X v : values.keySet()) {
             System.out.println(v + "\t" + values.get(v));

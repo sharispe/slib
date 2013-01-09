@@ -60,7 +60,7 @@ public abstract class GraphRepresentation implements IGraphRepresentation {
 	 * {@link #support(Resource)} implementation.
 	 * 
 	 * @param resource the given {@link Resource}
-	 * @throws SGL_Exception if the given resource is not supported
+         * @throws SLIB_Exception 
 	 * @see #support(Resource);
 	 */
 	public GraphRepresentation(V resource) throws SLIB_Exception{

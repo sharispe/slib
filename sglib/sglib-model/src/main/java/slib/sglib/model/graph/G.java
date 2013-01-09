@@ -76,6 +76,7 @@ public interface G extends NotifyingSail {
      *  <li> Direction.BOTH: all edges involving the specified vertex, i.e. union IN and OUT. </li>
      * </ul>
      * @param v the vertex of interest
+     * @param dir 
      * @return the set of edges corresponding to the query.
      * The method return an empty set if no results are associated to the query. 
      */
@@ -213,8 +214,20 @@ public interface G extends NotifyingSail {
      */
     public Set<E> getE(Set<URI> pTypes, V v, Set<VType> vTypes, Direction dir);
 
+    /**
+     *
+     * @param v
+     * @param wc
+     * @return
+     */
     public Set<E> getE(V v, WalkConstraints wc);
 
+    /**
+     *
+     * @param v
+     * @param wc
+     * @return
+     */
     public Set<V> getV(V v, WalkConstraints wc);
 
     /**

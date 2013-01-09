@@ -76,8 +76,8 @@ public class Dijkstra{
 	 * Create an Dijkstra algorithm used to compute shortest paths considering
 	 * the weighting scheme associated to the graph
 	 * @param g the graph on which the shortest path has to be computed
-	 * @param setEdgeTypes the set of edge types to consider
-	 * @throws SGL_Ex_Critic if graph weighting scheme contains negative values associated to graph edges
+         * @param setEdgeTypes the set of edge types to consider
+         * @throws SLIB_Ex_Critic  
 	 */
 	public Dijkstra(G g, Set<URI> setEdgeTypes) throws SLIB_Ex_Critic{
 		this.g = g;
@@ -105,8 +105,8 @@ public class Dijkstra{
 	 * considering a given non negative weighting scheme
 	 * @param g the graph on which the shortest path has to be computed
 	 * @param setEdgeTypes the set of edge types to consider
-	 * @param weightingScheme a 
-	 * @throws SGL_Ex_Critic if the specified weighting scheme contains negative values associated to graph edges
+         * @param weightingScheme a
+         * @throws SLIB_Ex_Critic  
 	 */
 	public Dijkstra(G g, Set<URI> setEdgeTypes, GWS weightingScheme) throws SLIB_Ex_Critic{
 		this.g = g;
@@ -120,8 +120,8 @@ public class Dijkstra{
 	 * Compute shortest path between two nodes
 	 * Note also that the resultStack is populated during computation
 	 * @param source
-	 * @param target
-	 * @return the shortest path weight as double 
+         * @param t 
+         * @return the shortest path weight as double 
 	 */
 	public double shortestPath(V source,V t){
 		
@@ -184,7 +184,12 @@ public class Dijkstra{
 		return dists.get(t);
 	}
 	
-	public ConcurrentHashMap<V, Double> shortestPath(V source){
+	/**
+     *
+     * @param source
+     * @return
+     */
+    public ConcurrentHashMap<V, Double> shortestPath(V source){
 		
 		logger.debug("\tComputing Shortest path... from "+source+"  "+ws);
 		

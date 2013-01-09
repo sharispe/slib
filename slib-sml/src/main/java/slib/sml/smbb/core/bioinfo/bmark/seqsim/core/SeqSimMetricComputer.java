@@ -51,11 +51,22 @@ public class SeqSimMetricComputer {
 	
 	IblastScoreAcessor blastScoreAcessor;
 	
-	public SeqSimMetricComputer(IblastScoreAcessor blastScoreAcessor){
+	/**
+     *
+     * @param blastScoreAcessor
+     */
+    public SeqSimMetricComputer(IblastScoreAcessor blastScoreAcessor){
 		this.blastScoreAcessor = blastScoreAcessor;
 	}
 
-	public double LRBS(String protA, String protB) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param protA
+     * @param protB
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double LRBS(String protA, String protB) throws SLIB_Ex_Critic{
 		
 		double blastScore_AvsB = blastScoreAcessor.getBlastScore(protA, protB);
 		double blastScore_BvsA = blastScoreAcessor.getBlastScore(protB, protA);
@@ -63,7 +74,14 @@ public class SeqSimMetricComputer {
 		return Math.log10((blastScore_AvsB + blastScore_BvsA)/2.);
 	}
 	
-	public double RRBS(String protA, String protB) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param protA
+     * @param protB
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double RRBS(String protA, String protB) throws SLIB_Ex_Critic{
 		
 		double blastScore_AvsB = blastScoreAcessor.getBlastScore(protA, protB);
 		double blastScore_BvsA = blastScoreAcessor.getBlastScore(protB, protA);
@@ -74,7 +92,11 @@ public class SeqSimMetricComputer {
 		return (blastScore_AvsB + blastScore_BvsA)/(blastScore_AvsA + blastScore_BvsB);
 	}
 	
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 		
 		String pref = System.getProperty("user.dir")+"/modules/smf/smbb/data/bioinfo/seqsim/";
 		String bscores = pref+"blastScores.csv";

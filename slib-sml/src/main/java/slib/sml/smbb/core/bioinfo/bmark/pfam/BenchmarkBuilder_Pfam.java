@@ -87,7 +87,14 @@ public class BenchmarkBuilder_Pfam {
 	DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
 
-	public void generateBenchmark(
+	/**
+     *
+     * @param graph
+     * @param instancesAccessor
+     * @param conf
+     * @throws SLIB_Exception
+     */
+    public void generateBenchmark(
 			G graph, 
 			InstancesAccessor instancesAccessor,
 			SmbbConf_GO_Pfam conf) throws SLIB_Exception{
@@ -202,11 +209,20 @@ public class BenchmarkBuilder_Pfam {
 		return pFamClansProteins;
 	}
 
-	public HashMap<String, HashSet<URI>> getClanProteinURIs(){
+	/**
+     *
+     * @return
+     */
+    public HashMap<String, HashSet<URI>> getClanProteinURIs(){
 		return clanProtUris;
 	}
 
-	public void buildClanProtURIs(String outfile) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param outfile
+     * @throws SLIB_Ex_Critic
+     */
+    public void buildClanProtURIs(String outfile) throws SLIB_Ex_Critic{
 
 		try{
 			FileWriter fstream = new FileWriter(outfile);
@@ -236,7 +252,12 @@ public class BenchmarkBuilder_Pfam {
 		logger.info("Clan info generated see: "+outfile);
 	}
 
-	public void buildPairwiseEvalFile(String outfile) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param outfile
+     * @throws SLIB_Ex_Critic
+     */
+    public void buildPairwiseEvalFile(String outfile) throws SLIB_Ex_Critic{
 
 		ArrayList<URI> uris = new ArrayList<URI>(getAllClanProteinURIs());
 
@@ -256,7 +277,11 @@ public class BenchmarkBuilder_Pfam {
 		logger.info("comparison file generated see: "+outfile);
 	}
 
-	public HashSet<URI> getAllClanProteinURIs(){
+	/**
+     *
+     * @return
+     */
+    public HashSet<URI> getAllClanProteinURIs(){
 		HashSet<URI> uris = new HashSet<URI>();
 
 		for(HashSet<URI> set : clanProtUris.values())
@@ -363,7 +388,13 @@ public class BenchmarkBuilder_Pfam {
 	}
 
 
-	public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param protPositiveComparison
+     * @param protNegativeComparison
+     * @throws SLIB_Ex_Critic
+     */
+    public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SLIB_Ex_Critic {
 
 		buildPostiveEvalFile(protPositiveComparison);
 

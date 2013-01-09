@@ -42,5 +42,24 @@ package slib.sglib.model.graph.elements.type;
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public enum VType{
-	PROPERTY, CLASS, INSTANCE, LITERAL, UNDEFINED;
+	/**
+     *
+     */
+    PROPERTY,
+    /**
+     *
+     */
+    CLASS,
+    /**
+     *
+     */
+    INSTANCE,
+    /**
+     *
+     */
+    LITERAL,
+    /**
+     *
+     */
+    UNDEFINED;
 }

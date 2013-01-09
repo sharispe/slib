@@ -44,8 +44,11 @@ public class IndexerSNOMEDCT_RF2 {
     /**
      * Only load an index for the URI already loaded
      *
+     * @param factory 
      * @param description_file
      * @param defaultNamespace
+     * @param EXCLUDE_INACTIVE_DESCRIPTIONS 
+     * @param EXCLUDE_OLD_DESCRIPTIONS 
      * @return
      * @throws SLIB_Exception
      */
@@ -146,6 +149,8 @@ public class IndexerSNOMEDCT_RF2 {
      * @param description_file
      * @param defaultNamespace
      * @param graph
+     * @param EXCLUDE_INACTIVE_DESCRIPTIONS 
+     * @param EXCLUDE_OLD_DESCRIPTIONS 
      * @return
      * @throws SLIB_Exception
      */

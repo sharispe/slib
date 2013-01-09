@@ -43,10 +43,24 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_groupwise_Max extends Sim_groupwise_general_abstract{
 	
 	
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf pairwiseConf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param groupwiseconf
+     * @param pairwiseConf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf pairwiseConf) throws SLIB_Ex_Critic {
 		
 		return rc.getMatrixScore(setA,setB, pairwiseConf).getMax();
 	}

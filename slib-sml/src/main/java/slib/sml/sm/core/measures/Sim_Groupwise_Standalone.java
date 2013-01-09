@@ -44,7 +44,20 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public interface Sim_Groupwise_Standalone extends Sim_Groupwise {
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception;
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param groupwiseconf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception;
 }

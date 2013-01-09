@@ -36,12 +36,27 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.smbb.core.bioinfo.bmark.ppi.utils;
 
+/**
+ *
+ * @author seb
+ */
 public class Interaction {
 	
-	public int a;
-	public int b;
+	/**
+     *
+     */
+    public int a;
+	/**
+     *
+     */
+    public int b;
 	
-	public Interaction(int a, int b){
+	/**
+     *
+     * @param a
+     * @param b
+     */
+    public Interaction(int a, int b){
 		this.a = a;
 		this.b = b;
 	}

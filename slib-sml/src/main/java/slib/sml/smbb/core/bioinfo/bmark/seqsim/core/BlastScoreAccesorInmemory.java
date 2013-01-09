@@ -42,11 +42,20 @@ import java.util.HashMap;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 
+/**
+ *
+ * @author seb
+ */
 public class BlastScoreAccesorInmemory implements IblastScoreAcessor{
 
 	HashMap<QueryEntry, Double> scoreStorage;
 	
-	public BlastScoreAccesorInmemory(String filePath) throws IOException{
+	/**
+     *
+     * @param filePath
+     * @throws IOException
+     */
+    public BlastScoreAccesorInmemory(String filePath) throws IOException{
 		
 		scoreStorage = new HashMap<QueryEntry, Double>();
 		

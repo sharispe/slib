@@ -50,10 +50,19 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public class VectorWeight_Chabalier_Propaggated {
 
 
-	public static ResultStack<V,Double> compute(G g){
+	/**
+     *
+     * @param g
+     * @return
+     */
+    public static ResultStack<V,Double> compute(G g){
 
 		Logger logger = LoggerFactory.getLogger(VectorWeight_Chabalier_Propaggated.class);
 

@@ -37,8 +37,16 @@ package slib.utils.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *
+ * @author seb
+ */
 public class UtilDebug {
 
+    /**
+     *
+     * @param fromClass
+     */
     public static void exit(Object fromClass) {
 
         Logger logger = LoggerFactory.getLogger(UtilDebug.class);
@@ -55,6 +63,9 @@ public class UtilDebug {
         System.exit(0);
     }
 
+    /**
+     *
+     */
     public static void exit() {
 
         Logger logger = LoggerFactory.getLogger(UtilDebug.class);

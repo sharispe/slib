@@ -43,15 +43,31 @@ import slib.tools.module.ModuleConf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConf_GO implements ModuleConf {
 	
 	Logger   logger = LoggerFactory.getLogger(SmbbConf_GO.class);
 	
-	protected String  type;
-	protected String  kb_uri;
-	protected String  graph_uri;
+	/**
+     *
+     */
+    protected String  type;
+	/**
+     *
+     */
+    protected String  kb_uri;
+	/**
+     *
+     */
+    protected String  graph_uri;
 	
-	public SmbbConf_GO(){} 
+	/**
+     *
+     */
+    public SmbbConf_GO(){} 
 
 	public boolean isValid() throws SLIB_Ex_Critic {
 		
@@ -76,28 +92,52 @@ public class SmbbConf_GO implements ModuleConf {
 		return out;
 	}
 
-	public String getKb_id() {
+	/**
+     *
+     * @return
+     */
+    public String getKb_id() {
 		return kb_uri;
 	}
 
-	public void setKb_id(String kb_id) {
+	/**
+     *
+     * @param kb_id
+     */
+    public void setKb_id(String kb_id) {
 		this.kb_uri = kb_id;
 	}
 
 
-	public String getType() {
+	/**
+     *
+     * @return
+     */
+    public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	/**
+     *
+     * @param type
+     */
+    public void setType(String type) {
 		this.type = type;
 	}
 	
-	public String getGraph_id() {
+	/**
+     *
+     * @return
+     */
+    public String getGraph_id() {
 		return graph_uri;
 	}
 
-	public void setGraph_id(String graph_id) {
+	/**
+     *
+     * @param graph_id
+     */
+    public void setGraph_id(String graph_id) {
 		graph_uri = graph_id;
 	}
 }

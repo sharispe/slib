@@ -38,12 +38,16 @@ package slib.utils.impl;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class Util {
 
 	/**
 	 * Only throw a critical exception passing the given message
-	 * @param message the message used
-	 * @throws SGL_Ex_Critic
+         * @param message the message used
+         * @throws SLIB_Ex_Critic  
 	 */
 	public static void error(String message) throws SLIB_Ex_Critic{
 		throw new SLIB_Ex_Critic(message);
@@ -62,7 +66,13 @@ public class Util {
 		return false;
 	}
 
-	public static Integer stringToInteger(String val) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param val
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static Integer stringToInteger(String val) throws SLIB_Ex_Critic{
 		Integer a = null;
 
 		try{
@@ -74,7 +84,13 @@ public class Util {
 		return a;
 	}
 	
-	public static Double stringToDouble(String val) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param val
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static Double stringToDouble(String val) throws SLIB_Ex_Critic{
 		Double a = null;
 
 		try{
@@ -86,7 +102,13 @@ public class Util {
 		return a;
 	}
 
-	public static Long stringToLong(String val) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param val
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static Long stringToLong(String val) throws SLIB_Ex_Critic{
 		Long a = null;
 
 		try{

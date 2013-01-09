@@ -74,6 +74,10 @@ import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.QueryEntry;
 import slib.utils.impl.QueryFileIterator;
 
+/**
+ *
+ * @author seb
+ */
 public class OntoFocus {
 
 	Logger logger = LoggerFactory.getLogger(OntoFocus.class);
@@ -90,11 +94,20 @@ public class OntoFocus {
 
 	private boolean showLabels = true; // TODO add to configuration parameters
 
-	public OntoFocus(){
+	/**
+     *
+     */
+    public OntoFocus(){
 		factory = DataFactoryMemory.getSingleton();
 	}
 
-	public void excecute(OntoFocusConf c) throws SLIB_Exception, IOException {
+	/**
+     *
+     * @param c
+     * @throws SLIB_Exception
+     * @throws IOException
+     */
+    public void excecute(OntoFocusConf c) throws SLIB_Exception, IOException {
 
 		this.c = c;
 
@@ -271,7 +284,11 @@ public class OntoFocus {
 		return q;
 	}
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		OntoFocus o = new OntoFocus();
 

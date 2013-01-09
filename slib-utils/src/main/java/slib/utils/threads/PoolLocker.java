@@ -36,32 +36,59 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.utils.threads;
 
+/**
+ *
+ * @author seb
+ */
 public class PoolLocker {
 
 	
-	protected int capacity;
-	protected int running  = 0; // number of thread already involved in a process
-	protected Object lock  = new Object();
+	/**
+     *
+     */
+    protected int capacity;
+	/**
+     *
+     */
+    protected int running  = 0; // number of thread already involved in a process
+	/**
+     *
+     */
+    protected Object lock  = new Object();
 
-	public PoolLocker(int size) {
+	/**
+     *
+     * @param size
+     */
+    public PoolLocker(int size) {
 		this.capacity = size;
 	}
 	
 
-	public void addTask() {
+	/**
+     *
+     */
+    public void addTask() {
 		synchronized(lock) {
 			running++;
 		}
 	}
 
-	public void taskComplete() {
+	/**
+     *
+     */
+    public void taskComplete() {
         synchronized(lock) {
         	running--;
             lock.notifyAll();
         }
 	}
 
-	public void awaitFreeResource() throws InterruptedException{
+	/**
+     *
+     * @throws InterruptedException
+     */
+    public void awaitFreeResource() throws InterruptedException{
         synchronized(lock) {
             while (running == capacity){ 
             	lock.wait();
@@ -69,11 +96,19 @@ public class PoolLocker {
         }
 	}
 	
-	public int getCapacity(){
+	/**
+     *
+     * @return
+     */
+    public int getCapacity(){
 		return capacity;
 	}
 	
-	public int getLoad(){
+	/**
+     *
+     * @return
+     */
+    public int getLoad(){
 		synchronized(lock) {
 			return running;
 		}

@@ -55,7 +55,15 @@ import slib.utils.impl.SetUtils;
 public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abstract{
 	
 	
-	@Override
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     */
+    @Override
 	public double sim(V a, V b, SM_Engine c,SMconf conf) {
 		
 		int nbV = c.getNbVertices();
@@ -69,8 +77,8 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
 	public double sim(Set<V> setA, Set<V> setB, SM_Engine c,SMconf conf) {
 		
 		int nbV = c.getNbVertices();
-		Set<V> ancA = c.getAncestors(setA);
-		Set<V> ancB = c.getAncestors(setB);
+		Set<V> ancA = c.getAncestorsInc(setA);
+		Set<V> ancB = c.getAncestorsInc(setB);
 		
 		return sim(nbV,ancA, ancB);
 	}

@@ -87,14 +87,11 @@ public class RooterDAG {
      * induced by etypeDAG is checked. If checkUnderlyingDAG is set to true and
      * uDAG DAG property is not validated an critical exception is
      * thrown.
-     * @param rootURI the URI of the vertex to consider as root if rooting
-     * requires to be performed. If the URI is not associated to graph vertex
-     * the vertex is added. If the vertex already exists impact of using it on
-     * uDAG DAG property is not evaluated. If you are not inspired, note that
-     * {@link URICommon#UNIVERSAL_ROOT} can be used as root.
+     * @param rootUri 
+     * @param dir 
      * @return the URI of the uDAG root vertex.
+     * @throws SLIB_Ex_Critic  
      *
-     * @throws SGL_Ex_Critic
      */
     public static URI rootUnderlyingDAG(G g, URI etypeDAG, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
 
@@ -160,8 +157,11 @@ public class RooterDAG {
      * Shortcut of {@link RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)}
      * only considering Taxonomic relationships i.e SUBCLASSOF/SUPERCLASSOF
      *
+     * @param g 
+     * @param rootUri 
+     * @return 
      * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public static URI rootUnderlyingTaxonomicDAG(G g, URI rootUri) throws SLIB_Ex_Critic {
 

@@ -54,17 +54,15 @@ public interface GraphLoader {
 	 * Load a new Graph considering the given configuration
 	 * @param conf a {@link GraphConf} object specifying the configuration the loader must takes into account
 	 * @return a graph {@link G}
-	 * @throws SGL_Exception if an error is thrown during loading. 
-	 * Note that all exceptions are encapsulated in a {@link SGL_Exception} 
+         * @throws SLIB_Exception 
 	 */
 	public G load(GraphConf conf) throws SLIB_Exception;
 	
 	/**
 	 * Populate an existing graph considering the given configuration
-	 * @param conf a {@link GraphConf} object specifying the configuration the loader must takes into account
-	 * @return a graph {@link G}
-	 * @throws SGL_Exception if an error is thrown during loading. 
-	 * Note that all exceptions are encapsulated in a {@link SGL_Exception} 
+         * @param conf a {@link GraphConf} object specifying the configuration the loader must takes into account
+         * @param g
+         * @throws SLIB_Exception  
 	 */
 	public void populate(GDataConf conf, G g) throws SLIB_Exception;
 

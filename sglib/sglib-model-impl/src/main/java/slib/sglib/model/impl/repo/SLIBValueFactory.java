@@ -68,6 +68,9 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
     /*---------*
      * Methods *
      *---------*/
+    /**
+     *
+     */
     public void clear() {
         uriRegistry.clear();
         bnodeRegistry.clear();
@@ -100,6 +103,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See getMemValue() for description.
+     * @param resource 
+     * @return 
      */
     public Resource getResource(Resource resource) {
         if (resource instanceof URI) {
@@ -122,6 +127,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See getMemValue() for description.
+     * @param bnode
+     * @return  
      */
     public synchronized BNode getBNode(BNode bnode) {
         return bnodeRegistry.get(bnode);
@@ -129,6 +136,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See getMemValue() for description.
+     * @param literal
+     * @return  
      */
     public synchronized Literal getLiteral(Literal literal) {
         return literalRegistry.get(literal);
@@ -191,6 +200,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See {@link #getOrCreateMemValue(Value)} for description.
+     * @param resource 
+     * @return 
      */
     public Resource getOrCreateResource(Resource resource) {
         if (resource instanceof URI) {
@@ -204,6 +215,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See {@link #getOrCreateMemValue(Value)} for description.
+     * @param uri 
+     * @return 
      */
     public synchronized URI getOrCreateURI(URI uri) {
         URI urim = getURI(uri);
@@ -233,6 +246,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See {@link #getOrCreateMemValue(Value)} for description.
+     * @param bnode 
+     * @return 
      */
     public synchronized BNode getOrCreateBNode(BNode bnode) {
         BNode memBNode = getBNode(bnode);
@@ -248,6 +263,8 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
 
     /**
      * See {@link #getOrCreateMemValue(Value)} for description.
+     * @param literal
+     * @return  
      */
     public synchronized Literal getOrCreateLiteral(Literal literal) {
         Literal memLiteral = getLiteral(literal);

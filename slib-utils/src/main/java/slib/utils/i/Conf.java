@@ -38,7 +38,6 @@ import java.util.HashMap;
 import java.util.Map;
 import slib.utils.ex.SLIB_Ex_Critic;
 
-import slib.utils.ex.SLIB_Exception;
 
 /**
  * Generic Configuration class used to build object storing a configuration. as
@@ -89,8 +88,7 @@ public class Conf {
      *
      * @param p the flag of the parameter
      * @return the value associated to the given key as a double
-     * @throws SGL_Exception if no value is associated to the given key or if
-     * the stored value cannot be converted to a double value.
+     * @throws SLIB_Ex_Critic  
      */
     public double getParamAsDouble(String p) throws SLIB_Ex_Critic {
         String pval = getParam(p).toString();

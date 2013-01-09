@@ -23,14 +23,26 @@ import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class RDFLoader implements GraphLoader {
 
     RDFParser parser = null;
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    /**
+     *
+     */
     public RDFLoader() {
     }
 
+    /**
+     *
+     * @param format
+     * @throws SLIB_Ex_Critic
+     */
     public RDFLoader(RDFFormat format) throws SLIB_Ex_Critic {
 
         loadFormat(format);
@@ -84,6 +96,12 @@ public class RDFLoader implements GraphLoader {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param file
+     * @throws SLIB_Ex_Critic
+     */
     public void load(G g, String file) throws SLIB_Ex_Critic {
 
 
@@ -99,12 +117,25 @@ public class RDFLoader implements GraphLoader {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param file
+     * @param format
+     * @throws SLIB_Ex_Critic
+     */
     public void load(G g, String file, RDFFormat format) throws SLIB_Ex_Critic {
 
         loadFormat(format);
         load(g, file);
     }
 
+    /**
+     *
+     * @param g
+     * @param rdfFileConf
+     * @throws SLIB_Ex_Critic
+     */
     public void load(G g, Map<String, RDFFormat> rdfFileConf) throws SLIB_Ex_Critic {
 
         for (Entry<String, RDFFormat> e : rdfFileConf.entrySet()) {

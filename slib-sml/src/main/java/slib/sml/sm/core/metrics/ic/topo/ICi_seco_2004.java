@@ -38,7 +38,6 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.utils.SMParams;
 import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -124,6 +123,8 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
         if (Double.isNaN(ic) || Double.isInfinite(ic)) {
             throw new SLIB_Ex_Critic(
                     "Incoherency found in IC " + this.getClass() + "\n"
+                    + "NB inclusive Descendants       " + nbInclusiveDescendants + "\n"
+                    + "NB concepts onto       " + nbConceptsOnto + "\n"
                     + "Log base       " + getLogBase() + "\n"
                     + "Log nbDesc     " + MathSML.log(nbInclusiveDescendants, getLogBase()) + "\n"
                     + "Log Set size   " + MathSML.log(nbConceptsOnto, getLogBase()) + "\n"

@@ -59,6 +59,12 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_mazandu_2012 implements ICtopo {
 
+    /**
+     *
+     * @param manager
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(SM_Engine manager) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());

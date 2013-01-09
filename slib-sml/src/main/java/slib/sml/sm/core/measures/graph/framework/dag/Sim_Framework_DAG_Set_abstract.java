@@ -46,10 +46,23 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG,Sim_Groupwise_Standalone{
 
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 		Set<V> ancA = c.getAncestorsInc(a);
 		Set<V> ancB = c.getAncestorsInc(b);
@@ -59,10 +72,17 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
 
 	/**
 	 * TODO Ugly Optimize
-	 */
+         * 
+         * @param setA 
+         * @param setB 
+         * @param c 
+         * @param conf 
+         * @return
+         * @throws SLIB_Exception  
+         */
 	public double sim(Set<V> setA, Set<V> setB, SM_Engine c , SMconf conf) throws SLIB_Exception{
-		Set<V> ancA = c.getAncestors(setA);
-		Set<V> ancB = c.getAncestors(setB);
+		Set<V> ancA = c.getAncestorsInc(setA);
+		Set<V> ancB = c.getAncestorsInc(setB);
 		
 		return sim(ancA,ancB,conf);
 	}
@@ -72,8 +92,8 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
 	 * @param ancA
 	 * @param ancB
 	 * @param conf
-	 * @return
-	 * @throws SGL_Exception
+         * @return
+         * @throws SLIB_Exception  
 	 */
 	public abstract double sim(Set<V> ancA, Set<V> ancB,SMconf conf) throws SLIB_Exception;
 

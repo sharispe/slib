@@ -82,11 +82,10 @@ public class GraphReduction_DAG {
 	 *  
 	 * @param g the graph from which the corresponding reduction must be build
 	 * @param rootURI The URI of the vertex from where the reduction is started (root)
-	 * @param graphReductionURI The URI of the resulting graph. Can be equals to the URI of g.
-	 * @param onlyAddGivenEtypes only edge types given as input (and their respective inverses) will be added.
-	 * @return the graph which corresponds to the reduction
-	 * 
-	 * @throws SGL_Ex_Critic
+         * @param edgeTypes 
+         * @param dir 
+         * @param onlyAddGivenEtypes only edge types given as input (and their respective inverses) will be added.
+         * @throws SLIB_Ex_Critic  
 	 */
 	public static void reduction(G g,URI rootURI, final Set<URI> edgeTypes, Direction dir, boolean onlyAddGivenEtypes) throws SLIB_Ex_Critic{
 
@@ -148,10 +147,8 @@ public class GraphReduction_DAG {
 	 * 
 	 * @param g the graph from which the corresponding reduction must be build
 	 * @param rootURI The URI of the vertex from where the reduction is started (root)
-	 * @param graphReductionURI The URI of the resulting graph. Can be equals to the URI of g.
 	 * @param onlyAddTaxonomical if true only SUPERCLASSOF and SUBCLASSOF edge types will be added else all relationships are added.
-	 * @return the graph which corresponds to the reduction
-	 * @throws SGL_Ex_Critic
+         * @throws SLIB_Ex_Critic 
 	 */
 	public static void taxonomicReduction(G g,URI rootURI, boolean onlyAddTaxonomical) throws SLIB_Ex_Critic{
 

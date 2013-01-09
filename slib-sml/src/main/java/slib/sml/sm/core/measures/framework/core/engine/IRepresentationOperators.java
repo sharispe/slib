@@ -65,7 +65,7 @@ public interface IRepresentationOperators{
 	 * @param rep_b a {@link GraphRepresentation}
 	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the commonality between the {@link GraphRepresentation}
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
@@ -78,7 +78,7 @@ public interface IRepresentationOperators{
 	 * @param rep_b a {@link GraphRepresentation}
 	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the subtraction between the {@link GraphRepresentation}
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
@@ -91,7 +91,7 @@ public interface IRepresentationOperators{
 	 * @param rep_b a {@link GraphRepresentation}
 	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the difference between the {@link GraphRepresentation}
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	
@@ -100,11 +100,10 @@ public interface IRepresentationOperators{
 	 * Assigns a double value to the evaluated informativeness.
 	 * As an example for a set representation A, this operator corresponds to |A|, the size of the set
 	 * 
-	 * @param rep_a a {@link GraphRepresentation}
-	 * @param rep_b a {@link GraphRepresentation}
+         * @param rep 
 	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return a double value corresponding to the informativeness of the {@link GraphRepresentation}
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public double informativeness(GraphRepresentation rep, SM_Engine manager) throws SLIB_Exception;
 
@@ -150,8 +149,8 @@ public interface IRepresentationOperators{
 	 * @param rep_b a {@link GraphRepresentation}
 	 * @param manager the {@link SM_Engine} used to process the graph
 	 * @return true if the rules are validated
-	 * @throws SGL_Exception
-	 * @see {@link #subtraction(GraphRepresentation, GraphRepresentation, SM_Engine)}
+         * @throws SLIB_Exception 
+         * @see {@link #subtraction(GraphRepresentation, GraphRepresentation, SM_Engine)}
 	 */
 	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception;
 	

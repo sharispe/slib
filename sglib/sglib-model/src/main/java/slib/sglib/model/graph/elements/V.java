@@ -56,7 +56,9 @@ public interface V{
 	
 	/**
 	 * Set the type of the vertex.
-	 */
+         * 
+         * @param nType 
+         */
 	public void  setType(VType nType);
 	
 	/**

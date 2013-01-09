@@ -48,17 +48,44 @@ import org.apache.commons.cli.Option;
  */
 public abstract class ToolCmdHandlerCst {
 	
-	public String appCmdName;
-	public boolean debugMode;
-	public Map<Option,Integer> optionsOrder;
+	/**
+     *
+     */
+    public String appCmdName;
+	/**
+     *
+     */
+    public boolean debugMode;
+	/**
+     *
+     */
+    public Map<Option,Integer> optionsOrder;
 	
-	public ToolCmdHandlerCst(String appCmdName, boolean debugMode, Map<Option, Integer> optionsOrder){
+	/**
+     *
+     * @param appCmdName
+     * @param debugMode
+     * @param optionsOrder
+     */
+    public ToolCmdHandlerCst(String appCmdName, boolean debugMode, Map<Option, Integer> optionsOrder){
 		this.appCmdName   = appCmdName;
 		this.debugMode    = debugMode;
 		this.optionsOrder = optionsOrder;
 	}
-	public String getAppCmdName(){return appCmdName;}
-	public boolean getDebugMode(){return debugMode;}
-	public Map<Option,Integer> getOptionOrder(){return optionsOrder;}
+	/**
+     *
+     * @return
+     */
+    public String getAppCmdName(){return appCmdName;}
+	/**
+     *
+     * @return
+     */
+    public boolean getDebugMode(){return debugMode;}
+	/**
+     *
+     * @return
+     */
+    public Map<Option,Integer> getOptionOrder(){return optionsOrder;}
 	
 }

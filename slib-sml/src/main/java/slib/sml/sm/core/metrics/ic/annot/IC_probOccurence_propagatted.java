@@ -49,12 +49,25 @@ import slib.utils.impl.ResultStack;
  */
 public class IC_probOccurence_propagatted extends LogBasedMetric implements ICcorpus {
 
+    /**
+     *
+     * @param NbOccurrenceAnnotPropagatted
+     * @return
+     * @throws SLIB_Exception
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> NbOccurrenceAnnotPropagatted) throws SLIB_Exception {
 
         return ProbOccurence.compute(NbOccurrenceAnnotPropagatted, 0);
     }
 
 
+    /**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);

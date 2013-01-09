@@ -51,6 +51,12 @@ import slib.utils.impl.ResultStack;
  */
 public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
 
+    /**
+     *
+     * @param nbOccurences
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurences) throws SLIB_Ex_Critic {
 
         // add 1 to all element occurrence counts to avoid -log(0)
@@ -71,6 +77,13 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
         return results;
     }
 
+    /**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
 

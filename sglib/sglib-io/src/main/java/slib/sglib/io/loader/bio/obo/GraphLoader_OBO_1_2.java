@@ -540,14 +540,27 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isAllow_all_gafVersion() {
         return allow_all_gafVersion;
     }
 
+    /**
+     *
+     * @param allow_all_gafVersion
+     */
     public void setAllow_all_gafVersion(boolean allow_all_gafVersion) {
         this.allow_all_gafVersion = allow_all_gafVersion;
     }
 
+    /**
+     *
+     * @param args
+     * @throws SLIB_Ex_Warning
+     */
     public static void main(String[] args) throws SLIB_Ex_Warning {
         //		String path = System.getProperty("user.dir")+"/data/graph/obo/";
         //

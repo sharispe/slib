@@ -44,28 +44,50 @@ import org.apache.commons.cli.OptionBuilder;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 
+/**
+ *
+ * @author seb
+ */
 public class SmCmdHandlerCst extends ToolCmdHandlerCst {
 
 	
 
 	
-	public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SM;
-	public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
-	public static boolean debugMode  = false;
+	/**
+     *
+     */
+    public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SM;
+	/**
+     *
+     */
+    public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
+	/**
+     *
+     */
+    public static boolean debugMode  = false;
 	
 	/*
 	 * Error messages  
 	 */
 	
-	public static final String errorMissingXMLconf = "[ERROR] Please specify an Xml configuration file";
+	/**
+     *
+     */
+    public static final String errorMissingXMLconf = "[ERROR] Please specify an Xml configuration file";
 			
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 			= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option help 			= new Option( "help", "print this message" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option xmlconf  = OptionBuilder.withArgName( "xmlconf" )
 	.hasArg()
 	.withDescription( "Xml configuration file (required)" )
@@ -75,14 +97,20 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		optionsOrder.put(xmlconf, optionsOrder.size());
 		optionsOrder.put(help, optionsOrder.size());
 	 }
 	
-	public SmCmdHandlerCst() {
+	/**
+     *
+     */
+    public SmCmdHandlerCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 	

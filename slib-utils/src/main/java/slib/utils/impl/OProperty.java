@@ -5,32 +5,58 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ *
+ * @author seb
+ */
 public class OProperty {
 	
-	protected Map<String,Object> properties = null;
+	/**
+     *
+     */
+    protected Map<String,Object> properties = null;
 	
-	public Object getProperty(String key) {
+	/**
+     *
+     * @param key
+     * @return
+     */
+    public Object getProperty(String key) {
 		if(properties == null)
 			return null;
 		else
 			return properties.get(key);
 	}
 
-	public Set<String> getPropertyKeys() {
+	/**
+     *
+     * @return
+     */
+    public Set<String> getPropertyKeys() {
 		if(properties == null)
 			return Collections.emptySet();
 		else
 			return properties.keySet();
 	}
 
-	public void setProperty(String key, Object value) {
+	/**
+     *
+     * @param key
+     * @param value
+     */
+    public void setProperty(String key, Object value) {
 		if(properties == null)
 			properties = new HashMap<String, Object>();
 		else
 			properties.put(key, value);
 	}
 
-	public Object removeProperty(String key) {
+	/**
+     *
+     * @param key
+     * @return
+     */
+    public Object removeProperty(String key) {
 		if(properties == null)
 			return null;
 		else

@@ -38,17 +38,51 @@ import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class SMconf extends Conf {
 
+    /**
+     *
+     */
     public String id;
+    /**
+     *
+     */
     public String flag;
+    /**
+     *
+     */
     public String className;
+    /**
+     *
+     */
     public String label;
+    /**
+     *
+     */
     public ICconf icConf;
+    /**
+     *
+     */
     public String pairwise_measure_id;
+    /**
+     *
+     */
     public String representation;
+    /**
+     *
+     */
     public OperatorConf operator;
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @throws SLIB_Ex_Critic
+     */
     public SMconf(String id, String flag) throws SLIB_Ex_Critic {
 
         this.id = id;
@@ -58,6 +92,13 @@ public class SMconf extends Conf {
         init();
     }
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @param label
+     * @throws SLIB_Ex_Critic
+     */
     public SMconf(String id, String flag, String label) throws SLIB_Ex_Critic {
 
         this.id = id;
@@ -67,6 +108,13 @@ public class SMconf extends Conf {
         init();
     }
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @param icConf
+     * @throws SLIB_Ex_Critic
+     */
     public SMconf(String id, String flag, ICconf icConf) throws SLIB_Ex_Critic {
 
         this.id = id;
@@ -76,6 +124,14 @@ public class SMconf extends Conf {
         init();
     }
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @param label
+     * @param icConf
+     * @throws SLIB_Ex_Critic
+     */
     public SMconf(String id, String flag, String label, ICconf icConf) throws SLIB_Ex_Critic {
 
         this.id = id;
@@ -85,6 +141,16 @@ public class SMconf extends Conf {
         init();
     }
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @param label
+     * @param icConf
+     * @param representation
+     * @param operator
+     * @throws SLIB_Ex_Critic
+     */
     public SMconf(String id, String flag, String label, ICconf icConf, String representation, OperatorConf operator) throws SLIB_Ex_Critic {
 
         this.id = id;
@@ -105,34 +171,66 @@ public class SMconf extends Conf {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public ICconf getICconf() {
         return icConf;
     }
 
+    /**
+     *
+     * @param ic
+     */
     public void setICconf(ICconf ic) {
         this.icConf = ic;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getRepresentation() {
         return representation;
     }
 
+    /**
+     *
+     * @param representation
+     */
     public void setRepresentation(String representation) {
         this.representation = representation;
     }
 
+    /**
+     *
+     * @return
+     */
     public OperatorConf getOperator() {
         return operator;
     }
 
+    /**
+     *
+     * @param operator
+     */
     public void setOperator(OperatorConf operator) {
         this.operator = operator;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getPairwise_measure_id() {
         return pairwise_measure_id;
     }
 
+    /**
+     *
+     * @param pairwise_measure_id
+     */
     public void setPairwise_measure_id(String pairwise_measure_id) {
         this.pairwise_measure_id = pairwise_measure_id;
     }

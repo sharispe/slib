@@ -40,12 +40,19 @@ import slib.tools.module.ModuleCst;
 import slib.tools.smltoolkit.SmlToolKitCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class SmUtilsToolKitCst extends ModuleCst {
 
 
 
 	
-	public static final String   ndescription = 
+	/**
+     *
+     */
+    public static final String   ndescription = 
         "\n"+ "Note that the module can also be used to process all files which respect the following restrictions " +
 
         "\n"+ "\t - tab separated format"+
@@ -84,10 +91,17 @@ public class SmUtilsToolKitCst extends ModuleCst {
         "\n";
 	
 	
-        public static final String   properties_prefix   = "sml-toolkit-utils";
+        /**
+     *
+     */
+    public static final String   properties_prefix   = "sml-toolkit-utils";
 	
 	
-	public SmUtilsToolKitCst() throws SLIB_Ex_Critic {
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public SmUtilsToolKitCst() throws SLIB_Ex_Critic {
 		super(SmlToolKitCst.properties_file_name,properties_prefix);
                 this.description = SmUtilsToolKitCst.ndescription;
 	}

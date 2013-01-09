@@ -44,9 +44,20 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class TestUtils {
 
-	public static G loadTestGraph(GFormat gFormat,String filePath) throws SLIB_Exception {
+	/**
+     *
+     * @param gFormat
+     * @param filePath
+     * @return
+     * @throws SLIB_Exception
+     */
+    public static G loadTestGraph(GFormat gFormat,String filePath) throws SLIB_Exception {
 
 
 		G g = null;

@@ -56,7 +56,16 @@ Morocco: Marrakech.
  */
 public class TODO__Sim_groupwise_DAG_PL extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param conf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Ex_Critic {
 		throw new UnsupportedOperationException(this.getClass()+" Not yet supported");
 	}
 

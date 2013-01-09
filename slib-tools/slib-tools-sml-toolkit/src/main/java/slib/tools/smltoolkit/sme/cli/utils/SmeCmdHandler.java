@@ -47,22 +47,46 @@ import slib.tools.module.CmdHandler;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmeCmdHandler extends CmdHandler {
 
 
 
 
-	public String  process;
-	public String  sm_file;
-	public String  clan_file;
-	public String  output;
-	public Double  maxValue;
+	/**
+     *
+     */
+    public String  process;
+	/**
+     *
+     */
+    public String  sm_file;
+	/**
+     *
+     */
+    public String  clan_file;
+	/**
+     *
+     */
+    public String  output;
+	/**
+     *
+     */
+    public Double  maxValue;
 	
 	
 	static Logger logger = LoggerFactory.getLogger(SmeCmdHandler.class);
 
 
-	public SmeCmdHandler(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public SmeCmdHandler(String[] args) throws SLIB_Exception {
 		super(new SmeToolKitCst(), new SmeCmdHandlerCst(), args);
 	}
 	

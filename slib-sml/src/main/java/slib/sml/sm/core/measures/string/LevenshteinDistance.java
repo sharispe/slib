@@ -27,10 +27,21 @@ public class LevenshteinDistance {
     String a;
     String b;
     
+    /**
+     *
+     * @param normalize
+     */
     public LevenshteinDistance(boolean normalize){
         this.norm = normalize;
     }
     
+    /**
+     *
+     * @param insP
+     * @param delP
+     * @param mismatchP
+     * @param normalize
+     */
     public LevenshteinDistance(double insP, double delP, double mismatchP, boolean normalize){
         this.ins = insP;
         this.del = delP;
@@ -38,6 +49,12 @@ public class LevenshteinDistance {
         this.norm = normalize;
     }
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @return
+     */
     public double distance(String a, String b) {
 
         this.a = a;

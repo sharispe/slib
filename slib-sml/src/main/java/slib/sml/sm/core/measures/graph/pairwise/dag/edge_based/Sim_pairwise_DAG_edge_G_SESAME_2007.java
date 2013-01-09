@@ -54,13 +54,33 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) {
 		
 		throw new UnsupportedOperationException(Sim_pairwise_DAG_edge_G_SESAME_2007.class+" is not available yet ");
 	}
 	
 
-	public double sim(	
+	/**
+     *
+     * @param cA
+     * @param cB
+     * @param ancestors_A
+     * @param ancestors_B
+     * @param distMin_a
+     * @param distMin_b
+     * @param maxDepths
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(	
 			V cA, 
 			V cB, 
 			Set<V> ancestors_A,

@@ -7,6 +7,10 @@ import slib.sglib.algo.utils.GAction;
 import slib.utils.i.CheckableValidity;
 import slib.utils.impl.ParametrableImpl;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphConf extends ParametrableImpl implements CheckableValidity, Comparable<Object>{
 
 	URI uri;
@@ -14,19 +18,30 @@ public class GraphConf extends ParametrableImpl implements CheckableValidity, Co
 	List<GDataConf> data;
 	List<GAction> actions;
 
-	public GraphConf(){
+	/**
+     *
+     */
+    public GraphConf(){
 		data    = new LinkedList<GDataConf>();
 		actions = new LinkedList<GAction>();
 	}
 	
-	public GraphConf(URI uri){
+	/**
+     *
+     * @param uri
+     */
+    public GraphConf(URI uri){
 		this();
 		this.uri = uri;
 	}
 	
 
 
-	public boolean isValid() {
+	/**
+     *
+     * @return
+     */
+    public boolean isValid() {
 		
 		if(uri == null) return false;
 
@@ -40,35 +55,67 @@ public class GraphConf extends ParametrableImpl implements CheckableValidity, Co
 		return true;
 	}
 	
-	public void addGDataConf(GDataConf conf){
+	/**
+     *
+     * @param conf
+     */
+    public void addGDataConf(GDataConf conf){
 		data.add(conf);
 	}
 	
-	public void addGAction(GAction conf){
+	/**
+     *
+     * @param conf
+     */
+    public void addGAction(GAction conf){
 		actions.add(conf);
 	}
 
-	public URI getUri() {
+	/**
+     *
+     * @return
+     */
+    public URI getUri() {
 		return uri;
 	}
 
-	public void setUri(URI uri) {
+	/**
+     *
+     * @param uri
+     */
+    public void setUri(URI uri) {
 		this.uri = uri;
 	}
 
-	public List<GDataConf> getData() {
+	/**
+     *
+     * @return
+     */
+    public List<GDataConf> getData() {
 		return data;
 	}
 
-	public void setData(List<GDataConf> data) {
+	/**
+     *
+     * @param data
+     */
+    public void setData(List<GDataConf> data) {
 		this.data = data;
 	}
 
-	public List<GAction> getActions() {
+	/**
+     *
+     * @return
+     */
+    public List<GAction> getActions() {
 		return actions;
 	}
 
-	public void setActions(List<GAction> actions) {
+	/**
+     *
+     * @param actions
+     */
+    public void setActions(List<GAction> actions) {
 		this.actions = actions;
 	}
 

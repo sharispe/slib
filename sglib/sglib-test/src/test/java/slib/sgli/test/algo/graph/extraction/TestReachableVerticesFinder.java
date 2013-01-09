@@ -58,14 +58,28 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 
+/**
+ *
+ * @author seb
+ */
 public class TestReachableVerticesFinder{
 	
-	public G g;
-	public RVF_DAG rvf;
+	/**
+     *
+     */
+    public G g;
+	/**
+     *
+     */
+    public RVF_DAG rvf;
 	
 	SLIB_UnitTestValues testValues;
 	
-	public TestReachableVerticesFinder() throws SLIB_Exception{
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    public TestReachableVerticesFinder() throws SLIB_Exception{
 		
 		testValues = new SLIB_UnitTestValues();
 		
@@ -73,7 +87,11 @@ public class TestReachableVerticesFinder{
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_descendant_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
@@ -91,7 +109,11 @@ public class TestReachableVerticesFinder{
 	
 
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_descendant_2() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
@@ -105,7 +127,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(desc.size() == 5);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_descendant_3() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
@@ -116,7 +142,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(desc.size() == 7);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_descendant_4() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
@@ -127,7 +157,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(desc.size() == 1);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_ancestors_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
@@ -139,7 +173,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(anc.size() == 2);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_ancestors_1b() throws SLIB_Ex_Critic{
 		
 		RVF_TAX rvf = new RVF_TAX( g, Direction.OUT);
@@ -154,7 +192,11 @@ public class TestReachableVerticesFinder{
 	
 	
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_ancestors_2() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
@@ -166,7 +208,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(anc.size() == 8);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_ancestors_3() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT);
@@ -177,7 +223,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(anc.size() == 1);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_all_1() throws SLIB_Ex_Critic{
 		
 		WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.BOTH);
@@ -189,7 +239,11 @@ public class TestReachableVerticesFinder{
 		assertTrue(all.size() == g.getV().size());
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_all_2() throws SLIB_Ex_Critic{
 		
 		HashSet<URI> setEdge = new HashSet<URI>();

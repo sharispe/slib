@@ -142,13 +142,37 @@ public final class SMConstants {
     //-------------------------------------------------------------------------------
     // Framework
     //-------------------------------------------------------------------------------
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_COMMONALITIES = Sim_Framework_Commonalities.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_JACCARD_1901 = Sim_Framework_Jaccard_1901.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DICE_1945 = Sim_Framework_Dice_1945.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_TVERSKY_1977 = Sim_Framework_Tversky_1977.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_3W_JACCARD_1901 = Sim_Framework_3W_Jaccard.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_NEI_LI = Sim_Framework_Nei_Li.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_SOKAL_SNEATH_I = Sim_Framework_Sokal_Sneath_I.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_FRAMEWORK = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -163,7 +187,13 @@ public final class SMConstants {
             put("SIM_FRAMEWORK_SOKAL_SNEATH_I", SIM_FRAMEWORK_SOKAL_SNEATH_I);
         }
     };
+    /**
+     *
+     */
     public static final String SET_DAG = GraphRepresentationAsSet.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> representation = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -171,13 +201,37 @@ public final class SMConstants {
             put("SET_DAG", SET_DAG);
         }
     };
+    /**
+     *
+     */
     public static final String OPERATOR_SET = OperatorsSet.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_ICA_GRASM = OperatorsSet_ICA_Grasm.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_MICA = OperatorsSet_MICA.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_MAX_IC = OperatorsSet_MAX_IC.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_IC = OperatorsSet_IC.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_ICA_GRASM_IC = OperatorsSet_ICA_Grasm_IC.class.getName();
+    /**
+     *
+     */
     public static final String OPERATOR_SET_MICA_IC = OperatorsSet_MICA_IC.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> operators = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -194,18 +248,57 @@ public final class SMConstants {
     //-------------------------------------------------------------------------------
     // Framework Set implementation
     //-------------------------------------------------------------------------------
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_BADER_2003 = Sim_Framework_DAG_Set_Bader_2003.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_BATET_2010 = Sim_Framework_DAG_Set_Batet_2010.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_BRAUN_BLANQUET_1932 = Sim_Framework_DAG_Set_Braun_Blanquet_1932.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_DICE_1945 = Sim_Framework_DAG_Set_Dice_1945.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_JACCARD_1901 = Sim_Framework_DAG_Set_Jaccard_1901.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_KNAPPE_2004 = Sim_Framework_DAG_Set_Knappe_2004.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_KORBEL_2002 = Sim_Framework_DAG_Set_Korbel_2002.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_MARYLAND_BRIDGE_2003 = Sim_Framework_DAG_Set_Maryland_Bridge_2003.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_OCHIAI_1957 = Sim_Framework_DAG_Set_Ochiai_1957.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_SIMPSON_1960 = Sim_Framework_DAG_Set_Simpson_1960.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_SOKAL_SNEATH_1963 = Sim_Framework_DAG_Set_Sokal_Sneath_1963.class.getName();
+    /**
+     *
+     */
     public static final String SIM_FRAMEWORK_DAG_SET_TVERSKY_1977 = Sim_Framework_DAG_Set_Tversky_1977.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_FRAMEWORK_DAG_SET_BASED = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -228,22 +321,70 @@ public final class SMConstants {
     // Groupwise
     //-------------------------------------------------------------------------------
     // Indirect measures i.e. Aggregation Strategies (Composite)
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_MAX_NORMALIZED_GOSIM = Sim_groupwise_MAX_NORMALIZED_GOSIM.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM = Sim_groupwise_MAX_NORMALIZED_GOSIM.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_AVERAGE = Sim_groupwise_Average.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_BEST_MATCH_AVERAGE = Sim_groupwise_BestMatchAverage.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_BEST_MATCH_MAX = Sim_groupwise_BestMatchMax.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_MAX = Sim_groupwise_Max.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_MIN = Sim_groupwise_Min.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_RANDOM = Sim_groupwise_Random.class.getName();
     // Flags
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_MAX = "SIM_GROUPWISE_MAX";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_MIN = "SIM_GROUPWISE_MIN";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_MAX_NORMALIZED_GOSIM = "SIM_GROUPWISE_MAX_NORMALIZED_GOSIM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_AVERAGE = "SIM_GROUPWISE_AVERAGE";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_BMM = "SIM_GROUPWISE_BMM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM = "SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_BMA = "SIM_GROUPWISE_BMA";
+    /**
+     *
+     */
     public static final Map<String, String> SIM_GROUPWISE_ADD_ON = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -258,22 +399,73 @@ public final class SMConstants {
         }
     };
     //Direct groupwise measures
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_GIC = "SIM_GROUPWISE_DAG_GIC";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_LEE_2004 = "SIM_GROUPWISE_DAG_LEE_2004";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_LP = "SIM_GROUPWISE_DAG_LP";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_NTO = "SIM_GROUPWISE_DAG_NTO";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_TO = "SIM_GROUPWISE_DAG_TO";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_UI = "SIM_GROUPWISE_DAG_UI";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_DAG_ALI_DEANE = "SIM_GROUPWISE_DAG_ALI_DEANE";
+    /**
+     *
+     */
     public static final String FLAG_SIM_GROUPWISE_SVM = "SIM_GROUPWISE_SVM";
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_GIC = Sim_groupwise_DAG_GIC.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_LEE_2004 = Sim_groupwise_DAG_Lee_2004.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_LP = Sim_groupwise_DAG_LP.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_NTO = Sim_groupwise_DAG_NTO.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_TO = Sim_groupwise_DAG_TO.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_UI = Sim_groupwise_DAG_UI.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_DAG_ALI_DEANE = Sim_groupwise_DAG_Ali_Deane.class.getName();
+    /**
+     *
+     */
     public static final String SIM_GROUPWISE_SVM = VectorSpaceModel.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_GROUPWISE_DAG = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -289,6 +481,9 @@ public final class SMConstants {
             putAll(SIM_FRAMEWORK_DAG_SET_BASED);
         }
     };
+    /**
+     *
+     */
     public static final Map<String, String> SIM_GROUPWISE_OTHERS = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -296,6 +491,9 @@ public final class SMConstants {
             put("SIM_GROUPWISE_RANDOM", SIM_GROUPWISE_RANDOM);
         }
     };
+    /**
+     *
+     */
     public static final HashMap<String, String> groupwiseMeasureMapping = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -306,6 +504,9 @@ public final class SMConstants {
             putAll(SIM_FRAMEWORK);
         }
     };
+    /**
+     *
+     */
     public static final HashSet<String> GROUPWISE_MEASURE_FLAGS = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
 
@@ -314,6 +515,11 @@ public final class SMConstants {
         }
     };
 
+    /**
+     *
+     * @param methodLabel
+     * @return
+     */
     public static String groupwiseClassName(String methodLabel) {
         return groupwiseMeasureMapping.get(methodLabel);
     }
@@ -324,14 +530,38 @@ public final class SMConstants {
     /*
      * -1 reserved flag for error
      */
+    /**
+     *
+     */
     public final static int NO_CORRESPONDANCE = -1;
+    /**
+     *
+     */
     public final static int PAIRWISE_GENERAL = 0;
+    /**
+     *
+     */
     public final static int PAIRWISE_DAG_NODE_BASED = 1;
+    /**
+     *
+     */
     public final static int PAIRWISE_DAG_EDGE_BASED = 2;
+    /**
+     *
+     */
     public final static int PAIRWISE_DAG_HYBRID_BASED = 3;
+    /**
+     *
+     */
     public final static int PAIRWISE_DAG_SET_BASED = 4;
     // GENERAL
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_RANDOM = Sim_pairwise_Random.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_GENERAL = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -340,16 +570,49 @@ public final class SMConstants {
         }
     };
     // EDGE BASED -----------------------------------------------------------------------------------
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_KYOGOKU_BASIC_2011 = Sim_pairwise_DAG_edge_Kyogoku_basic_2011.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_LEACOCK_CHODOROW_1998 = Sim_pairwise_DAG_edge_Leacock_Chodorow_1998.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_LI_2003 = Sim_pairwise_DAG_edge_Li_2003.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_PEKAR_STAAB_2002 = Sim_pairwise_DAG_edge_Pekar_Staab_2002.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_RADA_1989 = Sim_pairwise_DAG_edge_Rada_1989.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_RADA_LCA_1989 = Sim_pairwise_DAG_edge_Rada_LCA_1989.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_RESNIK_1995 = Sim_pairwise_DAG_edge_Resnik_1995.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_SLIMANI_2006 = Sim_pairwise_DAG_edge_Slimani_2006.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_STOJANOVIC_2001 = Sim_pairwise_DAG_edge_Stojanovic_2001.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_EDGE_WU_PALMER_1994 = Sim_pairwise_DAG_edge_Wu_Palmer_1994.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_DAG_EDGE_BASED = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -368,36 +631,129 @@ public final class SMConstants {
     };
     // NODE BASED -----------------------------------------------------------------------------------
     // - Information Content methods 
+    /**
+     *
+     */
     public static final String FLAG_ICI_RESNIK_UNPROPAGATED_1995 = "ICI_RESNIK_UNPROPAGATED_1995";
+    /**
+     *
+     */
     public static final String FLAG_ICI_RESNIK_1995 = "ICI_RESNIK_1995";
+    /**
+     *
+     */
     public static final String FLAG_ICI_SANCHEZ_2011_a = "ICI_SANCHEZ_2011_a";
+    /**
+     *
+     */
     public static final String FLAG_ICI_SANCHEZ_2011_b = "ICI_SANCHEZ_2011_b";
+    /**
+     *
+     */
     public static final String FLAG_ICI_SECO_2004 = "ICI_SECO_2004";
+    /**
+     *
+     */
     public static final String FLAG_ICI_ZHOU_2008 = "ICI_ZHOU_2008";
+    /**
+     *
+     */
     public static final String FLAG_ICI_MAZANDU_2012 = "ICI_MAZANDU_2012";
+    /**
+     *
+     */
     public static final String FLAG_ICI_DEPTH_MAX_NONLINEAR = "ICI_DEPTH_MAX_NONLINEAR";
+    /**
+     *
+     */
     public static final String FLAG_ICI_DEPTH_MIN_NONLINEAR = "ICI_DEPTH_MIN_NONLINEAR";
+    /**
+     *
+     */
     public static final String FLAG_ICI_PROB_OCCURENCE = "IC_PROB_OCCURENCE";
+    /**
+     *
+     */
     public static final String FLAG_ICI_PROB_OCCURENCE_PROPAGATED = "ICI_PROB_OCCURENCE_PROPAGATED";
+    /**
+     *
+     */
     public static final String FLAG_IC_ANNOT_RESNIK_1995 = "IC_ANNOT_RESNIK_1995";
+    /**
+     *
+     */
     public static final String FLAG_IC_ANNOT_RESNIK_1995_NORMALIZED = "IC_ANNOT_RESNIK_1995_NORMALIZED";
+    /**
+     *
+     */
     public static final String FLAG_IC_PROB_OCCURENCE_PROPAGATED = "IC_PROB_OCCURENCE_PROPAGATED";
+    /**
+     *
+     */
     public static final String FLAG_IC_IDF = "IC_ANNOT_IDF";
+    /**
+     *
+     */
     public static final String ICI_RESNIK_UNPROPAGATED_1995 = ICi_resnik_unpropagatted_1995.class.getName();
+    /**
+     *
+     */
     public static final String ICI_RESNIK_1995 = ICi_resnik_1995.class.getName();
+    /**
+     *
+     */
     public static final String ICI_SANCHEZ_2011_a = ICi_sanchez_2011_a.class.getName();
+    /**
+     *
+     */
     public static final String ICI_SANCHEZ_2011_b = ICi_sanchez_2011_b.class.getName();
+    /**
+     *
+     */
     public static final String ICI_SECO_2004 = ICi_seco_2004.class.getName();
+    /**
+     *
+     */
     public static final String ICI_ZHOU_2008 = ICi_zhou_2008.class.getName();
+    /**
+     *
+     */
     public static final String ICI_DEPTH_MAX_NONLINEAR = ICi_depth_max_nonlinear.class.getName();
+    /**
+     *
+     */
     public static final String ICI_DEPTH_MIN_NONLINEAR = ICi_depth_min_nonlinear.class.getName();
+    /**
+     *
+     */
     public static final String ICI_MAZANDU_2012 = ICi_mazandu_2012.class.getName();
+    /**
+     *
+     */
     public static final String ICI_PROB_OCCURENCE = ICi_probOccurence.class.getName();
+    /**
+     *
+     */
     public static final String ICI_PROB_OCCURENCE_PROPAGATED = ICi_probOccurence_propagatted.class.getName();
+    /**
+     *
+     */
     public static final String IC_ANNOT_RESNIK_1995 = IC_annot_resnik_1995.class.getName();
+    /**
+     *
+     */
     public static final String IC_ANNOT_IDF = IDF.class.getName();
+    /**
+     *
+     */
     public static final String IC_ANNOT_RESNIK_1995_NORMALIZED = IC_annot_resnik_1995_Normalized.class.getName();
+    /**
+     *
+     */
     public static final String IC_PROB_OCCURENCE_PROPAGATED = IC_probOccurence_propagatted.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_DAG_NODE_IC_INTRINSIC = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -415,6 +771,9 @@ public final class SMConstants {
             put(FLAG_ICI_MAZANDU_2012, ICI_MAZANDU_2012);
         }
     };
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_DAG_NODE_IC_ANNOT = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -425,48 +784,171 @@ public final class SMConstants {
         }
     };
     // Methods 
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006 = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_JACCARD = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_JACCARD";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_3WJACCARD = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_3WJACCARD";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_TVERSKY = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_TVERSKY";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_GL = "SIM_PAIRWISE_DAG_NODE_SCHLICKER_GL";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL = "SIM_PAIRWISE_DAG_NODE_GL";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_GL_GRASM = "SIM_PAIRWISE_DAG_NODE_GL_GRASM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998 = "SIM_PAIRWISE_DAG_NODE_LIN_1998";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_IC = "SIM_PAIRWISE_DAG_NODE_JACCARD_IC";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC = "SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC";
+    /**
+     *
+     */
     public static final String FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997 = "DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM = "SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995_GRASM = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995_GraSM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998_GRASM = "SIM_PAIRWISE_DAG_NODE_LIN_1998_GraSM";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_MAZANDU_2012 = "SIM_PAIRWISE_DAG_NODE_MAZANDU_2012";
+    /**
+     *
+     */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = "SIM_PAIRWISE_DAG_NODE_SIM_IC_2010";
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = Sim_pairwise_DAG_node_Tversky_IC.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_LIN_1998 = Sim_pairwise_DAG_node_Lin_1998.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_IC = Sim_pairwise_DAG_node_Jaccard_IC.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC = Sim_pairwise_DAG_node_Jaccard_3W_IC.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997 = Sim_pairwise_DAG_node_Jiang_Conrath_1997.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM = Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = Sim_pairwise_DAG_node_Resnik_1995.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995_ANCESTORS = Sim_pairwise_DAG_node_Resnik_1995_Ancestors.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995_DESCENDANTS = Sim_pairwise_DAG_node_Resnik_1995_Descendants.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006 = Sim_pairwise_DAG_node_Schlicker_2006_SimRel.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SCHLICKER_JACCARD = Sim_pairwise_DAG_node_Schlicker_Jaccard_SimRel.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SCHLICKER_3WJACCARD = Sim_pairwise_DAG_node_Schlicker_3WJaccard_SimRel.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SCHLICKER_TVERSKY = Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SCHLICKER_GL = Sim_pairwise_DAG_node_Schlicker_GL_SimRel.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_GL = Sim_pairwise_DAG_node_GL.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_GL_GRASM = Sim_pairwise_DAG_node_GL_GraSM.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_RESNIK_1995_GraSM = Sim_pairwise_DAG_node_Resnik_1995_GraSM.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_LIN_1998_GraSM = Sim_pairwise_DAG_node_Lin_1998_GraSM.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_MAZANDU_2012 = Sim_pairwise_DAG_node_Mazandu_2012.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = Sim_pairwise_DAG_node_Sim_IC_2010.class.getName();
     
     
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_DAG_NODE_BASED = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -494,6 +976,9 @@ public final class SMConstants {
 
         }
     };
+    /**
+     *
+     */
     public static final HashSet<String> MEASURE_REQUIRE_EXTRA_IC = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
 
@@ -506,8 +991,17 @@ public final class SMConstants {
         }
     };
     // HYBRID -----------------------------------------------------------------------------------
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_HYBRID_RANWEZ_2006 = Sim_pairwise_DAG_hybrid_Ranwez_2006.class.getName();
+    /**
+     *
+     */
     public static final String SIM_PAIRWISE_DAG_HYBRID_WANG_2007 = Sim_pairwise_DAG_hybrid_Wang_2007.class.getName();
+    /**
+     *
+     */
     public static final Map<String, String> SIM_PAIRWISE_DAG_HYBRID_BASED = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -516,6 +1010,9 @@ public final class SMConstants {
             put("SIM_PAIRWISE_DAG_HYBRID_WANG_2007", SIM_PAIRWISE_DAG_HYBRID_WANG_2007);
         }
     };
+    /**
+     *
+     */
     public static final HashMap<String, String> pairwiseMeasureMapping = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -528,6 +1025,9 @@ public final class SMConstants {
             putAll(SIM_FRAMEWORK);
         }
     };
+    /**
+     *
+     */
     public static final HashSet<String> PAIRWISE_MEASURE_FLAGS = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
 
@@ -535,6 +1035,9 @@ public final class SMConstants {
             addAll(pairwiseMeasureMapping.keySet());
         }
     };
+    /**
+     *
+     */
     public static final HashMap<String, String> icsMapping = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -543,6 +1046,9 @@ public final class SMConstants {
             putAll(SIM_PAIRWISE_DAG_NODE_IC_ANNOT);
         }
     };
+    /**
+     *
+     */
     public static final HashSet<String> IC_FLAGS = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
 
@@ -551,6 +1057,11 @@ public final class SMConstants {
         }
     };
 
+    /**
+     *
+     * @param measureFlag
+     * @return
+     */
     public static int getPairwiseApproach(String measureFlag) {
 
         if (SIM_PAIRWISE_GENERAL.keySet().contains(measureFlag)) {
@@ -569,6 +1080,11 @@ public final class SMConstants {
 
     }
 
+    /**
+     *
+     * @param mApproach
+     * @return
+     */
     public static boolean requireDAG(int mApproach) {
         if (mApproach == PAIRWISE_DAG_EDGE_BASED
                 || mApproach == PAIRWISE_DAG_NODE_BASED
@@ -580,10 +1096,20 @@ public final class SMConstants {
         return false;
     }
 
+    /**
+     *
+     * @param methodFLAG
+     * @return
+     */
     public static String pairwiseClassName(String methodFLAG) {
         return pairwiseMeasureMapping.get(methodFLAG);
     }
 
+    /**
+     *
+     * @param methodLabel
+     * @return
+     */
     public static String semanticMeasureClassName(String methodLabel) {
         String className = groupwiseMeasureMapping.get(methodLabel);
         if (className == null) {
@@ -591,6 +1117,9 @@ public final class SMConstants {
         }
         return className;
     }
+    /**
+     *
+     */
     public static final HashSet<String> MEASURE_FLAGS_IC_DEPENDENCY = new HashSet<String>() {
         private static final long serialVersionUID = 1L;
 

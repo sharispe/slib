@@ -60,6 +60,12 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_probOccurence implements ICtopo {
 
+    /**
+     *
+     * @param allNbDescendants
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> allNbDescendants) throws SLIB_Ex_Critic {
 
         return ProbOccurence.compute(allNbDescendants, 0);

@@ -37,9 +37,24 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.algo.utils;
 
 
+/**
+ *
+ * @author seb
+ */
 public enum VColor {
 
-	WHITE, ORANGE , RED;
+	/**
+     *
+     */
+    WHITE,
+    /**
+     *
+     */
+    ORANGE ,
+    /**
+     *
+     */
+    RED;
 	
 	
 	

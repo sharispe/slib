@@ -20,6 +20,10 @@ public class IndexerRepository {
         index = new IndexHash();
     }
 
+    /**
+     *
+     * @return
+     */
     public IndexerRepository getInstance(){
         
         if(repo == null){
@@ -28,6 +32,10 @@ public class IndexerRepository {
         return repo;
     }
 
+    /**
+     *
+     * @return
+     */
     public IndexHash getIndex() {
         return index;
     } 

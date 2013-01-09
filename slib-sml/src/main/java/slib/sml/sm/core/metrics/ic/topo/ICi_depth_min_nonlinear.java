@@ -56,9 +56,18 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_depth_min_nonlinear extends LogBasedMetric implements ICtopo {
 
+    /**
+     *
+     */
     public ICi_depth_min_nonlinear() {
     }
 
+    /**
+     *
+     * @param alldepths
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Integer> alldepths) throws SLIB_Ex_Critic{
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());

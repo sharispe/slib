@@ -90,11 +90,21 @@ public class ResultsMerger {
 
 	String tmp_dir = "/tmp/";
 	
-	public static int splitSize_default = 100; // file size
+	/**
+     *
+     */
+    public static int splitSize_default = 100; // file size
 	int splitSize = splitSize_default;
 
 
-	public void process(String file_a, String file_b, String out) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param file_a
+     * @param file_b
+     * @param out
+     * @throws SLIB_Ex_Critic
+     */
+    public void process(String file_a, String file_b, String out) throws SLIB_Ex_Critic {
 
 		logger.info("Merging results");
 		logger.info("file A: "+file_a);
@@ -165,7 +175,16 @@ public class ResultsMerger {
 
 	}
 
-	public void processLarge(String file_a, String file_b, String output,String tmp_dir, Integer split_size) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param file_a
+     * @param file_b
+     * @param output
+     * @param tmp_dir
+     * @param split_size
+     * @throws SLIB_Ex_Critic
+     */
+    public void processLarge(String file_a, String file_b, String output,String tmp_dir, Integer split_size) throws SLIB_Ex_Critic {
 
 
 		values_a_index = new HashMap<String, Long>();
@@ -279,7 +298,14 @@ public class ResultsMerger {
 
 	}
 
-	public String getLine(boolean isFile_A, Long file_index) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param isFile_A
+     * @param file_index
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public String getLine(boolean isFile_A, Long file_index) throws SLIB_Ex_Critic {
 
 		String out = null;
 		long file_nb 	= file_index/splitSize;
@@ -315,7 +341,12 @@ public class ResultsMerger {
 		return out;
 	}
 
-	public static String implodeArray(String[] inputArray) {
+	/**
+     *
+     * @param inputArray
+     * @return
+     */
+    public static String implodeArray(String[] inputArray) {
 
 		String output = "";
 
@@ -332,7 +363,12 @@ public class ResultsMerger {
 		return output;
 	}
 
-	public static String implodeArrayList(ArrayList<String> inputArray) {
+	/**
+     *
+     * @param inputArray
+     * @return
+     */
+    public static String implodeArrayList(ArrayList<String> inputArray) {
 
 		String output = "";
 
@@ -570,7 +606,11 @@ public class ResultsMerger {
 
 
 
-	@SuppressWarnings("unused")
+	/**
+     *
+     * @param args
+     */
+    @SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		ResultsMerger merger = new ResultsMerger();

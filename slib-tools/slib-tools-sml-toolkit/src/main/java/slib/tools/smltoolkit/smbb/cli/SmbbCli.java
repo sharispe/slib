@@ -73,20 +73,28 @@ public class SmbbCli implements SmlModuleCLI {
 
 	G g;
 
-	public SmbbCli(){}
+	/**
+     *
+     */
+    public SmbbCli(){}
 
 	/**
 	 * Load the module considering the given configuration file path.
 	 * 
-	 * @param confFile the path of the configuration file to take into account
-	 * @throws SGL_Exception
+         * @param confFile the path of the configuration file to take into account
+         * @throws SLIB_Exception  
 	 */
 	public SmbbCli(String confFile) throws SLIB_Exception{
 		execute(confFile);
 	}
 
 
-	public void execute(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public void execute(String[] args) throws SLIB_Exception {
 		SmbbCmdHandler cfgLoader = new SmbbCmdHandler(args);
 		execute(cfgLoader.xmlConfFile);
 	}
@@ -145,7 +153,11 @@ public class SmbbCli implements SmlModuleCLI {
 	}
 
 
-	@SuppressWarnings("unused")
+	/**
+     *
+     * @param args
+     */
+    @SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		String conf = System.getProperty("user.dir")+"/studies/modules/sml/smbb/conf/bioinfo";

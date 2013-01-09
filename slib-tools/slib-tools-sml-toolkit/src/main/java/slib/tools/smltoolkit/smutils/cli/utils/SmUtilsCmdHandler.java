@@ -52,37 +52,94 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmUtilsCmdHandler extends CmdHandler {
 
 
 
 
 	// result_merger
-	public String  process;
-	public String  file_A;
-	public String  file_B;
-	public String  output;
-	public String  tmp_dir;
-	public Integer split_size;
+	/**
+     *
+     */
+    public String  process;
+	/**
+     *
+     */
+    public String  file_A;
+	/**
+     *
+     */
+    public String  file_B;
+	/**
+     *
+     */
+    public String  output;
+	/**
+     *
+     */
+    public String  tmp_dir;
+	/**
+     *
+     */
+    public Integer split_size;
 
 	// sqliteUtils
 
-	public String  action;
-	public String  db_A;
-	public String  db_B;
-	public String  db_M;
-	public String  table_A;
-	public String  table_B;
-	public String  table_M;
-	public Integer BATCH_LIMIT;
-	public Integer BATCH_LIMIT_MATRIX_LINE;
-	public Set<String> colsToremove;
+	/**
+     *
+     */
+    public String  action;
+	/**
+     *
+     */
+    public String  db_A;
+	/**
+     *
+     */
+    public String  db_B;
+	/**
+     *
+     */
+    public String  db_M;
+	/**
+     *
+     */
+    public String  table_A;
+	/**
+     *
+     */
+    public String  table_B;
+	/**
+     *
+     */
+    public String  table_M;
+	/**
+     *
+     */
+    public Integer BATCH_LIMIT;
+	/**
+     *
+     */
+    public Integer BATCH_LIMIT_MATRIX_LINE;
+	/**
+     *
+     */
+    public Set<String> colsToremove;
 
 
 	static Logger logger = LoggerFactory.getLogger(SmUtilsCmdHandler.class);
 
 
-	public SmUtilsCmdHandler(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public SmUtilsCmdHandler(String[] args) throws SLIB_Exception {
 		super(new SmUtilsToolKitCst(), new SmUtilsCmdHandlerCst(), args);
 	}
 
@@ -188,7 +245,12 @@ public class SmUtilsCmdHandler extends CmdHandler {
 	
 	
 
-	@SuppressWarnings("unused")
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    @SuppressWarnings("unused")
 	public static void main(String[] args) throws SLIB_Exception {
 		SmUtilsCmdHandler handler = new SmUtilsCmdHandler(null);
 	}

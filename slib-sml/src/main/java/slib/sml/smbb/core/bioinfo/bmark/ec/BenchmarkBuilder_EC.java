@@ -90,7 +90,14 @@ public class BenchmarkBuilder_EC {
 	InstancesAccessor instancesAccessor;
 
 
-	public void generateBenchmark(
+	/**
+     *
+     * @param graph
+     * @param instancesAccessor
+     * @param conf
+     * @throws SLIB_Exception
+     */
+    public void generateBenchmark(
 			G graph, 
 			InstancesAccessor instancesAccessor,
 			SmbbConf_GO_EC conf) throws SLIB_Exception{
@@ -259,7 +266,7 @@ public class BenchmarkBuilder_EC {
 
 		for(V e : instancesAccessor.getInstances()){
 			Set<V> annots = instancesAccessor.getDirectClass(e);
-			Set<V> annots_prop = dm.getAncestors(annots);
+			Set<V> annots_prop = dm.getAncestorsInc(annots);
 			HashSet<String> ecCodes = getEcCodes(annots_prop);
 
 			if(ecCodes.size() > 1){

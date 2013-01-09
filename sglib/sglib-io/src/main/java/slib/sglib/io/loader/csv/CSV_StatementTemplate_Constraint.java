@@ -1,12 +1,27 @@
 package slib.sglib.io.loader.csv;
 
+/**
+ *
+ * @author seb
+ */
 public class CSV_StatementTemplate_Constraint {
 
 
-	public StatementTemplate_Constraint_Type type;
-	public StatementTemplateElement onElement;
+	/**
+     *
+     */
+    public StatementTemplate_Constraint_Type type;
+	/**
+     *
+     */
+    public StatementTemplateElement onElement;
 	
-	public CSV_StatementTemplate_Constraint(StatementTemplateElement elem,
+	/**
+     *
+     * @param elem
+     * @param type
+     */
+    public CSV_StatementTemplate_Constraint(StatementTemplateElement elem,
 			StatementTemplate_Constraint_Type type) {
 		
 		this.type = type;

@@ -39,17 +39,31 @@ package slib.sglib.io.loader.utils.filter.graph;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Filter {
 
 	String id;
 	String type;
 	
-	public Filter(String id, String type){
+	/**
+     *
+     * @param id
+     * @param type
+     */
+    public Filter(String id, String type){
 		this.id = id;
 		this.type = type;
 	}
 	
-	public Filter(Conf conf) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param conf
+     * @throws SLIB_Ex_Critic
+     */
+    public Filter(Conf conf) throws SLIB_Ex_Critic{
 		
 		String id   = (String) conf.getParam("id");
 		String type = (String) conf.getParam("type");
@@ -70,19 +84,35 @@ public abstract class Filter {
 		return out;
 	}
 
-	public String getId() {
+	/**
+     *
+     * @return
+     */
+    public String getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	/**
+     *
+     * @param id
+     */
+    public void setId(String id) {
 		this.id = id;
 	}
 
-	public String getType() {
+	/**
+     *
+     * @return
+     */
+    public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	/**
+     *
+     * @param type
+     */
+    public void setType(String type) {
 		this.type = type;
 	}
 	

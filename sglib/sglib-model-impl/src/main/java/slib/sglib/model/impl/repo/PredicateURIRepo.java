@@ -47,6 +47,10 @@ import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Ex_Warning;
 
+/**
+ *
+ * @author seb
+ */
 public class PredicateURIRepo implements PredicateFactory {
 
     private static PredicateURIRepo singleton;
@@ -68,6 +72,11 @@ public class PredicateURIRepo implements PredicateFactory {
         pURIs.add(RDFS.SUBCLASSOF);
     }
 
+    /**
+     *
+     * @param factory
+     * @return
+     */
     protected static PredicateURIRepo getInstance(DataFactory factory) {
         if (singleton == null) {
             singleton = new PredicateURIRepo(factory);
@@ -75,10 +84,21 @@ public class PredicateURIRepo implements PredicateFactory {
         return singleton;
     }
 
+    /**
+     *
+     * @param uri
+     * @return
+     */
     public boolean contains(URI uri) {
         return pURIs.contains(uri);
     }
 
+    /**
+     *
+     * @param suri
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public URI load(String suri) throws SLIB_Ex_Critic {
 
         URI uri = factory.createURI(suri);
@@ -90,10 +110,21 @@ public class PredicateURIRepo implements PredicateFactory {
         return uri;
     }
 
+    /**
+     *
+     * @param uri
+     * @return
+     */
     public URI getInverseURI(URI uri) {
         return inverses.get(uri);
     }
 
+    /**
+     *
+     * @param uri
+     * @param uriI
+     * @throws SLIB_Ex_Warning
+     */
     public void defineInverseURI(URI uri, URI uriI) throws SLIB_Ex_Warning {
 
 
@@ -115,11 +146,21 @@ public class PredicateURIRepo implements PredicateFactory {
         inverses.put(uriI, uri);
     }
 
+    /**
+     *
+     * @param type
+     * @return
+     */
     public URI getInverse(URI type) {
         URI inverse = inverses.get(type);
         return inverse;
     }
 
+    /**
+     *
+     * @param types
+     * @return
+     */
     public Set<URI> getInverse(Set<URI> types) {
 
         Set<URI> inverse = new HashSet<URI>();
@@ -131,6 +172,12 @@ public class PredicateURIRepo implements PredicateFactory {
         return inverse;
     }
 
+    /**
+     *
+     * @param eType
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public URI createInverse(URI eType) throws SLIB_Ex_Critic {
         URI inverse = load(SLIBVOC.SLIB_NS + eType.getLocalName() + "_inverse");
         return inverse;
@@ -139,7 +186,6 @@ public class PredicateURIRepo implements PredicateFactory {
     /**
      * DEBUG
      *
-     * @return
      */
     public void showInverseMapping() {
         HashSet<URI> t = new HashSet<URI>();// to avoid duplicate

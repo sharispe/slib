@@ -83,7 +83,8 @@ public class QueryFileIterator implements QueryIterator {
 	/**
 	 * Constructor of a {@link QueryFileIterator}
 	 * @param filepath the file to load as repository
-	 * @throws IOException if an IO exception appends
+         * @param uriPrefix 
+         * @throws IOException if an IO exception appends
 	 */
 	public QueryFileIterator(String filepath, String uriPrefix) throws IOException{
 		

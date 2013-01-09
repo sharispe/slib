@@ -19,7 +19,11 @@ public interface VirtualInstancesAccessor {
 	public long getInstancesNumber(V v);
 
 	
-	public Map<V, Long> getInferredInstancesNumberMapping();
+	/**
+     *
+     * @return
+     */
+    public Map<V, Long> getInferredInstancesNumberMapping();
 	/**
 	 * Access to the number of vertex considered as direct instance of a class 
 	 * e.g. all x respecting <x RDF.TYPE class>
@@ -28,7 +32,11 @@ public interface VirtualInstancesAccessor {
 	 */
 	public long getDirectInstancesNumber(V v);
 
-	public Map<V, Long> getDirectInstancesNumberMapping();
+	/**
+     *
+     * @return
+     */
+    public Map<V, Long> getDirectInstancesNumberMapping();
 
 
 

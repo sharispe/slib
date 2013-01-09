@@ -43,6 +43,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConf_GO_KEGG extends SmbbConf_GO {
 
 	Logger   logger = LoggerFactory.getLogger(SmbbConf_GO_KEGG.class);
@@ -56,11 +60,19 @@ public class SmbbConf_GO_KEGG extends SmbbConf_GO {
 	String  outputNegativeRel;
 	String  indexOut;
 	
-	public SmbbConf_GO_KEGG(){
+	/**
+     *
+     */
+    public SmbbConf_GO_KEGG(){
 		type = SmbbCst.type_GO_KEGG;
 	} 
 
-	public SmbbConf_GO_KEGG(Conf sspBBConf_g) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param sspBBConf_g
+     * @throws SLIB_Ex_Critic
+     */
+    public SmbbConf_GO_KEGG(Conf sspBBConf_g) throws SLIB_Ex_Critic {
 
 		this();
 
@@ -142,63 +154,123 @@ public class SmbbConf_GO_KEGG extends SmbbConf_GO {
 	}
 
 
-	public String getTaxon() {
+	/**
+     *
+     * @return
+     */
+    public String getTaxon() {
 		return taxon;
 	}
 
-	public Integer getMin_annot() {
+	/**
+     *
+     * @return
+     */
+    public Integer getMin_annot() {
 		return min_annot;
 	}
 
-	public void setMin_annot(Integer min_annot) {
+	/**
+     *
+     * @param min_annot
+     */
+    public void setMin_annot(Integer min_annot) {
 		this.min_annot = min_annot;
 	}
 
-	public void setTaxon(String taxon) {
+	/**
+     *
+     * @param taxon
+     */
+    public void setTaxon(String taxon) {
 		this.taxon = taxon;
 	}
 
-	public String getKeggIndex(){
+	/**
+     *
+     * @return
+     */
+    public String getKeggIndex(){
 		return this.kegg_index;
 	}
 	
-	public void setKeggIndex(String index) {
+	/**
+     *
+     * @param index
+     */
+    public void setKeggIndex(String index) {
 		this.kegg_index = index;
 	}
 	
-	public String getPathwayCluster(){
+	/**
+     *
+     * @return
+     */
+    public String getPathwayCluster(){
 		return this.pathway_clusters;
 	}
 	
-	public void setPathwayCluster(String index) {
+	/**
+     *
+     * @param index
+     */
+    public void setPathwayCluster(String index) {
 		this.pathway_clusters = index;
 	}
 
-	public String getOut_pair_file() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_pair_file() {
 		return out_pair_file;
 	}
 
-	public void setOut_pair_file(String out_pair_file) {
+	/**
+     *
+     * @param out_pair_file
+     */
+    public void setOut_pair_file(String out_pair_file) {
 		this.out_pair_file = out_pair_file;
 	}
 
-	public String getOutputPositiveRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputPositiveRel() {
 		return outputPositiveRel;
 	}
 
-	public void setOutputPositiveRel(String positiveRel) {
+	/**
+     *
+     * @param positiveRel
+     */
+    public void setOutputPositiveRel(String positiveRel) {
 		this.outputPositiveRel = positiveRel;
 	}
 
-	public String getOutputNegativeRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputNegativeRel() {
 		return outputNegativeRel;
 	}
 
-	public void setOutputNegativeRel(String negativeRel) {
+	/**
+     *
+     * @param negativeRel
+     */
+    public void setOutputNegativeRel(String negativeRel) {
 		this.outputNegativeRel = negativeRel;
 	}
 
-	public String getIndexFile() {
+	/**
+     *
+     * @return
+     */
+    public String getIndexFile() {
 		return indexOut;
 	}
 	

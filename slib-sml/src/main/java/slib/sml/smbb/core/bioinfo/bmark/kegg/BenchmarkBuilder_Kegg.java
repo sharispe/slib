@@ -87,7 +87,14 @@ public class BenchmarkBuilder_Kegg {
 	DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
 
-	public void generateBenchmark(
+	/**
+     *
+     * @param graph
+     * @param instancesAccessor
+     * @param conf
+     * @throws SLIB_Exception
+     */
+    public void generateBenchmark(
 			G graph, 
 			InstancesAccessor instancesAccessor,
 			SmbbConf_GO_KEGG conf) throws SLIB_Exception{
@@ -201,7 +208,12 @@ public class BenchmarkBuilder_Kegg {
 	}
 
 
-	public void buildPairwiseEvalFile(String outfile) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param outfile
+     * @throws SLIB_Ex_Critic
+     */
+    public void buildPairwiseEvalFile(String outfile) throws SLIB_Ex_Critic{
 
 		ArrayList<URI> uris = new ArrayList<URI>(getAllClanProteinURIs());
 
@@ -221,7 +233,11 @@ public class BenchmarkBuilder_Kegg {
 		logger.info("comparison file generated see: "+outfile);
 	}
 
-	public HashSet<URI> getAllClanProteinURIs(){
+	/**
+     *
+     * @return
+     */
+    public HashSet<URI> getAllClanProteinURIs(){
 		HashSet<URI> uris = new HashSet<URI>();
 
 		for(HashSet<URI> set : clustersEntitiesUris.values())
@@ -328,7 +344,13 @@ public class BenchmarkBuilder_Kegg {
 	}
 
 
-	public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param protPositiveComparison
+     * @param protNegativeComparison
+     * @throws SLIB_Ex_Critic
+     */
+    public void buildBinaryClassifierEvalFile(String protPositiveComparison,String protNegativeComparison) throws SLIB_Ex_Critic {
 
 		buildPostiveEvalFile(protPositiveComparison);
 

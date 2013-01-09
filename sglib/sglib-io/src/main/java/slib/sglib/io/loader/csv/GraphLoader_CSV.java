@@ -26,6 +26,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphLoader_CSV implements GraphLoader{
 	
 	boolean skipHeader = false;
@@ -42,7 +46,13 @@ public class GraphLoader_CSV implements GraphLoader{
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public void addMapping(int id, VType type, String prefix){
+	/**
+     *
+     * @param id
+     * @param type
+     * @param prefix
+     */
+    public void addMapping(int id, VType type, String prefix){
 
 		if(prefix == null)
 			prefix = "";
@@ -50,7 +60,13 @@ public class GraphLoader_CSV implements GraphLoader{
 		mappings.put(id, new CSV_Mapping(id, type, prefix));
 	}
 
-	public void addStatementTemplate(int src_id, int target_id, URI predicate_URI){
+	/**
+     *
+     * @param src_id
+     * @param target_id
+     * @param predicate_URI
+     */
+    public void addStatementTemplate(int src_id, int target_id, URI predicate_URI){
 
 		assert predicate_URI != null;
 

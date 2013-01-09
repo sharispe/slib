@@ -39,17 +39,52 @@ package slib.tools.ontofocus.core.utils;
 import slib.sglib.io.util.GFormat;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OntoFocusConf {
 
-	public String  ontoFile;
-	public GFormat  format;
-	public String  out;
-	public String  queryFile;
-	public String  rootURI;
-	public String  incR;
-	public boolean addR	  = false;
+	/**
+     *
+     */
+    public String  ontoFile;
+	/**
+     *
+     */
+    public GFormat  format;
+	/**
+     *
+     */
+    public String  out;
+	/**
+     *
+     */
+    public String  queryFile;
+	/**
+     *
+     */
+    public String  rootURI;
+	/**
+     *
+     */
+    public String  incR;
+	/**
+     *
+     */
+    public boolean addR	  = false;
 	
-	public OntoFocusConf(String ontoFile,GFormat format,String rootURI,
+	/**
+     *
+     * @param ontoFile
+     * @param format
+     * @param rootURI
+     * @param incR
+     * @param addR
+     * @param out
+     * @param queryFile
+     */
+    public OntoFocusConf(String ontoFile,GFormat format,String rootURI,
 			String incR, boolean addR, String out,String queryFile) {
 		
 		this.ontoFile = ontoFile;

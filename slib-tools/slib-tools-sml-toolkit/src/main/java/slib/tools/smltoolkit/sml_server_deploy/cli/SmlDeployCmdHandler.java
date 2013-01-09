@@ -48,16 +48,34 @@ import slib.tools.smltoolkit.sm.cli.SmCli;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmlDeployCmdHandler extends CmdHandler {
 
 
-	public String    xmlConfFile;
-	public String[]  benchmark_restrictions;
-	public String[]  profile_restrictions;
+	/**
+     *
+     */
+    public String    xmlConfFile;
+	/**
+     *
+     */
+    public String[]  benchmark_restrictions;
+	/**
+     *
+     */
+    public String[]  profile_restrictions;
 	static Logger logger = LoggerFactory.getLogger(SmlDeployCmdHandler.class);
 	
 
-	public SmlDeployCmdHandler(String[] args)throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public SmlDeployCmdHandler(String[] args)throws SLIB_Exception {
 		super(new SmlDeployToolKitCst(), new SmlDeployCmdHandlerCst(), args);
 	}
 
@@ -92,7 +110,11 @@ public class SmlDeployCmdHandler extends CmdHandler {
 	}
 
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		try {
 			SmlDeployCmdHandler 	    c = new SmlDeployCmdHandler(args);

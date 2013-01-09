@@ -63,13 +63,20 @@ import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
 
+/**
+ *
+ * @author seb
+ */
 public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 
 	
 	
 	Logger   logger = LoggerFactory.getLogger(Smbb_XMLConfLoader.class);
 	
-	public Conf sspBBConf_g;
+	/**
+     *
+     */
+    public Conf sspBBConf_g;
 	
 	/**
 	 * TODO remove this multiple configuration object
@@ -77,9 +84,18 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 	 * could be casted in order to be processed
 	 */
 	public SmbbConf_GO_PPI  sspBBConf_PPI;
-	public SmbbConf_GO_Pfam sspBBConf_Pfam;
-	public SmbbConf_GO_EC 	sspBBConf_EC;
-	public SmbbConf_GO_KEGG sspBBConf_KEGG;
+	/**
+     *
+     */
+    public SmbbConf_GO_Pfam sspBBConf_Pfam;
+	/**
+     *
+     */
+    public SmbbConf_GO_EC 	sspBBConf_EC;
+	/**
+     *
+     */
+    public SmbbConf_GO_KEGG sspBBConf_KEGG;
 	
 	String type     = null;
 	String kb_id    = null;
@@ -87,7 +103,12 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 	
 	Document document;
 
-	public Smbb_XMLConfLoader(String confFile) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param confFile
+     * @throws SLIB_Ex_Critic
+     */
+    public Smbb_XMLConfLoader(String confFile) throws SLIB_Ex_Critic{
 		
 		super(confFile);
 		
@@ -159,34 +180,58 @@ public class Smbb_XMLConfLoader extends XML_ModuleConfLoader {
 		sspBBConf_g = GenericConfBuilder.build(item);
 	}
 	
-	public String getType() {
+	/**
+     *
+     * @return
+     */
+    public String getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	/**
+     *
+     * @param type
+     */
+    public void setType(String type) {
 		this.type = type;
 	}
 	
 	
 
 
-	public String getKb_id() {
+	/**
+     *
+     * @return
+     */
+    public String getKb_id() {
 		return kb_id;
 	}
 
 
-	public void setKb_id(String kb_id) {
+	/**
+     *
+     * @param kb_id
+     */
+    public void setKb_id(String kb_id) {
 		this.kb_id = kb_id;
 	}
 
 
 
-	public String getGraphURI() {
+	/**
+     *
+     * @return
+     */
+    public String getGraphURI() {
 		return graphURI;
 	}
 
 
-	@SuppressWarnings("unused")
+	/**
+     *
+     * @param args
+     */
+    @SuppressWarnings("unused")
 	public static void main(String[] args) {
 
 		String pref = System.getProperty("user.dir")+"/modules/smf/smbb/conf/bioinfo/";

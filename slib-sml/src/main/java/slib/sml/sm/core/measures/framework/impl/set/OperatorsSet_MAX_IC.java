@@ -76,7 +76,8 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * supported by the operators.
 	 * The given configuration must contains an associated metric defining the method
 	 * to use to compute {@link V} informativeness see {@link OperatorConf#ic} and {@link ICconf}
-	 * @param conf the configuration of the operator
+         * @param conf the configuration of the operator
+         * @throws SLIB_Exception  
 	 */
 	public OperatorsSet_MAX_IC(OperatorConf conf) throws SLIB_Exception {
 		super(conf);
@@ -90,7 +91,9 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * 
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates commonalities the IC of represented
 	 * classes MICA
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep_a).anc;
@@ -116,7 +119,9 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * 
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates subtraction as informativeness 
 	 * of the class represented by rep_a - commonality(rep_a,rep_b).
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	public double subtraction(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		
 		return informativeness(rep_a, manager) - commonalities(rep_a, rep_b, manager);
@@ -127,7 +132,9 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * 
 	 * The {@link OperatorsSet_MAX_IC} implementation evaluates difference as sum of the informativeness 
 	 * of the compared representation -  2 * commonality(rep_a,rep_b).
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	public double diff(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		return informativeness(rep_a, manager)+informativeness(rep_b, manager)- 2. *commonalities(rep_a, rep_b, manager);
 	}
@@ -153,7 +160,10 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * the maximal IC of the classes'IC contained in the representation.
 	 * Because the metric used to compute the IC must monotonically decrease from the leaves
 	 * to the root informativeness(rep) must be equals to the IC of the class represented by rep.
-	 */
+         * 
+         * @param rep 
+         * @throws SLIB_Exception 
+         */
 	public double informativeness(GraphRepresentation rep,SM_Engine manager) throws SLIB_Exception {
 		
 		Set<V> a = ((GraphRepresentationAsSet) rep).anc;
@@ -174,7 +184,9 @@ public class OperatorsSet_MAX_IC extends RepresentationOperators{
 	 * 
 	 * Return true if the {@link GraphRepresentation} are supported see {@link #supportRepresentations(GraphRepresentation...)}
 	 * and if compared representation not only contains the root of the graph
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	public boolean validateRules(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception {
 		
 		if(supportRepresentations(rep_a,rep_b)){

@@ -41,13 +41,25 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
+/**
+ *
+ * @author seb
+ */
 public final class QueryEntryURI implements Map.Entry<String, Set<URI> > {
 	
     private String key;
     private Set<URI> value;
 
+    /**
+     *
+     */
     public QueryEntryURI(){}
     		
+    /**
+     *
+     * @param key
+     * @param value
+     */
     public QueryEntryURI(String key, Set<URI> value) {
         this.key = key;
         this.value = value;

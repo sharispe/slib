@@ -39,16 +39,35 @@ package slib.sglib.model.impl.voc;
 import org.openrdf.model.URI;
 import org.openrdf.model.impl.URIImpl;
 
+/**
+ *
+ * @author seb
+ */
 public class SLIBVOC {
 
-	public final static  String SLIB_NS = "http://www.lgi2p.ema.fr/";
+	/**
+     *
+     */
+    public final static  String SLIB_NS = "http://www.lgi2p.ema.fr/";
 	
 	
-	public final static URI UNIVERSAL_ROOT 		= new URIImpl(SLIB_NS+"Thing");
+	/**
+     *
+     */
+    public final static URI UNIVERSAL_ROOT 		= new URIImpl(SLIB_NS+"Thing");
 	
-	public final static URI V_TYPE_CLASS_URI 	= new URIImpl(SLIB_NS+"class");
-	public final static URI V_TYPE_INSTANCE_URI = new URIImpl(SLIB_NS+"instance");
-	public final static URI V_TYPE_LITERAL_URI  = new URIImpl(SLIB_NS+"literal");
+	/**
+     *
+     */
+    public final static URI V_TYPE_CLASS_URI 	= new URIImpl(SLIB_NS+"class");
+	/**
+     *
+     */
+    public final static URI V_TYPE_INSTANCE_URI = new URIImpl(SLIB_NS+"instance");
+	/**
+     *
+     */
+    public final static URI V_TYPE_LITERAL_URI  = new URIImpl(SLIB_NS+"literal");
 
 	
 	

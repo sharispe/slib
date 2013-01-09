@@ -37,13 +37,32 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.smbb.core.bioinfo.bmark.seqsim.core;
 
 
+/**
+ *
+ * @author seb
+ */
 public class BlastScoreEntry {
 
-	public String protA;
-	public String protB;
-	public double blastScore;
+	/**
+     *
+     */
+    public String protA;
+	/**
+     *
+     */
+    public String protB;
+	/**
+     *
+     */
+    public double blastScore;
 
-	public BlastScoreEntry(String protA, String protB, double blastScore) {
+	/**
+     *
+     * @param protA
+     * @param protB
+     * @param blastScore
+     */
+    public BlastScoreEntry(String protA, String protB, double blastScore) {
 		this.protA = protA;
 		this.protB = protB;
 		this.blastScore = blastScore;

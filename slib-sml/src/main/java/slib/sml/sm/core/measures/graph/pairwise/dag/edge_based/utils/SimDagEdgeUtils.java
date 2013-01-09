@@ -47,6 +47,10 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
+/**
+ *
+ * @author seb
+ */
 public class SimDagEdgeUtils {
 
 
@@ -59,12 +63,13 @@ public class SimDagEdgeUtils {
 	 * In COLING  ’02 Proceedings of the 19th international conference on Computational linguistics. 
 	 * Association for Computational Linguistics; 2002, 2:1-7.
 	 * 
-	 * @param allSpA   	 	HashMap<V, Double> shortest path from A to all concepts
+         * @param root 
+         * @param allSpA   	 	HashMap<V, Double> shortest path from A to all concepts
 	 * @param allSpB		HashMap<V, Double> shortest path from B to all concepts
-	 * @param allSpRoot		HashMap<V, Double> shortest path from the root to all concepts
 	 * @param ancestors_A	ArrayList<V> all ancestors of A
 	 * @param ancestors_B	ArrayList<V> all ancestors of B
-	 * @return V the vertex corresponding to the Most Specific Ancestors
+         * @param dijkstra 
+         * @return V the vertex corresponding to the Most Specific Ancestors
 	 */
 	public static  V getMSA_pekar_staab(
 			V root,
@@ -123,7 +128,14 @@ public class SimDagEdgeUtils {
 		return msa;
 	}	
 	
-	public static V searchMSA(Set<V> interSecAncestors,
+	/**
+     *
+     * @param interSecAncestors
+     * @param maxDepths
+     * @return
+     * @throws SLIB_Exception
+     */
+    public static V searchMSA(Set<V> interSecAncestors,
 			ResultStack<V,Integer> maxDepths) throws SLIB_Exception {
 		
 		

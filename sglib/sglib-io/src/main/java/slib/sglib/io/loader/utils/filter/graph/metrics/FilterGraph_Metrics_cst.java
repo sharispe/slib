@@ -38,12 +38,28 @@ package slib.sglib.io.loader.utils.filter.graph.metrics;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public class FilterGraph_Metrics_cst{
 
-	public static String TYPE = "annot_filter";
+	/**
+     *
+     */
+    public static String TYPE = "annot_filter";
 	
-	public static final String REMOVE_EMPTY = "remove_empty";
-	public static final String METRIC  		= "metric";
-	public static final String VALUE  		= "value";
+	/**
+     *
+     */
+    public static final String REMOVE_EMPTY = "remove_empty";
+	/**
+     *
+     */
+    public static final String METRIC  		= "metric";
+	/**
+     *
+     */
+    public static final String VALUE  		= "value";
 	
 }

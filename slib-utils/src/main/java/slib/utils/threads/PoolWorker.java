@@ -42,30 +42,55 @@ import java.util.concurrent.TimeUnit;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class PoolWorker extends PoolLocker{
 	
 	
 	ExecutorService pool;
 
-	protected PoolWorker(int size) {
+	/**
+     *
+     * @param size
+     */
+    protected PoolWorker(int size) {
 		super(size);
 		pool = Executors.newFixedThreadPool(size); 
 	}
 
-	public ExecutorService getPool() {
+	/**
+     *
+     * @return
+     */
+    public ExecutorService getPool() {
 		return pool;
 	}
 	
-	public void forceShutdown(){
+	/**
+     *
+     */
+    public void forceShutdown(){
 		pool.shutdownNow();
 	}
 	
-	public void shutdown() throws SLIB_Ex_Critic{
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public void shutdown() throws SLIB_Ex_Critic{
 		
 		shutdown(Long.MAX_VALUE, TimeUnit.DAYS); // avoid time out
 	}
 
-	public void shutdown(long timeout, TimeUnit timeunit) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param timeout
+     * @param timeunit
+     * @throws SLIB_Ex_Critic
+     */
+    public void shutdown(long timeout, TimeUnit timeunit) throws SLIB_Ex_Critic{
 		
 		boolean alreadyShutDown = pool.isShutdown();
 			

@@ -53,10 +53,18 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_UI extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param conf
+     * @return
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) {
 		
-		Set<V> anc_setA = rc.getAncestors(setA);
-		Set<V> anc_setB = rc.getAncestors(setB);
+		Set<V> anc_setA = rc.getAncestorsInc(setA);
+		Set<V> anc_setB = rc.getAncestorsInc(setB);
 		
 		Set<V> intersection = SetUtils.intersection(anc_setA, anc_setB);
 		Set<V> union 	   = SetUtils.union(anc_setA, anc_setB);

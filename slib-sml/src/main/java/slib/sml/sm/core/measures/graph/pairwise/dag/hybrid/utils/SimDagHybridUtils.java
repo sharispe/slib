@@ -39,11 +39,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -51,6 +49,10 @@ import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.weight.GWS;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SimDagHybridUtils {
 
     Logger logger = LoggerFactory.getLogger(SimDagHybridUtils.class);
@@ -62,8 +64,11 @@ public class SimDagHybridUtils {
      * @see ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
+     * @param v 
      * @param ancestors
      *
+     * @param g 
+     * @param setEdgeTypes 
      * @return
      */
     public HashMap<V, Double> computeSemanticContribution_Wang_2007(
@@ -165,8 +170,7 @@ public class SimDagHybridUtils {
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
      *
-     * @param HashMap<V,Double> semantic contribution
-     *
+     * @param sc 
      * @return double semantic value
      */
     public double computeSV_Wang_2007(Map<V, Double> sc) {

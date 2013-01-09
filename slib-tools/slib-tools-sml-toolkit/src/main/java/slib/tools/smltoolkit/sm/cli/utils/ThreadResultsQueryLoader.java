@@ -37,47 +37,82 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.tools.smltoolkit.sm.cli.utils;
 
 
+/**
+ *
+ * @author seb
+ */
 public class ThreadResultsQueryLoader {
 	
-	public StringBuilder buffer;
+	/**
+     *
+     */
+    public StringBuilder buffer;
 	int skipped  = 0;
 	int setValue = 0;
 	int jobSize;
 
 	
-	public ThreadResultsQueryLoader(int size){
+	/**
+     *
+     * @param size
+     */
+    public ThreadResultsQueryLoader(int size){
 		
 		jobSize = size;
 		buffer = new StringBuilder();
 	}
 
 
-	public int getSkipped() {
+	/**
+     *
+     * @return
+     */
+    public int getSkipped() {
 		return skipped;
 	}
 
 
-	public void setSkipped(int skipped) {
+	/**
+     *
+     * @param skipped
+     */
+    public void setSkipped(int skipped) {
 		this.skipped = skipped;
 	}
 
 
-	public int getSetValue() {
+	/**
+     *
+     * @return
+     */
+    public int getSetValue() {
 		return setValue;
 	}
 
 
-	public void setSetValue(int setValue) {
+	/**
+     *
+     * @param setValue
+     */
+    public void setSetValue(int setValue) {
 		this.setValue = setValue;
 	}
 
 
-	public int getJobSize() {
+	/**
+     *
+     * @return
+     */
+    public int getJobSize() {
 		return jobSize;
 	}
 
 
-	public void setJobSize(int jobSize) {
+	/**
+     *
+     * @param jobSize
+     */
+    public void setJobSize(int jobSize) {
 		this.jobSize = jobSize;
 	}
 	

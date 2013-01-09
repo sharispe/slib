@@ -64,13 +64,22 @@ public class SmlUtilsCli implements SmlModuleCLI{
 	
 	private SmUtilsCmdHandler cfgLoader;
 	
-	public void execute(String[] argsModule) throws SLIB_Exception {
+	/**
+     *
+     * @param argsModule
+     * @throws SLIB_Exception
+     */
+    public void execute(String[] argsModule) throws SLIB_Exception {
 		cfgLoader = new SmUtilsCmdHandler(argsModule);
 		execute();
 	}
 
 
-	public void execute() throws SLIB_Ex_Critic{
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public void execute() throws SLIB_Ex_Critic{
 		
 		if(cfgLoader.process.equals(SmUtilsCmdHandlerCst.process_resultMerger))
 			process_resultMerger();

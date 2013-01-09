@@ -37,76 +37,233 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.tools.module;
 
 
+/**
+ *
+ * @author seb
+ */
 public class XmlTags {
 	
-	public static final String VARIABLES_TAG 	   = "variables";
-	public static final String VARIABLE_TAG 	   = "var";
+	/**
+     *
+     */
+    public static final String VARIABLES_TAG 	   = "variables";
+	/**
+     *
+     */
+    public static final String VARIABLE_TAG 	   = "var";
 	
-	public static final String NAMESPACES_TAG 	   = "namespaces";
-	public static final String NAMESPACE_TAG 	   = "nm";
+	/**
+     *
+     */
+    public static final String NAMESPACES_TAG 	   = "namespaces";
+	/**
+     *
+     */
+    public static final String NAMESPACE_TAG 	   = "nm";
 	
-	public static final String NS_ATTR_PREFIX 	   = "prefix";
-	public static final String NS_ATTR_REF 	   	   = "ref";
+	/**
+     *
+     */
+    public static final String NS_ATTR_PREFIX 	   = "prefix";
+	/**
+     *
+     */
+    public static final String NS_ATTR_REF 	   	   = "ref";
 	
-	public static final String KEY_ATTR 	   = "key";
-	public static final String VALUE_ATTR 	   = "value";
+	/**
+     *
+     */
+    public static final String KEY_ATTR 	   = "key";
+	/**
+     *
+     */
+    public static final String VALUE_ATTR 	   = "value";
 	
-	public static final String GRAPHS_TAG 		   = "graphs";
-	public static final String GRAPH_TAG 		   = "graph";
-	public static final String GRAPH_ATT 		   = "graph";
-	public static final String GRAPH_RELATIONSHIP  = "relationship";
+	/**
+     *
+     */
+    public static final String GRAPHS_TAG 		   = "graphs";
+	/**
+     *
+     */
+    public static final String GRAPH_TAG 		   = "graph";
+	/**
+     *
+     */
+    public static final String GRAPH_ATT 		   = "graph";
+	/**
+     *
+     */
+    public static final String GRAPH_RELATIONSHIP  = "relationship";
 	
-	public static final String KBS_TAG = "kbs";
+	/**
+     *
+     */
+    public static final String KBS_TAG = "kbs";
 	
-	public static final String KB_TAG 		   = "kb";
-	public static final String KB_ATTR 	       = "kb";
-	public static final String KB_FILE_ATTR    = "kb_file";
-	public static final String KB_FORMAT_ATTR  = "kb_format";
-	public static final String KB_FILTERS_ATTR = "filters";
+	/**
+     *
+     */
+    public static final String KB_TAG 		   = "kb";
+	/**
+     *
+     */
+    public static final String KB_ATTR 	       = "kb";
+	/**
+     *
+     */
+    public static final String KB_FILE_ATTR    = "kb_file";
+	/**
+     *
+     */
+    public static final String KB_FORMAT_ATTR  = "kb_format";
+	/**
+     *
+     */
+    public static final String KB_FILTERS_ATTR = "filters";
 	
-	public static final String TYPE_ATTR   = "type";
-	public static final String OUTPUT_ATTR = "output";
-	public static final String FILE_ATTR   = "file";
+	/**
+     *
+     */
+    public static final String TYPE_ATTR   = "type";
+	/**
+     *
+     */
+    public static final String OUTPUT_ATTR = "output";
+	/**
+     *
+     */
+    public static final String FILE_ATTR   = "file";
 	
-	public static final String FORMAT_ATTR = "format";
-	public static final String URI_ATTR    = "uri";
-	public static final String ID_ATTR     = "id";
-	public static final String LABEL_ATTR  = "label";
-	public static final String GRAPH_ATTR  = "graph";
+	/**
+     *
+     */
+    public static final String FORMAT_ATTR = "format";
+	/**
+     *
+     */
+    public static final String URI_ATTR    = "uri";
+	/**
+     *
+     */
+    public static final String ID_ATTR     = "id";
+	/**
+     *
+     */
+    public static final String LABEL_ATTR  = "label";
+	/**
+     *
+     */
+    public static final String GRAPH_ATTR  = "graph";
 	
-	public static final String ROOT_ATTR  = "root";
-	public static final String DAG_ATTR   = "rooted_dag";
-	public static final String TRANSITIVE_REDUCTION_ATTR  = "transitive_reduction";
+	/**
+     *
+     */
+    public static final String ROOT_ATTR  = "root";
+	/**
+     *
+     */
+    public static final String DAG_ATTR   = "rooted_dag";
+	/**
+     *
+     */
+    public static final String TRANSITIVE_REDUCTION_ATTR  = "transitive_reduction";
 	
-	public static final String FILTERS_TAG = "filters";
-	public static final String FILTER_TAG  = "filter";
-	public static final String CLEAN_TAG  = "clean";
+	/**
+     *
+     */
+    public static final String FILTERS_TAG = "filters";
+	/**
+     *
+     */
+    public static final String FILTER_TAG  = "filter";
+	/**
+     *
+     */
+    public static final String CLEAN_TAG  = "clean";
 	
-	public static final String OPT_TAG 				= "opt";
-	public static final String OPT_NB_THREADS_ATTR  = "threads";
+	/**
+     *
+     */
+    public static final String OPT_TAG 				= "opt";
+	/**
+     *
+     */
+    public static final String OPT_NB_THREADS_ATTR  = "threads";
 	
-	public static final String EXCLUDE_AUTO_MEASURE     = "exclude_auto_measure";
+	/**
+     *
+     */
+    public static final String EXCLUDE_AUTO_MEASURE     = "exclude_auto_measure";
 	
-	public static final String DATA_TAG = "data";
-	public static final String FILE_TAG = "file";
+	/**
+     *
+     */
+    public static final String DATA_TAG = "data";
+	/**
+     *
+     */
+    public static final String FILE_TAG = "file";
 	
-	public static final String ACTIONS_TAG = "actions";
-	public static final String ACTION_TAG = "action";
-	public static final String URI_PREFIX_ATTR = "uri_prefix";
+	/**
+     *
+     */
+    public static final String ACTIONS_TAG = "actions";
+	/**
+     *
+     */
+    public static final String ACTION_TAG = "action";
+	/**
+     *
+     */
+    public static final String URI_PREFIX_ATTR = "uri_prefix";
 
-	public static final String MAP_TAG = "map";
+	/**
+     *
+     */
+    public static final String MAP_TAG = "map";
 	
-	public static final String MAP_ATT_FIELD  = "field";
-	public static final String MAP_ATT_TYPE   = "type";
-	public static final String MAP_ATT_PREFIX = "prefix";
+	/**
+     *
+     */
+    public static final String MAP_ATT_FIELD  = "field";
+	/**
+     *
+     */
+    public static final String MAP_ATT_TYPE   = "type";
+	/**
+     *
+     */
+    public static final String MAP_ATT_PREFIX = "prefix";
 	
-	public static final String STM_TAG = "stm";
+	/**
+     *
+     */
+    public static final String STM_TAG = "stm";
 	
-	public static final String STM_ATT_SUBJECT     = "subject";
-	public static final String STM_ATT_PREDICATE   = "predicate";
-	public static final String STM_ATT_OBJECT 	   = "object";
+	/**
+     *
+     */
+    public static final String STM_ATT_SUBJECT     = "subject";
+	/**
+     *
+     */
+    public static final String STM_ATT_PREDICATE   = "predicate";
+	/**
+     *
+     */
+    public static final String STM_ATT_OBJECT 	   = "object";
 	
-	public static final String STM_CONSTRAINT_TAG = "constraint";
-	public static final String STM_CONSTRAINT_ATT_ELEMENT = "element";
-	public static final String STM_CONSTRAINT_ATT_TYPE 	  = "type";
+	/**
+     *
+     */
+    public static final String STM_CONSTRAINT_TAG = "constraint";
+	/**
+     *
+     */
+    public static final String STM_CONSTRAINT_ATT_ELEMENT = "element";
+	/**
+     *
+     */
+    public static final String STM_CONSTRAINT_ATT_TYPE 	  = "type";
 }

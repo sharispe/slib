@@ -29,51 +29,49 @@
  * knowledge of the CeCILL license and that you accept its terms.
  * 
  */
-package slib.sglib.algo.validator.dag;
+package slib.sglib.algo.extraction.rvf;
 
-import java.util.LinkedList;
-import java.util.List;
-import slib.sglib.model.graph.elements.E;
+import java.util.Map;
+import java.util.Set;
+import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.utils.Direction;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class Path {
-    
-    List<V> vertices = new LinkedList<V>();
-    List<E> edges    = new LinkedList<E>();
-    
+public class AncestorEngine extends RVF_TAX {
+
     /**
-     *
+     * @param g the graph on which the engine must work
      */
-    public void clear(){
-        vertices = new LinkedList<V>();
-        edges = new LinkedList<E>();
-    }
-    void addVertex(V v) {
-       vertices.add(v);
+    public AncestorEngine(G g) {
+        super(g, Direction.OUT);
     }
 
-    void addEdge(E e) {
-        edges.add(e);
-    }
-    
-    @Override
-    public String toString(){
-        
-        String out = "";
-        
-        for(V v : vertices){
-            out += " "+v.getValue();
-        }
-        return out;
+    /**
+     * Compute the set of exclusive ancestors of a class. 
+     * Exclusive process: the focused vertex will NOT be
+     * included its the set of ancestors.
+     *
+     * @param v the vertex of interest
+     * @return the exclusive set of ancestors of the concept (empty set if any).
+     */
+    public Set<V> getAncestors(V v) {
+        return getRV(v);
     }
 
-    void removeLastVertex() {
-        vertices.remove(vertices.size()-1);
+    /**
+     * Compute the set of exclusive ancestors of all vertices contained in the graph. 
+     * Exclusive process: the focused vertex will NOT be
+     * included its the set of ancestors.
+     *
+     * @return a map containing the exclusive set of ancestors of each vertex concept (empty set if any).
+     * @throws SLIB_Ex_Critic  
+     */
+    public Map<V, Set<V>> getAllAncestors() throws SLIB_Ex_Critic {
+        return getAllRV();
     }
-    
-    
 }

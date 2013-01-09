@@ -45,9 +45,22 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_pairwise_DAG_edge_Pekar_Staab_2002 extends Sim_DAG_edge_abstract{
 
-public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
+    /**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
 	
 	V msa  = c.getMSA(a,b);
 	V root = c.getRoot();
@@ -63,7 +76,15 @@ public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
 }
 
 
-	public double sim(Map<V, Double> allSpMsa, V root, V a, V b){
+	/**
+     *
+     * @param allSpMsa
+     * @param root
+     * @param a
+     * @param b
+     * @return
+     */
+    public double sim(Map<V, Double> allSpMsa, V root, V a, V b){
 			
 		double sp_mrca_root = allSpMsa.get(root);
 		double sp_a_mrca 	= allSpMsa.get(a);

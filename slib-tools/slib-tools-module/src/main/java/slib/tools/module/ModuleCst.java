@@ -53,11 +53,29 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public abstract class ModuleCst {
 
+    /**
+     *
+     */
     public String appName = null;
+    /**
+     *
+     */
     public String version = null;
+    /**
+     *
+     */
     public String versionSnapshot = null;
+    /**
+     *
+     */
     public String reference = null;
+    /**
+     *
+     */
     public String description = null;
+    /**
+     *
+     */
     public String contact = null;
 
 //    /**
@@ -78,6 +96,12 @@ public abstract class ModuleCst {
 //        this.contact = contact;
 //    }
 
+    /**
+     *
+     * @param propertiesFile
+     * @param prefix
+     * @throws SLIB_Ex_Critic
+     */
     public ModuleCst(String propertiesFile, String prefix) throws SLIB_Ex_Critic {
 
         Configuration config;
@@ -102,26 +126,50 @@ public abstract class ModuleCst {
     
     
 
+    /**
+     *
+     * @return
+     */
     public String getVersion() {
         return version;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getAppName() {
         return appName;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getReference() {
         return reference;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getContact() {
         return contact;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getVersionSnapshot() {
         return versionSnapshot;
     }

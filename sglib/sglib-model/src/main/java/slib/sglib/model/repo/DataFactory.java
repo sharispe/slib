@@ -49,19 +49,56 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public interface DataFactory extends ISLIBValueFactory {
 
+    /**
+     *
+     * @param nm_s
+     */
     public void createNamespace(String nm_s);
 
+    /**
+     *
+     * @param prefix
+     * @param reference
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic;
 
+    /**
+     *
+     * @param uri
+     * @return
+     */
     public G getGraph(URI uri);
 
+    /**
+     *
+     * @return
+     */
     public Map<URI, G> getGraphs();
 
+    /**
+     *
+     * @param g
+     */
     public void addGraph(G g);
 
+    /**
+     *
+     * @param ns_prefix
+     * @return
+     */
     public String getNamespace(String ns_prefix);
 
+    /**
+     *
+     * @return
+     */
     public PredicateFactory getPredicateFactory();
     
+    /**
+     *
+     * @return
+     */
     public Set<URI> getURIs();
 }

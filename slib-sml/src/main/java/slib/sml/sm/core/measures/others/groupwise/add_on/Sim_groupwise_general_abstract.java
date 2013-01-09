@@ -38,6 +38,10 @@ package slib.sml.sm.core.measures.others.groupwise.add_on;
 import slib.sml.sm.core.measures.Sim_Groupwise_AddOn;
 
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_AddOn{
 	
 

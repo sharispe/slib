@@ -41,6 +41,10 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Sim_DAG_hybrid_abstract implements Sim_Pairwise_DAG{
 	
 

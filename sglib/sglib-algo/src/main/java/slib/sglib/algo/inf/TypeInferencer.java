@@ -15,13 +15,23 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 
+/**
+ *
+ * @author seb
+ */
 public class TypeInferencer {
 	
 	G g;
 	
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public boolean inferTypes(G g, boolean clearExistingTypes){
+	/**
+     *
+     * @param g
+     * @param clearExistingTypes
+     * @return
+     */
+    public boolean inferTypes(G g, boolean clearExistingTypes){
 		
 		logger.info("Type inference");
 		
@@ -173,7 +183,12 @@ public class TypeInferencer {
 		return false;
 	}
 	
-	public void applyVrule(G g, VRule rule) {
+	/**
+     *
+     * @param g
+     * @param rule
+     */
+    public void applyVrule(G g, VRule rule) {
 		for(V v : g.getV() ){
 			
 			if(v.getType()==null)

@@ -46,8 +46,16 @@ import slib.sglib.model.graph.elements.V;
  */
 public interface GraphTraversal{
 
-	boolean hasNext();
+	/**
+     *
+     * @return
+     */
+    boolean hasNext();
 
-	V next();
+	/**
+     *
+     * @return
+     */
+    V next();
 
 }

@@ -38,14 +38,38 @@ import slib.sml.sm.core.utils.SMConstants;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public abstract class ICconf extends Conf {
 
+    /**
+     *
+     */
     public String id;				// ID used to represent the IC 
+    /**
+     *
+     */
     public String label;			// label used to plot IC values
+    /**
+     *
+     */
     public String flag;			// SSPConstants flag corresponding to the IC 
+    /**
+     *
+     */
     public String className;
+    /**
+     *
+     */
     public boolean isCorpusBased;
 
+    /**
+     *
+     * @param flag
+     * @throws SLIB_Ex_Critic
+     */
     public ICconf(String flag) throws SLIB_Ex_Critic {
         this.id = flag;
         this.label = flag;
@@ -59,7 +83,7 @@ public abstract class ICconf extends Conf {
      * @param id ID used to represent the IC
      * @param label	label used to plot IC values
      * @param flag	SSPConstants flag corresponding to the IC
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public ICconf(String id, String label, String flag) throws SLIB_Ex_Critic {
         this.id = id;
@@ -85,22 +109,42 @@ public abstract class ICconf extends Conf {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getLabel() {
         return flag;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getFlag() {
         return flag;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getClassName() {
         return className;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean isCorpusBased() {
         return isCorpusBased;
     }

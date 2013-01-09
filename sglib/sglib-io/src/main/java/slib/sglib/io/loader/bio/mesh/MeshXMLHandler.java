@@ -10,11 +10,18 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MeshXMLHandler extends DefaultHandler {
 
     GraphLoader_MESH_XML loader;
+    /**
+     *
+     */
     public  MeshConcept    concept;
     boolean descriptorName = false;
     boolean descriptorUI   = false;
     boolean treeNumber     = false;
     
+    /**
+     *
+     * @param loader
+     */
     public MeshXMLHandler(GraphLoader_MESH_XML loader){
         this.loader = loader;
     }

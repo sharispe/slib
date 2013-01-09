@@ -41,9 +41,19 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.elements.abs.EdgeTypedAbstract;
 
+/**
+ *
+ * @author seb
+ */
 public class EdgeTyped extends EdgeTypedAbstract{
 
-	public EdgeTyped(V source, V target, URI uri) {
+	/**
+     *
+     * @param source
+     * @param target
+     * @param uri
+     */
+    public EdgeTyped(V source, V target, URI uri) {
 		super(source, target, uri);
 	}
 

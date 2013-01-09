@@ -33,6 +33,13 @@ public class IndexerWordNetBasic{
     
     G graph;
     
+    /**
+     *
+     * @param factory
+     * @param g
+     * @param file
+     * @throws SLIB_Ex_Critic
+     */
     public IndexerWordNetBasic(DataFactory factory, G g, String file) throws SLIB_Ex_Critic{
         
         graph = g;
@@ -102,10 +109,19 @@ public class IndexerWordNetBasic{
         logger.info("Index build" );
     }
     
+    /**
+     *
+     * @param query
+     * @return
+     */
     public Set<V> get(String query) {
         return stringToSynsetIndex.get(query);
     }
     
+    /**
+     *
+     * @return
+     */
     public Map<String, Set<V>> getIndex() {
         return stringToSynsetIndex;
     }

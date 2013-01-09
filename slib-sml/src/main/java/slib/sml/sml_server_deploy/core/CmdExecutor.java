@@ -30,6 +30,10 @@ import slib.sml.sml_server_deploy.core.utils.Command;
 import slib.sml.sml_server_deploy.core.utils.TreadIO;
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class CmdExecutor {
 
 
@@ -87,11 +91,18 @@ public class CmdExecutor {
 
 
 	
-	public CmdExecutor(){
+	/**
+     *
+     */
+    public CmdExecutor(){
 		runtime = Runtime.getRuntime();
 	}
 
-	public void addBenchmark(Benchmark b){
+	/**
+     *
+     * @param b
+     */
+    public void addBenchmark(Benchmark b){
 		benchmarks.add(b);
 	}
 
@@ -374,7 +385,12 @@ public class CmdExecutor {
 
 	}
 
-	public void addGlobalVariable(String key,String value){
+	/**
+     *
+     * @param key
+     * @param value
+     */
+    public void addGlobalVariable(String key,String value){
 		globalVariables.put(key, value);
 	}
 
@@ -485,7 +501,13 @@ public class CmdExecutor {
 	}
 
 
-	public void runAllBenchmarks() throws SLIB_Ex_Critic, IOException, InterruptedException {
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public void runAllBenchmarks() throws SLIB_Ex_Critic, IOException, InterruptedException {
 
 		applyBenchmarkRestrictions();
 
@@ -732,19 +754,35 @@ public class CmdExecutor {
 
 
 
-	public LinkedList<Benchmark> getBenchmarks() {
+	/**
+     *
+     * @return
+     */
+    public LinkedList<Benchmark> getBenchmarks() {
 		return benchmarks;
 	}
 
-	public void setBenchmarks(LinkedList<Benchmark> benchmarks) {
+	/**
+     *
+     * @param benchmarks
+     */
+    public void setBenchmarks(LinkedList<Benchmark> benchmarks) {
 		this.benchmarks = benchmarks;
 	}
 
-	public Map<String, String> getGlobalVariables() {
+	/**
+     *
+     * @return
+     */
+    public Map<String, String> getGlobalVariables() {
 		return globalVariables;
 	}
 
-	public void setGlobalVariables(Map<String, String> globalVariables) {
+	/**
+     *
+     * @param globalVariables
+     */
+    public void setGlobalVariables(Map<String, String> globalVariables) {
 		this.globalVariables = globalVariables;
 	}
 
@@ -754,35 +792,63 @@ public class CmdExecutor {
 		return out;
 	}
 
-	public void logInfo(String s){
+	/**
+     *
+     * @param s
+     */
+    public void logInfo(String s){
 		logger.info("["+current_benchmark_id+":"+benchmarks.size()+"] "+s);
 	}
 
-	public void addBenchmarkRestriction(String benchmarkid){
+	/**
+     *
+     * @param benchmarkid
+     */
+    public void addBenchmarkRestriction(String benchmarkid){
 		if(benchmark_restrictions == null)
 			benchmark_restrictions = new LinkedList<String>();
 		benchmark_restrictions.add(benchmarkid);
 	}
 
-	public List<String> getBenchmark_restrictions() {
+	/**
+     *
+     * @return
+     */
+    public List<String> getBenchmark_restrictions() {
 		return benchmark_restrictions;
 	}
 
-	public void setBenchmarkRestrictions(List<String> benchmark_restrictions) {
+	/**
+     *
+     * @param benchmark_restrictions
+     */
+    public void setBenchmarkRestrictions(List<String> benchmark_restrictions) {
 		this.benchmark_restrictions = benchmark_restrictions;
 	}
 
-	public void setProfileRestrictions(List<String> profile_restrictions) {
+	/**
+     *
+     * @param profile_restrictions
+     */
+    public void setProfileRestrictions(List<String> profile_restrictions) {
 		this.profile_restrictions = profile_restrictions;
 	}
 
-	public void addProfileRestriction(String profileFlag){
+	/**
+     *
+     * @param profileFlag
+     */
+    public void addProfileRestriction(String profileFlag){
 		if(profile_restrictions == null)
 			profile_restrictions = new LinkedList<String>();
 		profile_restrictions.add(profileFlag);
 	}
 
-	public String[] getDefaultHooksNames() {
+	/**
+     *
+     * @return
+     */
+    public String[] getDefaultHooksNames() {
 		return defaultHooks ;
 
 	}

@@ -57,7 +57,16 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract{
 
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 		
 		double ic_mica = c.getIC_MICA(conf.getICconf(),a, b);

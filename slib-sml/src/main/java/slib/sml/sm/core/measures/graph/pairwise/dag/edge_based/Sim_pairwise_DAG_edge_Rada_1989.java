@@ -50,13 +50,27 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class Sim_pairwise_DAG_edge_Rada_1989 extends Sim_DAG_edge_abstract{
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
 		double sp = c.getShortestPath(a, b);
 		return sp;
 	}
 
 
-	public double sim(Double distSourceTarget) {
+	/**
+     *
+     * @param distSourceTarget
+     * @return
+     */
+    public double sim(Double distSourceTarget) {
 		return 1/(distSourceTarget+1);
 	}
 

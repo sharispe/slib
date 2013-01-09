@@ -64,7 +64,10 @@ import slib.utils.impl.BigFileReader;
 public class MITAB25_reader {
 
 	Logger logger = LoggerFactory.getLogger(MITAB25_reader.class);
-	public HashMap<String, Integer> interactorsID = new HashMap<String, Integer>();
+	/**
+     *
+     */
+    public HashMap<String, Integer> interactorsID = new HashMap<String, Integer>();
 
 	private final int ID_INTER_A = 0;
 	private final int ID_INTER_B = 1;
@@ -82,11 +85,26 @@ public class MITAB25_reader {
 	
 
 
-	public InteractionSet load(String filePath) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param filePath
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public InteractionSet load(String filePath) throws SLIB_Ex_Critic{
 		return load(filePath,"",null,null);
 	}
 
-	public InteractionSet load(String filePath,String uriprefix, String flagTaxon_A,String flagTaxon_B) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param filePath
+     * @param uriprefix
+     * @param flagTaxon_A
+     * @param flagTaxon_B
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public InteractionSet load(String filePath,String uriprefix, String flagTaxon_A,String flagTaxon_B) throws SLIB_Ex_Critic{
 
 		InteractionSet ppiSet = new InteractionSet();
 
@@ -172,7 +190,10 @@ public class MITAB25_reader {
 		return ppiSet;
 	}
 	
-	public void clean(){
+	/**
+     *
+     */
+    public void clean(){
 		interactorsID = null;
 	}
 
@@ -185,7 +206,12 @@ public class MITAB25_reader {
 		return null;
 	}
 
-	public HashSet<String> retrieveAllTaxons(String filePath){
+	/**
+     *
+     * @param filePath
+     * @return
+     */
+    public HashSet<String> retrieveAllTaxons(String filePath){
 
 		logger.info("loading "+filePath);
 		HashSet<String> taxons = new HashSet<String>();

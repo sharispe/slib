@@ -61,10 +61,19 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_LP extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 		
-		Set<V> ancestors_setA = rc.getAncestors(setA);
-		Set<V> ancestors_setB = rc.getAncestors(setB);
+		Set<V> ancestors_setA = rc.getAncestorsInc(setA);
+		Set<V> ancestors_setB = rc.getAncestorsInc(setB);
 		
 		
 		Set<V> commonAncestors = SetUtils.intersection(ancestors_setA, ancestors_setB);

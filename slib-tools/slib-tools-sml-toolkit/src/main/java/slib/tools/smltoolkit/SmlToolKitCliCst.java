@@ -44,28 +44,62 @@ import org.apache.commons.cli.OptionBuilder;
 
 import slib.tools.module.ToolCmdHandlerCst;
 
+/**
+ *
+ * @author seb
+ */
 public class SmlToolKitCliCst extends ToolCmdHandlerCst{
 
 
 
-	public static final String   appCmdName 	= "sml-toolkit-<version>.jar ";
+	/**
+     *
+     */
+    public static final String   appCmdName 	= "sml-toolkit-<version>.jar ";
 	
-	public static final String   ToolName_SM 	= "sm";
-	public static final String   ToolName_SMBB 	= "smbb";
-	public static final String   ToolName_SME 	= "sme";
-	public static final String   ToolName_SMUTILS = "smutils";
-	public static final String   ToolName_SML_DEPLOY = "sml_deploy";
-	public static final String[] acceptedTools 	= {ToolName_SM,ToolName_SMBB,ToolName_SME,ToolName_SMUTILS,ToolName_SML_DEPLOY};
+	/**
+     *
+     */
+    public static final String   ToolName_SM 	= "sm";
+	/**
+     *
+     */
+    public static final String   ToolName_SMBB 	= "smbb";
+	/**
+     *
+     */
+    public static final String   ToolName_SME 	= "sme";
+	/**
+     *
+     */
+    public static final String   ToolName_SMUTILS = "smutils";
+	/**
+     *
+     */
+    public static final String   ToolName_SML_DEPLOY = "sml_deploy";
+	/**
+     *
+     */
+    public static final String[] acceptedTools 	= {ToolName_SM,ToolName_SMBB,ToolName_SME,ToolName_SMUTILS,ToolName_SML_DEPLOY};
 	
 	
 	
-	public static final String  toolArg = "t";
+	/**
+     *
+     */
+    public static final String  toolArg = "t";
 	
-	public static boolean debugMode  = false;
+	/**
+     *
+     */
+    public static boolean debugMode  = false;
 	
 	
 	
-	public SmlToolKitCliCst() {
+	/**
+     *
+     */
+    public SmlToolKitCliCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 	
@@ -73,17 +107,29 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst{
 	 * Error messages  
 	 */
 	
-	public static final String errorTool = "[ERROR] Incorrect tool, supported are "+Arrays.toString(SmlToolKitCliCst.acceptedTools);
+	/**
+     *
+     */
+    public static final String errorTool = "[ERROR] Incorrect tool, supported are "+Arrays.toString(SmlToolKitCliCst.acceptedTools);
 			
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 		= new Option( "help", "print this message" );
-	public static Option version 	= new Option( "version", "print the version in use" );
+	/**
+     *
+     */
+    public static Option help 		= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option version 	= new Option( "version", "print the version in use" );
 	
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option tool		 = OptionBuilder.withArgName( "value")
 	.hasArg()
 	.withDescription( "Tool name "+Arrays.toString(SmlToolKitCliCst.acceptedTools))
@@ -93,7 +139,10 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst{
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		optionsOrder.put(tool, optionsOrder.size());

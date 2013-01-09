@@ -37,26 +37,72 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.utils.impl;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OBOconstants {
 	
 	// Pattern
 	
-	public static final String TERM_FLAG 				= "[Term]";
-	public static final String TYPEDEF_FLAG 			= "[Typedef]";
+	/**
+     *
+     */
+    public static final String TERM_FLAG 				= "[Term]";
+	/**
+     *
+     */
+    public static final String TYPEDEF_FLAG 			= "[Typedef]";
 
-	public static final String NAME_FLAG 				= "name";
-	public static final String ISA_FLAG 				= "is_a";
-	public static final String DEF_NAMESPACE_FLAG 		= "default-namespace";
-	public static final String FORMAT_VERSION_FLAG 		= "format-version";
-	public static final String RELATIONSHIP_FLAG		= "relationship";
+	/**
+     *
+     */
+    public static final String NAME_FLAG 				= "name";
+	/**
+     *
+     */
+    public static final String ISA_FLAG 				= "is_a";
+	/**
+     *
+     */
+    public static final String DEF_NAMESPACE_FLAG 		= "default-namespace";
+	/**
+     *
+     */
+    public static final String FORMAT_VERSION_FLAG 		= "format-version";
+	/**
+     *
+     */
+    public static final String RELATIONSHIP_FLAG		= "relationship";
 
-	public static final String TERM_ID_FLAG 	 		= "id";
-	public static final String TYPEDEF_ID_FLAG 			= "id";
-	public static final String TYPEDEF_XREF 			= "xref";
-	public static final String TYPEDEF_ISTRANSIVE_FLAG 	= "is_transitive";
-	public static final String TYPEDEF_INVERSE_OF_FLAG 	= "inverse_of";
-	public static final String TYPEDEF_SYMMETRIC_FLAG 	= "is_symmetric";
+	/**
+     *
+     */
+    public static final String TERM_ID_FLAG 	 		= "id";
+	/**
+     *
+     */
+    public static final String TYPEDEF_ID_FLAG 			= "id";
+	/**
+     *
+     */
+    public static final String TYPEDEF_XREF 			= "xref";
+	/**
+     *
+     */
+    public static final String TYPEDEF_ISTRANSIVE_FLAG 	= "is_transitive";
+	/**
+     *
+     */
+    public static final String TYPEDEF_INVERSE_OF_FLAG 	= "inverse_of";
+	/**
+     *
+     */
+    public static final String TYPEDEF_SYMMETRIC_FLAG 	= "is_symmetric";
 
-	public static final String OBSOLETE_FLAG 			= "is_obsolete";
+	/**
+     *
+     */
+    public static final String OBSOLETE_FLAG 			= "is_obsolete";
 	
 }

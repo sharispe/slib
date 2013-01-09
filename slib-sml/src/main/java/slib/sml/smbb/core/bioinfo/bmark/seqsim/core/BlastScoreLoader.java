@@ -66,7 +66,12 @@ public class BlastScoreLoader implements Iterator<BlastScoreEntry> {
 	String line;
 	DataFactoryMemory df = DataFactoryMemory.getSingleton();
 
-	public BlastScoreLoader(String filepath) throws IOException{
+	/**
+     *
+     * @param filepath
+     * @throws IOException
+     */
+    public BlastScoreLoader(String filepath) throws IOException{
 
 		FileInputStream fstream = new FileInputStream(filepath);
 		in	 = new DataInputStream(fstream);
@@ -127,13 +132,22 @@ public class BlastScoreLoader implements Iterator<BlastScoreEntry> {
 		throw new UnsupportedOperationException();
 	}
 
-	public void close() throws IOException{
+	/**
+     *
+     * @throws IOException
+     */
+    public void close() throws IOException{
 
 		if(br != null)
 			br.close();
 	}
 
-	public ArrayList<BlastScoreEntry> nextValids(int nbValues) {
+	/**
+     *
+     * @param nbValues
+     * @return
+     */
+    public ArrayList<BlastScoreEntry> nextValids(int nbValues) {
 
 		ArrayList<BlastScoreEntry> bench = new ArrayList<BlastScoreEntry>();
 		int c = 0;

@@ -36,11 +36,19 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.utils.ex;
 
+/**
+ *
+ * @author seb
+ */
 public class SLIB_Ex_Warning extends SLIB_Exception {
 
 	private static final long serialVersionUID = 1L;
 	
-	public SLIB_Ex_Warning(String message) {
+	/**
+     *
+     * @param message
+     */
+    public SLIB_Ex_Warning(String message) {
 		super(message);
 	}
 

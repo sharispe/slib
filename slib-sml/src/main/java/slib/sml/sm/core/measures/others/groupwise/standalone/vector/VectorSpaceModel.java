@@ -45,9 +45,22 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public class VectorSpaceModel implements Sim_Groupwise_Standalone{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param groupwiseconf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
 		
 		ResultStack<V,Double> v1 = rc.getVector(setA, groupwiseconf);
 		ResultStack<V,Double> v2 = rc.getVector(setB, groupwiseconf);

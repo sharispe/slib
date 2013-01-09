@@ -40,18 +40,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import slib.sglib.algo.traversal.classical.BFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
@@ -65,40 +61,38 @@ import slib.utils.impl.SetUtils;
  */
 public class RVF_DAG extends RVF {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-
     /**
      * Create a basic RVF object considering an acyclic graph and a only one
-     * type of relationships to consider during the traversal. Note that graph
-     * acyclicity is not evaluated.
+     * type of relationships to consider during the traversal. 
+     * Note that graph acyclicity is required to ensure coherency but is not evaluated.
      *
      * @param g the Semantic Graph to consider
-     * @param eType the edgeType to take into account during the traversals
+     * @param wc  
      */
     public RVF_DAG(G g, WalkConstraints wc) {
         super(g, wc);
     }
 
     /**
-     * Compute the set of reachable vertices for each vertices composing the
-     * graph associated to the object considering the edge types Optimized
-     * through a topological ordering
+     * Compute the set of reachable vertices for each vertices contained in the graph according to the specified constraint associated to the instance in use.
+     * Exclusive process, i.e. the process doesn't consider that vertex v is contained in the set of reachable vertices from v.
+     * 
+     * Optimized through a topological ordering
      *
-     * @return an HashMap key V value the set of vertices reachable from the key
-     * Set<V>
-     * @throws SGL_Ex_Critic
+     * @return an Map key V value the set of vertices reachable from the key
+     * @throws SLIB_Ex_Critic  
      */
-    public Map<V, Set<V>> getAllVertices() throws SLIB_Ex_Critic {
+    public Map<V, Set<V>> getAllRV() throws SLIB_Ex_Critic {
 
         logger.debug("Get all reachable vertices : start");
         logger.debug("Walk constraint\n" + wc);
 
         Map<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
 
-        Map<V, Integer> inDegree = new HashMap<V, Integer>();
+        Map<V, Integer> inDegree     = new HashMap<V, Integer>();
         Map<V, Integer> inDegreeDone = new HashMap<V, Integer>();
 
-        // Initialize DataStructure + queue considering setEdgeTypes
+        // Initialize DataStructure + queue considering walk constraint
         List<V> queue = new ArrayList<V>();
 
         WalkConstraints oppositeWC = wc.getInverse(false);
@@ -126,8 +120,6 @@ public class RVF_DAG extends RVF {
         logger.debug("Propagation started from " + queue.size() + " vertices");
 
         while (!queue.isEmpty()) {
-
-
 
             V current = queue.get(0);
 
@@ -170,52 +162,35 @@ public class RVF_DAG extends RVF {
 
         //TOREMOVE 
 
-        logger.debug("Check Treatment coherency");
+        logger.debug("Checking Treatment coherency");
         long incoherencies = 0;
         for (V c : inDegree.keySet()) {
 
-            if (inDegree.get(c) != inDegreeDone.get(c)) {
+            if (!inDegree.get(c).equals(inDegreeDone.get(c))) {
 
                 logger.debug("\t" + c.getValue() + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
                 incoherencies++;
             }
         }
         logger.debug("Incoherencies : "+incoherencies);
+        if(incoherencies != 0){
+            throw new SLIB_Ex_Critic("Error incoherencies found during a treatment, "
+                    + "this can be due to incoherencies with regard to the graph properties "
+                    + "expected by the treatment performed. "
+                    + "Please check the processed graph is acyclic, i.e. is a Directed Acyclic Graph.");
+        }
 
 
         logger.debug("Get All reachable vertices : end");
         return allVertices;
     }
 
-//    /**
-//     * Return the set of terminal vertices (leaves) reachable for a specified
-//     * vertex
-//     *
-//     * @param v the source vertex
-//     * @return the set of terminal vertices as Set<V>
-//     */
-//    public Set<V> getTerminalVertices(V v) {
-//
-//        logger.info("Get Reachable Terminal vertices for " + v);
-//
-//        Set<V> terminalVertice = new HashSet<V>();
-//
-//        BFS it = new BFS(g, v, wc);
-//
-//        while (it.hasNext()) {
-//
-//            V next = it.next();
-//            if (g.getE(wc.getAcceptedPredicates(), next, wc.getAcceptedVTypes(), Direction.OUT).isEmpty()) {
-//                terminalVertice.add(next);
-//            }
-//        }
-//
-//        return terminalVertice;
-//    }
 
     /**
      * Return the set of terminal vertices (leaves) reachable for all vertices
      * composing the loaded graph
+     * 
+     * @TODO Precise if the process is exclusive or inclusive
      *
      * @return an HashMap key V, value the set of terminal vertices reachable
      * from the key Set<V>
@@ -276,6 +251,11 @@ public class RVF_DAG extends RVF {
         return allReachableLeaves;
     }
 
+    /**
+     *
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Long> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
         ResultStack<V, Long> allVertices = new ResultStack<V, Long>();
@@ -298,7 +278,7 @@ public class RVF_DAG extends RVF {
      * occurrences of each vertices
      * @return ResultStack of type Double representing the number occurrences
      * propagated of each vertices
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic  
      */
     public ResultStack<V, Long> propagateNbOccurences(ResultStack<V, Long> nbOccurrence) throws SLIB_Ex_Critic {
 

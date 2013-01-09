@@ -43,7 +43,18 @@ package slib.sglib.model.graph.utils;
  */
 public enum Direction {
 
-    IN, OUT, BOTH;
+    /**
+     *
+     */
+    IN,
+    /**
+     *
+     */
+    OUT,
+    /**
+     *
+     */
+    BOTH;
 
     /**
      * Return the opposite direction of a particular Direction.

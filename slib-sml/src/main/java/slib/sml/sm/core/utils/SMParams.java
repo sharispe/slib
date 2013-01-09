@@ -37,6 +37,9 @@ package slib.sml.sm.core.utils;
  */
 public enum SMParams {
     
+    /**
+     *
+     */
     LOG_BASE
     
 }

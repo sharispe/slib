@@ -63,7 +63,16 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract{
 	double alpha = 0.2;
 	double beta  = 0.6;
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 		double sp_AtoB 				  = c.getShortestPath(a, b);
 		Set<V> ancestors_A 	  = c.getAncestorsInc(a);
@@ -81,11 +90,12 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract{
 	 * 
 	 * Alpha in [0,1]   (best : 0.2)
 	 * Beta in  ]0,1]	(best : 0.6)
-	 * @param cA
-	 * @param cB
-	 * @param distSourceTarget
-	 * @return
-	 * @throws SGL_Ex_Critic 
+         * @param sp_AtoB 
+         * @param ancestors_A 
+         * @param ancestors_B 
+         * @param maxDepths 
+         * @return
+         * @throws SLIB_Exception  
 	 */
 	public double sim(  double sp_AtoB, 
 			Set<V> ancestors_A,

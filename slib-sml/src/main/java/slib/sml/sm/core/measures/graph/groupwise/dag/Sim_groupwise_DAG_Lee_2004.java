@@ -54,10 +54,18 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_Lee_2004 extends Sim_groupwise_DAG_abstract{
 
-	public double sim(Set<V> setA, Set<V> setB, SM_Engine c, SMconf conf) {
+	/**
+     *
+     * @param setA
+     * @param setB
+     * @param c
+     * @param conf
+     * @return
+     */
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine c, SMconf conf) {
 
-		Set<V> ancA = c.getAncestors(setA);
-		Set<V> ancB = c.getAncestors(setB);
+		Set<V> ancA = c.getAncestorsInc(setA);
+		Set<V> ancB = c.getAncestorsInc(setB);
 
 		Set<V> union = SetUtils.union(ancA, ancB);
 

@@ -57,13 +57,16 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class GraphRepresentationAsSet extends GraphRepresentation {
 	
-	public Set<V> anc;
+	/**
+     *
+     */
+    public Set<V> anc;
 	
 	/**
 	 * 
 	 * @param resource the {@link Resource} considered.
 	 * @param mnger the {@link SM_Engine} loaded for the processed graph
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public GraphRepresentationAsSet(V resource,SM_Engine mnger) throws SLIB_Exception{
 		super(resource);

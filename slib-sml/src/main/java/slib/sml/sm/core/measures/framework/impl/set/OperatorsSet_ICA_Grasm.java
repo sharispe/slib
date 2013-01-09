@@ -56,7 +56,11 @@ import slib.utils.ex.SLIB_Exception;
 public class OperatorsSet_ICA_Grasm extends OperatorsSet{
 
 
-	public OperatorsSet_ICA_Grasm(OperatorConf conf) {
+	/**
+     *
+     * @param conf
+     */
+    public OperatorsSet_ICA_Grasm(OperatorConf conf) {
 		super(conf);
 	}
 
@@ -66,7 +70,9 @@ public class OperatorsSet_ICA_Grasm extends OperatorsSet{
 	 * redefine commonalities evaluation. The commonality between two classes is evaluated
 	 * as the sum of their disjoint common ancestors (dca) {@link GraphRepresentationAsSet} 
 	 * cardinality divided by the number of dca.
-	 */
+         * 
+         * @throws SLIB_Exception 
+         */
 	@Override
 	public double commonalities(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine manager) throws SLIB_Exception{
 

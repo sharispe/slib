@@ -257,6 +257,11 @@ public class GraphLoader_Wordnet implements GraphLoader {
         }
     }
 
+    /**
+     *
+     * @param args
+     * @throws Exception
+     */
     public static void main(String[] args) throws Exception {
 
 

@@ -73,19 +73,40 @@ import slib.utils.impl.Util;
 import slib.utils.threads.PoolWorker;
 import slib.utils.threads.ThreadManager;
 
+/**
+ *
+ * @author seb
+ */
 public class SmCli implements SmlModuleCLI {
 
     Logger logger = LoggerFactory.getLogger(SmCli.class);
+    /**
+     *
+     */
     public Sm_XMLConfLoader conf;
+    /**
+     *
+     */
     public SM_Engine simManager;
     InstancesAccessor iAccessor;
+    /**
+     *
+     */
     public boolean SKIP_EMPTY_ANNOTATION = true;
+    /**
+     *
+     */
     public double EMPTY_ANNOTATION_SCORE = 0;
     DataFactory factory = DataFactoryMemory.getSingleton();
     G g;
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
 
+    /**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
     public void execute(String[] args) throws SLIB_Exception {
         SmCmdHandler c = new SmCmdHandler(args);
         execute(c.xmlConfFile);
@@ -95,7 +116,7 @@ public class SmCli implements SmlModuleCLI {
      * Execute from configuration file
      *
      * @param confFile
-     * @throws SGL_Exception
+     * @throws SLIB_Exception  
      */
     public void execute(String confFile) throws SLIB_Exception {
 
@@ -454,6 +475,11 @@ public class SmCli implements SmlModuleCLI {
         }
     }
 
+    /**
+     *
+     * @param icID
+     * @return
+     */
     public ICconf getICconf(String icID) {
 
         for (ICconf g : conf.gConfICs) {
@@ -477,10 +503,18 @@ public class SmCli implements SmlModuleCLI {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     public G getG() {
         return g;
     }
 
+    /**
+     *
+     * @return
+     */
     public InstancesAccessor getiAccessor() {
         return iAccessor;
     }

@@ -64,16 +64,28 @@ import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
 
+/**
+ *
+ * @author seb
+ */
 public class Test_GraphReduction_Transitive {
 	
 	G g;
 	SLIB_UnitTestValues test = new SLIB_UnitTestValues();
 
-	public Test_GraphReduction_Transitive() throws SLIB_Exception{
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    public Test_GraphReduction_Transitive() throws SLIB_Exception{
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
 	public void transitiveReductionToyGraph() throws SLIB_Exception{
 
 		System.out.println("Checking Transitive Reduction");
@@ -110,7 +122,11 @@ public class Test_GraphReduction_Transitive {
 	}
 
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
 	public void transitiveReductionGO() throws SLIB_Exception{
 
 		String gofilePath 	= SLIB_UnitTestValues.G_GO;

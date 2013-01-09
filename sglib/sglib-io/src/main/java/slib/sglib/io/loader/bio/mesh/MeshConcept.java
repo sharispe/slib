@@ -18,27 +18,50 @@ public class MeshConcept{
     String descriptorName;
     Set<String> treeNumberList;
     
+    /**
+     *
+     */
     public MeshConcept(){
         treeNumberList = new HashSet<String>();
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescriptorUI() {
         return descriptorUI;
     }
 
+    /**
+     *
+     * @param descriptorUI
+     */
     public void setDescriptorUI(String descriptorUI) {
         this.descriptorUI = descriptorUI;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getDescriptorName() {
         return descriptorName;
     }
 
+    /**
+     *
+     * @param descriptorName
+     */
     public void setDescriptorName(String descriptorName) {
         this.descriptorName = descriptorName;
     }
     
     
+    /**
+     *
+     * @param treeNumber
+     */
     public void addTreeNumber(String treeNumber){
         treeNumberList.add(treeNumber);
     }

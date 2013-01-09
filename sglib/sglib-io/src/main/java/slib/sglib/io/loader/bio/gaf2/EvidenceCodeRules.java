@@ -83,7 +83,10 @@ import java.util.Set;
  */
 public class EvidenceCodeRules {
 	
-	public final static Set<String> EXPchildren  = new HashSet<String>();
+	/**
+     *
+     */
+    public final static Set<String> EXPchildren  = new HashSet<String>();
 	static{
 		EXPchildren.add("IDA");
 		EXPchildren.add("IPI");
@@ -92,7 +95,10 @@ public class EvidenceCodeRules {
 		EXPchildren.add("IEP");
 	} 
 	
-	public final static Set<String> ISSchildren  = new HashSet<String>();
+	/**
+     *
+     */
+    public final static Set<String> ISSchildren  = new HashSet<String>();
 	static{
 		ISSchildren.add("ISO");
 		ISSchildren.add("ISA");

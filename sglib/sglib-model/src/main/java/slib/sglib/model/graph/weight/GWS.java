@@ -60,17 +60,60 @@ import slib.sglib.model.graph.elements.E;
  */
 public interface GWS {
 	
-	double getDefaultWeight();
-	void setDefaultWeight(double w);
+	/**
+     *
+     * @return
+     */
+    double getDefaultWeight();
+	/**
+     *
+     * @param w
+     */
+    void setDefaultWeight(double w);
 	
-	boolean existsWeight(E e);
-	double getWeight(E e);
-	void   addWeight(E e, double w);
-	void   setWeight(E e, double w);
+	/**
+     *
+     * @param e
+     * @return
+     */
+    boolean existsWeight(E e);
+	/**
+     *
+     * @param e
+     * @return
+     */
+    double getWeight(E e);
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    void   addWeight(E e, double w);
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    void   setWeight(E e, double w);
 	
-	boolean existsWeight(URI e);
-	double getWeight(URI e);
-	void addWeight(URI e, double w);
+	/**
+     *
+     * @param e
+     * @return
+     */
+    boolean existsWeight(URI e);
+	/**
+     *
+     * @param e
+     * @return
+     */
+    double getWeight(URI e);
+	/**
+     *
+     * @param e
+     * @param w
+     */
+    void addWeight(URI e, double w);
 	
 	
 	/**

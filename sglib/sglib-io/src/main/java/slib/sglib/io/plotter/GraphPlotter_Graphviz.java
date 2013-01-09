@@ -53,10 +53,25 @@ import slib.sglib.model.graph.elements.V;
  */
 public class GraphPlotter_Graphviz {
 
+    /**
+     *
+     * @param graph
+     * @param VertexUriColored
+     * @param showLabels
+     * @return
+     */
     public static String plot(G graph, Set<V> VertexUriColored, boolean showLabels) {
         return plot(graph, VertexUriColored, showLabels, null);
     }
 
+    /**
+     *
+     * @param graph
+     * @param VertexColored
+     * @param showLabels
+     * @param index
+     * @return
+     */
     public static String plot(G graph, Set<V> VertexColored, boolean showLabels, IndexHash index) {
 
         HashMap<URI, String> relColor = new HashMap<URI, String>();
@@ -136,6 +151,12 @@ public class GraphPlotter_Graphviz {
         return out;
     }
 
+    /**
+     *
+     * @param in
+     * @param max_num_per_string
+     * @return
+     */
     public static String splitString(String in, int max_num_per_string) {
 
         String[] data = in.split(" ");

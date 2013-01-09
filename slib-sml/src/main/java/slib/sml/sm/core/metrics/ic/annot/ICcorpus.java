@@ -40,7 +40,18 @@ import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public interface ICcorpus {
 
+    /**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Exception
+     */
     public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception;
 }

@@ -48,14 +48,26 @@ import slib.tools.smltoolkit.sm.cli.SmCli;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmCmdHandler extends CmdHandler {
 
 
-	public String  xmlConfFile;
+	/**
+     *
+     */
+    public String  xmlConfFile;
 	static Logger logger = LoggerFactory.getLogger(SmCmdHandler.class);
 	
 
-	public SmCmdHandler(String[] args)throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public SmCmdHandler(String[] args)throws SLIB_Exception {
 		super(new SmToolkitCst(), new SmCmdHandlerCst(), args);
 	}
 
@@ -83,7 +95,11 @@ public class SmCmdHandler extends CmdHandler {
 	}
 
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		try {
 			SmCmdHandler 	    c = new SmCmdHandler(args);

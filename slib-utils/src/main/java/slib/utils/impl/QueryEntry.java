@@ -38,13 +38,25 @@ package slib.utils.impl;
 
 import java.util.Map;
 
+/**
+ *
+ * @author seb
+ */
 public final class QueryEntry implements Map.Entry<String, String> {
 	
     private String key;
     private String value;
 
+    /**
+     *
+     */
     public QueryEntry(){}
     		
+    /**
+     *
+     * @param key
+     * @param value
+     */
     public QueryEntry(String key, String value) {
         this.key = key;
         this.value = value;

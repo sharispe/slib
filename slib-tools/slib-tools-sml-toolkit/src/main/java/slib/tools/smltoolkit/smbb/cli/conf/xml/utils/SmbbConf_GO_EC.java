@@ -43,6 +43,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConf_GO_EC extends SmbbConf_GO {
 
 	Logger   logger = LoggerFactory.getLogger(SmbbConf_GO_EC.class);
@@ -53,11 +57,19 @@ public class SmbbConf_GO_EC extends SmbbConf_GO {
 	String  out_genes_pair;
 	String  out_genes_pair_ecsim;
 	
-	public SmbbConf_GO_EC(){
+	/**
+     *
+     */
+    public SmbbConf_GO_EC(){
 		type = SmbbCst.type_GO_EC;
 	} 
 
-	public SmbbConf_GO_EC(Conf sspBBConf_g) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param sspBBConf_g
+     * @throws SLIB_Ex_Critic
+     */
+    public SmbbConf_GO_EC(Conf sspBBConf_g) throws SLIB_Ex_Critic {
 		
 		this();
 		
@@ -109,43 +121,83 @@ public class SmbbConf_GO_EC extends SmbbConf_GO {
 		return out;
 	}
 
-	public Long getRandom_number() {
+	/**
+     *
+     * @return
+     */
+    public Long getRandom_number() {
 		return random_number;
 	}
 
-	public void setRandom_number(Long random_number) {
+	/**
+     *
+     * @param random_number
+     */
+    public void setRandom_number(Long random_number) {
 		this.random_number = random_number;
 	}
 
-	public String getEc2GO_mapping() {
+	/**
+     *
+     * @return
+     */
+    public String getEc2GO_mapping() {
 		return ec2GO_mapping;
 	}
 
-	public void setEc2GO_mapping(String ec2go_mapping) {
+	/**
+     *
+     * @param ec2go_mapping
+     */
+    public void setEc2GO_mapping(String ec2go_mapping) {
 		ec2GO_mapping = ec2go_mapping;
 	}
 
-	public String getOut_genes_ec() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_genes_ec() {
 		return out_genes_ec;
 	}
 
-	public void setOut_genes_ec(String out_genes_ec) {
+	/**
+     *
+     * @param out_genes_ec
+     */
+    public void setOut_genes_ec(String out_genes_ec) {
 		this.out_genes_ec = out_genes_ec;
 	}
 
-	public String getOut_genes_pair() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_genes_pair() {
 		return out_genes_pair;
 	}
 
-	public void setOut_genes_pair(String out_genes_pair) {
+	/**
+     *
+     * @param out_genes_pair
+     */
+    public void setOut_genes_pair(String out_genes_pair) {
 		this.out_genes_pair = out_genes_pair;
 	}
 
-	public String getOut_genes_pair_ecsim() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_genes_pair_ecsim() {
 		return out_genes_pair_ecsim;
 	}
 
-	public void setOut_genes_pair_ecsim(String out_genes_pair_ecsim) {
+	/**
+     *
+     * @param out_genes_pair_ecsim
+     */
+    public void setOut_genes_pair_ecsim(String out_genes_pair_ecsim) {
 		this.out_genes_pair_ecsim = out_genes_pair_ecsim;
 	}
 	

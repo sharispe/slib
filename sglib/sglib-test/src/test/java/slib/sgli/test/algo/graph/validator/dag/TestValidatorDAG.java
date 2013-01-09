@@ -59,13 +59,21 @@ import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class TestValidatorDAG {
 
 	G g;
 	URI rootURI;
 	SLIB_UnitTestValues testValues;
 
-	public TestValidatorDAG() throws SLIB_Exception{
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    public TestValidatorDAG() throws SLIB_Exception{
 
 		testValues = new SLIB_UnitTestValues();
 		rootURI = testValues.G_BASIC_THING;
@@ -73,7 +81,11 @@ public class TestValidatorDAG {
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_root() throws SLIB_Ex_Critic{
 
 		System.out.println(g.toString());
@@ -92,7 +104,11 @@ public class TestValidatorDAG {
 		assertTrue(roots.size() == 2);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_dag_root_2() throws SLIB_Ex_Critic{
 
 		System.out.println(g.toString());
@@ -103,14 +119,22 @@ public class TestValidatorDAG {
 		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_true_dag() throws SLIB_Ex_Critic{
                 V root = new VertexTyped(g, rootURI, VType.CLASS);
 		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, RDFS.SUBCLASSOF,Direction.IN);
 		assertTrue(isDag);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_true_tax_dag() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
@@ -129,7 +153,11 @@ public class TestValidatorDAG {
 		assertTrue(isDag == false);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_true_tax_dag_unique_root() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
@@ -144,7 +172,11 @@ public class TestValidatorDAG {
 	}
 	
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_false_tax_dag_unique_root() throws SLIB_Ex_Critic{
 
 		boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
@@ -168,7 +200,11 @@ public class TestValidatorDAG {
 		assertTrue(isDag == false);
 	}
 	
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_false_tax_dag() throws SLIB_Ex_Critic{
 
 		URI animalURI 	= testValues.G_BASIC_ANIMAL;
@@ -186,7 +222,11 @@ public class TestValidatorDAG {
 		assertTrue(isDag == false);
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    @Test
 	public void test_false_dag() throws SLIB_Ex_Critic{
 
 		URI animalURI 	= testValues.G_BASIC_ANIMAL;

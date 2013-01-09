@@ -12,6 +12,9 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MeshXMLHandler extends DefaultHandler {
 
     Indexer_MESH_XML loader;
+    /**
+     *
+     */
     public MeshConcept concept;
     boolean descriptorName = false;
     boolean descriptorUI = false;
@@ -21,6 +24,10 @@ public class MeshXMLHandler extends DefaultHandler {
     
     StringBuilder tmpString;
 
+    /**
+     *
+     * @param loader
+     */
     public MeshXMLHandler(Indexer_MESH_XML loader) {
         this.loader = loader;
     }

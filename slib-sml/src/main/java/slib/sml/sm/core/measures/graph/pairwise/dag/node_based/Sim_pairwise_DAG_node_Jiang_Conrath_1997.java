@@ -52,6 +52,15 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_abstract {
 
+    /**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -62,6 +71,13 @@ public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_ab
     }
 
     
+    /**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_MICA
+     * @return
+     */
     public double sim(double ic_a, double ic_b, double ic_MICA) {
         return ic_a + ic_b - 2 * ic_MICA;
     }

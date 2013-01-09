@@ -44,8 +44,14 @@ import slib.sml.sm.core.utils.OperatorConf;
  */
 public abstract class RepresentationOperators implements IRepresentationOperators{
 	
-	protected OperatorConf conf;
-	protected double rulesInvalidatedScore = 0;
+	/**
+     *
+     */
+    protected OperatorConf conf;
+	/**
+     *
+     */
+    protected double rulesInvalidatedScore = 0;
 	
 	/**
 	 * Associates the configuration {@link OperatorConf} to the created operators

@@ -51,11 +51,18 @@ import slib.sml.sm.core.utils.SMconf;
  *
  *
  *
- * @param <V>
  */
 public abstract class Sim_pairwise_DAG_edge_Al_Mubaid_2006 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) {
 		throw new UnsupportedOperationException();
 		
 	}

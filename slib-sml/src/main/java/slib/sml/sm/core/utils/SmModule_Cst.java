@@ -36,12 +36,25 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.sm.core.utils;
 
+/**
+ *
+ * @author seb
+ */
 public class SmModule_Cst {
 	
-	public static final String	 version 	= "0.1";
-	public static String 		appName     = "Sm";
+	/**
+     *
+     */
+    public static final String	 version 	= "0.1";
+	/**
+     *
+     */
+    public static String 		appName     = "Sm";
 	
-	public static final String	reference =   null;
+	/**
+     *
+     */
+    public static final String	reference =   null;
 	
 	
 

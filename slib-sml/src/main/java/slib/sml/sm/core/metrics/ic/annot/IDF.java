@@ -47,10 +47,22 @@ import slib.utils.impl.ResultStack;
  */
 public class IDF extends LogBasedMetric implements ICcorpus {
 
+    /**
+     *
+     * @param nbOccurences
+     * @return
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Double> nbOccurences) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     *
+     * @param conf
+     * @param manager
+     * @return
+     * @throws SLIB_Exception
+     */
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         throw new UnsupportedOperationException("Not supported yet.");

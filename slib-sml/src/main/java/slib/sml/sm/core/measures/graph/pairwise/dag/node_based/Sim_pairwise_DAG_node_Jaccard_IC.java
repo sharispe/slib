@@ -51,7 +51,16 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_pairwise_DAG_node_Jaccard_IC implements Sim_DAG_node_abstract{
 	
 	
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		double ic_a = c.getIC(conf.getICconf(),a);
 		double ic_b = c.getIC(conf.getICconf(),b);
@@ -60,7 +69,14 @@ public class Sim_pairwise_DAG_node_Jaccard_IC implements Sim_DAG_node_abstract{
 		return sim(ic_a,ic_b,ic_MICA);
 	}
 
-	public double sim(double ic_a, double ic_b, double ic_mica) {
+	/**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @return
+     */
+    public double sim(double ic_a, double ic_b, double ic_mica) {
 		
 
 		double den = (  (ic_a) + (ic_b) - ic_mica );
@@ -72,7 +88,12 @@ public class Sim_pairwise_DAG_node_Jaccard_IC implements Sim_DAG_node_abstract{
 		return j;
 	}
 	
-	public static void main(String[] args) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Ex_Critic
+     */
+    public static void main(String[] args) throws SLIB_Ex_Critic {
 		Sim_pairwise_DAG_node_Jaccard_IC p = new Sim_pairwise_DAG_node_Jaccard_IC();
 		System.out.println(p.sim(0.25, 0.25, 0));
 	}

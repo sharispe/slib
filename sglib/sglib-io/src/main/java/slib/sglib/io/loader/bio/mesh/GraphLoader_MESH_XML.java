@@ -35,6 +35,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.UtilDebug;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphLoader_MESH_XML implements GraphLoader {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -42,6 +46,9 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
     DataFactory factory = DataFactoryMemory.getSingleton();
+    /**
+     *
+     */
     public static final String ARG_PREFIX = "prefix";
     String default_namespace;
 

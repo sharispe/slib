@@ -46,55 +46,95 @@ import slib.sml.sme.discriminative_power.DiscriminativePowerComputer;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 
+/**
+ *
+ * @author seb
+ */
 public class SmeCmdHandlerCst extends ToolCmdHandlerCst{
 
 	
 
-	public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SME;
-	public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
-	public static boolean 		 debugMode  = false;
+	/**
+     *
+     */
+    public static final String   moduleName 	  	= SmlToolKitCliCst.ToolName_SME;
+	/**
+     *
+     */
+    public static final String   appCmdName 	  	= SmlToolKitCliCst.appCmdName+" -module "+moduleName;
+	/**
+     *
+     */
+    public static boolean 		 debugMode  = false;
 	
-	public static final String   processDP 	  	= "discriminative_power";
+	/**
+     *
+     */
+    public static final String   processDP 	  	= "discriminative_power";
 	
-	public static final String[] acceptedProcesses 	= {processDP};
+	/**
+     *
+     */
+    public static final String[] acceptedProcesses 	= {processDP};
 	
 	/*
 	 * Error messages  
 	 */
 	
-	public static final String errorMissingProcess = "[ERROR] Please specify a process to perform, available "+Arrays.toString(acceptedProcesses);
+	/**
+     *
+     */
+    public static final String errorMissingProcess = "[ERROR] Please specify a process to perform, available "+Arrays.toString(acceptedProcesses);
 	
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 			= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option help 			= new Option( "help", "print this message" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option process  = OptionBuilder.withArgName( "process" )
 	.hasArg()
 	.withDescription( "process to perform (required) "+Arrays.toString(acceptedProcesses) )
 	.create( "process" );
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option sm_file  = OptionBuilder.withArgName( "sm_file" )
 	.hasArg()
 	.withDescription( "semantic measures result file (required for "+processDP+")" )
 	.create( "sm_file" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option clanFile  = OptionBuilder.withArgName( "clan_file" )
 	.hasArg()
 	.withDescription( "file containing clans (required for "+processDP+")" )
 	.create( "clan_file" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option output  = OptionBuilder.withArgName( "output" )
 	.hasArg()
 	.withDescription( "output file (required for "+processDP+")" )
 	.create( "output" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option max_value  = OptionBuilder.withArgName( "max_value" )
 	.hasArg()
 	.withDescription( "Decimal value. Set all discriminative power bigger than the specified maximal value to max_value ("+processDP+" optional, default "+DiscriminativePowerComputer.max_value_default+" )" )
@@ -103,7 +143,10 @@ public class SmeCmdHandlerCst extends ToolCmdHandlerCst{
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		optionsOrder.put(process, optionsOrder.size());
@@ -115,7 +158,10 @@ public class SmeCmdHandlerCst extends ToolCmdHandlerCst{
 	 }
 	
 	
-	public SmeCmdHandlerCst() {
+	/**
+     *
+     */
+    public SmeCmdHandlerCst() {
 		super(appCmdName, debugMode, optionsOrder);
 	}
 }

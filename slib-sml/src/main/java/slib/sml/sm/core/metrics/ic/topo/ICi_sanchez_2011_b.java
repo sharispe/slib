@@ -59,6 +59,12 @@ import slib.utils.impl.ResultStack;
 public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
 
     // TODO include current leaf
+    /**
+     *
+     * @param allNbOfReachableLeaves
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());

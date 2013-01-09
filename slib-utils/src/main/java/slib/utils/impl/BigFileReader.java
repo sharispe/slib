@@ -41,29 +41,55 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ *
+ * @author seb
+ */
 public class BigFileReader
 {
 	private String _currentLine;
 	private BufferedReader _reader;
 
-	public BigFileReader(String filePath) throws FileNotFoundException {
+	/**
+     *
+     * @param filePath
+     * @throws FileNotFoundException
+     */
+    public BigFileReader(String filePath) throws FileNotFoundException {
 		_reader = new BufferedReader(new FileReader(filePath));
 	}
 
-	public void close() throws IOException{
+	/**
+     *
+     * @throws IOException
+     */
+    public void close() throws IOException{
 		_reader.close();
 	}
 
-	public boolean hasNext() throws IOException{
+	/**
+     *
+     * @return
+     * @throws IOException
+     */
+    public boolean hasNext() throws IOException{
 		_currentLine = _reader.readLine();
 		return _currentLine != null;
 	}
 
-	public String next(){
+	/**
+     *
+     * @return
+     */
+    public String next(){
 		return _currentLine;
 	}
 	
-	public String nextTrimmed(){
+	/**
+     *
+     * @return
+     */
+    public String nextTrimmed(){
 		return _currentLine.trim();
 	}
 

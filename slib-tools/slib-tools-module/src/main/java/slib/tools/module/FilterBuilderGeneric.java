@@ -48,11 +48,21 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class FilterBuilderGeneric {
 	
 	
 	
-	public static Filter buildFilter(Conf gconf) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param gconf
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public static Filter buildFilter(Conf gconf) throws SLIB_Ex_Critic{
 		
 		Filter f = null;
 		
@@ -81,7 +91,12 @@ public class FilterBuilderGeneric {
 		return f;
 	}
 	
-	public static boolean supportType(String type){
+	/**
+     *
+     * @param type
+     * @return
+     */
+    public static boolean supportType(String type){
 		return Arrays.asList(FilterCst.supportedTypes).contains(type);
 	}
 }

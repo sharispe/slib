@@ -40,21 +40,45 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+/**
+ *
+ * @author seb
+ */
 public class InteractionSet {
 	
-	public ArrayList<String> interactors;
-	public HashSet<Interaction> interactions;
+	/**
+     *
+     */
+    public ArrayList<String> interactors;
+	/**
+     *
+     */
+    public HashSet<Interaction> interactions;
 	
-	public InteractionSet(){
+	/**
+     *
+     */
+    public InteractionSet(){
 		interactors  = new ArrayList<String>();
 		interactions = new HashSet<Interaction>();
 	}
 	
-	public void addInteraction(Integer a_id, Integer b_id){
+	/**
+     *
+     * @param a_id
+     * @param b_id
+     */
+    public void addInteraction(Integer a_id, Integer b_id){
 		interactions.add(new Interaction(a_id, b_id));
 	}
 
-	public boolean containsInteraction(Integer a_id, Integer b_id){
+	/**
+     *
+     * @param a_id
+     * @param b_id
+     * @return
+     */
+    public boolean containsInteraction(Integer a_id, Integer b_id){
 		
 		for(Interaction p:interactions){
 			if(p.a == a_id && p.b == b_id)
@@ -64,7 +88,11 @@ public class InteractionSet {
 	}
 	
 	
-	public HashMap<Integer, HashSet<Integer>> buildFastIndex(){
+	/**
+     *
+     * @return
+     */
+    public HashMap<Integer, HashSet<Integer>> buildFastIndex(){
 		
 		HashMap<Integer, HashSet<Integer>> index = new HashMap<Integer, HashSet<Integer>>();
 		for(Interaction p:interactions){

@@ -40,10 +40,21 @@ import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphActionExecutor {
 
     static Logger logger = LoggerFactory.getLogger(GraphActionExecutor.class);
 
+    /**
+     *
+     * @param factory
+     * @param action
+     * @param g
+     * @throws SLIB_Ex_Critic
+     */
     public static void applyAction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
         GActionType actionType = action.type;
@@ -354,6 +365,13 @@ public class GraphActionExecutor {
 
     }
 
+    /**
+     *
+     * @param factory
+     * @param actions
+     * @param g
+     * @throws SLIB_Ex_Critic
+     */
     public static void applyActions(DataFactory factory, List<GAction> actions, G g) throws SLIB_Ex_Critic {
 
         for (GAction action : actions) {

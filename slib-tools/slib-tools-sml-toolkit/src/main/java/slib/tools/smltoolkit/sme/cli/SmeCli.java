@@ -61,12 +61,21 @@ public class SmeCli implements SmlModuleCLI{
 	private SmeCmdHandler cfgLoader;
 
 
-	public void execute(String[] argsModule) throws SLIB_Exception {
+	/**
+     *
+     * @param argsModule
+     * @throws SLIB_Exception
+     */
+    public void execute(String[] argsModule) throws SLIB_Exception {
 		cfgLoader = new SmeCmdHandler(argsModule);
 		execute();
 	}
 
-	public void execute() throws SLIB_Ex_Critic{
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public void execute() throws SLIB_Ex_Critic{
 		
 		if(cfgLoader.process.equals(SmeCmdHandlerCst.processDP)){
 			

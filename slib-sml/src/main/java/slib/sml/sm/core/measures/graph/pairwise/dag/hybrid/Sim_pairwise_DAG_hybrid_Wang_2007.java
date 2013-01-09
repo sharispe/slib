@@ -55,7 +55,15 @@ import slib.utils.impl.SetUtils;
 public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
 
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) {
 
 		Map<V, Double> sc_A = c.computeSemanticContribution(a);
 		Map<V, Double> sc_B = c.computeSemanticContribution(b);
@@ -71,7 +79,19 @@ public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
 	}
 
 
-	public double sim(	V cA, 
+	/**
+     *
+     * @param cA
+     * @param cB
+     * @param sc_A
+     * @param sc_B
+     * @param svA
+     * @param svB
+     * @param ancA
+     * @param ancB
+     * @return
+     */
+    public double sim(	V cA, 
 			V cB, 
 			Map<V, Double> sc_A,
 			Map<V, Double> sc_B, 

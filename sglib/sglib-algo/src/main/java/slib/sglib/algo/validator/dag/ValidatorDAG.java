@@ -75,6 +75,15 @@ public class ValidatorDAG {
     /*---------------------------------------------------------------------*
      *  Algorithm
      *---------------------------------------------------------------------*/
+    /**
+     *
+     * @param graph
+     * @param startingURIs
+     * @param edgesTypes
+     * @param dir
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public boolean isDag(G graph, Set<URI> startingURIs, Set<URI> edgesTypes, Direction dir) throws SLIB_Ex_Critic {
 
         this.direction = dir;
@@ -177,7 +186,7 @@ public class ValidatorDAG {
      * @param graph the graph on which the evaluation has to be made
      * @return true if the the (underlying) taxonomic graph is a DAG
      *
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic {
         return isDag(graph, RDFS.SUBCLASSOF, Direction.IN);
@@ -189,11 +198,11 @@ public class ValidatorDAG {
      * the given edge type
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param type, the edge type to consider during underlying reduction e.g.
-     * if taxonomic graph use SUPERCLASSOF
+     * @param type 
+     * @param dir 
      * @return true if the the (underlying) graph reduction is a DAG
+     * @throws SLIB_Ex_Critic  
      *
-     * @throws SGL_Ex_Critic
      */
     public boolean isDag(G graph, URI type, Direction dir) throws SLIB_Ex_Critic {
         return isDag(graph, SetUtils.buildSet(type), dir);
@@ -206,17 +215,23 @@ public class ValidatorDAG {
      * the given set of edge types
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param URI rootURI the node to consider as root
-     * @param edgesTypes, the edge types to consider during underlying reduction
-     * e.g. if taxonomic graph use SUPERCLASSOF
+     * @param rootURI 
+     * @param edgeTypes 
+     * @param dir 
      * @return true if the the (underlying) graph reduction is a DAG
+     * @throws SLIB_Ex_Critic  
      *
-     * @throws SGL_Ex_Critic
      */
     public boolean isDag(G graph, URI rootURI, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
         return isDag(graph, SetUtils.buildSet(rootURI), edgeTypes, dir);
     }
 
+    /**
+     *
+     * @param graph
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public boolean containsTaxonomicalDag(G graph) throws SLIB_Ex_Critic {
         return isDag(graph, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
     }
@@ -228,12 +243,12 @@ public class ValidatorDAG {
      * the given edge type
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param URI rootURI the node to consider as root
-     * @param type, the edge type to consider during underlying reduction e.g.
-     * if taxonomic graph use SUPERCLASSOF
+     * @param rootURI 
+     * @param type 
+     * @param dir 
      * @return true if the the (underlying) graph reduction is a DAG
      *
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean isDag(G graph, URI rootURI, URI type, Direction dir) throws SLIB_Ex_Critic {
         return isDag(graph, rootURI, SetUtils.buildSet(type), dir);
@@ -248,11 +263,11 @@ public class ValidatorDAG {
      * types as root (see {@link ValidatorDAG#getDAGRoots(G, EType)})
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param edgeTypes, the set of edge types to consider during underlying
-     * graph reduction e.g. if taxonomic graph use SUPERCLASSOF
+     * @param edgeTypes 
+     * @param dir 
      * @return true if the the (underlying) graph reduction is a DAG
      *
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
 
@@ -283,6 +298,7 @@ public class ValidatorDAG {
      *
      * @param g the graph on which the root vertices need to be retrieve
      * @param etypes e.g. if taxonomic graph use SUPERCLASSOF
+     * @param dir 
      * @return The set of vertices matching the predefined conditions
      */
     public Set<V> getDAGRoots(G g, Set<URI> etypes, Direction dir) {
@@ -292,6 +308,13 @@ public class ValidatorDAG {
         return roots;
     }
 
+    /**
+     *
+     * @param g
+     * @param etypes
+     * @param dir
+     * @return
+     */
     public Set<V> getDAGRoots(G g, URI etypes, Direction dir) {
         return getDAGRoots(g, SetUtils.buildSet(etypes), dir);
     }
@@ -306,7 +329,7 @@ public class ValidatorDAG {
      * @return true if the graph contains a unique underlying rooted taxonomic
      * graph
      *
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean containsRootedTaxonomicDag(G g) throws SLIB_Ex_Critic {
 
@@ -340,7 +363,7 @@ public class ValidatorDAG {
      * @param g the graph
      * @return the root vertex
      *
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      * @see
      */
     public V getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
@@ -375,6 +398,13 @@ public class ValidatorDAG {
         return getDAGRoots(g, SetUtils.buildSet(etype), Direction.OUT);
     }
 
+    /**
+     *
+     * @param g
+     * @param rootURI
+     * @param edgesType
+     * @return
+     */
     public boolean containsRootedDagRoot(G g, URI rootURI, Set<URI> edgesType) {
 
         for (V v : getDAGRoots(g, edgesType, Direction.OUT)) {
@@ -388,10 +418,10 @@ public class ValidatorDAG {
 
     /**
      * @param g
-     * @param rootURI
+     * @param root 
      * @param edgesType
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType) throws SLIB_Ex_Critic {
 
@@ -400,9 +430,9 @@ public class ValidatorDAG {
 
     /**
      * @param g
-     * @param rootURI
+     * @param root 
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic 
      */
     public boolean isUniqueRootedTaxonomicDag(G g, V root) throws SLIB_Ex_Critic {
 
@@ -413,10 +443,11 @@ public class ValidatorDAG {
      * Do not check if the graph is a DAG
      *
      * @param g
-     * @param rootURI
+     * @param root 
      * @param edgesType
+     * @param dir 
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic  
      */
     public boolean isUniqueRootedDagRoot(G g, V root, Set<URI> edgesType, Direction dir) throws SLIB_Ex_Critic {
 
@@ -431,11 +462,24 @@ public class ValidatorDAG {
         return false;
     }
 
+    /**
+     *
+     * @param g
+     * @param root
+     * @param edgesType
+     * @param dir
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType, Direction dir) throws SLIB_Ex_Critic {
 
         return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(edgesType), dir);
     }
 
+    /**
+     *
+     * @return
+     */
     public E getLastEdge() {
         return lastEdge;
     }

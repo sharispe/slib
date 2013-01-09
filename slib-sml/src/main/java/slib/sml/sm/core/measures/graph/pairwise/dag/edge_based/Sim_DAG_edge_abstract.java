@@ -39,6 +39,10 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
 
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Sim_DAG_edge_abstract implements Sim_Pairwise_DAG{
 	
 

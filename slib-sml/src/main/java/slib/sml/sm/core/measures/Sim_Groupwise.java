@@ -36,6 +36,10 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.sm.core.measures;
 
+/**
+ *
+ * @author seb
+ */
 public interface Sim_Groupwise {
 
 }

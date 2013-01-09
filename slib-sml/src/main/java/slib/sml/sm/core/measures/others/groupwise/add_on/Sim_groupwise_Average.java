@@ -53,7 +53,12 @@ import slib.utils.impl.MatrixDouble;
  */
 public class Sim_groupwise_Average extends Sim_groupwise_general_abstract{
 	
-	public double score(MatrixDouble<V,V> pairwiseScores) {
+	/**
+     *
+     * @param pairwiseScores
+     * @return
+     */
+    public double score(MatrixDouble<V,V> pairwiseScores) {
 		
 		double sum = 0;
 		int c = 0;
@@ -70,7 +75,15 @@ public class Sim_groupwise_Average extends Sim_groupwise_general_abstract{
 	}
 	/**
 	 * Assumes score symmetry
-	 */
+         * 
+         * @param setA 
+         * @param setB 
+         * @param rc 
+         * @param groupwiseconf 
+         * @param conf 
+         * @return
+         * @throws SLIB_Ex_Critic  
+         */
 	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 		
 		MatrixDouble<V,V> results_setA = rc.getMatrixScore(setA,setB, conf);

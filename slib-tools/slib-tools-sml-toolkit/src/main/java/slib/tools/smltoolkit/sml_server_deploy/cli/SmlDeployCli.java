@@ -49,6 +49,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class SmlDeployCli implements SmlModuleCLI{
 
 	Logger logger = LoggerFactory.getLogger(SmlDeployCli.class);
@@ -56,7 +60,12 @@ public class SmlDeployCli implements SmlModuleCLI{
 
 
 
-	public void execute(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public void execute(String[] args) throws SLIB_Exception {
 		SmlDeployCmdHandler  c = new SmlDeployCmdHandler(args);
 
 		SmlDeployXMLLoader loader = new SmlDeployXMLLoader();

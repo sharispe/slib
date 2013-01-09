@@ -81,6 +81,12 @@ public class GraphLoader_SLIB implements GraphLoader {
         process(conf, g);
     }
 
+    /**
+     *
+     * @param conf
+     * @param graph
+     * @throws SLIB_Exception
+     */
     public void process(GDataConf conf, G graph) throws SLIB_Exception {
 
         this.g = graph;
@@ -137,6 +143,12 @@ public class GraphLoader_SLIB implements GraphLoader {
         }
     }
 
+    /**
+     *
+     * @param g
+     * @param outfile
+     * @throws SLIB_Ex_Critic
+     */
     public void flush(G g, String outfile) throws SLIB_Ex_Critic {
 
         try {

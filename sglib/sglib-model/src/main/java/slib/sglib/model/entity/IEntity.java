@@ -71,6 +71,7 @@ public interface IEntity {
     /**
      * To retrieve the annotations characterizing the entity
      *
+     * @param puri 
      * @return a Set of annotation objects
      */
     public Set<V> getAnnotations(URI puri);
@@ -80,21 +81,27 @@ public interface IEntity {
      *
      * @param annotationURI identifier of the annotation to remove to the entity
      * collection
-     * @return return true if the annotation was removed
      */
     public void removeAnnotations(URI annotationURI);
 
+    /**
+     *
+     * @param v
+     * @param puri
+     */
     public void addAnnotation(V v, URI puri);
 
     /**
      * Remove a particular Annotation associated to the Entity
      *
-     * @param annotationURI identifier of the annotation to remove to the entity
-     * collection
-     * @return true if the annotation was removed
+     * @param v 
      */
     public void removeAnnotations(V v);
 
+    /**
+     *
+     * @return
+     */
     public URI getURI();
 
     /**

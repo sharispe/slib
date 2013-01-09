@@ -39,13 +39,27 @@ package slib.sglib.io.loader.utils.filter.graph;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
+/**
+ *
+ * @author seb
+ */
 public class FilterGraph extends Filter{
 
-	public FilterGraph(String id, String type) {
+	/**
+     *
+     * @param id
+     * @param type
+     */
+    public FilterGraph(String id, String type) {
 		super(id, type);
 	}
 	
-	public FilterGraph(Conf conf) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param conf
+     * @throws SLIB_Ex_Critic
+     */
+    public FilterGraph(Conf conf) throws SLIB_Ex_Critic {
 		super(conf);
 	}
 

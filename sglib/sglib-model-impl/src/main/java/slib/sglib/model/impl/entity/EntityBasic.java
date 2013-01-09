@@ -56,17 +56,30 @@ public class EntityBasic implements IEntity{
 	Map<V,URI> annotationsMapping;
 	URI uri;
 	
-	public EntityBasic(URI uri) {
+	/**
+     *
+     * @param uri
+     */
+    public EntityBasic(URI uri) {
 		this.uri = uri;
 	}
 	
-	public EntityBasic(URI uri, Map<V,URI> annotationsMapping) {
+	/**
+     *
+     * @param uri
+     * @param annotationsMapping
+     */
+    public EntityBasic(URI uri, Map<V,URI> annotationsMapping) {
 		this.uri = uri;
 		this.annotationsMapping = annotationsMapping;
 	}
 
 
-	public Map<V,URI> getAnnotationsMapping() {
+	/**
+     *
+     * @return
+     */
+    public Map<V,URI> getAnnotationsMapping() {
 		return annotationsMapping;
 	}
 	
@@ -97,11 +110,20 @@ public class EntityBasic implements IEntity{
 	}
 
 
-	public URI getURI() {
+	/**
+     *
+     * @return
+     */
+    public URI getURI() {
 		return uri;
 	}
 
-	public void addAnnotation(V v, URI puri) {
+	/**
+     *
+     * @param v
+     * @param puri
+     */
+    public void addAnnotation(V v, URI puri) {
 		annotationsMapping.put(v, puri);
 	}
 

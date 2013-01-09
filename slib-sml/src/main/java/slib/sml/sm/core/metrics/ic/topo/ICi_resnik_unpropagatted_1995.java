@@ -62,6 +62,12 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_resnik_unpropagatted_1995 extends LogBasedMetric implements ICtopo {
     
+    /**
+     *
+     * @param nbDescendants
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> nbDescendants) throws SLIB_Ex_Critic {
         
         ResultStack<V, Double> rtemp = ProbOccurence.compute(nbDescendants, 0);

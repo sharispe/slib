@@ -58,6 +58,10 @@ import slib.sglib.model.impl.graph.weight.GWS_impl;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.impl.SetUtils;
 
+/**
+ *
+ * @author seb
+ */
 public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
     private DataFactory factory;
@@ -69,6 +73,11 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     private GWS ws;
     private URI uri;
 
+    /**
+     *
+     * @param factory
+     * @param uri
+     */
     public GraphMemory_Abstract(DataFactory factory, URI uri) {
 
         this.uri = uri;
@@ -160,6 +169,13 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return edgesCol;
     }
 
+    /**
+     *
+     * @param rset
+     * @param vertices
+     * @param dir
+     * @return
+     */
     public Set<E> getE(Set<URI> rset, Set<V> vertices, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
@@ -640,6 +656,9 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         return valid;
     }
 
+    /**
+     *
+     */
     public void info() {
         System.out.println(uri);
         System.out.println("Vertices: " + getV().size());
@@ -764,6 +783,8 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
      * *************************************************************************************
      * NotifySail Interface
      * *************************************************************************************
+     * @return 
+     * @throws SailException 
      */
     @Override
     public boolean isWritable() throws SailException {

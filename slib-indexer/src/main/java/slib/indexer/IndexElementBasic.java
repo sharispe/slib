@@ -47,11 +47,20 @@ public class IndexElementBasic implements IndexedElement{
     String preferredDescription;
     Set<String> descriptions;
     
+    /**
+     *
+     * @param v
+     */
     public IndexElementBasic(Value v){
         associatedValue = v;
         this.descriptions = new HashSet<String>();
     }
 
+    /**
+     *
+     * @param v
+     * @param d
+     */
     public IndexElementBasic(Value v, String d) {
         this(v);
         this.preferredDescription = d;
@@ -59,21 +68,37 @@ public class IndexElementBasic implements IndexedElement{
     }
     
     
+    /**
+     *
+     * @param d
+     */
     @Override
     public void addDescription(String d){
         descriptions.add(d);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Set<String> getDescriptions() {
         return descriptions;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String getPreferredDescription() {
         return preferredDescription;
     }
 
+    /**
+     *
+     * @param d
+     */
     @Override
     public void setPreferredDescription(String d) {
         this.descriptions.remove(this.preferredDescription);
@@ -81,16 +106,28 @@ public class IndexElementBasic implements IndexedElement{
         this.descriptions.add(d);
     }
 
+    /**
+     *
+     * @param d
+     */
     @Override
     public void addDescriptions(Collection<String> d) {
        descriptions.addAll(d);
     }
     
+    /**
+     *
+     * @param d
+     */
     @Override
     public void addDescriptions(String[] d) {
        descriptions.addAll(Arrays.asList(d));
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public Value getValue() {
         return associatedValue;

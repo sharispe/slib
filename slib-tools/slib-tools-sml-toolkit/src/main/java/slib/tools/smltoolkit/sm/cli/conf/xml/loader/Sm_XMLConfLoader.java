@@ -65,22 +65,49 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
     Logger logger = LoggerFactory.getLogger(Sm_XMLConfLoader.class);
+    /**
+     *
+     */
     public LinkedHashSet<SMconf> gConfPairwise;
+    /**
+     *
+     */
     public LinkedHashSet<SMconf> gConfGroupwise;
+    /**
+     *
+     */
     public LinkedHashSet<ICconf> gConfICs;
+    /**
+     *
+     */
     public LinkedHashSet<Conf> gConfQueries;
+    /**
+     *
+     */
     public LinkedHashSet<OperatorConf> gConfOperators;
     Integer nbThreads;
     Integer benchSize;
     Boolean cachePairwiseResults;
     Boolean skipEmptyAnnots;
     Double emptyAnnotsScores;
+    /**
+     *
+     */
     public String graphURI;
 
     //	private boolean optConfDefined = false;
+    /**
+     *
+     * @param confFile
+     * @throws SLIB_Exception
+     */
     public Sm_XMLConfLoader(String confFile) throws SLIB_Exception {
 
         super(confFile);
@@ -933,18 +960,34 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         return operatorConfSet;
     }
 
+    /**
+     *
+     * @return
+     */
     public Integer getBenchSize() {
         return benchSize;
     }
 
+    /**
+     *
+     * @return
+     */
     public Boolean getCachePairwiseResults() {
         return cachePairwiseResults;
     }
 
+    /**
+     *
+     * @return
+     */
     public Boolean getSkipEmptyAnnots() {
         return skipEmptyAnnots;
     }
 
+    /**
+     *
+     * @return
+     */
     public Double getEmptyAnnotsScores() {
         return emptyAnnotsScores;
     }

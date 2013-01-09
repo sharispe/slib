@@ -82,23 +82,28 @@ public interface WalkConstraints {
 	
 	
 	/**
-	 * Access to the predicate which can be traversed from target <- source 
-	 * i.e. in the opposite direction
+	 * Access to the predicate which can be traversed from target to source, i.e. in the opposite direction.
 	 * Return the set of URI corresponding to the valid predicates
-	 */
+         * 
+         * @return 
+         */
 	public Set<URI> getAcceptedWalks_DIR_IN();
 	
 	/**
 	 * Access to the predicate which can be traversed from source -> target
 	 * i.e. in the original direction
 	 * Return the set of URI corresponding to the valid predicates
-	 */
+         * 
+         * @return 
+         */
 	public Set<URI> getAcceptedWalks_DIR_OUT();
 	
 	/**
 	 * Intersection of {@link #getAcceptedWalks_DIR_IN()} and {@link #getAcceptedWalks_DIR_OUT()}
 	 * Return the set of URI corresponding to the valid predicates
-	 */
+         * 
+         * @return 
+         */
 	public Set<URI> getAcceptedWalks_DIR_BOTH();
 	
 	/**

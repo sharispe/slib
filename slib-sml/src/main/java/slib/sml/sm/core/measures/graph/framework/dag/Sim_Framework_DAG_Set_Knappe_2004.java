@@ -53,9 +53,16 @@ public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abs
 	
 	private double k = 0.5;
 	
-	public Sim_Framework_DAG_Set_Knappe_2004() {}
+	/**
+     *
+     */
+    public Sim_Framework_DAG_Set_Knappe_2004() {}
 	
-	public Sim_Framework_DAG_Set_Knappe_2004(double k){
+	/**
+     *
+     * @param k
+     */
+    public Sim_Framework_DAG_Set_Knappe_2004(double k){
 		this.k = k;
 	}
 
@@ -72,11 +79,19 @@ public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abs
 	}
 	
 	
-	public double getK() {
+	/**
+     *
+     * @return
+     */
+    public double getK() {
 		return k;
 	}
 
-	public void setK(double k) {
+	/**
+     *
+     * @param k
+     */
+    public void setK(double k) {
 		this.k = k;
 	}
 

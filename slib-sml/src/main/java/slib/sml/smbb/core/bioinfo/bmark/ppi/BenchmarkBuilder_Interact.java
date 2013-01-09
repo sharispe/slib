@@ -74,9 +74,9 @@ public class BenchmarkBuilder_Interact {
 	 * Generate an interaction considering the given configuration specified in 
 	 * a {@link SmbbConf_GO_PPI} object.
 	 * @param g the graph containing the annotations involved
-	 * @param kb the knowledge base containing the entities involved in the interaction files.
+         * @param instancesAccessor 
 	 * @param conf the configuration to take into account during benchmark creation
-	 * @throws SGL_Exception 
+         * @throws SLIB_Exception 
 	 * @see {@link SmbbConf_GO_PPI} for the configuration of the process.
 	 */
 	public static void generateBenchmark(

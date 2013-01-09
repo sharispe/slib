@@ -41,6 +41,10 @@ import java.util.HashMap;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class GlobalConfPattern {
 	
 	private static GlobalConfPattern conf;
@@ -48,7 +52,11 @@ public class GlobalConfPattern {
 	private HashMap<String, String > variables;
 
 	
-	public static GlobalConfPattern getInstance() {
+	/**
+     *
+     * @return
+     */
+    public static GlobalConfPattern getInstance() {
 		if (conf == null) {
 			conf = new GlobalConfPattern();
 		}
@@ -59,17 +67,33 @@ public class GlobalConfPattern {
 		variables = new HashMap<String, String>();
 	}
 	
-	public void addVar(String key, String value) throws SLIB_Ex_Critic{
+	/**
+     *
+     * @param key
+     * @param value
+     * @throws SLIB_Ex_Critic
+     */
+    public void addVar(String key, String value) throws SLIB_Ex_Critic{
 		if(variables.containsKey(key))
 			throw new SLIB_Ex_Critic("Duplicate global variable "+key);
 		variables.put(key, value);
 	}
 	
-	public HashMap<String, String > getVariables(){
+	/**
+     *
+     * @return
+     */
+    public HashMap<String, String > getVariables(){
 		return variables;
 	}
 	
-	public String getValue(String key) throws SLIB_Exception{
+	/**
+     *
+     * @param key
+     * @return
+     * @throws SLIB_Exception
+     */
+    public String getValue(String key) throws SLIB_Exception{
 		return variables.get(key);
 	}
 }

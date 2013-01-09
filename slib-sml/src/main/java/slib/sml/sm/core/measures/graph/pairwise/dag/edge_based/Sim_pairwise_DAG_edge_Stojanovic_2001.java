@@ -51,11 +51,19 @@ import slib.utils.impl.SetUtils;
  * Create util classO
  * @author seb
  *
- * @param <V>
  */
 public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract{
 
-	public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param a
+     * @param b
+     * @param c
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 		
 		Set<V> ancestors_A = c.getAncestorsInc(a);
 		Set<V> ancestors_B = c.getAncestorsInc(b);
@@ -64,7 +72,17 @@ public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract
 		return sim(a,b,ancestors_A,ancestors_B,maxDepths);
 	}
 
-	public double sim(	
+	/**
+     *
+     * @param cA
+     * @param cB
+     * @param ancestors_A
+     * @param ancestors_B
+     * @param maxDepths
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double sim(	
 			V cA, 
 			V cB, 
 			Collection<V> ancestors_A,

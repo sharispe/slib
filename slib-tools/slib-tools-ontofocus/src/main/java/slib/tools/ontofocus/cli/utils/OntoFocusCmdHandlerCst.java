@@ -45,42 +45,88 @@ import org.apache.commons.cli.OptionBuilder;
 import slib.sglib.io.util.GFormat;
 import slib.tools.module.ToolCmdHandlerCst;
 
+/**
+ *
+ * @author seb
+ */
 public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 
 
-	public static final String   appCmdName 	  	= "OntoFocus.jar ";
-	public static final GFormat   format_default  	= GFormat.OBO;
-	public static final GFormat[] acceptedFormats 	= {GFormat.OBO, GFormat.RDF_XML};
+	/**
+     *
+     */
+    public static final String   appCmdName 	  	= "OntoFocus.jar ";
+	/**
+     *
+     */
+    public static final GFormat   format_default  	= GFormat.OBO;
+	/**
+     *
+     */
+    public static final GFormat[] acceptedFormats 	= {GFormat.OBO, GFormat.RDF_XML};
 	
-	public static boolean debugMode  = false;
-	public static boolean addRelsVal = false;
-	public static String  rootURI	 = null;
+	/**
+     *
+     */
+    public static boolean debugMode  = false;
+	/**
+     *
+     */
+    public static boolean addRelsVal = false;
+	/**
+     *
+     */
+    public static String  rootURI	 = null;
 	
-	public static String incR_Separator = ","; // separator used to defined multiple relationships to consider during the process
+	/**
+     *
+     */
+    public static String incR_Separator = ","; // separator used to defined multiple relationships to consider during the process
 	
 	/*
 	 * Error messages  
 	 */
 	
-	public static final String errorOntology = "[ERROR] Please specify an ontology, supported format are "+Arrays.toString(OntoFocusCmdHandlerCst.acceptedFormats);
-	public static final String errorOutput   = "[ERROR] Please specify an output file";
-	public static final String errorFocus    = "[ERROR] Please specify a file containing focus term/concept uri/id (one per line)";
+	/**
+     *
+     */
+    public static final String errorOntology = "[ERROR] Please specify an ontology, supported format are "+Arrays.toString(OntoFocusCmdHandlerCst.acceptedFormats);
+	/**
+     *
+     */
+    public static final String errorOutput   = "[ERROR] Please specify an output file";
+	/**
+     *
+     */
+    public static final String errorFocus    = "[ERROR] Please specify a file containing focus term/concept uri/id (one per line)";
 			
 	/*
 	 * Setting Options 
 	 */
 	
-	public static Option help 			= new Option( "help", "print this message" );
-	public static Option addR 			= new Option( "addR", "add all directed relationships, only considering types explicitly defined by the ontology, to the final reduction\n"+
+	/**
+     *
+     */
+    public static Option help 			= new Option( "help", "print this message" );
+	/**
+     *
+     */
+    public static Option addR 			= new Option( "addR", "add all directed relationships, only considering types explicitly defined by the ontology, to the final reduction\n"+
 													  "(optional, default:"+addRelsVal+")" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option ontology  = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "ontology file (required)" )
 	.create( "onto" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option root  = OptionBuilder.withArgName( "id/URI" )
 	.hasArg()
 	.withDescription( 	"id/uri of the concept/term to consider as the root of the graph\n"+
@@ -88,7 +134,10 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 						" if multiple choices generate an error)" )
 	.create( "root" );
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option incR  = OptionBuilder.withArgName( "id/URI" )
 	.hasArg()
 	.withDescription( "id/uri of other relationships to consider during topological sort and graph extension. "+
@@ -99,21 +148,30 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 	.create( "incR" );
 
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option out		 = OptionBuilder.withArgName( "file")
 	.hasArg()
 	.withDescription( "output file (optional, default: stdout)" )
 	.create( "out" );
 
 
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option entities	 = OptionBuilder.withArgName( "file" )
 	.hasArg()
 	.withDescription( "file containing id/uri of the concepts/terms to focus on, one per line (required)" )
 	.create( "focus" );
 	
 	
-	@SuppressWarnings("static-access")
+	/**
+     *
+     */
+    @SuppressWarnings("static-access")
 	public static Option format 	 = OptionBuilder.withArgName( "value" )
 	.hasArg()
 	.withDescription( "format (optional, default:"+format_default+", values: "+Arrays.toString(acceptedFormats)+")" )
@@ -122,7 +180,10 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 	/*
 	 * Use this data structure to define order of options in help message
 	 */
-	public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
+	/**
+     *
+     */
+    public final static HashMap<Option,Integer> optionsOrder = new HashMap<Option,Integer>();
 	static
 	{
 		optionsOrder.put(ontology, optionsOrder.size());
@@ -138,7 +199,10 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst{
 	 }
 
 
-	public OntoFocusCmdHandlerCst() {
+	/**
+     *
+     */
+    public OntoFocusCmdHandlerCst() {
 		
 		super(appCmdName, debugMode, optionsOrder);
 	}

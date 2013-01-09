@@ -36,8 +36,19 @@ package slib.sml.sm.core.metrics.ic.utils;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class IC_Conf_Topo extends ICconf {
 
+    /**
+     *
+     * @param id
+     * @param label
+     * @param flag
+     * @throws SLIB_Ex_Critic
+     */
     public IC_Conf_Topo(String id, String label, String flag) throws SLIB_Ex_Critic {
 
         super(id, label, flag);
@@ -47,11 +58,22 @@ public class IC_Conf_Topo extends ICconf {
         }
     }
 
+    /**
+     *
+     * @param flag
+     * @throws SLIB_Ex_Critic
+     */
     public IC_Conf_Topo(String flag) throws SLIB_Ex_Critic {
 
         super(flag, flag, flag);
     }
 
+    /**
+     *
+     * @param id
+     * @param flag
+     * @throws SLIB_Ex_Critic
+     */
     public IC_Conf_Topo(String id, String flag) throws SLIB_Ex_Critic {
 
         super(id, id, flag);

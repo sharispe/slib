@@ -38,6 +38,10 @@ package slib.sml.sm.core.measures.graph.groupwise.dag;
 
 import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
 
+/**
+ *
+ * @author seb
+ */
 public abstract class Sim_groupwise_DAG_abstract implements Sim_Groupwise_Standalone{
 	
 	

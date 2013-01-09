@@ -53,6 +53,10 @@ import slib.utils.threads.PoolWorker;
 
 
 
+/**
+ *
+ * @author seb
+ */
 public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoader>{
 
 	Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -68,7 +72,13 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 	G g;
 
 
-	public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench,SmCli sspM){
+	/**
+     *
+     * @param poolWorker
+     * @param queriesBench
+     * @param sspM
+     */
+    public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench,SmCli sspM){
 
 		this.poolWorker   = poolWorker;
 		this.queriesBench = queriesBench;

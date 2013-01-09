@@ -33,6 +33,10 @@ import slib.sglib.model.impl.graph.elements.VertexTyped;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 
 
+/**
+ *
+ * @author seb
+ */
 public class GSailConnection extends NotifyingSailConnectionBase implements InferencerConnection {
 
 	G graph;
@@ -43,18 +47,35 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
     private boolean addition;
     private boolean deletion;
 	
-	public GSailConnection(G sailBase) {
+	/**
+     *
+     * @param sailBase
+     */
+    public GSailConnection(G sailBase) {
 		super((SailBase) sailBase);
 		this.graph = sailBase;
 
 	}
 
-	@Override
+	/**
+     *
+     * @throws SailException
+     */
+    @Override
 	protected void closeInternal() throws SailException {
 		// do nothing ?
 	}
 
-	@Override
+	/**
+     *
+     * @param tupleExpr
+     * @param dataset
+     * @param bindings
+     * @param includeInferred
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected CloseableIteration<? extends BindingSet, QueryEvaluationException> evaluateInternal(
 			TupleExpr tupleExpr, Dataset dataset, BindingSet bindings,
 			boolean includeInferred) throws SailException {
@@ -64,14 +85,29 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 
 	}
 
-	@Override
+	/**
+     *
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected CloseableIteration<? extends Resource, SailException> getContextIDsInternal()
 			throws SailException {
 		throw new UnsupportedOperationException("Not supported yet.");
 
 	}
 
-	@Override
+	/**
+     *
+     * @param subj
+     * @param pred
+     * @param obj
+     * @param includeInferred
+     * @param contexts
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected CloseableIteration<? extends Statement, SailException> getStatementsInternal(
 			Resource subj, URI pred, Value obj, boolean includeInferred,
 			Resource... contexts) throws SailException {
@@ -119,18 +155,32 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		return valids;
 	}
 
-	@Override
+	/**
+     *
+     * @param contexts
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected long sizeInternal(Resource... contexts) throws SailException {
 		return graph.getNumberEdges();
 	}
 
-	@Override
+	/**
+     *
+     * @throws SailException
+     */
+    @Override
 	protected void startTransactionInternal() throws SailException {
         addition = false;
         deletion = false;
 	}
 
-	@Override
+	/**
+     *
+     * @throws SailException
+     */
+    @Override
 	protected void commitInternal() throws SailException {
 		
 		
@@ -149,7 +199,11 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 
 	}
 
-	@Override
+	/**
+     *
+     * @throws SailException
+     */
+    @Override
 	protected void rollbackInternal() throws SailException {
 		throw new SailException("rollbackInternal are not supported ...");
 	}
@@ -167,7 +221,15 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		return edge;
 	}
 
-	@Override
+	/**
+     *
+     * @param subj
+     * @param pred
+     * @param obj
+     * @param contexts
+     * @throws SailException
+     */
+    @Override
 	protected void addStatementInternal(Resource subj, URI pred, Value obj, Resource... contexts) throws SailException {
 
 
@@ -181,7 +243,15 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		addition = true;
 	}
 
-	@Override
+	/**
+     *
+     * @param subj
+     * @param pred
+     * @param obj
+     * @param contexts
+     * @throws SailException
+     */
+    @Override
 	protected void removeStatementsInternal(Resource subj, URI pred, Value obj,
 			Resource... contexts) throws SailException {
 		graph.removeE( createEdge(subj, pred, obj, contexts) );
@@ -193,12 +263,22 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		deletion = true;
 	}
 
-	@Override
+	/**
+     *
+     * @param contexts
+     * @throws SailException
+     */
+    @Override
 	protected void clearInternal(Resource... contexts) throws SailException {
 		// do nothing ?
 	}
 
-	@Override
+	/**
+     *
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected CloseableIteration<? extends Namespace, SailException> getNamespacesInternal()
 			throws SailException {
 		// TODO Auto-generated method stub Sep 7, 2012
@@ -206,14 +286,26 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 
 	}
 
-	@Override
+	/**
+     *
+     * @param prefix
+     * @return
+     * @throws SailException
+     */
+    @Override
 	protected String getNamespaceInternal(String prefix) throws SailException {
 		// TODO Auto-generated method stub Sep 7, 2012
 		throw new UnsupportedOperationException("Not supported yet.");
 
 	}
 
-	@Override
+	/**
+     *
+     * @param prefix
+     * @param name
+     * @throws SailException
+     */
+    @Override
 	protected void setNamespaceInternal(String prefix, String name)
 			throws SailException {
 		// TODO Auto-generated method stub Sep 7, 2012
@@ -221,14 +313,23 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 
 	}
 
-	@Override
+	/**
+     *
+     * @param prefix
+     * @throws SailException
+     */
+    @Override
 	protected void removeNamespaceInternal(String prefix) throws SailException {
 		// TODO Auto-generated method stub Sep 7, 2012
 		throw new UnsupportedOperationException("Not supported yet.");
 
 	}
 
-	@Override
+	/**
+     *
+     * @throws SailException
+     */
+    @Override
 	protected void clearNamespacesInternal() throws SailException {
 		// TODO Auto-generated method stub Sep 7, 2012
 		throw new UnsupportedOperationException("Not supported yet.");

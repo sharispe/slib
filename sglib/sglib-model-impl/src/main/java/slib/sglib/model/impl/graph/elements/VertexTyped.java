@@ -7,12 +7,31 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.utils.impl.OProperty;
 
 
+/**
+ *
+ * @author seb
+ */
 public class VertexTyped extends OProperty implements V {
 
+    /**
+     *
+     */
     protected G g;
+    /**
+     *
+     */
     protected Value value;
+    /**
+     *
+     */
     protected VType type;
 
+    /**
+     *
+     * @param g
+     * @param v
+     * @param type
+     */
     public VertexTyped(G g, Value v, VType type) {
         this.g = g;
         this.value = v;
@@ -24,6 +43,10 @@ public class VertexTyped extends OProperty implements V {
         this.type = type;
     }
 
+    /**
+     *
+     * @return
+     */
     public String stringValue() {
         return value.stringValue();
     }
@@ -34,6 +57,7 @@ public class VertexTyped extends OProperty implements V {
 
     /**
      * If the specified type is null Undefined is used
+     * @param type 
      */
     public void setType(VType type) {
 

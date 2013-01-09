@@ -61,6 +61,12 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_probOccurence_propagatted implements ICtopo {
 
+    /**
+     *
+     * @param allNbPathLeadingToAllVertex
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> allNbPathLeadingToAllVertex) throws SLIB_Ex_Critic {
 
         return ProbOccurence.compute(allNbPathLeadingToAllVertex, 0);

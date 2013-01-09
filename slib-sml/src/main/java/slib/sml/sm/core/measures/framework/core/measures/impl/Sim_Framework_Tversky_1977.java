@@ -54,12 +54,22 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_Framework_Tversky_1977 extends Sim_Framework{
 	
-	public static final String k_param_name = "k";
+	/**
+     *
+     */
+    public static final String k_param_name = "k";
 	private double k = 0.5; // do not set to 0 or 1 by default
 	
-	public Sim_Framework_Tversky_1977() {}
+	/**
+     *
+     */
+    public Sim_Framework_Tversky_1977() {}
 	
-	public Sim_Framework_Tversky_1977(double k){
+	/**
+     *
+     * @param k
+     */
+    public Sim_Framework_Tversky_1977(double k){
 		this.k = k;
 	}
 	
@@ -76,7 +86,15 @@ public class Sim_Framework_Tversky_1977 extends Sim_Framework{
 	 * <li> the commonalities between the two compared element produces 0
 	 * <li> the the only subtraction to consider (according to k) produce 0
 	 * </ul>
-	 */
+         * 
+         * @param rep_a 
+         * @param rep_b 
+         * @param c 
+         * @param operators 
+         * @param conf 
+         * @return 
+         * @throws SLIB_Exception 
+         */
 	public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
 		
 		if(! operators.asOperatorCommonalities())
@@ -98,11 +116,19 @@ public class Sim_Framework_Tversky_1977 extends Sim_Framework{
 		return (double) commonalities / den;
 	}
 
-	public double getK() {
+	/**
+     *
+     * @return
+     */
+    public double getK() {
 		return k;
 	}
 
-	public void setK(double k) {
+	/**
+     *
+     * @param k
+     */
+    public void setK(double k) {
 		this.k = k;
 	}
 	

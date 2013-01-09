@@ -102,6 +102,12 @@ public class GraphLoader_SGL implements GraphLoader {
         process(conf, g);
     }
 
+    /**
+     *
+     * @param conf
+     * @param graph
+     * @throws SLIB_Exception
+     */
     public void process(GDataConf conf, G graph) throws SLIB_Exception {
 
         this.g = graph;

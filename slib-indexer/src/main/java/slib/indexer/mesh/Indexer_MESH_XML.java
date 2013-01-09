@@ -24,6 +24,10 @@ import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
+/**
+ *
+ * @author seb
+ */
 public class Indexer_MESH_XML {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -60,6 +64,14 @@ public class Indexer_MESH_XML {
         concepts.add(concept);
     }
 
+    /**
+     *
+     * @param factory
+     * @param filepath
+     * @param defaultNamespace
+     * @return
+     * @throws SLIB_Exception
+     */
     public IndexHash buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
 
         this.factory = factory;

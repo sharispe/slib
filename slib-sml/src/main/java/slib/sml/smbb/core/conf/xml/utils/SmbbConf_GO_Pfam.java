@@ -43,6 +43,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 
 	Logger   logger = LoggerFactory.getLogger(SmbbConf_GO_Pfam.class);
@@ -56,11 +60,19 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 	String  outputPositiveRel;
 	String  outputNegativeRel;
 	
-	public SmbbConf_GO_Pfam(){
+	/**
+     *
+     */
+    public SmbbConf_GO_Pfam(){
 		type = SmbbCst.type_GO_PFAM;
 	} 
 
-	public SmbbConf_GO_Pfam(Conf sspBBConf_g) throws SLIB_Ex_Critic {
+	/**
+     *
+     * @param sspBBConf_g
+     * @throws SLIB_Ex_Critic
+     */
+    public SmbbConf_GO_Pfam(Conf sspBBConf_g) throws SLIB_Ex_Critic {
 
 		this();
 
@@ -143,67 +155,131 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 	}
 
 
-	public String getTaxon() {
+	/**
+     *
+     * @return
+     */
+    public String getTaxon() {
 		return taxon;
 	}
 
-	public Integer getMin_annot() {
+	/**
+     *
+     * @return
+     */
+    public Integer getMin_annot() {
 		return min_annot;
 	}
 
-	public void setMin_annot(Integer min_annot) {
+	/**
+     *
+     * @param min_annot
+     */
+    public void setMin_annot(Integer min_annot) {
 		this.min_annot = min_annot;
 	}
 
-	public void setTaxon(String taxon) {
+	/**
+     *
+     * @param taxon
+     */
+    public void setTaxon(String taxon) {
 		this.taxon = taxon;
 	}
 
-	public String getpFamKB_index() {
+	/**
+     *
+     * @return
+     */
+    public String getpFamKB_index() {
 		return pFamKB_index;
 	}
 
-	public void setpFamKB_index(String pFamKB_index) {
+	/**
+     *
+     * @param pFamKB_index
+     */
+    public void setpFamKB_index(String pFamKB_index) {
 		this.pFamKB_index = pFamKB_index;
 	}
 
-	public String getpFamClans() {
+	/**
+     *
+     * @return
+     */
+    public String getpFamClans() {
 		return pFamClans;
 	}
 
-	public void setpFamClans(String pFamClans) {
+	/**
+     *
+     * @param pFamClans
+     */
+    public void setpFamClans(String pFamClans) {
 		this.pFamClans = pFamClans;
 	}
 
-	public String getOut_pair_file() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_pair_file() {
 		return out_pair_file;
 	}
 
-	public void setOut_pair_file(String out_pair_file) {
+	/**
+     *
+     * @param out_pair_file
+     */
+    public void setOut_pair_file(String out_pair_file) {
 		this.out_pair_file = out_pair_file;
 	}
 
-	public String getOut_clan_prot() {
+	/**
+     *
+     * @return
+     */
+    public String getOut_clan_prot() {
 		return out_clan_prot;
 	}
 
-	public void setOut_clan_prot(String out_clan_prot) {
+	/**
+     *
+     * @param out_clan_prot
+     */
+    public void setOut_clan_prot(String out_clan_prot) {
 		this.out_clan_prot = out_clan_prot;
 	}
 	
-	public String getOutputPositiveRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputPositiveRel() {
 		return outputPositiveRel;
 	}
 
-	public void setOutputPositiveRel(String positiveRel) {
+	/**
+     *
+     * @param positiveRel
+     */
+    public void setOutputPositiveRel(String positiveRel) {
 		this.outputPositiveRel = positiveRel;
 	}
 
-	public String getOutputNegativeRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputNegativeRel() {
 		return outputNegativeRel;
 	}
 
-	public void setOutputNegativeRel(String negativeRel) {
+	/**
+     *
+     * @param negativeRel
+     */
+    public void setOutputNegativeRel(String negativeRel) {
 		this.outputNegativeRel = negativeRel;
 	}
 	

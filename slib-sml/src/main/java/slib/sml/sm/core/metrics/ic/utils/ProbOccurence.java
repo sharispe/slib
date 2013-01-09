@@ -41,13 +41,17 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
+/**
+ *
+ * @author seb
+ */
 public class ProbOccurence implements ICtopo {
 
     /**
      * @param nbOccurrence
      * @param addToOccurrence
      * @return
-     * @throws SGL_Ex_Critic
+     * @throws SLIB_Ex_Critic  
      */
     public static ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurrence, int addToOccurrence) throws SLIB_Ex_Critic {
 

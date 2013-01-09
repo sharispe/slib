@@ -53,23 +53,53 @@ import slib.tools.ontofocus.core.utils.OntoFocusCst;
 import slib.utils.ex.SLIB_Exception;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OntoFocusCmdHandler extends CmdHandler {
 
 
-	public String  ontoFile  = null;
-	public String  out		  = null;
-	public String  queryFile = null;
-	public String  rootURI	  = null;
-	public String  incR	  = null;
-	public boolean addR	  = false;
+	/**
+     *
+     */
+    public String  ontoFile  = null;
+	/**
+     *
+     */
+    public String  out		  = null;
+	/**
+     *
+     */
+    public String  queryFile = null;
+	/**
+     *
+     */
+    public String  rootURI	  = null;
+	/**
+     *
+     */
+    public String  incR	  = null;
+	/**
+     *
+     */
+    public boolean addR	  = false;
 	
-	public GFormat  format 	  = OntoFocusCmdHandlerCst.format_default;
+	/**
+     *
+     */
+    public GFormat  format 	  = OntoFocusCmdHandlerCst.format_default;
 
 
 	static Logger logger = LoggerFactory.getLogger(OntoFocusCmdHandler.class);
 
 
-	public OntoFocusCmdHandler(String[] args) throws SLIB_Exception {
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public OntoFocusCmdHandler(String[] args) throws SLIB_Exception {
 		
 		super(new OntoFocusCst(),new OntoFocusCmdHandlerCst(),args);
 
@@ -133,7 +163,11 @@ public class OntoFocusCmdHandler extends CmdHandler {
 		return new OntoFocusConf(ontoFile,format,rootURI,incR,addR,out,queryFile);
 	}
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		try {
 			OntoFocusCmdHandler c = new OntoFocusCmdHandler(args);

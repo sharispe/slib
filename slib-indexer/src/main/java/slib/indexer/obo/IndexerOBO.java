@@ -50,6 +50,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
 
+/**
+ *
+ * @author seb
+ */
 public class IndexerOBO {
 
     DataFactory factory;
@@ -63,6 +67,14 @@ public class IndexerOBO {
     IndexHash index;
     String defaultNamespace;
 
+    /**
+     *
+     * @param factory
+     * @param filepath
+     * @param defaultNamespace
+     * @return
+     * @throws SLIB_Exception
+     */
     public IndexHash buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
         
         this.factory = factory;

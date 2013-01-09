@@ -57,9 +57,16 @@ public class GWS_impl implements GWS{
 	Map<URI, Double> eTypeWeights;
 	Map<E, Double> eWeights;
 	
-	public GWS_impl(){}
+	/**
+     *
+     */
+    public GWS_impl(){}
 
-	public GWS_impl(double defaultWeight){
+	/**
+     *
+     * @param defaultWeight
+     */
+    public GWS_impl(double defaultWeight){
 		this.defaultWeight = defaultWeight;
 	}
 

@@ -37,8 +37,15 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 
+/**
+ *
+ * @author seb
+ */
 public class Sim_pairwise_DAG_node_Constants {
 	
-	public static final String IC_PROB = "ic_prob";
+	/**
+     *
+     */
+    public static final String IC_PROB = "ic_prob";
 	
 	}

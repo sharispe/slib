@@ -56,6 +56,10 @@ import slib.utils.impl.ResultStack;
 
 import slib.sglib.model.repo.DataFactory;
 
+/**
+ *
+ * @author seb
+ */
 public class TestDepthAnalyser {
 
 	G g;
@@ -81,7 +85,11 @@ public class TestDepthAnalyser {
 	
 	WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN);
 
-	public TestDepthAnalyser() throws SLIB_Exception{
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    public TestDepthAnalyser() throws SLIB_Exception{
 		testvalues = new SLIB_UnitTestValues();
 		
 		g = TestUtils.loadTestGraph(GFormat.SGL,SLIB_UnitTestValues.G_DAG_BASIC);
@@ -89,7 +97,11 @@ public class TestDepthAnalyser {
 		depthAnalyser = new DepthAnalyserAG(factory, g, wc);
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
 	public void test_max_depth() throws SLIB_Exception{
 
 		ResultStack<V,Integer> maxDepths = depthAnalyser.getVMaxDepths();
@@ -101,7 +113,11 @@ public class TestDepthAnalyser {
 		assertTrue(max_depth_women == maxDepths.get(g.getV( testvalues.G_BASIC_WOMEN )));
 	}
 
-	@Test
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
 	public void test_min_depth() throws SLIB_Exception{
 
 		ResultStack<V,Integer> minDepths = depthAnalyser.getVMinDepths();

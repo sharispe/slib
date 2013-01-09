@@ -56,13 +56,28 @@ import slib.utils.ex.SLIB_Exception;
  */
 public abstract class CmdHandler {
 	
-	public ModuleCst cst;
-	public ToolCmdHandlerCst cstCmd;
+	/**
+     *
+     */
+    public ModuleCst cst;
+	/**
+     *
+     */
+    public ToolCmdHandlerCst cstCmd;
 	
-	public Options options;
-	public HelpFormatter helpFormatter;
+	/**
+     *
+     */
+    public Options options;
+	/**
+     *
+     */
+    public HelpFormatter helpFormatter;
 	
-	public Map<Option,Integer> optionsOrder;
+	/**
+     *
+     */
+    public Map<Option,Integer> optionsOrder;
 
 	private String USAGE;
 	private final String HEADER = "----------------------------------------------------------------------";
@@ -80,7 +95,14 @@ public abstract class CmdHandler {
 		}
 	};
 	
-	public CmdHandler(ModuleCst cst,ToolCmdHandlerCst cstCmd, String[] args) throws SLIB_Exception{
+	/**
+     *
+     * @param cst
+     * @param cstCmd
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public CmdHandler(ModuleCst cst,ToolCmdHandlerCst cstCmd, String[] args) throws SLIB_Exception{
 		this.cst = cst;
 		this.cstCmd = cstCmd;
 		
@@ -103,29 +125,54 @@ public abstract class CmdHandler {
 	}
 	
 
-	public abstract void processArgs(String[] args) throws SLIB_Exception;
+	/**
+     *
+     * @param args
+     * @throws SLIB_Exception
+     */
+    public abstract void processArgs(String[] args) throws SLIB_Exception;
 
 	
-	public void showCmdLineExamples() throws SLIB_Exception{
+	/**
+     *
+     * @throws SLIB_Exception
+     */
+    public void showCmdLineExamples() throws SLIB_Exception{
 		throw new SLIB_Ex_Critic("No command line examples, sorry");
 	}
 
-	public void showDescription() {
+	/**
+     *
+     */
+    public void showDescription() {
 		if(cst.getDescription() != null)
 			logger.info(cst.getDescription());
 	}
 	
-	public void showContact() {
+	/**
+     *
+     */
+    public void showContact() {
 		if(cst.getContact() != null)
 			logger.info("Contact : "+cst.getContact());
 	}
 
-	public void showRef() {
+	/**
+     *
+     */
+    public void showRef() {
 		if(cst.getReference() != null)
 			logger.info("Please cite: "+cst.getReference());
 	}
 
-	public void ending(String message,boolean showHelp,boolean showDesc,boolean showContact){
+	/**
+     *
+     * @param message
+     * @param showHelp
+     * @param showDesc
+     * @param showContact
+     */
+    public void ending(String message,boolean showHelp,boolean showDesc,boolean showContact){
 
 		if(message != null)
 			logger.info(message);
@@ -144,7 +191,12 @@ public abstract class CmdHandler {
 	}
 	
 
-	public void ending(String message,boolean showHelp){
+	/**
+     *
+     * @param message
+     * @param showHelp
+     */
+    public void ending(String message,boolean showHelp){
 
 
 		logger.info(HEADER);

@@ -91,8 +91,14 @@ public class SQLiteUtils {
 
 	Logger logger = LoggerFactory.getLogger(SQLiteUtils.class);
 
-	public static int BATCH_LIMIT 			  = 25000;
-	public static int BATCH_LIMIT_MATRIX_LINE = 1000;
+	/**
+     *
+     */
+    public static int BATCH_LIMIT 			  = 25000;
+	/**
+     *
+     */
+    public static int BATCH_LIMIT_MATRIX_LINE = 1000;
 
 	private String e_A_flag = "entity_A";
 	private String e_B_flag = "entity_B";
@@ -167,9 +173,9 @@ public class SQLiteUtils {
 	 *  
 	 * @param filepath the tabular file containing the results
 	 * @param db the name of the database to consider
-	 * @param tableName the name of the table where to flush the results
+         * @param tableName the name of the table where to flush the results
+         * @throws SLIB_Ex_Critic  
 	 * 
-	 * @throws SGL_Exception
 	 */
 	public void createTableDB(String filepath, String db, String tableName) throws SLIB_Ex_Critic{
 
@@ -303,7 +309,7 @@ public class SQLiteUtils {
 	 * @param db_tmerge database in which the merge table will be created (different from db_tAB)
 	 * @param table_merge the name of the new table
 	 * 
-	 * @throws SGL_Exception
+         * @throws SLIB_Exception 
 	 */
 	public void mergeTables(String db_tAB, String table_A, String table_B, String db_tmerge, String table_merge) throws SLIB_Exception {
 
@@ -325,7 +331,7 @@ public class SQLiteUtils {
 	 * @param db_tmerge database in which the merge table will be created
 	 * @param table_merge the name of the new table
 	 * 
-	 * @throws SGL_Exception
+         * @throws SLIB_Ex_Critic 
 	 */
 	public void mergeTables(String db_tA, String table_A, String db_tB, String table_B, String db_tmerge,String table_merge) throws SLIB_Ex_Critic {
 
@@ -652,10 +658,10 @@ public class SQLiteUtils {
 	 * 
 	 * @param sqlLiteDB the database containing the table to consider
 	 * @param table the name of the table
-	 * @param outfile the file in which the table will be flush 
+         * @param outfile the file in which the table will be flush
+         * @throws SLIB_Ex_Critic  
 	 * 
 	 *  
-	 * @throws SGL_Exception
 	 */
 	public void flushTableInFile(String sqlLiteDB, String table, String outfile) throws SLIB_Ex_Critic {
 
@@ -765,8 +771,9 @@ public class SQLiteUtils {
 	 * if the already exists in the new database it will be dropped
 	 * @param db the database containing the table to copy
 	 * @param table the name of the table
-	 * @param newDB the name of the database where the new table will be created
-	 * @throws SGL_Exception 
+         * @param newDB the name of the database where the new table will be created
+         * @param tableNew
+         * @throws SLIB_Ex_Critic  
 	 */
 	public void copyTable(String db, String table, String newDB,String tableNew) throws SLIB_Ex_Critic {
 
@@ -895,7 +902,7 @@ public class SQLiteUtils {
 	 * @param columnsToDrop a list of strings corresponding to the columns to delete
 	 * 
 	 * SQLlite do not support ALTER column, a temporal copy of the table is performed during the process  
-	 * @throws SGL_Ex_Critic
+         * @throws SLIB_Ex_Critic 
 	 */
 	public void dropColumns(String db, String table, Set<String> columnsToDrop) throws SLIB_Ex_Critic {
 
@@ -1016,8 +1023,8 @@ public class SQLiteUtils {
 	/**
 	 * Drop a table from a database
 	 * @param db the database
-	 * @param table the name of table to drop
-	 * @throws SGL_Exception 
+         * @param table the name of table to drop
+         * @throws SLIB_Ex_Critic  
 	 */
 	public  void dropTable(String db, String table) throws SLIB_Ex_Critic {
 
@@ -1047,7 +1054,7 @@ public class SQLiteUtils {
 	/**
 	 * Return info a specified database
 	 * @param db the database
-	 * @throws SGL_Exception 
+         * @throws SLIB_Ex_Critic 
 	 */
 	public void getInfo(String db) throws SLIB_Ex_Critic {
 
@@ -1057,8 +1064,8 @@ public class SQLiteUtils {
 	/**
 	 * Return info a specified table
 	 * @param db the database
-	 * @param table the table
-	 * @throws SGL_Exception 
+         * @param table the table
+         * @throws SLIB_Ex_Critic  
 	 */
 	public void getInfo(String db, String table) throws SLIB_Ex_Critic {
 
@@ -1130,7 +1137,7 @@ public class SQLiteUtils {
 	 * @param db
 	 * @param table
 	 * @param newTableName
-	 * @throws SGL_Exception 
+         * @throws SLIB_Ex_Critic 
 	 */
 	public void renameTable(String db, String table, String newTableName) throws SLIB_Ex_Critic {
 
@@ -1159,27 +1166,47 @@ public class SQLiteUtils {
 	
 
 
-	public int getBATCH_LIMIT() {
+	/**
+     *
+     * @return
+     */
+    public int getBATCH_LIMIT() {
 		return BATCH_LIMIT;
 	}
 
 
-	public void setBATCH_LIMIT(int bATCH_LIMIT) {
+	/**
+     *
+     * @param bATCH_LIMIT
+     */
+    public void setBATCH_LIMIT(int bATCH_LIMIT) {
 		BATCH_LIMIT = bATCH_LIMIT;
 	}
 
 
-	public int getBATCH_LIMIT_MATRIX_LINE() {
+	/**
+     *
+     * @return
+     */
+    public int getBATCH_LIMIT_MATRIX_LINE() {
 		return BATCH_LIMIT_MATRIX_LINE;
 	}
 
 
-	public void setBATCH_LIMIT_MATRIX_LINE(int bATCH_LIMIT_MATRIX_LINE) {
+	/**
+     *
+     * @param bATCH_LIMIT_MATRIX_LINE
+     */
+    public void setBATCH_LIMIT_MATRIX_LINE(int bATCH_LIMIT_MATRIX_LINE) {
 		BATCH_LIMIT_MATRIX_LINE = bATCH_LIMIT_MATRIX_LINE;
 	}
 
 
-	public static void main(String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
 
 		SQLiteUtils sqlLiteUtil = new SQLiteUtils();
 

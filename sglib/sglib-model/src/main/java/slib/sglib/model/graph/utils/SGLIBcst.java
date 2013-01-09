@@ -36,8 +36,15 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.model.graph.utils;
 
+/**
+ *
+ * @author seb
+ */
 public class SGLIBcst {
 	
-	public static final String FICTIVE_ROOT = "__FICTIVE__";
+	/**
+     *
+     */
+    public static final String FICTIVE_ROOT = "__FICTIVE__";
 
 }

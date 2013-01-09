@@ -42,13 +42,13 @@ package slib.sml.sm.core.measures.others.groupwise.add_on;
  * TODO @see TODO file
  * @author seb
  *
- * @param <V>
- * @param <E>
- * @param <I>
- * @param <F>
  */
 public class Sim_groupwise_Optimal_Assignment{
-	public double sim() {
+	/**
+     *
+     * @return
+     */
+    public double sim() {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -36,10 +36,23 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.smbb.core.bioinfo.bmark.ppi.utils;
 
+/**
+ *
+ * @author seb
+ */
 public class UniprotKB_Cst {
 	
-	public final String UNIPROTKB_FLAG 							= "uniprotkb";
-	public static final String TAXON_HOMO_SAPIENS 				= "9606";
-	public static final String TAXON_SACCHAROMYCES_CEREVISIAE   = "4932";
+	/**
+     *
+     */
+    public final String UNIPROTKB_FLAG 							= "uniprotkb";
+	/**
+     *
+     */
+    public static final String TAXON_HOMO_SAPIENS 				= "9606";
+	/**
+     *
+     */
+    public static final String TAXON_SACCHAROMYCES_CEREVISIAE   = "4932";
 
 }

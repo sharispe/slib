@@ -11,12 +11,20 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.elements.EdgeTyped;
 import slib.sglib.model.impl.graph.elements.VertexTyped;
 
+/**
+ *
+ * @author seb
+ */
 public class SlibRdfHandler implements RDFHandler {
 
     G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     int count = 0;
 
+    /**
+     *
+     * @param g
+     */
     public SlibRdfHandler(G g) {
         this.g = g;
     }

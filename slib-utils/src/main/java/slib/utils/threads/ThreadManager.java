@@ -42,6 +42,10 @@ import org.slf4j.LoggerFactory;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 
+/**
+ *
+ * @author seb
+ */
 public class ThreadManager extends PoolLocker{
 	
 	private static ThreadManager instance;
@@ -51,6 +55,10 @@ public class ThreadManager extends PoolLocker{
 	
 	private static final int MAX_THREAD_DEFAULT = 1;
 	
+    /**
+     *
+     * @return
+     */
     public static ThreadManager getSingleton(){
     	if(instance == null)
     		instance = new ThreadManager();
@@ -61,6 +69,11 @@ public class ThreadManager extends PoolLocker{
     	super(MAX_THREAD_DEFAULT);
     }
     
+    /**
+     *
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public PoolWorker getMaxLoadPoolWorker() throws SLIB_Ex_Critic{
     	
     	synchronized(lock) {
@@ -75,6 +88,12 @@ public class ThreadManager extends PoolLocker{
     	}
     }
     
+    /**
+     *
+     * @param size
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
     public PoolWorker getPoolWorker(int size) throws SLIB_Ex_Critic{
     	
     	synchronized(lock) {
@@ -94,16 +113,28 @@ public class ThreadManager extends PoolLocker{
     }
     
 
-	public void setMaxThread(int maxThread){
+	/**
+     *
+     * @param maxThread
+     */
+    public void setMaxThread(int maxThread){
 		capacity = maxThread;
 		logger.info("Setting maximal number of threads to "+capacity);
     }
     
+    /**
+     *
+     * @return
+     */
     public int getMaxThread(){
     	return capacity;
     }
 
-	public void freeResource(int nbThread) {
+	/**
+     *
+     * @param nbThread
+     */
+    public void freeResource(int nbThread) {
 		this.running -= nbThread;
 	}
 }

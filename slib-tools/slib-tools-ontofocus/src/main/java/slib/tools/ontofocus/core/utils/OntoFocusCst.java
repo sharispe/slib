@@ -40,6 +40,10 @@ import slib.tools.module.ModuleCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 
+/**
+ *
+ * @author seb
+ */
 public class OntoFocusCst extends ModuleCst{
 	
 
@@ -48,10 +52,17 @@ public class OntoFocusCst extends ModuleCst{
          * See properties file and POM for constant values
          */
         public static final String   properties_file_name   = "ontofocus-constants.properties";
-        public static final String   properties_prefix      = "ontofocus";
+        /**
+     *
+     */
+    public static final String   properties_prefix      = "ontofocus";
 	
 	
-	public OntoFocusCst() throws SLIB_Ex_Critic {
+	/**
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public OntoFocusCst() throws SLIB_Ex_Critic {
 		super(properties_file_name,properties_prefix);
 	}
 

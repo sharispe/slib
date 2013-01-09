@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import slib.sglib.algo.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
@@ -46,14 +45,11 @@ import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.impl.SetUtils;
 
 /**
- * Class used to perform traversal on a graph using Breadth First Search
- * Algorithm from a set of vertices and considering particular type of both
- * vertices and relationships. Note that transitivity property of relationship
- * is not considered as a rule governing the traversal.
- *
+ * Class used to perform traversal on a graph using Breadth First Search.
+ * Algorithm start from a set of vertices and can be tuned to only consider particular type of both
+ * vertices and relationships. 
  *
  * <a href="http://en.wikipedia.org/wiki/Breadth-first_search">more about</a>
- *
  *
  * @author Sebastien Harispe
  *
@@ -68,11 +64,11 @@ public class BFS implements GraphTraversal {
     boolean removePerformed = false;
 
     /**
-     * Creates an instance of BFS
-     *
-     * @param g the graph
-     * @param eTypes the type of relationships to consider
-     * @param sources the set of vertices from which starts the BFS
+     * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
+     * The first elements of the iteration will be the sources
+     * @param g the graph to consider
+     * @param sources the set of vertices considered as sources of the traversal i.e. from which the traversal start
+     * @param wc the constraint applied to the walk
      */
     public BFS(G g, Set<V> sources, WalkConstraints wc) {
 
@@ -85,21 +81,29 @@ public class BFS implements GraphTraversal {
     }
 
     /**
-     * Creates an instance of BFS
-     *
-     * @param g the graph
-     * @param eTypes the type of relationships to consider
-     * @param sources the set of vertices from which starts the BFS
+     * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
+     * The first element of the iteration will be the source of the BFS
+     * @param g the graph to consider
+     * @param source the source of the traversal i.e. from which the traversal start
+     * @param wc the constraint applied to the walk
      */
     public BFS(G g, V source, WalkConstraints wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean hasNext() {
         return queue.isEmpty() == false;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public V next() {
 

@@ -36,17 +36,34 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.utils.ex;
 
+/**
+ *
+ * @author seb
+ */
 public class SLIB_Exception extends Exception{
 
-	public SLIB_Exception(String message) {
+	/**
+     *
+     * @param message
+     */
+    public SLIB_Exception(String message) {
 		super(message);
 	}
 
-	public SLIB_Exception(Throwable cause) {
+	/**
+     *
+     * @param cause
+     */
+    public SLIB_Exception(Throwable cause) {
 		super(cause);
 	}
 
-	public SLIB_Exception(String message, Throwable cause) {
+	/**
+     *
+     * @param message
+     * @param cause
+     */
+    public SLIB_Exception(String message, Throwable cause) {
 		super(message, cause);
 	}
 

@@ -53,7 +53,17 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_Framework_Jaccard_1901 extends Sim_Framework{
 	
 
-	public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
+	/**
+     *
+     * @param rep_a
+     * @param rep_b
+     * @param c
+     * @param operators
+     * @param conf
+     * @return
+     * @throws SLIB_Exception
+     */
+    public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operators, SMconf conf) throws SLIB_Exception {
 		
 		if(!operators.validateRules(rep_a, rep_b, c))
 			return operators.getRulesInvalidatedScore();

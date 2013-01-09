@@ -38,7 +38,17 @@ package slib.sml.smbb.core.bioinfo.i_o.loader.mitab;
 
 import java.util.regex.Pattern;
 
+/**
+ *
+ * @author seb
+ */
 public class MiTAB25_Cst {
-	public static final Pattern p_taxid 	  = Pattern.compile("taxid:(\\d+).*");
-	public static final Pattern p_uniprotKBid = Pattern.compile(".*uniprotkb:([A-Z]\\d+).*");
+	/**
+     *
+     */
+    public static final Pattern p_taxid 	  = Pattern.compile("taxid:(\\d+).*");
+	/**
+     *
+     */
+    public static final Pattern p_uniprotKBid = Pattern.compile(".*uniprotkb:([A-Z]\\d+).*");
 }

@@ -43,6 +43,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
 
+/**
+ *
+ * @author seb
+ */
 public class SmbbConf_GO_PPI extends SmbbConf_GO {
 	
 	Logger   logger = LoggerFactory.getLogger(SmbbConf_GO_PPI.class);
@@ -56,7 +60,10 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 	private Integer min_annot;
 	private String  taxon;
 	
-	public SmbbConf_GO_PPI(){
+	/**
+     *
+     */
+    public SmbbConf_GO_PPI(){
 		type = SmbbCst.type_GO_PPI;
 	} 
 
@@ -74,8 +81,8 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 	 * 	<li> {@link SmbbCst#setSize} </li>
 	 * 	<li> {@link SmbbCst#taxon} </li>
 	 * <li> {@link SmbbCst#min_annot_size} </li>
-	 * </ul>
-	 * @throws SGL_Ex_Critic if an error occurs during object creation
+         * </ul>
+         * @throws SLIB_Ex_Critic  
 	 */
 	public SmbbConf_GO_PPI(Conf genericConf) throws SLIB_Ex_Critic {
 		
@@ -157,59 +164,115 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 		return out;
 	}
 
-	public String getKnownRel() {
+	/**
+     *
+     * @return
+     */
+    public String getKnownRel() {
 		return knownRel;
 	}
 
-	public void setKnownRel(String knownRel) {
+	/**
+     *
+     * @param knownRel
+     */
+    public void setKnownRel(String knownRel) {
 		this.knownRel = knownRel;
 	}
 
-	public String getKnownRelBase() {
+	/**
+     *
+     * @return
+     */
+    public String getKnownRelBase() {
 		return knownRelBase;
 	}
 
-	public void setKnownRelBase(String knownRelBase) {
+	/**
+     *
+     * @param knownRelBase
+     */
+    public void setKnownRelBase(String knownRelBase) {
 		this.knownRelBase = knownRelBase;
 	}
 
-	public String getOutputPositiveRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputPositiveRel() {
 		return outputPositiveRel;
 	}
 
-	public void setOutputPositiveRel(String positiveRel) {
+	/**
+     *
+     * @param positiveRel
+     */
+    public void setOutputPositiveRel(String positiveRel) {
 		this.outputPositiveRel = positiveRel;
 	}
 
-	public String getOutputNegativeRel() {
+	/**
+     *
+     * @return
+     */
+    public String getOutputNegativeRel() {
 		return outputNegativeRel;
 	}
 
-	public void setOutputNegativeRel(String negativeRel) {
+	/**
+     *
+     * @param negativeRel
+     */
+    public void setOutputNegativeRel(String negativeRel) {
 		this.outputNegativeRel = negativeRel;
 	}
 
-	public Integer getSetSize() {
+	/**
+     *
+     * @return
+     */
+    public Integer getSetSize() {
 		return setSize;
 	}
 
-	public void setSetSize(Integer setSize) {
+	/**
+     *
+     * @param setSize
+     */
+    public void setSetSize(Integer setSize) {
 		this.setSize = setSize;
 	}
 
-	public String getTaxon() {
+	/**
+     *
+     * @return
+     */
+    public String getTaxon() {
 		return taxon;
 	}
 
-	public Integer getMin_annot() {
+	/**
+     *
+     * @return
+     */
+    public Integer getMin_annot() {
 		return min_annot;
 	}
 
-	public void setMin_annot(Integer min_annot) {
+	/**
+     *
+     * @param min_annot
+     */
+    public void setMin_annot(Integer min_annot) {
 		this.min_annot = min_annot;
 	}
 
-	public void setTaxon(String taxon) {
+	/**
+     *
+     * @param taxon
+     */
+    public void setTaxon(String taxon) {
 		this.taxon = taxon;
 	}
 }

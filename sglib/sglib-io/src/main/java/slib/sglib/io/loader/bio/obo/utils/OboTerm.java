@@ -38,45 +38,85 @@ package slib.sglib.io.loader.bio.obo.utils;
 
 import java.util.ArrayList;
 
+/**
+ *
+ * @author seb
+ */
 public class OboTerm {
 	
 	String uri;
 	ArrayList<OboRelationship> relationships = new ArrayList<OboRelationship>();
 	boolean isObsolete = false;
 	
-	public OboTerm(String uri){
+	/**
+     *
+     * @param uri
+     */
+    public OboTerm(String uri){
 		this.uri = uri;
 	}
 	
-	public OboTerm(){
+	/**
+     *
+     */
+    public OboTerm(){
 		relationships = new ArrayList<OboRelationship>();
 	}
 	
-	public void addRel(String relType,String targetId){
+	/**
+     *
+     * @param relType
+     * @param targetId
+     */
+    public void addRel(String relType,String targetId){
 		relationships.add( new OboRelationship(relType, targetId) );
 	}
 	
-	public ArrayList<OboRelationship> getRelationships(){
+	/**
+     *
+     * @return
+     */
+    public ArrayList<OboRelationship> getRelationships(){
 		return relationships;
 	}
 	
-	public String getURIstring() {
+	/**
+     *
+     * @return
+     */
+    public String getURIstring() {
 		return uri;
 	}
 
-	public void setURIstring(String uri) {
+	/**
+     *
+     * @param uri
+     */
+    public void setURIstring(String uri) {
 		this.uri = uri;
 	}
 
-	public void setRelationships(ArrayList<OboRelationship> relationships) {
+	/**
+     *
+     * @param relationships
+     */
+    public void setRelationships(ArrayList<OboRelationship> relationships) {
 		this.relationships = relationships;
 	}
 
-	public boolean isObsolete() {
+	/**
+     *
+     * @return
+     */
+    public boolean isObsolete() {
 		return isObsolete;
 	}
 
-	public void setObsolete(boolean isObsolete) {
+	/**
+     *
+     * @param isObsolete
+     */
+    public void setObsolete(boolean isObsolete) {
 		this.isObsolete = isObsolete;
 	}
 	
