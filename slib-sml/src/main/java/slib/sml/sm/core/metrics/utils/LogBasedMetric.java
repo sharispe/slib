@@ -31,6 +31,10 @@
  */
 package slib.sml.sm.core.metrics.utils;
 
+import slib.sml.sm.core.utils.SMParams;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.i.Conf;
+
 /**
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
@@ -47,6 +51,13 @@ public class LogBasedMetric implements LogBasedMetricInterface{
     @Override
     public void setLogBase(Double logbase) {
         this.logbase =  logbase;
+    }
+
+    @Override
+    public void setLogBase(Conf conf) throws SLIB_Ex_Critic {
+        if (conf.containsParam(SMParams.LOG_BASE.toString())) {
+            logbase = conf.getParamAsDouble(SMParams.LOG_BASE.toString());
+        }
     }
     
 }

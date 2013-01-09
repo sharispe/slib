@@ -249,7 +249,7 @@ public class SM_Engine {
      * @return a resultStack containing the maximal depths 
      * @throws SGL_Ex_Critic
      */
-    public ResultStack<V, Integer> getMaxDepths() throws SLIB_Exception {
+    public ResultStack<V, Integer> getMaxDepths() throws SLIB_Ex_Critic {
 
         if (cache.maxDepths == null) {
             DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
@@ -265,7 +265,7 @@ public class SM_Engine {
      * @return a resultStack containing the minimal depths  
      * @throws SGL_Ex_Critic
      */
-    public ResultStack<V, Integer> getMinDepths() throws SLIB_Exception {
+    public ResultStack<V, Integer> getMinDepths() throws SLIB_Ex_Critic {
 
         if (cache.minDepths == null) {
             DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
@@ -533,11 +533,13 @@ public class SM_Engine {
 
             if (icConf instanceof IC_Conf_Corpus) {
 
+                IC_Conf_Corpus icConfCorpus = (IC_Conf_Corpus) icConf;
+                
                 cl = Class.forName(icClassName);
                 Constructor<?> co = cl.getConstructor();
                 ICcorpus o = (ICcorpus) co.newInstance();
 
-                results = o.compute(this);
+                results = o.compute(icConfCorpus,this);
             } else {
 
                 IC_Conf_Topo icConfTopo = (IC_Conf_Topo) icConf;
@@ -831,7 +833,7 @@ public class SM_Engine {
         return sim;
     }
 
-    public ResultStack<V, Long> getnbPathLeadingToAllVertex() throws SLIB_Exception {
+    public ResultStack<V, Long> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
 
         if (cache.nbPathLeadingToAllVertices == null) {
             cache.nbPathLeadingToAllVertices = (ResultStack<V, Long>) descGetter.computeNbPathLeadingToAllVertices();

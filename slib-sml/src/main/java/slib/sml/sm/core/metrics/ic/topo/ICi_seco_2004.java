@@ -67,9 +67,9 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
      * inclusive i.e. the count of descendants of a concepts x must also count x.
      * @return a result stack storing the information for each concepts
      * specified in the result stack specified in parameter.
-     * @throws SLIB_Exception
+     * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> allNbOfDescendants) throws SLIB_Exception {
+    public ResultStack<V, Double> compute(ResultStack<V, Long> allNbOfDescendants) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
 
@@ -95,11 +95,9 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Exception {
+    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic {
 
-        if (conf.containsParam(SMParams.LOG_BASE.toString())) {
-            setLogBase(conf.getParamAsDouble(SMParams.LOG_BASE.toString()));
-        }
+        setLogBase(conf);
 
         // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
         return compute(engine.getAllNbDescendantsInc());

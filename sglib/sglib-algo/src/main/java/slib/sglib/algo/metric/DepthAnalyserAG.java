@@ -89,7 +89,7 @@ public class DepthAnalyserAG {
      * @return a ResultStack containing the depth of each vertex.
      * @throws SGL_Ex_Critic
      */
-    private ResultStack<V, Integer> getVDepths(boolean max) throws SLIB_Exception {
+    private ResultStack<V, Integer> getVDepths(boolean max) throws SLIB_Ex_Critic {
 
         ResultStack<V, Integer> computedDepths = new ResultStack<V, Integer>();
 
@@ -166,7 +166,7 @@ public class DepthAnalyserAG {
      * @return a ResultStack containing the maximal depth of each vertex.
      * @throws SGL_Ex_Critic
      */
-    public ResultStack<V, Integer> getVMaxDepths() throws SLIB_Exception {
+    public ResultStack<V, Integer> getVMaxDepths() throws SLIB_Ex_Critic {
 
         logger.debug("Compute max depths");
         return getVDepths(true);
@@ -176,7 +176,7 @@ public class DepthAnalyserAG {
      * @return a ResultStack containing the minimal depth of each vertex.
      * @throws SGL_Ex_Critic
      */
-    public ResultStack<V, Integer> getVMinDepths() throws SLIB_Exception {
+    public ResultStack<V, Integer> getVMinDepths() throws SLIB_Ex_Critic {
 
         logger.debug("Compute min depths");
         return getVDepths(false);

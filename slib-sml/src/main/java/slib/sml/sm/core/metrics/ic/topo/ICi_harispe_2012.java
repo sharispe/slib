@@ -34,14 +34,14 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
+import slib.sml.sm.core.metrics.utils.LogBasedMetric;
+import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
 /**
@@ -67,12 +67,12 @@ import slib.utils.impl.ResultStack;
  * 
  * @author Sebastien Harispe
  */
-public class ICi_harispe_2012 implements ICtopo {
+public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
     
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves,
-            ResultStack<V, Double> allNbAncestors) throws SLIB_Exception {
+            ResultStack<V, Double> allNbAncestors) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
 
@@ -95,17 +95,14 @@ public class ICi_harispe_2012 implements ICtopo {
         
         double x = nbLeaves / nbAncestors;
         
-        return -(Math.log(x)/Math.log(2)); 
-        // as proposed by Sanchez et al. i.e. from private communication
-        
-        //return -Math.log(x / (maxLeaves +1.)); // base e
+        return - MathSML.log(x,getLogBase()); 
     }
 
     @Override
     public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-            throws SLIB_Exception {
+            throws SLIB_Ex_Critic {
         
-        
+        setLogBase(conf);
 
         ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestors();
         ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();

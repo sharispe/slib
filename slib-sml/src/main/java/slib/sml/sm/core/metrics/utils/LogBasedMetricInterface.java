@@ -31,6 +31,10 @@
  */
 package slib.sml.sm.core.metrics.utils;
 
+import slib.sml.sm.core.utils.SMParams;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.i.Conf;
+
 /**
  * Interface implemented by classes depending on a log base configuration.
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
@@ -48,5 +52,14 @@ public interface LogBasedMetricInterface {
      * @param logbase the new log base
      */
     public void setLogBase(Double logbase);
+    
+    /**
+     * Mutator of the log base associated to the metric.
+     * The method set the value associated to any parameter {@link SMParams#LOG_BASE} 
+     * specified in the specified configuration (if any).
+     * @param conf the configuration to consider
+     * @throws SLIB_Ex_Critic if the specified value cannot be parsed to a Double
+     */
+    public void setLogBase(Conf conf) throws SLIB_Ex_Critic;
     
 }

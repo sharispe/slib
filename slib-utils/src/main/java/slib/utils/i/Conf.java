@@ -36,6 +36,7 @@ package slib.utils.i;
 
 import java.util.HashMap;
 import java.util.Map;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 import slib.utils.ex.SLIB_Exception;
 
@@ -91,13 +92,13 @@ public class Conf {
      * @throws SGL_Exception if no value is associated to the given key or if
      * the stored value cannot be converted to a double value.
      */
-    public double getParamAsDouble(String p) throws SLIB_Exception {
+    public double getParamAsDouble(String p) throws SLIB_Ex_Critic {
         String pval = getParam(p).toString();
         double val;
         try {
             val = Double.parseDouble(pval);
         } catch (Exception e) {
-            throw new SLIB_Exception("Error converting " + p + " parameter to numeric value");
+            throw new SLIB_Ex_Critic("Error converting " + p + " parameter to numeric value");
         }
         return val;
     }

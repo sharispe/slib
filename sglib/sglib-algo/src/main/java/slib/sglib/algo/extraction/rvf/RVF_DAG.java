@@ -276,7 +276,7 @@ public class RVF_DAG extends RVF {
         return allReachableLeaves;
     }
 
-    public ResultStack<V, Long> computeNbPathLeadingToAllVertices() throws SLIB_Exception {
+    public ResultStack<V, Long> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
         ResultStack<V, Long> allVertices = new ResultStack<V, Long>();
 
@@ -300,7 +300,7 @@ public class RVF_DAG extends RVF {
      * propagated of each vertices
      * @throws SGL_Ex_Critic
      */
-    public ResultStack<V, Long> propagateNbOccurences(ResultStack<V, Long> nbOccurrence) throws SLIB_Exception {
+    public ResultStack<V, Long> propagateNbOccurences(ResultStack<V, Long> nbOccurrence) throws SLIB_Ex_Critic {
 
         HashMap<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
         HashMap<V, Integer> inDegree = new HashMap<V, Integer>();

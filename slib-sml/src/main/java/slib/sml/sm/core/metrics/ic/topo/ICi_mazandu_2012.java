@@ -36,9 +36,7 @@ package slib.sml.sm.core.metrics.ic.topo;
 
 import java.util.List;
 import java.util.Set;
-
 import org.openrdf.model.URI;
-
 import slib.sglib.algo.traversal.classical.DFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -46,7 +44,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.utils.SM_Engine;
-import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
 /**
@@ -61,7 +59,7 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_mazandu_2012 implements ICtopo {
 
-    public ResultStack<V, Double> compute(SM_Engine manager) throws SLIB_Exception {
+    public ResultStack<V, Double> compute(SM_Engine manager) throws SLIB_Ex_Critic {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
 
@@ -102,8 +100,9 @@ public class ICi_mazandu_2012 implements ICtopo {
         return results;
     }
 
+    @Override
     public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
-            throws SLIB_Exception {
+            throws SLIB_Ex_Critic {
         return compute(manager);
     }
 }
