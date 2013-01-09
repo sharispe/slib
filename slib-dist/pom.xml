@@ -61,11 +61,6 @@
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>slib-utils</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-indexer</artifactId>
             <version>0.0.3-SNAPSHOT</version>
         </dependency>
