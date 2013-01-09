@@ -36,6 +36,7 @@ package slib.sml.sm.core.metrics.ic.topo;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
+import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.utils.SMParams;
 import slib.sml.sm.core.utils.SM_Engine;
@@ -52,10 +53,22 @@ import slib.utils.impl.ResultStack;
  *
  * @author Sebastien Harispe
  */
-public class ICi_seco_2004 implements ICtopo {
-    
-    Double logbase = null;
+public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
 
+    /**
+     * Compute the Information contents of the vertices specified in the given
+     * stack.
+     *
+     * @param allNbOfDescendants a result stack containing the number of
+     * inclusive descendants for all the vertices contained in the graph.
+     * The information content will be computed for each vertices composing the stack considering the number
+     * of vertices in the graph equaling the number of vertices in the stack. 
+     * Note that the number of descendant is considered to be
+     * inclusive i.e. the count of descendants of a concepts x must also count x.
+     * @return a result stack storing the information for each concepts
+     * specified in the result stack specified in parameter.
+     * @throws SLIB_Exception
+     */
     public ResultStack<V, Double> compute(ResultStack<V, Long> allNbOfDescendants) throws SLIB_Exception {
 
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
@@ -69,24 +82,12 @@ public class ICi_seco_2004 implements ICtopo {
 
             nbDesc = allNbOfDescendants.get(v).doubleValue();
 
-            // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
-            // the nominator and thus obtain log(0) for a leaf.
-            // In our case the beahaviour is the same as in the original formulation
-
-            x = MathSML.log(nbDesc, logbase) / MathSML.log(setSize, logbase);
-            cur_ic = 1. - x;
-
-            if (Double.isNaN(cur_ic) || Double.isInfinite(cur_ic)) {
-                throw new SLIB_Ex_Critic(
-                        "Incoherency found in IC " + this.getClass() + "\n"
-                        + "Log base       " + logbase +"\n"
-                        + "Log nbDesc     " + MathSML.log(nbDesc, logbase)  + "\n"
-                        + "Log Set size   " + MathSML.log(setSize, logbase) + "\n"
-                        + "IC of vertex " + v + " is set to " + x + "\n"
-                        + "Number of Descendants: " + nbDesc + "\n"
-                        + "SetSize: " + setSize + "\n"
-                        + "");
+            try {
+                cur_ic = computeIC(nbDesc, setSize);
+            } catch (SLIB_Exception e) {
+                throw new SLIB_Ex_Critic("Error computing IC of concept " + v + "\n" + e.getMessage());
             }
+
             results.add(v, cur_ic);
         }
 
@@ -94,13 +95,46 @@ public class ICi_seco_2004 implements ICtopo {
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager) throws SLIB_Exception {
+    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Exception {
 
         if (conf.containsParam(SMParams.LOG_BASE.toString())) {
-            logbase = conf.getParamAsDouble(SMParams.LOG_BASE.toString());
+            setLogBase(conf.getParamAsDouble(SMParams.LOG_BASE.toString()));
         }
 
         // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
-        return compute(manager.getAllNbDescendantsInc());
+        return compute(engine.getAllNbDescendantsInc());
     }
+
+    /**
+     * Compute the IC considering the given parameters.
+     * @param nbInclusiveDescendants the number of inclusive descendants to consider.
+     * @param nbConceptsOnto the number of concepts composing the ontology.
+     * @return the IC.
+     * @throws SLIB_Ex_Critic 
+     */
+    public double computeIC(double nbInclusiveDescendants, double nbConceptsOnto) throws SLIB_Ex_Critic {
+
+        /*
+         * The formulation of Seco do not consider inclusive descendants but add + 1 to correct
+         * the nominator and thus obtain log(0) for a leaf.
+         * In our case the behaviour as inclusive descendants are considered
+         */
+
+        double x = MathSML.log(nbInclusiveDescendants, getLogBase()) / MathSML.log(nbConceptsOnto, getLogBase());
+        double ic = 1. - x;
+
+        if (Double.isNaN(ic) || Double.isInfinite(ic)) {
+            throw new SLIB_Ex_Critic(
+                    "Incoherency found in IC " + this.getClass() + "\n"
+                    + "Log base       " + getLogBase() + "\n"
+                    + "Log nbDesc     " + MathSML.log(nbInclusiveDescendants, getLogBase()) + "\n"
+                    + "Log Set size   " + MathSML.log(nbConceptsOnto, getLogBase()) + "\n"
+                    + "IC is set to " + ic + "\n"
+                    + "Number of Descendants: " + nbInclusiveDescendants + "\n"
+                    + "SetSize: " + nbConceptsOnto + "\n"
+                    + "");
+        }
+        return ic;
+    }
+
 }

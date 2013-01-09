@@ -29,27 +29,24 @@
  * knowledge of the CeCILL license and that you accept its terms.
  * 
  */
-package slib.sml.sm.core.utils;
+package slib.sml.sm.core.metrics.utils;
 
 /**
- *
+ * Interface implemented by classes depending on a log base configuration.
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class MathSML {
-
+public interface LogBasedMetricInterface {
+    
     /**
-     * Compute the logarithm of the given value considering the specified log base.
-     * If the log base is set to null Math.log is computed.
-     * @param value the log value to compute
-     * @param base the log base to consider
-     * @return the logarithm of the value at the given base.
+     * Getter of the log base associated to the metric.
+     * @return the log base
      */
-    public static double log(double value, Double base) {
-
-        if (base == null) {
-            return Math.log(value);
-        } else {
-            return Math.log(value) / Math.log(base);
-        }
-    }
+    public Double getLogBase();
+    
+    /**
+     * Mutator of the log base associated to the metric.
+     * @param logbase the new log base
+     */
+    public void setLogBase(Double logbase);
+    
 }
