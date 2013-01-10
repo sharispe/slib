@@ -18,8 +18,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import slib.sglib.algo.utils.GAction;
-import slib.sglib.algo.utils.GActionType;
+import slib.sglib.algo.graph.utils.GAction;
+import slib.sglib.algo.graph.utils.GActionType;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.csv.CSV_Mapping;

@@ -45,11 +45,11 @@ import org.openrdf.model.vocabulary.RDFS;
 
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
-import slib.sglib.algo.extraction.rvf.AncestorEngine;
-import slib.sglib.algo.extraction.rvf.DescendantEngine;
-import slib.sglib.algo.extraction.rvf.RVF_TAX;
-import slib.sglib.algo.reduction.dag.GraphReduction_Transitive;
-import slib.sglib.algo.utils.RooterDAG;
+import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
+import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
+import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
+import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
+import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;

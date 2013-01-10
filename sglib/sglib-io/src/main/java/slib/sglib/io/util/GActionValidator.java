@@ -1,6 +1,6 @@
 package slib.sglib.io.util;
 
-import slib.sglib.algo.utils.GAction;
+import slib.sglib.algo.graph.utils.GAction;
 
 /**
  *

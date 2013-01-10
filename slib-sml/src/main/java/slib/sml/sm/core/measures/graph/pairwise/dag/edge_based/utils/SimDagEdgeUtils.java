@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import slib.sglib.algo.shortest_path.Dijkstra;
+import slib.sglib.algo.graph.shortest_path.Dijkstra;
 import slib.sglib.model.graph.elements.V;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;

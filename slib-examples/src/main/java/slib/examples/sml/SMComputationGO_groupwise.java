@@ -33,11 +33,11 @@ package slib.examples.sml;
 
 import java.util.Set;
 import org.openrdf.model.URI;
-import slib.sglib.algo.GraphActionExecutor;
-import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
-import slib.sglib.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
-import slib.sglib.algo.utils.GAction;
-import slib.sglib.algo.utils.GActionType;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
+import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
+import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
+import slib.sglib.algo.graph.utils.GAction;
+import slib.sglib.algo.graph.utils.GActionType;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;

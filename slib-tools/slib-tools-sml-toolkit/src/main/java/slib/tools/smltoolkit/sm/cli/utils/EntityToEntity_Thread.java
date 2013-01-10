@@ -42,7 +42,7 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
+import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.repo.DataFactoryMemory;

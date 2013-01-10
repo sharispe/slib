@@ -44,8 +44,8 @@ import org.openrdf.model.vocabulary.RDFS;
 
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
-import slib.sglib.algo.metric.DepthAnalyserAG;
-import slib.sglib.algo.utils.WalkConstraintTax;
+import slib.sglib.algo.graph.metric.DepthAnalyserAG;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;

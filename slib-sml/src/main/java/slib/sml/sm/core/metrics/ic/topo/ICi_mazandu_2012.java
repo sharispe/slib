@@ -37,7 +37,7 @@ package slib.sml.sm.core.metrics.ic.topo;
 import java.util.List;
 import java.util.Set;
 import org.openrdf.model.URI;
-import slib.sglib.algo.traversal.classical.DFS;
+import slib.sglib.algo.graph.traversal.classical.DFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;

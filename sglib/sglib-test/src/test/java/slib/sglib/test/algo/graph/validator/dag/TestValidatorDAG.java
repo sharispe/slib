@@ -46,7 +46,7 @@ import org.openrdf.model.vocabulary.RDFS;
 
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
-import slib.sglib.algo.validator.dag.ValidatorDAG;
+import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;

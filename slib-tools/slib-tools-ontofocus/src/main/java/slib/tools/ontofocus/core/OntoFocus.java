@@ -49,9 +49,9 @@ import org.slf4j.LoggerFactory;
 
 import slib.indexer.IndexHash;
 import slib.indexer.obo.IndexerOBO;
-import slib.sglib.algo.reduction.dag.GraphReduction_DAG_Ranwez_2011;
-import slib.sglib.algo.utils.RooterDAG;
-import slib.sglib.algo.validator.dag.ValidatorDAG;
+import slib.sglib.algo.graph.reduction.dag.GraphReduction_DAG_Ranwez_2011;
+import slib.sglib.algo.graph.utils.RooterDAG;
+import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;

@@ -42,7 +42,7 @@ import org.openrdf.rio.RDFFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sglib.algo.GraphActionExecutor;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.bio.gaf2.GraphLoader_GAF_2;

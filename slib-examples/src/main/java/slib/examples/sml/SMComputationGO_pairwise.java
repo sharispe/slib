@@ -32,9 +32,9 @@
 package slib.examples.sml;
 
 import org.openrdf.model.URI;
-import slib.sglib.algo.GraphActionExecutor;
-import slib.sglib.algo.utils.GAction;
-import slib.sglib.algo.utils.GActionType;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
+import slib.sglib.algo.graph.utils.GAction;
+import slib.sglib.algo.graph.utils.GActionType;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;

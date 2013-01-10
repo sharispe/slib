@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import slib.sglib.algo.utils.GActionType;
+import slib.sglib.algo.graph.utils.GActionType;
 import slib.sglib.io.util.GFormat;
 
 /**

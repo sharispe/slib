@@ -45,9 +45,9 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sglib.algo.extraction.rvf.instances.InstancesAccessor;
-import slib.sglib.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
-import slib.sglib.algo.validator.dag.ValidatorDAG;
+import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
+import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
+import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
