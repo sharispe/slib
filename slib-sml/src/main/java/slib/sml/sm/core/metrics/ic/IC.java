@@ -37,14 +37,15 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.metrics.ic;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
 /**
- *
- * @author seb
+ * Interface defining the methods representing an IC computer.
+ * 
+ * @author Harispe Sébastien
  */
 public interface IC {
 	
