@@ -34,21 +34,35 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import java.util.Set;
 
+import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- * TODO @see TODO file
- * @author seb
  *
+ * @author seb
  */
-public class Sim_groupwise_Optimal_Assignment{
+public class Sim_groupwise_Min extends Sim_groupwise_general_abstract{
+
+
+
 	/**
      *
+     * @param setA
+     * @param setB
+     * @param rc
+     * @param groupwiseconf
+     * @param conf
      * @return
+     * @throws SLIB_Ex_Critic
      */
-    public double sim() {
-		throw new UnsupportedOperationException();
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SLIB_Ex_Critic {
+		
+		return rc.getMatrixScore(setA,setB, conf).getMin();
 	}
 }

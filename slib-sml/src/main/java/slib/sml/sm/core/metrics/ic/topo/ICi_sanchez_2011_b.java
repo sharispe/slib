@@ -35,17 +35,16 @@
 package slib.sml.sm.core.metrics.ic.topo;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 /**
  *
- * @author seb ﻿1. Sanchez D, Batet M, Isern D: Ontology-based information
+ * Reference: Sanchez D, Batet M, Isern D: Ontology-based information
  * content computation. Knowledge-Based Systems 2011, 24:297-303.
  *
  * formula equation 9 p 299
@@ -55,6 +54,8 @@ import slib.utils.impl.ResultStack;
  * IC is normalize considering spirit formulated in Faria and al in order to
  * produce results [0,1]. ﻿Faria D, Pesquita C, Couto FM, Falcão A: Proteinon: A
  * web tool for protein semantic similarity. 2007.
+ * 
+ * @author Harispe Sébastien ﻿
  */
 public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
 

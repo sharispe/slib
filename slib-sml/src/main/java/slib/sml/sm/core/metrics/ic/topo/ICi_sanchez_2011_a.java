@@ -39,18 +39,16 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.utils.SMParams;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 /**
  *
- * ﻿Sanchez D, Batet M, Isern D: Ontology-based information content computation.
+ * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content computation.
  * Knowledge-Based Systems 2011, 24:297-303.
  *
  * formula equation 10 p 300
@@ -58,7 +56,7 @@ import slib.utils.impl.ResultStack;
  * IC inner expression range : ]0,1] IC value : [0,...[
  *
  *
- * @author Sebastien Harispe
+ * @author Harispe Sébastien
  */
 public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
 

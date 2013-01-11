@@ -34,41 +34,15 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.graph.groupwise.dag;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
+import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 
-import java.util.Set;
-
-import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- * Al-Mubaid H, Nagar A. Comparison of four similar-
-ity measures based on GO annotations for Gene
-Clustering. Report no. 3, 2008 IEEE Symposium on
-Computers and Communications, 6–9 July 2008.
-Morocco: Marrakech.
-
- * 
- * @author Sebastien Harispe
- * 
+ *
+ * @author seb
  */
-public class TODO__Sim_groupwise_DAG_PL extends Sim_groupwise_DAG_abstract{
-
-	/**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Ex_Critic {
-		throw new UnsupportedOperationException(this.getClass()+" Not yet supported");
-	}
-
-
+public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_Indirect{
 	
+
 }

@@ -35,12 +35,11 @@
 package slib.sml.sm.core.metrics.ic.topo;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 /**
@@ -56,68 +55,75 @@ import slib.utils.impl.ResultStack;
  *
  */
 public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
-    
+
     double k = 0.5;
-    
+
     /**
-     *
+     * Builder of an instance of IC computer. 
+     * The parameter k is set to 0.5
      */
     public ICi_zhou_2008() {
     }
-    
+
     /**
+     * Builder of an instance of IC computer.
      *
-     * @param k
+     * @param k the value of the constant.
      */
     public ICi_zhou_2008(double k) {
         this.k = k;
     }
-    
+
     /**
+     * Compute the IC for each vertices expressed in the given result stack. The
+     * two result stack are expected to contain the values for each processed
+     * vertices.
      *
-     * @param alldepths
-     * @param allNbDescendants
-     * @return
+     * @param alldepths a result stack containing the depth for each vertices
+     * @param allNbDescendants a result stack containing the number of
+     * descendants for each vertices
+     * @return a result stack containing the IC for each vertices.
      * @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Double> compute(ResultStack<V, Integer> alldepths,
             ResultStack<V, Long> allNbDescendants) throws SLIB_Ex_Critic {
-        
+
         ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
-        
+
         double max_depth = alldepths.getMax() + 1;
-        
+
         int nbHypo, depth;
         int nbConcepts = alldepths.size();
-        
+
         double x, y, cur_ic;
-        
+
         for (V v : alldepths.keySet()) {
-            
+
             depth = alldepths.get(v);
             nbHypo = allNbDescendants.get(v).intValue();
-            
-            
-            x = k * (1. - MathSML.log(nbHypo,getLogBase()) / MathSML.log(nbConcepts,getLogBase()));
-            y = (1. - k) * (MathSML.log(depth + 1.,getLogBase()) / MathSML.log(max_depth,getLogBase()));
-            
+
+
+            x = k * (1. - MathSML.log(nbHypo, getLogBase()) / MathSML.log(nbConcepts, getLogBase()));
+            y = (1. - k) * (MathSML.log(depth + 1., getLogBase()) / MathSML.log(max_depth, getLogBase()));
+
             cur_ic = x + y;
-            
+
             results.add(v, cur_ic);
         }
-        
+
         return results;
     }
-    
+
+    @Override
     public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
-        
+
         setLogBase(conf);
-        
+
         if (conf.containsParam("k")) {
             k = Double.parseDouble((String) conf.getParam("k"));
         }
-        
+
         return compute(manager.getMaxDepths(), manager.getAllNbDescendantsInc());
     }
 }

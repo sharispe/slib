@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
 
 import java.util.Set;
 

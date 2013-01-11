@@ -34,24 +34,22 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.graph.groupwise.dag;
+package slib.sml.sm.core.measures.others.groupwise.direct;
 
+import java.util.Random;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
 
 /**
- * Sheehan B, Quigley A, Gaudin B, et al. A relation based
- * measure of semantic similarity for Gene Ontology annota-
- * tions. BMC Bioinformatics 2008;9:468.
- * 
- * @author Sebastien Harispe
- * 
+ *
+ * @author seb
  */
-public class TODO__Sim_groupwise_DAG_NLP extends Sim_groupwise_DAG_abstract{
+public class Sim_groupwise_Random implements Sim_Groupwise_Direct{
 
 	/**
      *
@@ -60,12 +58,14 @@ public class TODO__Sim_groupwise_DAG_NLP extends Sim_groupwise_DAG_abstract{
      * @param rc
      * @param conf
      * @return
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Exception
      */
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) throws SLIB_Ex_Critic {
-		throw new UnsupportedOperationException(this.getClass()+" Not yet supported");
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf)
+			throws SLIB_Exception {
+		
+		Random r = new Random();
+		
+		return r.nextDouble();
 	}
 
-
-	
 }

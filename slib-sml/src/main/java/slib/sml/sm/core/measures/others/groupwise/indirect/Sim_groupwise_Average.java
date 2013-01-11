@@ -34,15 +34,63 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.add_on;
-import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import java.util.Set;
+
+import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.impl.MatrixDouble;
 
 /**
+ * Classic Average Measure
+ * Assumes score symmetry
+ * 
+ * @author Sebastien Harispe
  *
- * @author seb
  */
-public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_Indirect{
+public class Sim_groupwise_Average extends Sim_groupwise_general_abstract{
 	
+	/**
+     *
+     * @param pairwiseScores
+     * @return
+     */
+    public double score(MatrixDouble<V,V> pairwiseScores) {
+		
+		double sum = 0;
+		int c = 0;
+		
+		Double[][] matrix = pairwiseScores.getMatrix();
+		
+		for (int i = 0; i < matrix.length; i++) {
+			for (int j = 0; j < matrix[i].length; j++) {
+				sum += matrix[i][j];
+				c++;
+			}
+		}
+		return sum/c ;
+	}
+	/**
+	 * Assumes score symmetry
+         * 
+         * @param setA 
+         * @param setB 
+         * @param rc 
+         * @param groupwiseconf 
+         * @param conf 
+         * @return
+         * @throws SLIB_Ex_Critic  
+         */
+	public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
+		
+		MatrixDouble<V,V> results_setA = rc.getMatrixScore(setA,setB, conf);
+		
+		double score = score(results_setA);
+
+		return score;
+	}
 
 }

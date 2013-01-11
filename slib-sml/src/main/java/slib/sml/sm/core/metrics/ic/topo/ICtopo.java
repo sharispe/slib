@@ -35,23 +35,28 @@
 package slib.sml.sm.core.metrics.ic.topo;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 
 /**
+ * Class representing Topological Information Content
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public interface ICtopo {
 
     /**
+     * Compute the topological Information Content for the vertices contained by
+     * the graph associated to the given engine.
      *
-     * @param conf
-     * @param manager
-     * @return
+     * @param conf the configuration defining the measure among other
+     * @param engine the engine used to manage the computation
+     * @return a result stack containing the Information Content for each
+     * vertices of the graph.
+     *
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager) throws SLIB_Ex_Critic;
+    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic;
 }

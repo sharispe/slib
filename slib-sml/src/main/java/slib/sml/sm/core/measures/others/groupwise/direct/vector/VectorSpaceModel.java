@@ -34,22 +34,22 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.measures.others.groupwise.direct.vector;
 
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.ResultStack;
 
 /**
  *
  * @author seb
  */
-public class Sim_groupwise_Min extends Sim_groupwise_general_abstract{
-
-
+public class VectorSpaceModel implements Sim_Groupwise_Direct{
 
 	/**
      *
@@ -57,12 +57,42 @@ public class Sim_groupwise_Min extends Sim_groupwise_general_abstract{
      * @param setB
      * @param rc
      * @param groupwiseconf
-     * @param conf
      * @return
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Exception
      */
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SLIB_Ex_Critic {
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
 		
-		return rc.getMatrixScore(setA,setB, conf).getMin();
+		ResultStack<V,Double> v1 = rc.getVector(setA, groupwiseconf);
+		ResultStack<V,Double> v2 = rc.getVector(setB, groupwiseconf);
+		
+		double num 	 = 0;
+		double denum_w1 = 0;
+		double denum_w2 = 0;
+		
+		double w1 = 0;
+		double w2 = 0;
+		
+		for(V v : v1.getValues().keySet()){
+			
+			w1 = v1.get(v);
+			w2 = v2.get(v);
+			
+			
+			num   += w1 * w2; 
+			denum_w1 += Math.pow(w1,2); 
+			denum_w2 += Math.pow(w2,2);
+		}
+		
+		double sim = 0;
+		if(num != 0)
+			sim = num / ( Math.sqrt(denum_w1) * Math.sqrt(denum_w2) );
+		
+		
+		sim = Math.round(sim*10000)/10000.0d;
+		
+		return sim;
+		
+//		throw new UnsupportedOperationException();
 	}
+	
 }

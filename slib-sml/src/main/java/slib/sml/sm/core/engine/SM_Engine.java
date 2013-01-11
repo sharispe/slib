@@ -66,12 +66,10 @@ import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
-import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
+import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.measures.Sim_Pairwise;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
-import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
-import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.measures.framework.core.measures.Sim_FrameworkAbstracted;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
@@ -94,12 +92,12 @@ import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
- * This class is used facilitate the access of commonly required methods for SMs
- * computation. Depending on the tuning of the engine some caching systems can
- * be taken into account in order to boost some process and avoid to recompute
- * some results.
+ * This class is used to facilitate the access of commonly required methods for
+ * SMs computation. Depending on the tuning of the engine some caching systems
+ * can be taken into account in order to boost some processes by avoiding to
+ * recompute some results.
  *
- * @author Sebastien Harispe
+ * @author Harispe Sébastien
  *
  */
 public class SM_Engine {
@@ -211,13 +209,14 @@ public class SM_Engine {
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * Get the parents of a vertex.
+     * A parent is a concept which is of type {@link VType#CLASS}. 
+     * @param v the focus vertex
+     * @return the set of parent of the given vertex
      */
     public Set<V> getParents(V v) {
 
-        Set<E> edges = graph.getE(goToSuperClassETypes, v, Direction.OUT);
+        Set<E> edges = graph.getE(goToSuperClassETypes, v, VType.CLASS, Direction.OUT);
         Set<V> parents = new HashSet<V>();
 
         for (E e : edges) {
@@ -275,7 +274,7 @@ public class SM_Engine {
      * CACHED
      *
      * @return a resultStack containing the maximal depths
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Integer> getMaxDepths() throws SLIB_Ex_Critic {
 
@@ -291,7 +290,7 @@ public class SM_Engine {
      * CACHED
      *
      * @return a resultStack containing the minimal depths
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Integer> getMinDepths() throws SLIB_Ex_Critic {
 
@@ -306,10 +305,10 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @param icConf 
+     * @param icConf
      * @param v
      * @return the information content of the specified vertex.
-     * @throws SLIB_Exception  
+     * @throws SLIB_Exception
      */
     public double getIC(ICconf icConf, V v) throws SLIB_Exception {
 
@@ -328,7 +327,7 @@ public class SM_Engine {
      * CACHED
      *
      * @return the maximal depth of the graph.
-     * @throws SLIB_Exception  
+     * @throws SLIB_Exception
      */
     public int getMaxDepth() throws SLIB_Exception {
 
@@ -355,7 +354,7 @@ public class SM_Engine {
      * @param a
      * @param b
      * @return
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public double getShortestPath(V a, V b) throws SLIB_Ex_Critic {
 
@@ -373,7 +372,7 @@ public class SM_Engine {
      * @param a
      * @param b
      * @return
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public V getMSA(V a, V b) throws SLIB_Ex_Critic {
 
@@ -385,8 +384,7 @@ public class SM_Engine {
     }
 
     /**
-     * @return
-     * @throws SLIB_Ex_Critic  
+     * @return @throws SLIB_Ex_Critic
      */
     public synchronized V getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
@@ -403,7 +401,7 @@ public class SM_Engine {
      * @return a map containing the weight of the shortest path linking a the
      * given vertex.
      *
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public synchronized Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
 
@@ -495,11 +493,11 @@ public class SM_Engine {
     /**
      * CACHED
      *
-     * @param icConf 
+     * @param icConf
      * @param a
      * @param b
      * @return
-     * @throws SLIB_Exception 
+     * @throws SLIB_Exception
      */
     public double getIC_MICA(ICconf icConf, V a, V b) throws SLIB_Exception {
 
@@ -538,7 +536,7 @@ public class SM_Engine {
 
         for (V c : graph.getVClass()) {
             int nbDesc = allDescendants.get(c).size();
-            allNbDescendants.add(c, (long) nbDesc+1); //  getAllDescendants() is exlusive
+            allNbDescendants.add(c, (long) nbDesc + 1); //  getAllDescendants() is exlusive
         }
         return allNbDescendants;
     }
@@ -546,11 +544,11 @@ public class SM_Engine {
     /**
      * @TODO add caching
      * @return
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
         Map<V, Set<V>> descs = descGetter.getAllRVClass();
-        for(V v : descs.keySet()){
+        for (V v : descs.keySet()) {
             descs.get(v).add(v);
         }
         return descs;
@@ -707,10 +705,10 @@ public class SM_Engine {
         ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
 
         for (V c : graph.getVClass()) {
-            System.out.println(""+c);
+            System.out.println("" + c);
             System.out.println(allAncestors.get(c));
             int nbAnc = allAncestors.get(c).size();
-            allNbancestors.add(c, (double) nbAnc + 1 ); // getAllRVClass() is exlusive
+            allNbancestors.add(c, (double) nbAnc + 1); // getAllRVClass() is exlusive
         }
         return allNbancestors;
     }
@@ -725,11 +723,12 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED by default
-     * @param pairwiseConf 
-     * @param a 
-     * @param b 
-     * @return 
-     * @throws SLIB_Ex_Critic 
+     *
+     * @param pairwiseConf
+     * @param a
+     * @param b
+     * @return
+     * @throws SLIB_Ex_Critic
      */
     public double computePairwiseSim(SMconf pairwiseConf, V a, V b) throws SLIB_Ex_Critic {
 
@@ -844,11 +843,12 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED
-     * @param confGroupwise 
+     *
+     * @param confGroupwise
      * @param setA
-     * @param setB 
+     * @param setB
      * @return
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
@@ -889,12 +889,13 @@ public class SM_Engine {
 
     /**
      * NOT_CACHED TODO add measure caching
-     * @param confGroupwise 
-     * @param confPairwise 
-     * @param setB 
-     * @param setA 
+     *
+     * @param confGroupwise
+     * @param confPairwise
+     * @param setB
+     * @param setA
      * @return
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,
@@ -937,8 +938,7 @@ public class SM_Engine {
 
     /**
      *
-     * @return
-     * @throws SLIB_Ex_Critic
+     * @return @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Long> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
 
@@ -1064,7 +1064,7 @@ public class SM_Engine {
      * Topological propagation considering one occurrence per term
      *
      * @return
-     * @throws SLIB_Exception 
+     * @throws SLIB_Exception
      */
     public ResultStack<V, Long> getNbOccurrenceProp() throws SLIB_Exception {
 
@@ -1089,9 +1089,9 @@ public class SM_Engine {
      *
      * @param setA
      * @param setB
-     * @param pairwiseConf 
+     * @param pairwiseConf
      * @return
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public MatrixDouble<V, V> getMatrixScore(
             Set<V> setA,

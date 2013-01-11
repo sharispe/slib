@@ -38,12 +38,12 @@ import java.util.Iterator;
 import java.util.Set;
 import slib.sglib.model.graph.elements.V;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
+ * 
  * Class used to defined static methods utility.
  *
  * @author Harispe Sébastien
@@ -151,8 +151,6 @@ public class IcUtils {
                 }
             }
         }
-
-
         return min;
     }
 }

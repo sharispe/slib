@@ -34,7 +34,7 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
 
 import java.util.Set;
 
@@ -42,58 +42,27 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.MatrixDouble;
 
-
-
-/**﻿
- * Frohlich H, Speer N, Poustka A, Beissbarth T: GOSim--an R-package for computation of information theoretic GO similarities between terms and gene products. BMC bioinformatics 2007, 8:166.
- * Implementation as defined in equation 7 page 3/8
- * 
- * @author Sebastien Harispe 
+/**
  *
+ * @author seb
  */
-public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract{
+public class Sim_groupwise_Max extends Sim_groupwise_general_abstract{
 	
-	/**
-	 * @see Sim_groupwise_Max to compute max values
-	 * @param maxScore_sA_vs_sB
-	 * @param maxScore_sA_vs_sA
-	 * @param maxScore_sB_vs_sB
-	 * @return
-	 */
-	public double sim(double maxScore_sA_vs_sB,double maxScore_sA_vs_sA, double maxScore_sB_vs_sB) {
-		
-		double den = Math.sqrt( maxScore_sA_vs_sA * maxScore_sB_vs_sB);
-		if(den == 0)
-			return 0;
-		
-		double sim = maxScore_sA_vs_sB / den;
-		return sim ;
-	}
-
+	
 	/**
      *
      * @param setA
      * @param setB
      * @param rc
      * @param groupwiseconf
-     * @param paiwiseconf
+     * @param pairwiseConf
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public double sim(Set<V> setA, Set<V> setB,  SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf pairwiseConf) throws SLIB_Ex_Critic {
 		
-		MatrixDouble<V,V> results_setA_B = rc.getMatrixScore(setA,setB, paiwiseconf);
-		MatrixDouble<V,V> results_setA_A = rc.getMatrixScore(setA,setA, paiwiseconf);
-		MatrixDouble<V,V> results_setB_B = rc.getMatrixScore(setB,setB, paiwiseconf);
-		
-		double maxScore_sA_vs_sB = results_setA_B.getMax();
-		double maxScore_sA_vs_sA = results_setA_A.getMax();
-		double maxScore_sB_vs_sB = results_setB_B.getMax();
-		
-		
-		return sim(maxScore_sA_vs_sB, maxScore_sA_vs_sA, maxScore_sB_vs_sB);
-
+		return rc.getMatrixScore(setA,setB, pairwiseConf).getMax();
 	}
+
 }

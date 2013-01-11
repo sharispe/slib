@@ -34,54 +34,21 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.measures.others.groupwise.indirect;
 
-import java.util.Set;
 
-import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.MatrixDouble;
 
 /**
- *
+ * TODO @see TODO file
  * @author seb
+ *
  */
-public class Sim_groupwise_BestMatchAverage extends Sim_groupwise_general_abstract{
-
+public class Sim_groupwise_Optimal_Assignment{
 	/**
      *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @param conf
      * @return
-     * @throws SLIB_Ex_Critic
      */
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf conf) throws SLIB_Ex_Critic {
-
-		MatrixDouble<V,V> results_setA = rc.getMatrixScore(setA,setB, conf);
-		
-		double sumMaxColumn = 0;
-		double sumMaxRow = 0;
-		
-		for(V v: setA)
-			sumMaxColumn += results_setA.getMaxColumn(v);
-		
-		for(V v: setB)
-			sumMaxRow += results_setA.getMaxRow(v);
-		
-		double num = 1./setA.size();
-		double columnScore = num * (sumMaxColumn);
-		
-		num = 1./setB.size();
-		double rowScore = num * (sumMaxRow);
-		
-		if(columnScore > rowScore)
-			return columnScore;
-		return rowScore;
+    public double sim() {
+		throw new UnsupportedOperationException();
 	}
-
 }
