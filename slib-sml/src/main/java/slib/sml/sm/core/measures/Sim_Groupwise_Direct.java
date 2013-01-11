@@ -32,60 +32,33 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.utils;
+package slib.sml.sm.core.measures;
 
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.metrics.ic.utils.ICconf;
-import slib.utils.impl.ResultStack;
+import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Interface used to represent direct groupwise measures. Those measures do not
+ * rely on a pairwise measure to compute the likeness of two group of concepts.
  *
- * @author seb
+ * @author Harispe Sébastien
  */
-public class SMProxResultStorage {
-
-    Map<ICconf, ResultStack<V, Double>> metrics_results;
-    Map<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>> pairwise_results;
-    Map<V, ConcurrentHashMap<V, Double>> shortestPath;
-    Map<V, Set<V>> ancestors;
-    Map<V, Set<V>> descendants;
-    Map<V, Set<V>> reachableLeaves;
-    ResultStack<V, Long> nbPathLeadingToAllVertices;
-    // Depth
-    ResultStack<V, Integer> maxDepths;
-    ResultStack<V, Integer> minDepths;
-    Integer maxDepth;
-    /**
-     *
-     */
-    public ResultStack<V, Long> nbOccurrencePropagatted;
+public interface Sim_Groupwise_Direct extends Sim_Groupwise {
 
     /**
+     * Compute the similarity between the given sets of concepts considering a
+     * particular configuration.
      *
+     * @param setA the first set of vertices
+     * @param setB the second set of vertices
+     * @param rc the engine used to access specific information used by the
+     * measures
+     * @param groupwiseconf the groupwise configuration.
+     * @return the semantic similarity of the pair of groups of concepts
+     * @throws SLIB_Exception
      */
-    public SMProxResultStorage() {
-        this.clearCache();
-    }
-
-    /**
-     *
-     */
-    public void clearCache() {
-
-        metrics_results = new ConcurrentHashMap<ICconf, ResultStack<V, Double>>();
-        ancestors = new ConcurrentHashMap<V, Set<V>>();
-        descendants = new ConcurrentHashMap<V, Set<V>>();
-        reachableLeaves = new ConcurrentHashMap<V, Set<V>>();
-        shortestPath = new ConcurrentHashMap<V, ConcurrentHashMap<V, Double>>();
-        pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>>();
-        nbOccurrencePropagatted = new ResultStack<V, Long>();
-
-        nbPathLeadingToAllVertices = null;
-        maxDepths = null;
-        minDepths = null;
-        maxDepth = null;
-    }
+    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception;
 }

@@ -40,7 +40,7 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 

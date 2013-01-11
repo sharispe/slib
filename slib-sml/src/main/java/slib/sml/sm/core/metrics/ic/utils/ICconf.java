@@ -40,50 +40,52 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public abstract class ICconf extends Conf {
 
     /**
-     *
+     * ID used to represent the IC.
      */
-    public String id;				// ID used to represent the IC 
+    public String id;
     /**
-     *
+     * label used to plot IC values.
      */
-    public String label;			// label used to plot IC values
+    public String label;
     /**
-     *
+     * Flag corresponding to the IC computation method.
      */
-    public String flag;			// SSPConstants flag corresponding to the IC 
+    public String flag;
     /**
-     *
+     * Class name of the computation method.
      */
     public String className;
     /**
-     *
+     * Define if the IC is corpus-based (extrinsic).
      */
     public boolean isCorpusBased;
 
     /**
+     * Builder of the IC configuration.
      *
-     * @param flag
+     * @param icFlag the flag of the IC
      * @throws SLIB_Ex_Critic
      */
-    public ICconf(String flag) throws SLIB_Ex_Critic {
-        this.id = flag;
-        this.label = flag;
-        this.flag = flag;
+    public ICconf(String icFlag) throws SLIB_Ex_Critic {
+        this.id = icFlag;
+        this.label = icFlag;
+        this.flag = icFlag;
 
         validate();
     }
 
     /**
+     * Advanced builder of an instance of IC configuration.
      *
-     * @param id ID used to represent the IC
-     * @param label	label used to plot IC values
-     * @param flag	SSPConstants flag corresponding to the IC
-     * @throws SLIB_Ex_Critic 
+     * @param id the ID used to represent the IC (must be unique)
+     * @param label the label used to plot IC values
+     * @param flag the flag corresponding to the IC
+     * @throws SLIB_Ex_Critic
      */
     public ICconf(String id, String label, String flag) throws SLIB_Ex_Critic {
         this.id = id;
@@ -94,6 +96,12 @@ public abstract class ICconf extends Conf {
 
     }
 
+    /**
+     * Method used to validate the configuration specified with regard to
+     * constraints/properties to respect/ensure.
+     *
+     * @throws SLIB_Ex_Critic
+     */
     private void validate() throws SLIB_Ex_Critic {
 
         if (SMConstants.SIM_PAIRWISE_DAG_NODE_IC_ANNOT.containsKey(flag)) {
@@ -110,40 +118,39 @@ public abstract class ICconf extends Conf {
     }
 
     /**
-     *
-     * @return
+     * Getter of the id.
+     * @return the id associated to the configuration
      */
     public String getId() {
         return id;
     }
 
     /**
-     *
-     * @return
+     * Getter of the label.
+     * @return the label associated to the configuration.
      */
     public String getLabel() {
         return flag;
     }
 
     /**
-     *
-     * @return
+     * Getter of the flag.
+     * @return the flag associated to the configuration.
      */
     public String getFlag() {
         return flag;
     }
 
     /**
-     *
-     * @return
+     * Getter of the class name.
+     * @return the class name associated to the configuration.
      */
     public String getClassName() {
         return className;
     }
 
     /**
-     *
-     * @return
+     * @return true if the IC configuration is associated to an IC which is corpus based.
      */
     public boolean isCorpusBased() {
         return isCorpusBased;
@@ -179,6 +186,7 @@ public abstract class ICconf extends Conf {
         return true;
     }
 
+    @Override
     public String toString() {
         String out = "id : " + id + "\n";
         out += "label : " + id + "\n";

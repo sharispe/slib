@@ -55,10 +55,9 @@ import sun.security.krb5.internal.crypto.EType;
 
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
- *
+ * 
  * @todo use {@link WalkConstraints} to simplify the code and the parameters passed to the methods.
  * @author Sebastien Harispe
- *
  */
 public class ValidatorDAG {
 

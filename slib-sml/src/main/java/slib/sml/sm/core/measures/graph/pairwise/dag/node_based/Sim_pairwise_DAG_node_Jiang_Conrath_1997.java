@@ -38,7 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 

@@ -39,48 +39,56 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 /**
- *
- * @author seb
+ * Basic class used to represent the configuration associated to a Semantic Measures.
+ * 
+ * @author Harispe Sébastien
  */
 public class SMconf extends Conf {
 
     /**
-     *
+     * The unique id associated to the configuration.
      */
     public String id;
+    
     /**
-     *
+     * The flag corresponding to the type of measure associated to the configuration.
      */
     public String flag;
+    
     /**
-     *
+     * The name of the class associated to the semantic measures method the configuration is linked to.
      */
     public String className;
+    
     /**
-     *
+     * The label of the configuration.
      */
     public String label;
+    
     /**
-     *
+     * The configuration of the Information Content metric associated to the measure.
      */
     public ICconf icConf;
+    
     /**
-     *
+     * The id of the pairwise measure associated to the configuration (in case of groupwise measures).
      */
     public String pairwise_measure_id;
+    
     /**
-     *
+     * The representation used by the measure.
      */
     public String representation;
+    
     /**
-     *
+     * The operator used by the measure.
      */
     public OperatorConf operator;
 
     /**
-     *
-     * @param id
-     * @param flag
+     * Build an instance of configuration considering the given id and flag
+     * @param id the id of the configuration (must be unique).
+     * @param flag the flag defining the semantic measure method associated to the configuration.
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag) throws SLIB_Ex_Critic {
@@ -93,10 +101,11 @@ public class SMconf extends Conf {
     }
 
     /**
-     *
-     * @param id
-     * @param flag
-     * @param label
+     * Build an instance of configuration considering the given id, flag and label.
+     * @param id the id of the configuration (must be unique).
+     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param label the label associated to the configuration.
+     * 
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label) throws SLIB_Ex_Critic {
@@ -109,10 +118,10 @@ public class SMconf extends Conf {
     }
 
     /**
-     *
-     * @param id
-     * @param flag
-     * @param icConf
+     * Build an instance of configuration considering the given id, flag and Information Content configuration.
+     * @param id the id of the configuration (must be unique).
+     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param icConf the IC configuration associated to the configuration 
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, ICconf icConf) throws SLIB_Ex_Critic {
@@ -125,11 +134,11 @@ public class SMconf extends Conf {
     }
 
     /**
-     *
-     * @param id
-     * @param flag
-     * @param label
-     * @param icConf
+     * Build an instance of configuration considering the given id, flag and Information Content configuration.
+     * @param id the id of the configuration (must be unique).
+     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param label the label associated to the configuration
+     * @param icConf the IC configuration associated to the configuration 
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label, ICconf icConf) throws SLIB_Ex_Critic {
@@ -142,13 +151,13 @@ public class SMconf extends Conf {
     }
 
     /**
-     *
-     * @param id
-     * @param flag
-     * @param label
-     * @param icConf
-     * @param representation
-     * @param operator
+     * Build an instance of configuration considering the given parameters.
+     * @param id the id of the configuration (must be unique).
+     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param label the label associated to the configuration
+     * @param icConf the IC configuration associated to the configuration 
+     * @param representation The representation adopted by the measure
+     * @param operator the operator used by the measure
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label, ICconf icConf, String representation, OperatorConf operator) throws SLIB_Ex_Critic {
@@ -162,6 +171,10 @@ public class SMconf extends Conf {
         init();
     }
 
+    /**
+     * Initialize the measure configuration with regard to the specified parameters.
+     * @throws SLIB_Ex_Critic 
+     */
     private void init() throws SLIB_Ex_Critic {
 
         this.className = SMConstants.semanticMeasureClassName(this.flag);
@@ -172,69 +185,70 @@ public class SMconf extends Conf {
     }
 
     /**
-     *
-     * @return
+     * The IC configuration associated to the configuration.
+     * @return the IC configuration associated to the current configuration
      */
     public ICconf getICconf() {
         return icConf;
     }
 
     /**
-     *
-     * @param ic
+     * Mutator of the IC configuration. 
+     * @param ic the new IC configuration to consider
      */
     public void setICconf(ICconf ic) {
         this.icConf = ic;
     }
 
     /**
-     *
-     * @return
+     * Getter of the representation.
+     * @return the representation associated to the configuration
      */
     public String getRepresentation() {
         return representation;
     }
 
     /**
-     *
-     * @param representation
+     * Mutator of the representation
+     * @param representation the new representation
      */
     public void setRepresentation(String representation) {
         this.representation = representation;
     }
 
     /**
-     *
-     * @return
+     * Getter of the operator associated to the configuration.
+     * @return the current operator configuration
      */
     public OperatorConf getOperator() {
         return operator;
     }
 
     /**
-     *
-     * @param operator
+     * Mutator of the operator.
+     * @param operator the new operator.
      */
     public void setOperator(OperatorConf operator) {
         this.operator = operator;
     }
 
     /**
-     *
-     * @return
+     * Getter of the pairwise Id
+     * @return the pairwise id
      */
     public String getPairwise_measure_id() {
         return pairwise_measure_id;
     }
 
     /**
-     *
-     * @param pairwise_measure_id
+     * Mutator of the pairwise id.
+     * @param pairwise_measure_id the new id of the measure configuration
      */
     public void setPairwise_measure_id(String pairwise_measure_id) {
         this.pairwise_measure_id = pairwise_measure_id;
     }
 
+    @Override
     public String toString() {
         String out = "id : " + id + "\n";
         out += "flag : " + flag + "\n";

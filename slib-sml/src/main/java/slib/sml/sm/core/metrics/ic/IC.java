@@ -38,7 +38,7 @@ package slib.sml.sm.core.metrics.ic;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 

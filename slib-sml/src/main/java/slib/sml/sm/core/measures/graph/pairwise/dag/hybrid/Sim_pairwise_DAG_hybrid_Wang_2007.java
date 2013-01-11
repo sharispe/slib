@@ -41,7 +41,7 @@ import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 

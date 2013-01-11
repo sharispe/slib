@@ -38,8 +38,8 @@ package slib.sml.sm.core.measures.framework.core.measures.impl;
 
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
-import slib.sml.sm.core.measures.framework.core.measures.Sim_Framework;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.measures.framework.core.measures.Sim_FrameworkAbstracted;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Exception;
  * 
  * @author Sebastien Harispe
  */
-public class Sim_Framework_Tversky_1977 extends Sim_Framework{
+public class Sim_Framework_Tversky_1977 extends Sim_FrameworkAbstracted{
 	
 	/**
      *

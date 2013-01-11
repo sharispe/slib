@@ -32,59 +32,61 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.others.groupwise.add_on;
+package slib.sml.sm.core.engine;
 
+import java.util.Map;
 import java.util.Set;
-
+import java.util.concurrent.ConcurrentHashMap;
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.MatrixDouble;
+import slib.utils.impl.ResultStack;
 
 /**
- * ﻿
- * Frohlich H, Speer N, Poustka A, Beissbarth T: GOSim--an R-package for
- * computation of information theoretic GO similarities between terms and gene
- * products. BMC bioinformatics 2007, 8:166. Implementation as defined in
- * equation 7 page 3/8
  *
- * @author Sebastien Harispe
- *
+ * @author seb
  */
-public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
+public class SMProxResultStorage {
+
+    Map<ICconf, ResultStack<V, Double>> metrics_results;
+    Map<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>> pairwise_results;
+    Map<V, ConcurrentHashMap<V, Double>> shortestPath;
+    Map<V, Set<V>> ancestors;
+    Map<V, Set<V>> descendants;
+    Map<V, Set<V>> reachableLeaves;
+    ResultStack<V, Long> nbPathLeadingToAllVertices;
+    // Depth
+    ResultStack<V, Integer> maxDepths;
+    ResultStack<V, Integer> minDepths;
+    Integer maxDepth;
+    /**
+     *
+     */
+    public ResultStack<V, Long> nbOccurrencePropagatted;
 
     /**
-     * @see Sim_groupwise_Max to compute max values
-     * @param avgScore_sA_vs_sB
-     * @param avgScore_sA_vs_sA
-     * @param avgScore_sB_vs_sB
-     * @return
+     *
      */
-    public double sim(double avgScore_sA_vs_sB, double avgScore_sA_vs_sA, double avgScore_sB_vs_sB) {
-
-        double den = Math.sqrt(avgScore_sA_vs_sA * avgScore_sB_vs_sB);
-        if (den == 0) {
-            return 0;
-        }
-
-        double sim = avgScore_sA_vs_sB / den;
-        return sim;
+    public SMProxResultStorage() {
+        this.clearCache();
     }
 
+    /**
+     *
+     */
+    public void clearCache() {
 
-    @Override
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
+        metrics_results = new ConcurrentHashMap<ICconf, ResultStack<V, Double>>();
+        ancestors = new ConcurrentHashMap<V, Set<V>>();
+        descendants = new ConcurrentHashMap<V, Set<V>>();
+        reachableLeaves = new ConcurrentHashMap<V, Set<V>>();
+        shortestPath = new ConcurrentHashMap<V, ConcurrentHashMap<V, Double>>();
+        pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>>();
+        nbOccurrencePropagatted = new ResultStack<V, Long>();
 
-        MatrixDouble<V, V> results_setA_B = rc.getMatrixScore(setA, setB, paiwiseconf);
-        MatrixDouble<V, V> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
-        MatrixDouble<V, V> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
-
-        double avgScore_sA_vs_sB = results_setA_B.getAverage();
-        double avgScore_sA_vs_sA = results_setA_A.getAverage();
-        double avgScore_sB_vs_sB = results_setB_B.getAverage();
-
-        return sim(avgScore_sA_vs_sB, avgScore_sA_vs_sA, avgScore_sB_vs_sB);
-
+        nbPathLeadingToAllVertices = null;
+        maxDepths = null;
+        minDepths = null;
+        maxDepth = null;
     }
 }

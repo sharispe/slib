@@ -37,7 +37,6 @@ package slib.sml.sm.core.utils;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-
 import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_3W_Jaccard;
 import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Commonalities;
 import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Dice_1945;
@@ -132,7 +131,7 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
 /**
  * Class used to defined Semantic Measures constants such as measures flags.
  *
- * @FIXME requires to be split in a smart way.
+ * @todo requires to be split in a smart way.
  *
  * @author Sebastien Harispe
  *
@@ -517,11 +516,13 @@ public final class SMConstants {
 
     /**
      *
-     * @param methodLabel
-     * @return
+     * Return the class Name of the given groupwise semantic measure flag
+     *
+     * @param methodFlag the flag associated to the method
+     * @return the class Name of the given groupwise semantic measure flag
      */
-    public static String groupwiseClassName(String methodLabel) {
-        return groupwiseMeasureMapping.get(methodLabel);
+    public static String groupwiseClassName(String methodFlag) {
+        return groupwiseMeasureMapping.get(methodFlag);
     }
     //-------------------------------------------------------------------------------
     // Pairwise
@@ -944,8 +945,6 @@ public final class SMConstants {
      *
      */
     public static final String SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = Sim_pairwise_DAG_node_Sim_IC_2010.class.getName();
-    
-    
     /**
      *
      */
@@ -1059,8 +1058,10 @@ public final class SMConstants {
 
     /**
      *
-     * @param measureFlag
-     * @return
+     * Return the id of the approach associated to the semantic measure flag
+     *
+     * @param measureFlag the flag associated to the method
+     * @return the id of the approach
      */
     public static int getPairwiseApproach(String measureFlag) {
 
@@ -1081,9 +1082,10 @@ public final class SMConstants {
     }
 
     /**
+     * Test if the approach requires the graph to be a Directed Acyclic Graph.
      *
-     * @param mApproach
-     * @return
+     * @param mApproach the id of the approach considered
+     * @return true if the approach requires a DAG
      */
     public static boolean requireDAG(int mApproach) {
         if (mApproach == PAIRWISE_DAG_EDGE_BASED
@@ -1098,22 +1100,27 @@ public final class SMConstants {
 
     /**
      *
-     * @param methodFLAG
-     * @return
+     *
+     * Return the class Name of the given pairwise semantic measure flag
+     *
+     * @param methodFlag the flag associated to the method
+     * @return the class Name of the given pairwise semantic measure flag
      */
-    public static String pairwiseClassName(String methodFLAG) {
-        return pairwiseMeasureMapping.get(methodFLAG);
+    public static String pairwiseClassName(String methodFlag) {
+        return pairwiseMeasureMapping.get(methodFlag);
     }
 
     /**
      *
-     * @param methodLabel
-     * @return
+     * Return the class Name of the given semantic measure flag
+     *
+     * @param methodFlag the flag associated to the method
+     * @return the class Name of the given semantic measure flag
      */
-    public static String semanticMeasureClassName(String methodLabel) {
-        String className = groupwiseMeasureMapping.get(methodLabel);
+    public static String semanticMeasureClassName(String methodFlag) {
+        String className = groupwiseMeasureMapping.get(methodFlag);
         if (className == null) {
-            return pairwiseClassName(methodLabel);
+            return pairwiseClassName(methodFlag);
         }
         return className;
     }

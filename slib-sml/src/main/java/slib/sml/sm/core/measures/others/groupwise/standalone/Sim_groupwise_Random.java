@@ -40,8 +40,8 @@ import java.util.Random;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
@@ -49,7 +49,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author seb
  */
-public class Sim_groupwise_Random implements Sim_Groupwise_Standalone{
+public class Sim_groupwise_Random implements Sim_Groupwise_Direct{
 
 	/**
      *

@@ -35,8 +35,8 @@ knowledge of the CeCILL license and that you accept its terms.
  
  
 package slib.sml.sm.core.measures.framework.core.engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.OperatorConf;
-import slib.sml.sm.core.utils.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 
 /**

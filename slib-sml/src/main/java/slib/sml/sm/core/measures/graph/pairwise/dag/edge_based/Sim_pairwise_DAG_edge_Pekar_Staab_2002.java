@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 import java.util.Map;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 

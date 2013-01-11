@@ -39,7 +39,7 @@ package slib.sml.sm.core.measures.others.groupwise.add_on;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 

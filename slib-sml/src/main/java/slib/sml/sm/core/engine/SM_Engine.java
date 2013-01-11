@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.utils;
+package slib.sml.sm.core.engine;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -66,12 +66,14 @@ import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
-import slib.sml.sm.core.measures.Sim_Groupwise_AddOn;
-import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
+import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Pairwise;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
+import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
-import slib.sml.sm.core.measures.framework.core.measures.Sim_Framework;
+import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
+import slib.sml.sm.core.measures.framework.core.measures.Sim_FrameworkAbstracted;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.utils.SimDagHybridUtils;
 import slib.sml.sm.core.metrics.ic.annot.ICcorpus;
@@ -81,6 +83,10 @@ import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.metrics.ic.utils.IcUtils;
 import slib.sml.sm.core.metrics.vector.VectorWeight_Chabalier_2007;
+import slib.sml.sm.core.utils.OperatorConf;
+import slib.sml.sm.core.utils.SMConstants;
+import slib.sml.sm.core.utils.SMconf;
+import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.MatrixDouble;
@@ -120,8 +126,8 @@ public class SM_Engine {
     ResultStack<V, Double> vectorWeights = null;
     ValidatorDAG validator;
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
-    Map<SMconf, Sim_Groupwise_AddOn> groupwiseAddOnMeasures;
-    Map<SMconf, Sim_Groupwise_Standalone> groupwiseStandaloneMeasures;
+    Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
+    Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
     ResultStack<V, Double> allNbReachableLeaves;
 
     /**
@@ -154,8 +160,8 @@ public class SM_Engine {
         cache = new SMProxResultStorage();
         pairwiseMeasures = new ConcurrentHashMap<SMconf, Sim_Pairwise>();
 
-        groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_AddOn>();
-        groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Standalone>();
+        groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
+        groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
     }
 
     /**
@@ -826,7 +832,7 @@ public class SM_Engine {
         Constructor<?> co_operator = cl.getConstructor(OperatorConf.class);
 
 
-        Sim_Framework measure = (Sim_Framework) co_measure.newInstance();
+        Sim_FrameworkAbstracted measure = (Sim_FrameworkAbstracted) co_measure.newInstance();
         GraphRepresentation a_rep = (GraphRepresentation) co_representation.newInstance(a, this);
         GraphRepresentation b_rep = (GraphRepresentation) co_representation.newInstance(b, this);
         RepresentationOperators op = (RepresentationOperators) co_operator.newInstance(measure_conf.operator);
@@ -854,7 +860,7 @@ public class SM_Engine {
 
         try {
 
-            Sim_Groupwise_Standalone gMeasure;
+            Sim_Groupwise_Direct gMeasure;
 
             synchronized (groupwiseStandaloneMeasures) {
 
@@ -866,7 +872,7 @@ public class SM_Engine {
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
-                    gMeasure = (Sim_Groupwise_Standalone) co.newInstance();
+                    gMeasure = (Sim_Groupwise_Direct) co.newInstance();
                     groupwiseStandaloneMeasures.put(confGroupwise, gMeasure);
                 }
             }
@@ -899,7 +905,7 @@ public class SM_Engine {
         double sim = -Double.MAX_VALUE;
 
         try {
-            Sim_Groupwise_AddOn gMeasure;
+            Sim_Groupwise_Indirect gMeasure;
 
             synchronized (groupwiseAddOnMeasures) {
 
@@ -911,7 +917,7 @@ public class SM_Engine {
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
-                    gMeasure = (Sim_Groupwise_AddOn) co.newInstance();
+                    gMeasure = (Sim_Groupwise_Indirect) co.newInstance();
                     groupwiseAddOnMeasures.put(confGroupwise, gMeasure);
                 }
             }

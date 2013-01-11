@@ -43,7 +43,7 @@ import org.openrdf.model.Resource;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 
 /**

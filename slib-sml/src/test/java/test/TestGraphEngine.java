@@ -57,7 +57,7 @@ import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.ResultStack;
 

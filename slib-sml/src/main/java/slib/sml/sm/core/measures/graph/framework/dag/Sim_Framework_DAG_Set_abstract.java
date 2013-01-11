@@ -39,9 +39,9 @@ package slib.sml.sm.core.measures.graph.framework.dag;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
@@ -50,7 +50,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author seb
  */
-public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG,Sim_Groupwise_Standalone{
+public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG,Sim_Groupwise_Direct{
 
 
 	/**

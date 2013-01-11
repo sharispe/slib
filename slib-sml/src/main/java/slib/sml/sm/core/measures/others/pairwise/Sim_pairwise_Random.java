@@ -40,7 +40,7 @@ import java.util.Random;
 
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.measures.Sim_Pairwise;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 

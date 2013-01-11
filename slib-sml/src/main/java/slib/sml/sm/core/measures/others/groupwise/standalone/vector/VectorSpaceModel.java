@@ -39,8 +39,8 @@ package slib.sml.sm.core.measures.others.groupwise.standalone.vector;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
-import slib.sml.sm.core.measures.Sim_Groupwise_Standalone;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
@@ -49,7 +49,7 @@ import slib.utils.impl.ResultStack;
  *
  * @author seb
  */
-public class VectorSpaceModel implements Sim_Groupwise_Standalone{
+public class VectorSpaceModel implements Sim_Groupwise_Direct{
 
 	/**
      *

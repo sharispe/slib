@@ -36,10 +36,19 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sml.sm.core.measures;
 
+import java.util.Set;
+import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Exception;
+
 /**
- *
- * @author seb
+ * Interface used to represent Semantic similarity used to process pairs of groups of vertices.
+ * 
+ * @author Harispe Sébastien
  */
 public interface Sim_Groupwise {
+    
+
 
 }

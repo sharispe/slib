@@ -44,7 +44,7 @@ import slib.sglib.model.impl.graph.elements.VertexTyped;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 
 /**

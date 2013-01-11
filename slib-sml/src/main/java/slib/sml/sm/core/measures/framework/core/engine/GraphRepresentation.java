@@ -40,7 +40,6 @@ knowledge of the CeCILL license and that you accept its terms.
 
 import org.openrdf.model.Resource;
 import org.openrdf.model.Value;
-
 import slib.sglib.model.graph.elements.V;
 import slib.utils.ex.SLIB_Exception;
 
@@ -52,6 +51,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public abstract class GraphRepresentation implements IGraphRepresentation {
 
+        
 	V r;
 
 	/**

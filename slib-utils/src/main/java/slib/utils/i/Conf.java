@@ -40,7 +40,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 
 /**
- * Generic Configuration class used to build object storing a configuration. as
+ * Generic Configuration class used to build object storing a configuration as
  * key value pairs. {@link Conf} objects are defined by a map storing pair of
  * keys and values in which the key is a {@link String} corresponding to the
  * flag of the parameter and the value is an {@link Object} corresponding to the

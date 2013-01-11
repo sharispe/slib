@@ -40,7 +40,7 @@ import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.IGraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.utils.OperatorConf;
-import slib.sml.sm.core.utils.SM_Engine;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 

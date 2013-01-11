@@ -44,101 +44,114 @@ import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
+ * Class used to defined static methods utility.
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class IcUtils {
 
     /**
-     * 
-     * @param ancA
-     * @param ancB
-     * @param icResults
-     * @return the Most Informative Common Ancestor regarding the given metric results, null if none is found
-     * @throws SLIB_Exception 
+     * Search the Most Informative Concept Shared between two sets, regarding
+     * the given metric. This method is particularly suited to the search of the
+     * Most Informative Common Ancestor, considering the input sets as the
+     * inclusive ancestors of the concepts for which we search the MICAS.
+     *
+     * @param setA the first set
+     * @param setB the second set
+     * @param icScores the metric result to consider to evaluate the specificity
+     * of a concept
+     * @return the Most Informative concept regarding the given metric results,
+     * null if none is found
+     * @throws SLIB_Exception
      */
-    public static V searchMICA(Set<V> ancA,
-            Set<V> ancB,
-            ResultStack<V, Double> icResults) throws SLIB_Exception {
+    public static V searchMICA(Set<V> setA,
+            Set<V> setB,
+            ResultStack<V, Double> icScores) throws SLIB_Exception {
 
-        Set<V> intersec = SetUtils.intersection(ancA, ancB);
+        Set<V> intersec = SetUtils.intersection(setA, setB);
 
         if (intersec.isEmpty()) {
             throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
-        } else if (icResults == null) {
+        } else if (icScores == null) {
             throw new SLIB_Ex_Critic("Empty IC result stack... Treatment cannot be performed");
         }
 
         Iterator<V> it = intersec.iterator();
         V mica = null;
-        double max = -Double.MAX_VALUE; 
+        double max = -Double.MAX_VALUE;
 
         while (it.hasNext()) {
 
             V v = it.next();
-            if (mica == null || max < icResults.get(v)) {
-                max = icResults.get(v);
+            if (mica == null || max < icScores.get(v)) {
+                max = icScores.get(v);
                 mica = v;
             }
         }
-        
-        System.out.println(ancA);
-        System.out.println(ancB);
-        System.out.println("Intersection "+intersec);
-        System.out.println("MICA: "+mica);
         return mica;
     }
 
     /**
+     * Search the IC of Most Informative Concept Shared between two sets,
+     * regarding the given metric. This method is particularly suited to the
+     * search of IC of the Most Informative Common Ancestor, considering the
+     * input sets as the inclusive ancestors of the concepts for which we search
+     * the MICAS.
      *
-     * @param ancA
-     * @param ancB
-     * @param icScores
-     * @return
-     * @throws SLIB_Exception  
+     * @param setA the first set
+     * @param setB the second set
+     * @param icScores the metric result to consider to evaluate the specificity
+     * of a concept
+     * @return the IC of the Most Informative concept regarding the given metric
+     * results, null if none is found
+     *
+     * @throws SLIB_Exception
      */
-    public static Double searchMax_IC_MICA(Set<V> ancA,
-            Set<V> ancB,
+    public static Double searchMax_IC_MICA(Set<V> setA,
+            Set<V> setB,
             ResultStack<V, Double> icScores) throws SLIB_Exception {
-        
-        V mica = searchMICA(ancA, ancB, icScores);
-        
-        
+
+        V mica = searchMICA(setA, setB, icScores);
+
+
         return icScores.get(mica);
     }
 
     /**
+     * Search the IC of Less Informative Concept Shared between two sets,
+     * regarding the given metric.
      *
-     * @param ancA
-     * @param ancB
-     * @param icResults
-     * @return
+     * @param setA the first set
+     * @param setB the second set
+     * @param icScores the metric result to consider to evaluate the specificity
+     * of a concept
+     * @return the IC of the Less Informative concept regarding the given metric
+     * results, null if none is found
+     *
      * @throws SLIB_Exception
      */
-    public static double searchMin_pOc_MICA(
-            Set<V> ancA,
-            Set<V> ancB,
-            ResultStack<V, Double> icResults) throws SLIB_Exception {
+    public static Double searchMin_pOc_MICA(
+            Set<V> setA,
+            Set<V> setB,
+            ResultStack<V, Double> icScores) throws SLIB_Exception {
 
-        Set<V> intersec = SetUtils.intersection(ancA, ancB);
+        Set<V> intersec = SetUtils.intersection(setA, setB);
 
-        if (intersec.isEmpty()) {
-            throw new SLIB_Ex_Warning("Searching a min from an empty collection, be sure the compared concepts are locate under the specified root...");
-        }
+        Double min = null;
 
-        if (icResults == null) {
-            throw new SLIB_Ex_Critic("Empty result set");
-        }
+        if (!intersec.isEmpty() && icScores != null) {
 
-        Iterator<V> it = intersec.iterator();
-        double min = icResults.get(it.next()); // TODO check empty intersection
+            Iterator<V> it = intersec.iterator();
+            min = icScores.get(it.next());
 
-        while (it.hasNext()) {
-            V v = it.next();
-            if (min > icResults.get(v)) {
-                min = icResults.get(v);
+            while (it.hasNext()) {
+                V v = it.next();
+                if (min > icScores.get(v)) {
+                    min = icScores.get(v);
+                }
             }
         }
+
 
         return min;
     }

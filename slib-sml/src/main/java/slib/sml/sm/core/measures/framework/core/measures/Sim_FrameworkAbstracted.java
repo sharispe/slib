@@ -42,47 +42,43 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Interface defining the methods shared by similarity measures based on the
- * abstract framework. In short, those measures are based on a abstract layer
- * defining the elements to compare, e.g. concept or group of concepts, as
- * (graph) representations and the operators which can be used to perform the
- * operations on which rely the abstract measure in use i.e. assessment of the
- * commonality and difference of the compared elements.
  *
+ * Abstract used to facilitate {@link Sim_Framework} interface implementation.
+ * 
  * @author Harispe Sébastien
  */
-public interface Sim_Framework {
+public abstract class Sim_FrameworkAbstracted implements Sim_Framework {
 
-    /**
-     * Assess the similarity of two elements based on the specified
-     * configuration.
-     *
-     * @param a the first element to compare
-     * @param b the second element to compare
-     * @param engine the engine used to perform semantic measures computation
-     * @param operators the operators on which rely the abstract measure
-     * @param conf the configuration
-     * @return the similarity score
-     * @throws SLIB_Exception
-     */
-    public double sim(V a,
-            V b,
-            SM_Engine engine,
-            RepresentationOperators operators,
-            SMconf conf) throws SLIB_Exception;
+    @Override
+    public final double sim(V a, V b, SM_Engine c,
+            RepresentationOperators operator, SMconf conf)
+            throws SLIB_Exception {
+
+        GraphRepresentation rep_a = c.getRepresentation(a, conf);
+        GraphRepresentation rep_b = c.getRepresentation(b, conf);
+
+        return sim(rep_a, rep_b, c, operator, conf);
+    }
 
     /**
      *
-     * Assess the similarity of two elements based on the specified
-     * configuration.
-     *
-     * @param rep_a representation of the first element
-     * @param rep_b representation of the second element
-     * @param engine the engine used to perform semantic measures computation
-     * @param operators the operators on which rely the abstract measure
-     * @param conf the configuration
-     * @return the similarity score
+     * @param rep_a
+     * @param rep_b
+     * @param c
+     * @param operator
+     * @param conf
+     * @return
      * @throws SLIB_Exception
      */
-    public double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine engine, RepresentationOperators operators, SMconf conf) throws SLIB_Exception;
+    public final double sim(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SLIB_Exception {
+
+        if (!operator.validateRules(rep_a, rep_b, c)) {
+            return operator.getRulesInvalidatedScore();
+        }
+
+        return compute(rep_a, rep_b, c, operator, conf);
+    }
+
+    @Override
+    public abstract double compute(GraphRepresentation rep_a, GraphRepresentation rep_b, SM_Engine c, RepresentationOperators operator, SMconf conf) throws SLIB_Exception;
 }
