@@ -70,7 +70,7 @@
 
                 <configuration>
                     <finalName>ontofocus-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
+                    <appendAssemblyId>true</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
@@ -82,7 +82,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <id>make-assembly-ontofocus</id><!-- this is used for inheritance merges -->
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
                             <goal>attached</goal><!-- goals == mojos -->
@@ -96,11 +96,11 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/ontofocus-latest.jar"/>
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/ontofocus-${sml-toolkit.version}.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-latest.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${sml-toolkit.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-${sml-toolkit.version}.jar"/>
                             </tasks>
                         </configuration>
                         <goals>

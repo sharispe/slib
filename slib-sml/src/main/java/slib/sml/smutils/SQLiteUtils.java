@@ -51,7 +51,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -81,7 +80,7 @@ import slib.utils.ex.SLIB_Exception;
  * databases containing tables with more than 500 columns. If such big table are
  * processed a SQL_Exception will be throw.
  *
- * @author Sebastien Harispe
+ * @author Harispe Sébastien
  *
  */
 public class SQLiteUtils {
@@ -129,7 +128,7 @@ public class SQLiteUtils {
                 }
             }
             in.close();
-        } catch (IOException e) {//Catch exception if any
+        } catch (IOException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         return header;
@@ -1206,6 +1205,7 @@ public class SQLiteUtils {
     }
 
     /**
+     *
      * Setter of the number of value stored in memory.
      *
      * @param BATCH_LIMIT
@@ -1215,7 +1215,6 @@ public class SQLiteUtils {
     }
 
     /**
-     *
      * @return the number of values stored by line.
      */
     public int getBATCH_LIMIT_MATRIX_LINE() {

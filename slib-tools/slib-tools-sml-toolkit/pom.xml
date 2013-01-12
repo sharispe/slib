@@ -30,13 +30,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <scope>compile</scope>
-            <version>1.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <scope>runtime</scope>
-            <version>1.5.6</version>
         </dependency>
 
         <dependency>
@@ -53,13 +51,14 @@
 
     <build>
         <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
-
-        <filters>
+<!--
+-->        <filters>
             <filter>src/main/resources/sml-toolkit-constants.properties</filter>
         </filters>
     
         <resources>
-            <!-- include main.properties -->
+            <!--             include main.properties 
+            -->            
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -69,7 +68,7 @@
                 </includes>
             </resource>
 
-            <!-- exclude everything else -->
+            <!--exclude everything else--> 
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
@@ -99,7 +98,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id><!-- this is used for inheritance merges -->
+                        <id>make-assembly-sml-toolkit</id><!-- this is used for inheritance merges -->
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
                             <goal>attached</goal><!-- goals == mojos -->
@@ -113,7 +112,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>install</phase>
+                        <phase>package</phase>
                         <configuration>
                             <tasks>
                                 <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar"/>
@@ -128,6 +127,15 @@
                 </executions>
             </plugin>
 
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
 
 
         </plugins>

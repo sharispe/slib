@@ -1,11 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.lgi2p.kid</groupId>
     <name>slib</name>
     <artifactId>slib</artifactId>
     <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
+    
+    <properties>
+        <slib.version>0.0.3-SNAPSHOT</slib.version>
+        <sml-toolkit.version>0.0.3</sml-toolkit.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+
     <modules>
         <module>sglib</module>
         <module>slib-utils</module>
@@ -16,25 +24,14 @@
         <module>slib-examples</module>
         <module>slib-dist</module>
     </modules>
-        
-    <properties>
-        <slib.version>0.0.3-SNAPSHOT</slib.version>
-        <sml-toolkit.version>0.0.3</sml-toolkit.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
 
+    <description>Core modules for slib</description>
+    
+
+    
     <dependencyManagement>
 
         <dependencies>
-                    
-                    
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.5.6</version>
-                <scope>compile</scope>
-            </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
@@ -45,6 +42,12 @@
                 <optional>true</optional>
             </dependency>
 
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.5.6</version>
+                <scope>compile</scope>
+            </dependency>
 
             <!-- concrete Log4J Implementation for SLF4J API -->
             <dependency>
@@ -56,11 +59,16 @@
         </dependencies>
     </dependencyManagement>
 
-
     <build>
-
+        
         <pluginManagement>
             <plugins>
+                
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.6</version>
+                </plugin>
+                
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.5.1</version>
@@ -69,7 +77,15 @@
                         <target>1.6</target>
                     </configuration>
                 </plugin>
-                                
+                
+                <plugin>
+                    <artifactId>maven-deploy-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2</version>
+                </plugin>
                                 
                                 
                 <plugin>
@@ -86,46 +102,88 @@
                             <id>aggregate</id>
                             <goals>
                                 <goal>aggregate</goal>
+                                <goal>aggregate-jar</goal>
                             </goals>
-                            <phase>site</phase>
+                            <phase>deploy</phase>
                         </execution>
                     </executions>
                 </plugin>
-                
-       
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-
-                <configuration>
-                    <finalName>slib-${slib.version}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest></manifest>
-                    </archive>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id><!-- this is used for inheritance merges -->
-                        <phase>package</phase><!-- append to the packaging phase. -->
-                        <goals>
-                            <goal>attached</goal><!-- goals == mojos -->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
-           
-
-
-
-      
-
+               
             </plugins>
         </pluginManagement>
+        
+        <plugins>
 
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <finalName>slib-${project.version}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/sdk.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <reportPlugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <configuration>
+                                <encoding>utf8</encoding>
+                                <source>1.6</source>
+                                <quiet>true</quiet>
+                                <groups>
+                                    <group>
+                                        <title>sglib API</title>
+                                        <packages>fr.lgi2p.kid.sglib*</packages>
+                                    </group>
+                                    <group>
+                                        <title>slib-indexer API</title>
+                                        <packages>fr.lgi2p.kid.slib-indexer*</packages>
+                                    </group>
+                                    <group>
+                                        <title>slib-sml API</title>
+                                        <packages>fr.lgi2p.kid.slib-sml*</packages>
+                                    </group>
+                                    <group>
+                                        <title>slib-tools API</title>
+                                        <packages>fr.lgi2p.kid.slib-tools*</packages>
+                                    </group>
+                                    <group>
+                                        <title>slib-utils API</title>
+                                        <packages>fr.lgi2p.kid.slib-utils*</packages>
+                                    </group>
+                                </groups>
+                                <links>
+                                    <link>http://download.oracle.com/javase/1.6.0/docs/api</link>
+                                </links>
+                            </configuration>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                        <report>aggregate</report>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-project-info-reports-plugin</artifactId>
+                            <reportSets>
+                                <reportSet>
+                                    <reports>
+                                    </reports>
+                                </reportSet>
+                            </reportSets>
+                        </plugin>
+                    </reportPlugins>
+                </configuration> 
+            </plugin>
+        </plugins>
     </build>
-
 </project>

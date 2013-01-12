@@ -57,7 +57,6 @@ import slib.utils.impl.BigFileReader;
  * Used to results merge files.
  * Comment start by ! and the process consider first line as header (except those starting by !)
  *
- *
  * @author Harispe Sébastien
  *
  */

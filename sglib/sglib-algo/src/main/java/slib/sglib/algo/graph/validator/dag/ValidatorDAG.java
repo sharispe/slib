@@ -51,7 +51,6 @@ import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
-import sun.security.krb5.internal.crypto.EType;
 
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
@@ -361,7 +360,8 @@ public class ValidatorDAG {
      * @param g the graph
      * @return the root vertex
      *
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic if multiple roots are detected
+     * 
      * @see
      */
     public V getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
