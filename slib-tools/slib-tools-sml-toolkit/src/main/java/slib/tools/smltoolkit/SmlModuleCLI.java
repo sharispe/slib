@@ -8,10 +8,10 @@ import slib.utils.ex.SLIB_Exception;
  */
 public interface SmlModuleCLI {
 
-	/**
+    /**
      *
      * @param args
      * @throws SLIB_Exception
      */
-    public void execute(String[] args)  throws SLIB_Exception; 
+    public void execute(String[] args) throws SLIB_Exception;
 }

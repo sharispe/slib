@@ -41,10 +41,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 import org.openrdf.model.URI;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
@@ -52,9 +50,9 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.SmlModuleCLI;
@@ -107,6 +105,7 @@ public class SmCli implements SmlModuleCLI {
      * @param args
      * @throws SLIB_Exception
      */
+    @Override
     public void execute(String[] args) throws SLIB_Exception {
         SmCmdHandler c = new SmCmdHandler(args);
         execute(c.xmlConfFile);
@@ -116,7 +115,7 @@ public class SmCli implements SmlModuleCLI {
      * Execute from configuration file
      *
      * @param confFile
-     * @throws SLIB_Exception  
+     * @throws SLIB_Exception
      */
     public void execute(String confFile) throws SLIB_Exception {
 
@@ -134,14 +133,14 @@ public class SmCli implements SmlModuleCLI {
         if (g == null) {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");
         }
-        
-        logger.info("Graph information:\n"+g.toString());
+
+        logger.info("Graph information:\n" + g.toString());
 
         simManager = new SM_Engine(g);
 
 
-        for (ICconf g : conf.gConfICs) {
-            simManager.computeIC(g);
+        for (ICconf icConf : conf.gConfICs) {
+            simManager.computeIC(icConf);
         }
 
 

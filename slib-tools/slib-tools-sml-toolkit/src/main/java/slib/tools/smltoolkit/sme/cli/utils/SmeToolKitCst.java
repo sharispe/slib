@@ -49,7 +49,7 @@ public class SmeToolKitCst extends ModuleCst {
         /**
      *
      */
-    public static final String   properties_prefix   = "sml-toolkit-sme";
+    public static final String   properties_prefix   = "sml-toolkit.sme";
 	
 	
 	/**

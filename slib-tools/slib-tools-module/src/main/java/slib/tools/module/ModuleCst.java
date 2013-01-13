@@ -34,11 +34,6 @@
  */
 package slib.tools.module;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -78,23 +73,6 @@ public abstract class ModuleCst {
      */
     public String contact = null;
 
-//    /**
-//     * Build the Module Constant object
-//     *
-//     * @param appName	the name of the application
-//     * @param version	the version of the application as String
-//     * @param reference	the reference of the module
-//     * @param description a description of the module
-//     * @param contact the email to contact if a bug is encountered.
-//     */
-//    public ModuleCst(String appName, String version, String reference, String description, String contact) {
-//
-//        this.appName = appName;
-//        this.version = version;
-//        this.reference = reference;
-//        this.description = description;
-//        this.contact = contact;
-//    }
 
     /**
      *

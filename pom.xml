@@ -4,12 +4,12 @@
     <groupId>fr.lgi2p.kid</groupId>
     <name>slib</name>
     <artifactId>slib</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4</version>
     <packaging>pom</packaging>
     
     <properties>
-        <slib.version>0.0.3-SNAPSHOT</slib.version>
-        <sml-toolkit.version>0.0.3</sml-toolkit.version>
+        <slib.version>0.0.4</slib.version>
+        <sml-toolkit.version>0.0.4</sml-toolkit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

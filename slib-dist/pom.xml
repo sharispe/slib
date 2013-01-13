@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.0.3-SNAPSHOT</version>
+        <version>0.0.4</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-dist</artifactId>
@@ -62,12 +62,12 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
@@ -77,37 +77,37 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-algo</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model-impl</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-indexer</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-io</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-tools-sml-toolkit</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-tools-ontofocus</artifactId>
-            <version>0.0.3-SNAPSHOT</version>
+            <version>0.0.4</version>
         </dependency>
     </dependencies>
 </project>

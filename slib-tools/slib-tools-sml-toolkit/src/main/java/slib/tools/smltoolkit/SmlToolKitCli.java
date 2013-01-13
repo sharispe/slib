@@ -106,7 +106,7 @@ public class SmlToolKitCli extends CmdHandler {
             }
 
         } catch (ParseException exp) {
-            ending("Error : " + SmlToolKitCliCst.appCmdName + " Parsing failed.  Trace: " + exp.getMessage(), true);
+            ending("Error : " + SmlToolKitCliCst._appCmdName + " Parsing failed.  Trace: " + exp.getMessage(), true);
         }
         launch();
     }
@@ -176,8 +176,10 @@ public class SmlToolKitCli extends CmdHandler {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
+        String[] argsTest = {"-t", "sm"};
+
         try {
-            SmlToolKitCli c = new SmlToolKitCli(args);
+            SmlToolKitCli c = new SmlToolKitCli(argsTest);
 
         } catch (Exception e) {
             logger.error("\n\n[Error] " + e.getMessage() + "\n");
