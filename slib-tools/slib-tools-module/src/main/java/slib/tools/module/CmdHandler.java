@@ -79,6 +79,7 @@ public abstract class CmdHandler {
     
     
     Comparator<Option> comparator = new Comparator<Option>() {
+        @Override
         public int compare(Option o1, Option o2) {
             if (optionsOrder.get(o1) > optionsOrder.get(o2)) {
                 return 1;

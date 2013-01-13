@@ -36,14 +36,12 @@ package slib.tools.smltoolkit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.SmCli;
 import slib.tools.smltoolkit.smbb.cli.SmbbCli;
@@ -176,10 +174,9 @@ public class SmlToolKitCli extends CmdHandler {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
-        String[] argsTest = {"-t", "sm"};
 
         try {
-            SmlToolKitCli c = new SmlToolKitCli(argsTest);
+            SmlToolKitCli c = new SmlToolKitCli(args);
 
         } catch (Exception e) {
             logger.error("\n\n[Error] " + e.getMessage() + "\n");
