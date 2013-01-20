@@ -43,7 +43,7 @@ import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
- * 
+ *
  * Class used to defined static methods utility.
  *
  * @author Harispe Sébastien
