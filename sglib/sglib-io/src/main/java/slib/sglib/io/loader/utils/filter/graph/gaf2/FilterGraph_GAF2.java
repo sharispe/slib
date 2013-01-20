@@ -39,7 +39,6 @@ package slib.sglib.io.loader.utils.filter.graph.gaf2;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-
 import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;

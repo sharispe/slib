@@ -73,7 +73,7 @@ public class SmbbConf_GO_EC extends SmbbConf_GO {
 		
 		this();
 		
-		this.kb_uri 	   = (String) sspBBConf_g.getParam(SmbbCst.kb_id);
+		this.kb_uri 	   = (String) sspBBConf_g.getParam(SmbbCst.kb_uri);
 		this.graph_uri 	   = (String) sspBBConf_g.getParam(SmbbCst.graph_uri);
 		this.ec2GO_mapping = (String) sspBBConf_g.getParam(SmbbCst.ec2GO_mapping);
 		this.out_genes_ec   = (String) sspBBConf_g.getParam(SmbbCst.out_genes_ec);

@@ -6,6 +6,7 @@ import org.openrdf.model.vocabulary.RDF;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 
 /**
@@ -58,8 +59,7 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
     @Override
     public Set<V> getInstances() {
-        // TODO Auto-generated method stub Aug 30, 2012
-        throw new UnsupportedOperationException("Not supported yet.");
+        return graph.getV(VType.INSTANCE);
 
     }
 

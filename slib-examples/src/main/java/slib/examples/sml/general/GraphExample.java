@@ -29,7 +29,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  * 
  */
-package slib.examples.sml;
+package slib.examples.sml.general;
 
 import java.util.Set;
 import org.openrdf.model.URI;

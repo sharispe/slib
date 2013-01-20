@@ -28,6 +28,8 @@ import slib.sglib.io.loader.csv.CSV_StatementTemplate_Constraint;
 import slib.sglib.io.loader.csv.StatementTemplateElement;
 import slib.sglib.io.loader.csv.StatementTemplate_Constraint_Type;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
+import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
+import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
@@ -488,6 +490,10 @@ public class XMLConfLoaderGeneric {
         NodeList list = item.getElementsByTagName(XmlTags.FILTER_TAG);
         LinkedHashSet<Conf> gConfGenerics = GenericConfBuilder.build(list);
         filters = buildFilters(gConfGenerics);
+        
+        for(Filter f : filters){
+            FilterRepository.getInstance().addFilter(f);
+        }
 
     }
 
@@ -528,13 +534,5 @@ public class XMLConfLoaderGeneric {
      */
     public LinkedList<GraphConf> getGraphConfs() {
         return graphConfs;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public LinkedHashSet<Filter> getFilters() {
-        return filters;
     }
 }

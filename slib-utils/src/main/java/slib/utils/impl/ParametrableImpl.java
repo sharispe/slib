@@ -23,6 +23,7 @@ public class ParametrableImpl implements Parametrable {
      * @param name
      * @param o
      */
+    @Override
     public void addParameter(String name, Object o) {
         if (params == null) {
             params = new HashMap<String, Object>();
@@ -35,6 +36,7 @@ public class ParametrableImpl implements Parametrable {
      * @param name
      * @return
      */
+    @Override
     public Object getParameter(String name) {
         if (params == null) {
             return null;
@@ -46,6 +48,7 @@ public class ParametrableImpl implements Parametrable {
      *
      * @param name
      */
+    @Override
     public void removeParameter(String name) {
         if (existsParam(name)) {
             params.remove(name);
@@ -55,6 +58,7 @@ public class ParametrableImpl implements Parametrable {
     /**
      *
      */
+    @Override
     public void clear() {
         params = null;
     }
@@ -64,6 +68,7 @@ public class ParametrableImpl implements Parametrable {
      * @param pname
      * @return
      */
+    @Override
     public boolean existsParam(String pname) {
         return (params != null && params.containsKey(pname));
     }
@@ -72,6 +77,7 @@ public class ParametrableImpl implements Parametrable {
      * Can be null
      * @return 
      */
+    @Override
     public Map<String, Object> getParams() {
         return params;
     }

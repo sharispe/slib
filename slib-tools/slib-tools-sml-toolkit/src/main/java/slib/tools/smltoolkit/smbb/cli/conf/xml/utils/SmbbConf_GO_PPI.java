@@ -88,7 +88,7 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 		
 		this();
 		
-		String kb_id 	= (String) 		genericConf.getParam(SmbbCst.kb_id);
+		String kb_id 	= (String) 		genericConf.getParam(SmbbCst.kb_uri);
 		String graph_id = (String) 		genericConf.getParam(SmbbCst.graph_uri);
 		
 		
@@ -141,7 +141,7 @@ public class SmbbConf_GO_PPI extends SmbbConf_GO {
 			Util.error("[Module "+SmbbCst.name+"] Please specify a value for parameter "+SmbbCst.negativeRel);
 		
 		if(kb_uri == null)
-			Util.error("[Module "+SmbbCst.name+"] Please specify a KB id (i.e "+SmbbCst.kb_id+" parameter) check URIs ");
+			Util.error("[Module "+SmbbCst.name+"] Please specify a KB id (i.e "+SmbbCst.kb_uri+" parameter) check URIs ");
 		
 		if(taxon == null)
 			Util.error("[Module "+SmbbCst.name+"] Please specify a Taxon id (i.e "+SmbbCst.taxon+" parameter) ");

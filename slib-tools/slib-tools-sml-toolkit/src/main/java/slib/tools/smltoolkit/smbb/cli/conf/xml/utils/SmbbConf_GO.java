@@ -74,7 +74,7 @@ public class SmbbConf_GO implements ModuleConf {
 		if(type == null)
 			Util.error("Please specify a "+SmbbCst.type);
 		if(kb_uri == null)
-			Util.error("Please specify a "+SmbbCst.kb_id);
+			Util.error("Please specify a "+SmbbCst.kb_uri);
 		if(graph_uri == null)
 			Util.error("Please specify a "+SmbbCst.graph_uri);
 		

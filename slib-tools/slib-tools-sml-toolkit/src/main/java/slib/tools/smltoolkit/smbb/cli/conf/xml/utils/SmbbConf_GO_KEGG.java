@@ -77,7 +77,7 @@ public class SmbbConf_GO_KEGG extends SmbbConf_GO {
 		this();
 
 		
-		String kb_id 		 = (String) sspBBConf_g.getParam(SmbbCst.kb_id);
+		String kb_id 		 = (String) sspBBConf_g.getParam(SmbbCst.kb_uri);
 		String graph_id 	 = (String) sspBBConf_g.getParam(SmbbCst.graph_uri);
 		String kegg_index    = (String) sspBBConf_g.getParam(SmbbCst.kegg_index);
 		String pathway_clusters = (String) sspBBConf_g.getParam(SmbbCst.pathway_clusters);

@@ -78,7 +78,7 @@ public class SmbbConf_GO_Pfam extends SmbbConf_GO {
 		this();
 
 		
-		String kb_id 		 = (String) sspBBConf_g.getParam(SmbbCst.kb_id);
+		String kb_id 		 = (String) sspBBConf_g.getParam(SmbbCst.kb_uri);
 		String graph_id 	 = (String) sspBBConf_g.getParam(SmbbCst.graph_uri);
 		String pFamKB_index  = (String) sspBBConf_g.getParam(SmbbCst.pFamKb_index);
 		String pFamClans  	 = (String) sspBBConf_g.getParam(SmbbCst.pFamClans);

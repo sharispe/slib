@@ -46,18 +46,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
+import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
-import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
 import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.EdgeTyped;
 import slib.sglib.model.impl.graph.elements.VertexTyped;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -144,8 +143,9 @@ public class GraphLoader_GAF_2 implements GraphLoader {
     public final static int GENE_PRODUCT_ISOFORM = 16;
     private G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataFactoryMemory data = DataFactoryMemory.getSingleton();
-    String gNS;
+    DataFactoryMemory factory = DataFactoryMemory.getSingleton();
+    String prefixUriInstance;
+    String defaultURIprefix;
     Pattern colon = Pattern.compile(":");
 
     @Override
@@ -178,7 +178,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
             throw new SLIB_Ex_Critic("Cannot process Null Graph");
         }
 
-        logger.info("Populate graph " + graph.getURI());
+        logger.info("GAF 2 loader populates graph " + graph.getURI());
         this.g = graph;
 
         process(conf);
@@ -186,20 +186,33 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
     private void process(GDataConf conf) throws SLIB_Ex_Critic {
 
+        prefixUriInstance = (String) conf.getParameter("prefix");
+        if (prefixUriInstance == null) {
+            prefixUriInstance = g.getURI().getNamespace();
+        }
 
-        gNS = g.getURI().getNamespace();
+        logger.info("Instance URIs will be prefixed by: "+prefixUriInstance);
+        
+        defaultURIprefix = prefixUriInstance;
+        logger.info("Default URI prefix is set to: "+prefixUriInstance);
+        
 
 
-        Set<FilterGraph> filters = new HashSet<FilterGraph>();
+        Set<Filter> filters = new HashSet<Filter>();
 
         String filtersAsStrings = (String) conf.getParameter("filters");
 
         if (filtersAsStrings != null) {
             String[] filterNames = filtersAsStrings.split(",");
+            
             FilterRepository filtersRepo = FilterRepository.getInstance();
 
             for (String fname : filterNames) {
-                filters.add(filtersRepo.getFilter(fname));
+                Filter f = filtersRepo.getFilter(fname);
+                if(f == null){
+                    throw new SLIB_Ex_Critic("Cannot locate filter associated to id "+fname);
+                }
+                filters.add(f);
             }
         }
 
@@ -210,14 +223,18 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         if (filters != null) {
 
-            for (FilterGraph f : filters) {
+            for (Filter f : filters) {
 
                 if (f instanceof FilterGraph_GAF2) {
 
                     if (filter != null) {
                         throw new SLIB_Ex_Critic("Two filters " + FilterGraph_GAF2_cst.TYPE + " have been specified. Only one admitted");
                     } else {
+                        
                         filter = (FilterGraph_GAF2) f;
+                        logger.info("Filtering according to filter "+filter.getId()+"\ttype"+filter.getType());
+                        
+                        
                         taxons = filter.getTaxons();
                         excludedEC = filter.getExcludedEC();
                     }
@@ -254,12 +271,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         logger.info("Loading...");
 
-        String uriPrefix = (String) conf.getParameter("prefix");
-        if (uriPrefix == null) {
-            uriPrefix = g.getURI().getNamespace();
-        }
-
-        logger.info("Using prefix: " + uriPrefix);
+        
 
         DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
@@ -295,7 +307,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
 
 
-                    URI entityID = uriManager.createURI(uriPrefix + data[DB_OBJECT_ID]);
+                    URI entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
                     qualifier = data[QUALIFIER];
                     gotermURI = buildURI(data[GOID]);
                     evidenceCode = data[EVIDENCE_CODE];
@@ -387,6 +399,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         logger.info("\tExcluded  - Contains qualifier 	      : " + existsQualifier);
         logger.info("\tNot found unexisting term in the graph :	" + not_found);
 
+        logger.info("\tAdding instances to the graph");
 
         // Build Instance
         long vnumber = 0;
@@ -412,6 +425,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         logger.info("Number of Instance loaded 	  	: " + vnumber);
         logger.info("Number of Annotation loaded 	: " + vedges);
+        logger.info("GAF2 Loader done.");
     }
 
     private String buildURI(String value) throws SLIB_Ex_Critic {
@@ -421,14 +435,14 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         if (info != null && info.length == 2) {
 
-            String ns = data.getNamespace(info[0]);
+            String ns = factory.getNamespace(info[0]);
             if (ns == null) {
                 throw new SLIB_Ex_Critic("No namespace associated to prefix " + info[0] + ". Cannot load " + value + ", please load required namespace prefix");
             }
 
             return ns + info[1];
         } else {
-            return gNS + value;
+            return defaultURIprefix + value;
         }
     }
 
