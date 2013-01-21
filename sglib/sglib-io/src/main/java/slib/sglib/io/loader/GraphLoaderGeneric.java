@@ -121,7 +121,7 @@ public class GraphLoaderGeneric {
      */
     public static G load(GraphConf graphConf) throws SLIB_Exception {
 
-        logger.debug("Loading Graph");
+        logger.info("Loading Graph "+graphConf.getUri());
 
         G g = createGraph(graphConf.getUri());
 

@@ -24,12 +24,10 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.inf.TypeInferencer;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
-import slib.sglib.algo.graph.utils.GAction;
-import slib.sglib.algo.graph.utils.GActionType;
-import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -111,11 +109,61 @@ public class GraphActionExecutor {
         String regex = (String) action.getParameter("regex");
         String vocVal = (String) action.getParameter("vocabulary");
         String file_uris = (String) action.getParameter("file_uris");
+        String rootURIs = (String) action.getParameter("root_uri");
 
 
         Set<V> toRemove = new HashSet<V>();
 
-        if (regex != null) {
+        if (rootURIs != null) {
+
+            /*
+             * Reduce the Graph considering all classes subsumed by the given root vertex
+             * Instances annotated by those classes are also conserved into the graph, others are removed.
+             */
+
+            logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by the taxonomic graph built from: " + rootURIs);
+
+            try {
+                URI rootURI = factory.createURI(rootURIs);
+                V root = g.getV(rootURI);
+                
+                if(root == null){
+                    throw new SLIB_Ex_Critic("Error cannot state vertex associated to URI "+rootURI+" in graph "+g.getURI());
+                }
+                
+                DescendantEngine descEngine = new DescendantEngine(g);
+                Set<V> descsInclusive = descEngine.getDescendants(root);
+                descsInclusive.add(root);
+                
+                
+                Set<V> classesToRemove = g.getV(VType.CLASS);
+                classesToRemove.removeAll(descsInclusive);
+                
+                logger.info("Removing "+classesToRemove.size()+" classes of the graph");
+                g.removeV(classesToRemove);
+                
+                // We then remove the entities which are not 
+                // linked to the graph current underlyign taxonomic graph
+                
+                Set<V> instancesToRemove = new HashSet<V>();
+                
+                for(V v : g.getV(VType.INSTANCE)){
+                    // No links to taxonomic graph anymore 
+                    if(g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()){ 
+                       instancesToRemove.add(v); 
+                    }
+                }
+                
+                logger.info("Removing "+instancesToRemove.size()+" instances of the graph");
+                g.removeV(instancesToRemove);
+                
+                
+                
+                
+            } catch (IllegalArgumentException e) {
+                throw new SLIB_Ex_Critic("Error value specified for parameter root_uri, i.e. " + rootURIs + " cannot be converted into an URI");
+            }
+        } else if (regex != null) {
 
             logger.info("Applying regex: " + regex);
             Pattern pattern;
@@ -194,7 +242,6 @@ public class GraphActionExecutor {
 
     }
 
-    
     private static void rdfsInference(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
         logger.info("Apply inference engine");
