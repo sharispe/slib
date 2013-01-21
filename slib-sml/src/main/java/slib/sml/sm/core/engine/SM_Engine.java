@@ -90,6 +90,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.MatrixDouble;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
+import slib.utils.impl.UtilDebug;
 
 /**
  * This class is used to facilitate the access of commonly required methods for
@@ -209,8 +210,9 @@ public class SM_Engine {
     }
 
     /**
-     * Get the parents of a vertex.
-     * A parent is a concept which is of type {@link VType#CLASS}. 
+     * Get the parents of a vertex. A parent is a concept which is of type
+     * {@link VType#CLASS}.
+     *
      * @param v the focus vertex
      * @return the set of parent of the given vertex
      */
@@ -949,9 +951,6 @@ public class SM_Engine {
         return cache.nbPathLeadingToAllVertices;
     }
 
-//	public VirtualInstancesAccessor getInstanceAccessor(){
-//		return iAccessorCorpus;
-//	}
     /**
      *
      * @return
@@ -961,32 +960,23 @@ public class SM_Engine {
         HashMap<V, Set<V>> linkedEntities = new HashMap<V, Set<V>>();
         Set<V> instances = graph.getV(VType.INSTANCE);
 
+        for (V i : instances) {
+            Set<V> annots = graph.getV(i, RDF.TYPE, Direction.OUT);
 
-
-        for (V o : instances) {
-            Set<V> annots = graph.getV(o, RDF.TYPE, Direction.OUT);
-
-            if (annots == null) {
-                annots = new HashSet<V>();
-            }
-
-            for (V v : annots) {
-                Set<V> instancesV = linkedEntities.get(v);
-
-                if (instancesV == null) {
-                    instancesV = new HashSet<V>();
+            if (annots != null) {
+                for (V c : annots) {
+                    if (linkedEntities.get(c) == null) {
+                        linkedEntities.put(c,new HashSet<V>());
+                    }
+                    linkedEntities.get(c).add(i);
                 }
-
-                instancesV.add(o);
-
-                linkedEntities.put(v, instancesV);
             }
 
         }
         // Get Topological ordering trough DFS
         // - get roots
         Set<V> roots = new ValidatorDAG().getDAGRoots(graph, goToSuperClassETypes, Direction.OUT);
-
+        
         DFS dfs = new DFS(graph, roots, goToSuperClassETypes, Direction.IN);
         List<V> topoOrdering = dfs.getTraversalOrder();
 
@@ -1019,47 +1009,6 @@ public class SM_Engine {
         return cache.nbOccurrencePropagatted;
     }
 
-//	//TODO cache
-//	public  ResultStack<V,Long> getNbInstancesInferredFromCorpus(){
-//		return new ResultStack<V, Long>(iAccessorCorpus.getInferredInstancesNumberMapping());
-//	}
-//	public  ResultStack<V,Long> getNbOccurrencePropFromCorpus(VirtualInstancesAccessor iAccessor) throws SGL_Exception_Critical {
-//
-//
-//		HashMap<V,Set<V>> linkedEntities = new HashMap<V,Set<V>>();
-//
-//		Set<V> instances = g.getV(VTypeGeneric.INSTANCE);
-//		
-//		for(V o : instances)
-//			linkedEntities.put(o, g.getV(o,RDF.TYPE,Direction.OUT));
-//
-//		// Get Topological ordering trough DFS
-//		// - get roots
-//		Set<V> roots = new ValidatorDAG().getDAGRoots(g, goToSuperClassETypes, Direction.OUT);
-//
-//		DFS dfs = new DFS(g, roots, goToSuperClassETypes, Direction.IN);
-//		List<V> topoOrdering = dfs.getTraversalOrder();
-//
-//
-//		ResultStack<V,Long> rStack = new ResultStack<V,Long>();
-//
-//		for (int i = 0; i< topoOrdering.size(); i++) {
-//
-//			V currentV = topoOrdering.get(i);
-//			Set<V> entities = linkedEntities.get(currentV);
-//
-//			// propagate Linked Entities in a bottom up fashion according the topological order
-//			for(E e : g.getE(goToSuperClassETypes, currentV,Direction.OUT)){
-//				if(!entities.isEmpty())
-//					linkedEntities.get(e.getTarget()).addAll(entities);
-//			}
-//
-//			rStack.add(currentV, (long) entities.size());
-//		}
-//		cache.nbOccurrencePropagatted = rStack;
-//
-//	return cache.nbOccurrencePropagatted;
-//}
     /**
      * Topological propagation considering one occurrence per term
      *

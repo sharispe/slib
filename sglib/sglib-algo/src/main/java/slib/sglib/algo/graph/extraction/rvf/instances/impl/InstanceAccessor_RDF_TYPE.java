@@ -11,6 +11,9 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.impl.Util;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -76,21 +79,9 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
         Set<V> instances = new HashSet<V>();
         
         instances.addAll(getDirectInstances(v));
-        System.out.println("Processing "+v);
-        System.out.println("Number of decendants \t"+descendantsEngine.getDescendants(v).size());
         for(V d : descendantsEngine.getDescendants(v)){
             instances.addAll(getDirectInstances(d));
         }
-        
-        // TO remove just to test coherency of results
-        System.out.println("Instance number: "+instances.size());
-        Set<V> i = graph.getV(VType.INSTANCE);
-        i.removeAll(instances);
-        
-        V instance = i.iterator().next();
-        System.out.println(instance);
-        Set<V> classes = graph.getV(instance, RDF.TYPE, Direction.OUT);
-        System.out.println(classes);
         return instances;
     }
 }
