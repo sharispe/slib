@@ -657,7 +657,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     }
 
     /**
-     *
+     * Print Information
      */
     public void info() {
         System.out.println(uri);
@@ -687,7 +687,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
             for (E e : vertexInEdges.get(v)) {
                 if (buildUris == null || buildUris.contains(e.getURI())) {
-                    vSelected.add(e.getTarget());
+                    vSelected.add(e.getSource());
                 }
             }
         }
@@ -702,6 +702,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
             for (E e : vertexOutEdges.get(v)) {
+                
                 if (buildUri == null || buildUri.equals(e.getURI())) {
                     vert.add(e.getTarget());
                 }
@@ -711,7 +712,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
             for (E e : vertexInEdges.get(v)) {
                 if (buildUri == null || buildUri.equals(e.getURI())) {
-                    vert.add(e.getTarget());
+                    vert.add(e.getSource());
                 }
             }
         }

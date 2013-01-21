@@ -370,7 +370,7 @@ public interface G extends NotifyingSail {
      * If the given VType is equals to null, no restriction is applied.
      *
      * @param type
-     * @return the corresponding set of vertices
+     * @return a set containing the corresponding set of vertices
      */
     public Set<V> getV(VType type);
 
@@ -378,7 +378,7 @@ public interface G extends NotifyingSail {
      * Return graph vertices respecting the given constraint.
      * 
      * @param type types
-     * @return the corresponding set of vertices
+     * @return  a set containing the corresponding set of vertices
      */
     public Set<V> getV(Set<VType> type);
 
