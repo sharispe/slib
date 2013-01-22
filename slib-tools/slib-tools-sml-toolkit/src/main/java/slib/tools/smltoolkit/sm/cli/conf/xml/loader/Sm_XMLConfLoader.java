@@ -238,7 +238,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
             if (!(type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)
                     || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)
-                    || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO_FULL))) {
+                    || type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL))) {
                 Util.error("Please precise a valid type to all queries, error due to type=" + type);
             }
         }

@@ -45,6 +45,7 @@ public class SGLIBcst {
 	/**
      *
      */
-    public static final String FICTIVE_ROOT = "__FICTIVE__";
+    public static final String FICTIVE_ROOT_FLAG = "__FICTIVE__";
+    public static final String FICTIVE_ROOT_URI  = "http://ema.lig2p.fr/fictive_root";
 
 }

@@ -38,7 +38,6 @@ import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.metrics.ic.topo.ICtopo;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 /**
@@ -55,7 +54,7 @@ public class ProbOccurence implements ICtopo {
      */
     public static ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurrence, int addToOccurrence) throws SLIB_Ex_Critic {
 
-        double max = nbOccurrence.getMax();
+        long max = (long) nbOccurrence.getMax();
         ResultStack<V, Double> results = new ResultStack<V, Double>();
 
         // we add to the max the number of occurrences added to each nodes

@@ -341,12 +341,18 @@ public class GraphActionExecutor {
 
         if (rootURIs != null && !rootURIs.isEmpty()) {
 
-            URI rootURI = factory.createURI(rootURIs);
+            URI rootURI;
 
-            if (rootURIs.equals(SGLIBcst.FICTIVE_ROOT)) {
+            if (rootURIs.equals(SGLIBcst.FICTIVE_ROOT_FLAG)) {
+                rootURI = factory.createURI(SGLIBcst.FICTIVE_ROOT_URI);
                 g.createVertex(rootURI);
+                
 
             }
+            else{
+                rootURI = factory.createURI(rootURIs);
+            }
+            
             if (g.getV(rootURI) == null) {
                 throw new SLIB_Ex_Critic("Cannot resolve specified root:" + rootURI);
             } else {

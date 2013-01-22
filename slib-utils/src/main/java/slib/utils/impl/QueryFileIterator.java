@@ -100,6 +100,7 @@ public class QueryFileIterator implements QueryIterator {
 
     }
 
+    @Override
     public boolean hasNext() {
         if (line == null) {
             try {
@@ -116,6 +117,7 @@ public class QueryFileIterator implements QueryIterator {
      * Note the Query Entry returned can be equal to null if the line is not in
      * agreement with the expectations i.e. e1 \t e2
      */
+    @Override
     public QueryEntry next() {
 
         QueryEntry entry = null;
@@ -143,6 +145,7 @@ public class QueryFileIterator implements QueryIterator {
         return entry;
     }
 
+    @Override
     public void close() throws IOException {
 
         if (br != null) {
@@ -150,6 +153,7 @@ public class QueryFileIterator implements QueryIterator {
         }
     }
 
+    @Override
     public List<QueryEntry> nextValids(int nbValues) {
 
         List<QueryEntry> bench = new ArrayList<QueryEntry>();
@@ -166,6 +170,7 @@ public class QueryFileIterator implements QueryIterator {
         return bench;
     }
 
+    @Override
     public long getNumberQueries() throws Exception {
 
         LineNumberReader lnr;

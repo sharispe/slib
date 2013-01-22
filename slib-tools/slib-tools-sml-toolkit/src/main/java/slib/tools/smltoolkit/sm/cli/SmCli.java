@@ -48,6 +48,8 @@ import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
+import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
 import slib.sml.sm.core.engine.SM_Engine;
@@ -60,6 +62,7 @@ import slib.tools.smltoolkit.sm.cli.conf.xml.loader.Sm_XMLConfLoader;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
 import slib.tools.smltoolkit.sm.cli.utils.ConceptToConcept_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.EntityToEntity_Thread;
+import slib.tools.smltoolkit.sm.cli.utils.QueryConceptsIterator;
 import slib.tools.smltoolkit.sm.cli.utils.SmCmdHandler;
 import slib.tools.smltoolkit.sm.cli.utils.ThreadResultsQueryLoader;
 import slib.utils.ex.SLIB_Exception;
@@ -207,12 +210,22 @@ public class SmCli implements SmlModuleCLI {
 
                 logger.info("Query :" + id);
 
-                QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
+                // require file
+                if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC) || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
 
-                if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)) {
+                    QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
+
+                    if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL)) {
+                        perform_cTOc(qloader, output);
+                    } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
+                        perform_oTOo(qloader, output);
+                    }
+                } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL)) {
+                    
+                    QueryIterator qloader = new QueryConceptsIterator(g);
+                    
                     perform_cTOc(qloader, output);
-                } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
-                    perform_oTOo(qloader, output);
+
                 } else {
                     throw new UnsupportedOperationException(type + " is not a supported " + XmlTags.TYPE_ATTR + " of queries");
                 }
@@ -349,6 +362,8 @@ public class SmCli implements SmlModuleCLI {
             }
         }
     }
+
+  
 
     private void perform_cTOc(QueryIterator qloader, String output) throws SLIB_Exception {
 
@@ -516,5 +531,11 @@ public class SmCli implements SmlModuleCLI {
      */
     public InstancesAccessor getiAccessor() {
         return iAccessor;
+    }
+
+    public static void main(String[] args) throws SLIB_Exception {
+
+        SmCli cli = new SmCli();
+        cli.execute("/home/seb/dev/experiments/conf.xml");
     }
 }

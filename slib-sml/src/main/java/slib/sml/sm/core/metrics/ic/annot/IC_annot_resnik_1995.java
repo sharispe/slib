@@ -68,11 +68,16 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
 
         for (V v : nbOccurences.getValues().keySet()) {
 
+            
             double pc = rtemp.get(v);
 
+            //long nbOccMax = (long) nbOccurences.getMax()+1;
+            //System.out.println(v+"\t"+nbOccurences.get(v)+"\t"+pc+"\t"+nbOccMax);
+            
             curIc = -Math.log(pc);
 
             results.add(v, curIc);
+            
         }
         return results;
     }
