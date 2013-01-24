@@ -62,13 +62,11 @@ public class QueryConceptsIterator implements QueryIterator {
     public QueryEntry next() {
 
         QueryEntry q = new QueryEntry(classes.get(i).getValue().stringValue(), classes.get(j).getValue().stringValue());
-        i++;
+        
         j++;
-        if (i == classes.size()) {
-            i = 0;
-        }
         if (j == classes.size()) {
-            j = 0;
+            i++;
+            j = i+1;
         }
         return q;
 
@@ -86,6 +84,8 @@ public class QueryConceptsIterator implements QueryIterator {
 
     @Override
     public boolean hasNext() {
+        
+//        System.out.println(i+"  "+j);
         if (i < classes.size() && j < classes.size()) {
             return true;
         }
