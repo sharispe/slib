@@ -40,24 +40,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.graph.traversal.classical.DFS;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
-import slib.utils.ex.SLIB_Ex_Warning;
-import slib.utils.impl.SetUtils;
-
-import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.repo.DataFactory;
+import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.ex.SLIB_Ex_Warning;
+import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.SetUtils;
 
 /**
  * Algorithm used to extract a subgraph from a DAG (Directed Acyclic Graph)
@@ -150,12 +147,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
             rootVertex = graph.createVertex(rootURI);
         }
 
-
         logger.debug("Selected Etypes: " + edgesTypes);
-
-        if (graph.containsVertex(rootVertex)) {
-            throw new SLIB_Ex_Critic("Unable to find Vertex associated to Root URI " + rootVertex.getValue());
-        }
 
         if (validateDAGproperty) {
 

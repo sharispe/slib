@@ -65,14 +65,17 @@ public final class QueryEntryURI implements Map.Entry<String, Set<URI> > {
         this.value = value;
     }
 
+    @Override
     public String getKey() {
         return key;
     }
 
+    @Override
     public Set<URI> getValue() {
         return value;
     }
 
+    @Override
     public Set<URI> setValue(Set<URI> value) {
     	Set<URI> old = this.value;
         this.value = value;
@@ -88,11 +91,13 @@ public final class QueryEntryURI implements Map.Entry<String, Set<URI> > {
     public boolean isValid(){
     	boolean valid = true;
     	
-    	if(key == null || key.trim().isEmpty())
-    		valid = false;
+    	if(key == null || key.trim().isEmpty()) {
+            valid = false;
+        }
     	
-    	else if(value == null || value.isEmpty())
-    		valid = false;
+    	else if(value == null || value.isEmpty()) {
+            valid = false;
+        }
     	
     	return valid;
     }

@@ -104,8 +104,9 @@ public class GraphPlotter_Graphviz {
             }
 
             if (index != null && index.containsIndexFor(v)) {
-
-                String indexVal = index.valuesOf(v).toString()+" ["+v.getValue().stringValue()+"]";
+                
+                String indexVal = index.valuesOf(v).getPreferredDescription()+" ["+v.getValue().stringValue()+"]";
+                
                 String splittedLabel = splitString(indexVal, 20);
                 out += "\t\"" + splittedLabel + "\"[fillcolor=" + color + "];\n";
 
@@ -138,10 +139,10 @@ public class GraphPlotter_Graphviz {
             if (index != null) {
 
                 if (index.containsIndexFor(s.getValue())) {
-                    source = splitString(index.valuesOf(s).toString()+" ["+s.getValue().stringValue()+"]", 20);
+                    source = splitString(index.valuesOf(s).getPreferredDescription()+" ["+s.getValue().stringValue()+"]", 20);
                 }
                 if (index.containsIndexFor(e.getTarget().getValue())) {
-                    target = splitString(index.valuesOf(t).toString()+" ["+t.getValue().stringValue()+"]", 20);
+                    target = splitString(index.valuesOf(t).getPreferredDescription()+" ["+t.getValue().stringValue()+"]", 20);
                 }
             }
             out += "\t\"" + source + "\" -> \"" + target + "\" " + info + ";\n";

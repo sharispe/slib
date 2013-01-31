@@ -40,21 +40,22 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.io.util.GFormat;
+import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.tools.module.CmdHandler;
 import slib.tools.module.XMLAttributMapping;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.OntoFocus;
 import slib.tools.ontofocus.core.utils.OntoFocusConf;
 import slib.tools.ontofocus.core.utils.OntoFocusCst;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
  *
  * @author seb
  */
-public class OntoFocusCmdHandler extends CmdHandler {
+public final class OntoFocusCmdHandler extends CmdHandler {
 
     /**
      *
@@ -80,6 +81,8 @@ public class OntoFocusCmdHandler extends CmdHandler {
      *
      */
     public boolean addR = false;
+    
+    public boolean transitiveReductionClass = false;
     /**
      *
      */
@@ -98,7 +101,8 @@ public class OntoFocusCmdHandler extends CmdHandler {
         processArgs(args);
     }
 
-    public void processArgs(String[] args) {
+    @Override
+    public void processArgs(String[] args) throws SLIB_Ex_Critic {
         CommandLineParser parser = new BasicParser();
 
         try {
@@ -110,6 +114,10 @@ public class OntoFocusCmdHandler extends CmdHandler {
 
                 if (line.hasOption("addR")) {
                     addR = true;
+                }
+                
+                if (line.hasOption("tr")) {
+                    transitiveReductionClass = true;
                 }
 
 
@@ -147,6 +155,27 @@ public class OntoFocusCmdHandler extends CmdHandler {
                     String formatAsString = line.getOptionValue("format");
                     format = XMLAttributMapping.GDataFormatMapping.get(formatAsString);
                 }
+                
+                //-- prefixes
+                if (line.hasOption("prefixes")) { // expected value such as GO=http://graph1/,DO=http://graph2
+                    String prefixesAsString = line.getOptionValue("prefixes");
+                    
+                    String[] prefixesKeyValue = prefixesAsString.split(",");
+                    for(String pKeyValue : prefixesKeyValue){
+                        
+                        String[] data = pKeyValue.split("=");
+                        
+                        if(data.length != 2){
+                            throw new SLIB_Ex_Critic("Cannot load prefix expressed in '"+pKeyValue+"'");
+                        }
+                        
+                        String prefix = data[0];
+                        String value = data[1];
+
+                        DataFactoryMemory.getSingleton().loadNamespacePrefix(prefix, value);
+                        
+                    }
+                }
             }
 
         } catch (ParseException exp) {
@@ -155,7 +184,7 @@ public class OntoFocusCmdHandler extends CmdHandler {
     }
 
     private OntoFocusConf getLoadedConf() {
-        return new OntoFocusConf(ontoFile, format, rootURI, incR, addR, out, queryFile);
+        return new OntoFocusConf(ontoFile, format, rootURI, incR, addR,transitiveReductionClass, out, queryFile);
     }
 
     /**
@@ -164,16 +193,12 @@ public class OntoFocusCmdHandler extends CmdHandler {
      */
     public static void main(String[] args) {
 
-        try {
+        try {            
             OntoFocusCmdHandler c = new OntoFocusCmdHandler(args);
-
-            OntoFocus p = new OntoFocus();
-            p.excecute(c.getLoadedConf());
-
+            new OntoFocus().excecute(c.getLoadedConf());
         } catch (Exception e) {
             logger.info("Ooops: " + e.getMessage());
             e.printStackTrace();
-            logger.info("see log file.");
         }
     }
 }

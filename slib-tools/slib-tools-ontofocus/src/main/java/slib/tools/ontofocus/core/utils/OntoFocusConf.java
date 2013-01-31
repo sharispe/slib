@@ -73,6 +73,7 @@ public class OntoFocusConf {
      *
      */
     public boolean addR	  = false;
+    public boolean transitiveReductionClass	  = false;
 	
 	/**
      *
@@ -85,13 +86,14 @@ public class OntoFocusConf {
      * @param queryFile
      */
     public OntoFocusConf(String ontoFile,GFormat format,String rootURI,
-			String incR, boolean addR, String out,String queryFile) {
+			String incR, boolean addR,boolean transitiveReductionClass, String out,String queryFile) {
 		
 		this.ontoFile = ontoFile;
 		this.format = format;
 		this.rootURI = rootURI;
 		this.incR = incR;
 		this.addR = addR;
+                this.transitiveReductionClass = transitiveReductionClass;
 		this.out = out;
 		
 		this.queryFile = queryFile;
