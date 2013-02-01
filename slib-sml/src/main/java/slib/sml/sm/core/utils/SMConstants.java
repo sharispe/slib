@@ -116,6 +116,7 @@ import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995;
 import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995_Normalized;
 import slib.sml.sm.core.metrics.ic.annot.IC_probOccurence_propagatted;
 import slib.sml.sm.core.metrics.ic.annot.IDF;
+import slib.sml.sm.core.metrics.ic.topo.ICi_ancestors_norm;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_max_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_min_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_mazandu_2012;
@@ -671,11 +672,16 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String FLAG_ICI_PROB_OCCURENCE = "IC_PROB_OCCURENCE";
+    public static final String FLAG_ICI_PROB_OCCURENCE = "ICI_PROB_OCCURENCE";
     /**
      *
      */
     public static final String FLAG_ICI_PROB_OCCURENCE_PROPAGATED = "ICI_PROB_OCCURENCE_PROPAGATED";
+    
+        /**
+     *
+     */
+    public static final String FLAG_ICI_ANCESTORS_NORM = "ICI_ANCESTORS_NORM";
     /**
      *
      */
@@ -724,6 +730,8 @@ public final class SMConstants {
      *
      */
     public static final String ICI_DEPTH_MIN_NONLINEAR = ICi_depth_min_nonlinear.class.getName();
+    
+    public static final String ICI_ANCESTORS_NORM = ICi_ancestors_norm.class.getName();
     /**
      *
      */
@@ -770,6 +778,7 @@ public final class SMConstants {
             put(FLAG_ICI_PROB_OCCURENCE, ICI_PROB_OCCURENCE);
             put(FLAG_ICI_PROB_OCCURENCE_PROPAGATED, ICI_PROB_OCCURENCE_PROPAGATED);
             put(FLAG_ICI_MAZANDU_2012, ICI_MAZANDU_2012);
+            put(FLAG_ICI_ANCESTORS_NORM, ICI_ANCESTORS_NORM);
         }
     };
     /**
