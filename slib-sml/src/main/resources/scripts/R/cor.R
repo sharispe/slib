@@ -1,6 +1,6 @@
 #!/usr/bin/Rscript
 
-version	  <- "0.0.1"
+version	  <- "0.0.4"
 cat("------------------------------------------------\n")
 cat("SMF-sme: Correlation version ",version,"\n")
 cat("------------------------------------------------\n")

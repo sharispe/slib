@@ -2,20 +2,35 @@
 
 
 
-version	  <- "0.0.1"
+version	  <- "0.0.4"
 cat("------------------------------------------------\n")
-cat("SML-sme: ROC analysis ",version,"\n")
+cat(" SML-sme: ROC analysis ",version,"\n")
 cat("------------------------------------------------\n")
 
 options <- commandArgs(trailingOnly = T)
 
 if(length(options) != 5 | options[1] == "-help"){
+	cat("- Script used to compute performances of semantic measures as binary classifiers.\n- Considering two classes of equal size, i.e. positive and negative, the script generates the ROC curve and compute the AUC for each measures evaluated.\n- The script expects as inputs two TSV files corresponding to the results obtained for the pairs of entities composing the positive and negative classes respectively.\n- The files contain two columns dedicated to the fist and second element compared (first and second entities of each pair) + a column for each measure evaluated.\n- Separator must be tab, each file is also expected to contain a header like E1___E2___measure1___measure2... with '___' a tab, i.e. \\t\n\n")
 	cat("- Arguments -\n")
-	cat("- [1] similarities results positive set\n")
-	cat("- [2] similarities results negative set\n")
-	cat("- [3] output i.e tabular file with AUC values\n")
-	cat("- [4] output i.e pdf file name\n")
-	cat("- [5] number of measure evaluation per plot e.g. 6\n")
+	cat("- [1] TSV file storing the similarities obtained for the positive class\n")
+	cat("- [2] TSV file storing the similarities obtained for the negative class\n")
+	cat("- [3] output file in which AUC values will be printed\n")
+	cat("- [4] output file corresponding to the pdf file in which the curves will be generated\n")
+	cat("- [5] number of curves per plot e.g. 6\n")
+	cat("\n- Example of input file\n")
+	cat("E1	E2	measure_1	measure_2	measure_3\n")
+	cat("http://kb/P08779	http://kb/P27448	0.06361557341907438	0.06361557341907438	0.24127760640918536\n")
+	cat("http://kb/P11142	http://kb/Q12955	0.04411701377176696	0.04322231548414211	0.1858309222826733\n")
+	cat("http://kb/P40222	http://kb/P26992	0.03821990658753103	0.03821990658753103	0.24518581646494583\n")
+	cat("http://kb/P61978	http://kb/P30305	0.07071610809827798	0.07025253667430627	0.18807246165123245\n")
+	cat("...\n\n")
+	cat("\n- Example of command\n")
+	cat("./rocr.R result_positive.tsv result_negative.tsv auc_results.txt roc_curves.pdf 6\n")
+	cat("\n- @authors Harispe Sébastien ")
+	cat("\n- Licence: CeCILL")
+	cat("\n- Bugs / Questions, see support at http://www.lgi2p.ema.fr/kid/tools/sml/")
+	cat("\n")
+	cat("------------------------------------------------\n")
 	quit();
 }
 
