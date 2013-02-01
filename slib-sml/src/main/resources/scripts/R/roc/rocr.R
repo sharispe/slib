@@ -200,12 +200,12 @@ plotDensity <- function(labelM1){
 		valuesNegativeM1  <- c(simScores_negative[,labelM1])
 	
 		hist(valuesPositiveM1,xlab=labelM1,main=paste(labelM1," +"), breaks = 40, col = "lightblue",prob=TRUE)
-		lines(density(valuesPositiveM1, adjust=2),col="red") 
+		#lines(density(valuesPositiveM1, adjust=2),col="red") 
 		
 		hist(valuesNegativeM1,xlab=labelM1,main=paste(labelM1," -"), breaks = 40, col = "lightblue",prob=TRUE)
 		
 		#TODO Remove NA ommit
-		lines(density(na.omit(valuesNegativeM1), adjust=2),col="red") 
+		#lines(density(na.omit(valuesNegativeM1), adjust=2),col="red") 
 		
 }
 
@@ -225,8 +225,21 @@ plotSpot <- function(labelM1,labelM2){
 library(ROCR)
 
 
+cat("Loading positive scores",file_simScores_positive,"\n")
 simScores_positive  <- read.csv(file=file_simScores_positive,head=TRUE,sep="\t")
+
+cat("Loading negative scores",file_simScores_negative,"\n")
 simScores_negative <-  read.csv(file=file_simScores_negative,head=TRUE,sep="\t")
+
+if(ncol(simScores_positive) != ncol(simScores_negative)){
+	print("Error abnormal number of column")
+	print(paste("positive ",ncol(simScores_positive)))
+	print(head(simScores_positive,1))
+	print(paste("negative ",ncol(simScores_negative)))
+	print(head(simScores_negative,1))
+	
+	quit()
+}
 
 simScores_positive <- simScores_positive[,3:ncol(simScores_positive)]
 simScores_negative <- simScores_negative[,3:ncol(simScores_negative)]
@@ -235,12 +248,6 @@ simScores_negative <- simScores_negative[,3:ncol(simScores_negative)]
 pdf(pdfOutput)
 
 par(mfrow=c(2,2))
-
-if(ncol(simScores_positive) != ncol(simScores_negative)){
-	print("Error abnormal number of column")
-	quit()
-}
-
 
 
 
@@ -275,6 +282,7 @@ rocR(methodLabels,"sens", "spec",setSize)
 rocR(methodLabels,"lift", "rpp",setSize)
 
 for(i in 1:length(methodLabels)){
+	cat("Plot density for ",methodLabels[i],"\n")
 	plotDensity(methodLabels[i])
 }
 
