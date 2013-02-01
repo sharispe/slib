@@ -60,6 +60,7 @@ public class Sim_groupwise_Max extends Sim_groupwise_general_abstract{
      * @return
      * @throws SLIB_Ex_Critic
      */
+    @Override
     public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf,  SMconf pairwiseConf) throws SLIB_Ex_Critic {
 		
 		return rc.getMatrixScore(setA,setB, pairwiseConf).getMax();
