@@ -64,11 +64,21 @@ public class IcUtils {
      * null if none is found
      * @throws SLIB_Exception
      */
-    public static V searchMICA(Set<V> setA,
+    public static V searchMICA(
+            V a,
+            V b,
+            Set<V> setA,
             Set<V> setB,
             ResultStack<V, Double> icScores) throws SLIB_Exception {
+        
+        
+        if(a.equals(b)){
+            return a;
+        }
 
         Set<V> intersec = SetUtils.intersection(setA, setB);
+        
+        
 
         if (intersec.isEmpty()) {
             throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
@@ -82,7 +92,9 @@ public class IcUtils {
 
         while (it.hasNext()) {
 
+            
             V v = it.next();
+            
             if (mica == null || max < icScores.get(v)) {
                 max = icScores.get(v);
                 mica = v;
@@ -107,11 +119,14 @@ public class IcUtils {
      *
      * @throws SLIB_Exception
      */
-    public static Double searchMax_IC_MICA(Set<V> setA,
+    public static Double searchMax_IC_MICA(
+            V a,
+            V b,
+            Set<V> setA,
             Set<V> setB,
             ResultStack<V, Double> icScores) throws SLIB_Exception {
 
-        V mica = searchMICA(setA, setB, icScores);
+        V mica = searchMICA(a,b,setA, setB, icScores);
 
 
         return icScores.get(mica);
