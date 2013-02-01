@@ -506,9 +506,17 @@ public class SM_Engine {
         if (cache.metrics_results.get(icConf) == null) {
             computeIC(icConf);
         }
+        return IcUtils.searchMax_IC_MICA(a,b,getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
+    }
+    
+    public V getMICA(ICconf icConf, V a, V b) throws SLIB_Exception {
+
+        if (cache.metrics_results.get(icConf) == null) {
+            computeIC(icConf);
+        }
 
 
-        return IcUtils.searchMax_IC_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
+        return IcUtils.searchMICA(a,b,getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
     /**
@@ -584,12 +592,11 @@ public class SM_Engine {
         if (icConf == null) {
             throw new SLIB_Ex_Critic("IC configuration cannot be set to null... " + icConf);
         }
-
-        logger.info("computing IC " + icConf.getId());
-
-        if (cache.metrics_results.get(icConf) != null) {
+        else if (cache.metrics_results.get(icConf) != null) {
             return cache.metrics_results.get(icConf);
         }
+        
+        logger.info("computing IC " + icConf.getId());
 
         Class<?> cl;
         ResultStack<V, Double> results;
@@ -1051,8 +1058,7 @@ public class SM_Engine {
         for (V a : setA) {
 
             for (V b : setB) {
-                double sim = computePairwiseSim(pairwiseConf, a, b);
-                m.setValue(a, b, sim);
+                m.setValue(a, b, computePairwiseSim(pairwiseConf, a, b));
             }
         }
         return m;
