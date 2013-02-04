@@ -227,9 +227,22 @@ library(ROCR)
 
 cat("Loading positive scores",file_simScores_positive,"\n")
 simScores_positive  <- read.csv(file=file_simScores_positive,head=TRUE,sep="\t")
+# Check for Na
+na_number <- sum(is.na(as.matrix(simScores_positive)))
+if(na_number != 0){
+	cat("Error: Positive scores contain ",na_number, " Non Arithmetic number(s)\n")
+	quit()
+}
 
 cat("Loading negative scores",file_simScores_negative,"\n")
 simScores_negative <-  read.csv(file=file_simScores_negative,head=TRUE,sep="\t")
+# Check for Na
+na_number <- sum(is.na(as.matrix(simScores_negative)))
+if(na_number != 0){
+	cat("Error: Positive scores contain ",na_number, " Non Arithmetic number(s)\n")
+	quit()
+}
+
 
 if(ncol(simScores_positive) != ncol(simScores_negative)){
 	print("Error abnormal number of column")
