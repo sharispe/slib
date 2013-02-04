@@ -62,7 +62,7 @@ public class Sim_groupwise_Average extends Sim_groupwise_general_abstract {
         Double[][] matrix = pairwiseScores.getMatrix();
 
         for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[j].length; j++) {
+            for (int j = 0; j < matrix[i].length; j++) {
                 sum += matrix[i][j];
                 c++;
             }
