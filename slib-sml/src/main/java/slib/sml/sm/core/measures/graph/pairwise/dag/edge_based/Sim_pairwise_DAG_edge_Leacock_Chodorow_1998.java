@@ -81,7 +81,6 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
 
 		// add +1 to the path to avoid infinity value if sim(a,a)
 		double lc = - Math.log( (shortestPath+1) / (2 * depth_max)); 
-		lc = - Math.log10( 0.125); 
 		return lc;
 	}
 
