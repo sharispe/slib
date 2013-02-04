@@ -34,37 +34,29 @@
  */
 package slib.sglib.model.impl.repo;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.PredicateFactory;
-import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Ex_Warning;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class PredicateURIRepo implements PredicateFactory {
 
     private static PredicateURIRepo singleton;
     private DataFactory factory;
     private Set<URI> pURIs; // predicate URIs 
-    private Map<URI, URI> inverses;
-
 
     private PredicateURIRepo(DataFactory factory) {
 
         this.factory = factory;
         pURIs    = new HashSet<URI>();
-        inverses = new HashMap<URI, URI>();
-
         init();
     }
 
@@ -109,69 +101,7 @@ public class PredicateURIRepo implements PredicateFactory {
 
         return uri;
     }
-
-    /**
-     *
-     * @param uri
-     * @return
-     */
-    public URI getInverseURI(URI uri) {
-        return inverses.get(uri);
-    }
-
-    /**
-     *
-     * @param uri
-     * @param uriI
-     * @throws SLIB_Ex_Warning
-     */
-    public void defineInverseURI(URI uri, URI uriI) throws SLIB_Ex_Warning {
-
-
-        if (inverses.containsKey(uri)
-                && !inverses.get(uri).equals(uriI)) {
-            throw new SLIB_Ex_Warning(""
-                    + "Error Setting " + uriI + " as inverse of " + uri + ""
-                    + "\nInverse URI already define for " + uri + "-> " + inverses.get(uri));
-        }
-
-        if (inverses.containsKey(uriI)
-                && !inverses.get(uriI).equals(uri)) {
-            throw new SLIB_Ex_Warning(""
-                    + "Error Setting " + uri + " as inverse of " + uriI + ""
-                    + "\nInverse URI already define for " + uriI + "-> " + inverses.get(uriI));
-        }
-
-        inverses.put(uri, uriI);
-        inverses.put(uriI, uri);
-    }
-
-    /**
-     *
-     * @param type
-     * @return
-     */
-    public URI getInverse(URI type) {
-        URI inverse = inverses.get(type);
-        return inverse;
-    }
-
-    /**
-     *
-     * @param types
-     * @return
-     */
-    public Set<URI> getInverse(Set<URI> types) {
-
-        Set<URI> inverse = new HashSet<URI>();
-
-        for (URI type : types) {
-            inverse.add(getInverse(type));
-        }
-
-        return inverse;
-    }
-
+    
     /**
      *
      * @param eType
@@ -183,23 +113,8 @@ public class PredicateURIRepo implements PredicateFactory {
         return inverse;
     }
 
-    /**
-     * DEBUG
-     *
-     */
-    public void showInverseMapping() {
-        HashSet<URI> t = new HashSet<URI>();// to avoid duplicate
-        for (Entry<URI, URI> e : inverses.entrySet()) {
 
-            if (!t.contains(e.getKey()) && !t.contains(e.getKey())) {
-                System.out.println(e.getKey() + "  " + e.getValue());
-
-                t.add(e.getKey());
-                t.add(e.getValue());
-            }
-        }
-    }
-
+    @Override
     public URI createPURI(String uri) {
         URI u = factory.createURI(uri);
         pURIs.add(u);
@@ -207,11 +122,18 @@ public class PredicateURIRepo implements PredicateFactory {
 
     }
 
+    @Override
     public boolean add(URI uri) {
         return pURIs.add(uri);
     }
 
+    @Override
     public Set<URI> getURIs() {
         return pURIs;
+    }
+
+    @Override
+    public void clear() {
+        pURIs.clear();
     }
 }
