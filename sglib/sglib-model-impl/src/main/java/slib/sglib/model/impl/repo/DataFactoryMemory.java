@@ -145,6 +145,14 @@ public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
         return getMemURIs();
     }
     
+    @Override
+    public void clear() {
+        super.clear();
+        namespacesPrefix.clear();
+        namespaces.clear();
+        graphs.clear();
+        eTypes.clear();       
+    }
     
     
 

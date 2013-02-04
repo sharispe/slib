@@ -96,4 +96,11 @@ public class GlobalConfPattern {
     public String getValue(String key) throws SLIB_Exception{
 		return variables.get(key);
 	}
+
+    /**
+     * Remove loaded variables
+     */
+    public void clear() {
+        variables.clear();
+    }
 }

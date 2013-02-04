@@ -55,4 +55,11 @@ public class FilterRepository {
      public Filter containsFilter(String fname) throws SLIB_Ex_Critic {
         return filters.get(fname);
     }
+
+     /**
+      * Remove loaded filters
+      */
+    public void clear() {
+        filters.clear();
+    }
 }

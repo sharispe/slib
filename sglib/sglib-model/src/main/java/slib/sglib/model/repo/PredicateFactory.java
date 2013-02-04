@@ -37,12 +37,11 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.model.repo;
 
 import java.util.Set;
-
 import org.openrdf.model.URI;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public interface PredicateFactory {
 	
@@ -64,5 +63,12 @@ public interface PredicateFactory {
      * @return
      */
     Set<URI> getURIs();
+
+    /**
+     * Clear the Factory
+     */
+    public void clear();
+
+
 	
 }
