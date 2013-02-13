@@ -51,17 +51,8 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     
-    boolean preventIncoherency = true;
+    static boolean preventIncoherency = true;
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -80,19 +71,28 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
+    public static double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
 
         double lin = 0.;
 
         double den = ic_a + ic_b;
 
-        if ( preventIncoherency && (ic_mica > ic_a || ic_mica > ic_b)) {
+        if ( preventIncoherency && 
+                ( 
+                    (ic_mica > ic_a && ic_mica -ic_a > 0.00001) || 
+                    (ic_mica > ic_b && ic_mica -ic_b > 0.00001)
+                )
+           ) {
             throw new SLIB_Ex_Critic("Cannot compute Lin considering ic MICA > ic C1 or ic c2, ic MICA set to " + ic_mica + " ic c1 " + ic_a + " ic c2 " + ic_b);
         }
 
         if (den != 0) {
             lin = (2. * ic_mica) / den;
         }
+//        System.out.println("\t\ta = "+ic_a);
+//        System.out.println("\t\tb = "+ic_b);
+//        System.out.println("\t\tmica = "+ic_mica);
+//        System.out.println("\t\tsim = "+lin);
         return lin;
     }
     
