@@ -64,8 +64,8 @@ public class GraphReduction_Transitive {
 
     /**
      * Performs a transitive reduction of the given graph only taxonomic
-     * relationships are considered i.e SUBCLASSOF, SUPERCLASSOF The rooted DAG
-     * property of the graph is checked considering SUBCLASSOF relationships.
+     * relationships are considered i.e SUBCLASSOF. 
+     * The rooted DAG property of the graph is checked considering SUBCLASSOF relationships.
      *
      * @param graph the graph on which the transitive reduction needs to be
      * performed
