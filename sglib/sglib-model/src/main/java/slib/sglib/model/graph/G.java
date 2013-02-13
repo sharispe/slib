@@ -239,6 +239,17 @@ public interface G extends NotifyingSail {
      * @param type the predicate URI of the edge to create
      */
     public void addE(V src, V target, URI type);
+    
+     /**
+     * Add an edge of the given type (URI) between the specified source and target.
+     * If the given edge already exits nothing is done. 
+     *
+     * @param src the source of the edge
+     * @param target the target of the edge
+     * @param type the predicate URI of the edge to create
+     */
+    public void addE(Value src, Value target, URI type);
+    
 
     /**
      * Add the given edge to the graph
