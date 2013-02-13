@@ -33,11 +33,11 @@ package slib.examples.sml.go;
 
 import java.util.Set;
 import org.openrdf.model.URI;
-import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.sglib.algo.graph.utils.GAction;
 import slib.sglib.algo.graph.utils.GActionType;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
@@ -48,10 +48,10 @@ import slib.sglib.model.impl.graph.elements.VertexTyped;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
