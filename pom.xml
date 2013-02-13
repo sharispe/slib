@@ -9,7 +9,7 @@
     
     <properties>
         <slib.version>0.0.5</slib.version>
-        <sml-toolkit.version>0.0.4b</sml-toolkit.version>
+        <sml-toolkit.version>0.0.5</sml-toolkit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
