@@ -81,6 +81,8 @@ import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.metrics.ic.utils.IcUtils;
 import slib.sml.sm.core.metrics.vector.VectorWeight_Chabalier_2007;
+import slib.sml.sm.core.utils.LCAFinder;
+import slib.sml.sm.core.utils.LCAFinderImpl;
 import slib.sml.sm.core.utils.OperatorConf;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
@@ -109,6 +111,7 @@ public class SM_Engine {
     AncestorEngine ancGetter;
     DescendantEngine descGetter;
     Set<URI> allRelTypes;
+    LCAFinder dcaFinder;
     /**
      * Set of URI associated to the predicates admitted to perform bottom up
      * traversal on the underlying taxonomic graph of the considered graph e.g.
@@ -161,6 +164,8 @@ public class SM_Engine {
 
         groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
         groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
+        
+        dcaFinder = new LCAFinderImpl();
     }
 
     /**
@@ -1201,5 +1206,9 @@ public class SM_Engine {
      */
     public void setICSvalues(ICconf icConf, ResultStack<V, Double> ics) {
         cache.metrics_results.put(icConf, ics);
+    }
+
+    public Set<V> getLCA(V a, V b) throws SLIB_Exception {
+        return dcaFinder.getLCA(graph, a, b);
     }
 }
