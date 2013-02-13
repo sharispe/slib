@@ -10,6 +10,10 @@ cat("------------------------------------------------\n")
 options <- commandArgs(trailingOnly = T)
 
 if(length(options) != 5 | options[1] == "-help"){
+
+        if(length(options) != 5 ){
+            cat("- ERROR:  Invalid number of arguments... -\n\n")
+        }
 	cat("- Script used to compute performances of semantic measures as binary classifiers.\n- Considering two classes of equal size, i.e. positive and negative, the script generates the ROC curve and compute the AUC for each measures evaluated.\n- The script expects as inputs two TSV files corresponding to the results obtained for the pairs of entities composing the positive and negative classes respectively.\n- The files contain two columns dedicated to the fist and second element compared (first and second entities of each pair) + a column for each measure evaluated.\n- Separator must be tab, each file is also expected to contain a header like E1___E2___measure1___measure2... with '___' a tab, i.e. \\t\n\n")
 	cat("- Arguments -\n")
 	cat("- [1] TSV file storing the similarities obtained for the positive class\n")
@@ -62,7 +66,7 @@ rocR <- function(mLabelsOrder,ROCR_arg1,ROCR_arg2,setSize){
 	}
 	addV <- FALSE
 	
-	LOG <-TRUE
+	LOG <-FALSE
 	
 	colorsP <- c("blue","forestgreen","darkorange2","yellow1","antiquewhite4","firebrick1")
 
@@ -140,7 +144,7 @@ rocR <- function(mLabelsOrder,ROCR_arg1,ROCR_arg2,setSize){
 computeAUC <- function(){
 
 	cat("-- Computing AUC\n	")
-	LOG <-TRUE
+	LOG <-FALSE
 	aucs <- c()
 
 	for(i in 1:ncol(simScores_positive)){
