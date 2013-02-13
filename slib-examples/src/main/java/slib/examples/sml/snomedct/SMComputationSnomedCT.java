@@ -88,9 +88,6 @@ public class SMComputationSnomedCT {
         // General information about the graph
         System.out.println(graph.toString());
         
-        
-        
-        
         // The Gene Ontology is not rooted, i.e. Molecular Function, Biological Process, Cellular Component, the three sub-ontologies of 
         // the GO are not rooted. We create such a virtual root in order to be able to compare 
         // the concepts expressed in different sub-ontologies.
