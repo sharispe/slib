@@ -114,14 +114,18 @@ public class Conf {
     }
 
     /**
-     * @param p
-     * @param v
+     * Add the parameter to the configuration
+     * Override existing parameter if one exists.
+     * @param p the parameter flag
+     * @param v the value associated
+     * @return the configuration object from which the method is called (auto complete feature)
      */
-    public void addParam(String p, Object v) {
+    public Conf addParam(String p, Object v) {
         if (params == null) {
             params = new HashMap<String, Object>();
         }
         params.put(p, v);
+        return this;
     }
 
   
