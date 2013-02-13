@@ -95,9 +95,9 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
 
         vMapping = new HashMap<Value, V>();
         vertices = new HashSet<V>();
-        edges    = new HashSet<E>();
+        edges = new HashSet<E>();
         vertexOutEdges = new HashMap<V, HashSet<E>>();
-        vertexInEdges  = new HashMap<V, HashSet<E>>();
+        vertexInEdges = new HashMap<V, HashSet<E>>();
         factory.addGraph(this);
     }
 
@@ -202,7 +202,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         } else {
 
             edgesCol = new HashSet<E>();
-            
+
             if (dir == Direction.BOTH || dir == Direction.OUT) {
                 for (E e : getE(eTypes, v, Direction.OUT)) {
                     if (targetTypes.contains(e.getTarget().getType())) {
@@ -288,12 +288,28 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     public Set<V> getV() {
         return new HashSet<V>(vertices);
     }
-    
 
     @Override
     public void addE(V src, V target, URI type) {
 
         E e = new EdgeTyped(src, target, type);
+        addE(e);
+    }
+
+    @Override
+    public void addE(Value src, Value target, URI type) {
+
+        V srcV = vMapping.get(src);
+        V targetV = vMapping.get(target);
+
+        if (srcV == null) {
+            throw new IllegalArgumentException("Graph " + this.getURI() + " doesn't contain a vertex associated to value " + src);
+        }
+        if (targetV == null) {
+            throw new IllegalArgumentException("Graph " + this.getURI() + " doesn't contain a vertex associated to value " + target);
+        }
+
+        E e = new EdgeTyped(srcV, targetV, type);
         addE(e);
     }
 
@@ -311,7 +327,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
             return;
         }
 
-        if(edges.remove(e)){
+        if (edges.remove(e)) {
             vertexOutEdges.get(e.getSource()).remove(e);
             vertexInEdges.get(e.getTarget()).remove(e);
         }
@@ -702,7 +718,7 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
             for (E e : vertexOutEdges.get(v)) {
-                
+
                 if (buildUri == null || buildUri.equals(e.getURI())) {
                     vert.add(e.getTarget());
                 }
@@ -756,8 +772,14 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
     @Override
     public String toString() {
 
-        String out = uri.toString() + "\n";
+        String out = "";
 
+        if (uri == null) {
+            out += "Uri undefined\n";
+        } 
+        else {
+            out += uri.toString() + "\n";
+        }
         String exURiVertex = "";
 
         if (!vMapping.isEmpty()) {
@@ -784,12 +806,12 @@ public class GraphMemory_Abstract extends NotifyingSailBase implements G {
      * *************************************************************************************
      * NotifySail Interface
      * *************************************************************************************
-     * @return 
-     * @throws SailException 
+     * @return
+     * @throws SailException
      */
     @Override
     public boolean isWritable() throws SailException {
-        return true; 
+        return true;
     }
 
     @Override
