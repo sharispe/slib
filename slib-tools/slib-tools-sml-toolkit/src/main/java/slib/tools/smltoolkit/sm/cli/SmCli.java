@@ -189,6 +189,8 @@ public class SmCli implements SmlModuleCLI {
         iAccessor = new InstanceAccessor_RDF_TYPE(g);
 
         computeQueries();
+        
+        logger.info("process done");
     }
 
     private void computeQueries() throws SLIB_Exception {
@@ -215,7 +217,7 @@ public class SmCli implements SmlModuleCLI {
 
                     QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
 
-                    if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL)) {
+                    if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)) {
                         perform_cTOc(qloader, output);
                     } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
                         perform_oTOo(qloader, output);
