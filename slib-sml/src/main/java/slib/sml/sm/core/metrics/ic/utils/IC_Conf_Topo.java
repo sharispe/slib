@@ -68,10 +68,11 @@ public class IC_Conf_Topo extends ICconf {
         super(flag, flag, flag);
     }
 
-    /**
+     /**
+     * Build an instance of IC configuration.
      *
-     * @param id
-     * @param flag
+     * @param id the ID associated to the configuration (will also be used for the label)
+     * @param flag the flag associated to the configuration
      * @throws SLIB_Ex_Critic
      */
     public IC_Conf_Topo(String id, String flag) throws SLIB_Ex_Critic {

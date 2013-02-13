@@ -130,7 +130,7 @@ public abstract class ICconf extends Conf {
      * @return the label associated to the configuration.
      */
     public String getLabel() {
-        return flag;
+        return label;
     }
 
     /**

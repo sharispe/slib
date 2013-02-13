@@ -70,36 +70,38 @@ public class IcUtils {
             Set<V> setA,
             Set<V> setB,
             ResultStack<V, Double> icScores) throws SLIB_Exception {
-        
-        
-        if(a.equals(b)){
-            return a;
-        }
 
-        Set<V> intersec = SetUtils.intersection(setA, setB);
-        
-        
-
-        if (intersec.isEmpty()) {
-            throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
-        } else if (icScores == null) {
-            throw new SLIB_Ex_Critic("Empty IC result stack... Treatment cannot be performed");
-        }
-
-        Iterator<V> it = intersec.iterator();
         V mica = null;
-        double max = -Double.MAX_VALUE;
 
-        while (it.hasNext()) {
+        if (a.equals(b)) {
+            mica = a;
+        } else {
 
-            
-            V v = it.next();
-            
-            if (mica == null || max < icScores.get(v)) {
-                max = icScores.get(v);
-                mica = v;
+            Set<V> intersec = SetUtils.intersection(setA, setB);
+
+
+
+            if (intersec.isEmpty()) {
+                throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
+            } else if (icScores == null) {
+                throw new SLIB_Ex_Critic("Empty IC result stack... Treatment cannot be performed");
+            }
+
+            Iterator<V> it = intersec.iterator();
+            double max = -Double.MAX_VALUE;
+
+            while (it.hasNext()) {
+
+
+                V v = it.next();
+
+                if (mica == null || max < icScores.get(v)) {
+                    max = icScores.get(v);
+                    mica = v;
+                }
             }
         }
+//        System.out.println("\t" + a + "\t" + b+"\t"+mica);
         return mica;
     }
 
@@ -126,7 +128,7 @@ public class IcUtils {
             Set<V> setB,
             ResultStack<V, Double> icScores) throws SLIB_Exception {
 
-        V mica = searchMICA(a,b,setA, setB, icScores);
+        V mica = searchMICA(a, b, setA, setB, icScores);
 
 
         return icScores.get(mica);

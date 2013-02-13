@@ -47,12 +47,22 @@ public class IC_Conf_Corpus extends ICconf {
     /**
      * Build an instance of IC configuration.
      *
-     * @param id the ID associated to the configuration
+     * @param flag the flag associated to the configuration
      * @throws SLIB_Ex_Critic
      */
-    public IC_Conf_Corpus(String id) throws SLIB_Ex_Critic {
-
-        super(id);
+    public IC_Conf_Corpus(String flag) throws SLIB_Ex_Critic {
+        super(flag);
+    }
+    
+     /**
+     * Build an instance of IC configuration.
+     *
+     * @param id the ID associated to the configuration (will also be used for the label)
+     * @param flag the flag associated to the configuration
+     * @throws SLIB_Ex_Critic
+     */
+    public IC_Conf_Corpus(String id,String flag) throws SLIB_Ex_Critic {
+        super(id,id,flag);
     }
 
     /**
