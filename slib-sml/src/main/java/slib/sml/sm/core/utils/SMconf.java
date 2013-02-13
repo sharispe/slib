@@ -34,13 +34,15 @@
  */
 package slib.sml.sm.core.utils;
 
+import java.util.HashMap;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 /**
- * Basic class used to represent the configuration associated to a Semantic Measures.
- * 
+ * Basic class used to represent the configuration associated to a Semantic
+ * Measures.
+ *
  * @author Harispe Sébastien
  */
 public class SMconf extends Conf {
@@ -49,37 +51,34 @@ public class SMconf extends Conf {
      * The unique id associated to the configuration.
      */
     public String id;
-    
     /**
-     * The flag corresponding to the type of measure associated to the configuration.
+     * The flag corresponding to the type of measure associated to the
+     * configuration.
      */
     public String flag;
-    
     /**
-     * The name of the class associated to the semantic measures method the configuration is linked to.
+     * The name of the class associated to the semantic measures method the
+     * configuration is linked to.
      */
     public String className;
-    
     /**
      * The label of the configuration.
      */
     public String label;
-    
     /**
-     * The configuration of the Information Content metric associated to the measure.
+     * The configuration of the Information Content metric associated to the
+     * measure.
      */
     public ICconf icConf;
-    
     /**
-     * The id of the pairwise measure associated to the configuration (in case of groupwise measures).
+     * The id of the pairwise measure associated to the configuration (in case
+     * of groupwise measures).
      */
     public String pairwise_measure_id;
-    
     /**
      * The representation used by the measure.
      */
     public String representation;
-    
     /**
      * The operator used by the measure.
      */
@@ -87,8 +86,10 @@ public class SMconf extends Conf {
 
     /**
      * Build an instance of configuration considering the given id and flag
+     *
      * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to the configuration.
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag) throws SLIB_Ex_Critic {
@@ -101,11 +102,14 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Build an instance of configuration considering the given id, flag and label.
+     * Build an instance of configuration considering the given id, flag and
+     * label.
+     *
      * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
      * @param label the label associated to the configuration.
-     * 
+     *
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label) throws SLIB_Ex_Critic {
@@ -118,10 +122,13 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Build an instance of configuration considering the given id, flag and Information Content configuration.
+     * Build an instance of configuration considering the given id, flag and
+     * Information Content configuration.
+     *
      * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to the configuration. 
-     * @param icConf the IC configuration associated to the configuration 
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
+     * @param icConf the IC configuration associated to the configuration
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, ICconf icConf) throws SLIB_Ex_Critic {
@@ -134,11 +141,14 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Build an instance of configuration considering the given id, flag and Information Content configuration.
+     * Build an instance of configuration considering the given id, flag and
+     * Information Content configuration.
+     *
      * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
      * @param label the label associated to the configuration
-     * @param icConf the IC configuration associated to the configuration 
+     * @param icConf the IC configuration associated to the configuration
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label, ICconf icConf) throws SLIB_Ex_Critic {
@@ -152,10 +162,12 @@ public class SMconf extends Conf {
 
     /**
      * Build an instance of configuration considering the given parameters.
+     *
      * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to the configuration. 
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
      * @param label the label associated to the configuration
-     * @param icConf the IC configuration associated to the configuration 
+     * @param icConf the IC configuration associated to the configuration
      * @param representation The representation adopted by the measure
      * @param operator the operator used by the measure
      * @throws SLIB_Ex_Critic
@@ -172,8 +184,10 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Initialize the measure configuration with regard to the specified parameters.
-     * @throws SLIB_Ex_Critic 
+     * Initialize the measure configuration with regard to the specified
+     * parameters.
+     *
+     * @throws SLIB_Ex_Critic
      */
     private void init() throws SLIB_Ex_Critic {
 
@@ -186,6 +200,7 @@ public class SMconf extends Conf {
 
     /**
      * The IC configuration associated to the configuration.
+     *
      * @return the IC configuration associated to the current configuration
      */
     public ICconf getICconf() {
@@ -193,7 +208,8 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Mutator of the IC configuration. 
+     * Mutator of the IC configuration.
+     *
      * @param ic the new IC configuration to consider
      */
     public void setICconf(ICconf ic) {
@@ -202,6 +218,7 @@ public class SMconf extends Conf {
 
     /**
      * Getter of the representation.
+     *
      * @return the representation associated to the configuration
      */
     public String getRepresentation() {
@@ -210,6 +227,7 @@ public class SMconf extends Conf {
 
     /**
      * Mutator of the representation
+     *
      * @param representation the new representation
      */
     public void setRepresentation(String representation) {
@@ -218,6 +236,7 @@ public class SMconf extends Conf {
 
     /**
      * Getter of the operator associated to the configuration.
+     *
      * @return the current operator configuration
      */
     public OperatorConf getOperator() {
@@ -226,6 +245,7 @@ public class SMconf extends Conf {
 
     /**
      * Mutator of the operator.
+     *
      * @param operator the new operator.
      */
     public void setOperator(OperatorConf operator) {
@@ -234,6 +254,7 @@ public class SMconf extends Conf {
 
     /**
      * Getter of the pairwise Id
+     *
      * @return the pairwise id
      */
     public String getPairwise_measure_id() {
@@ -242,6 +263,7 @@ public class SMconf extends Conf {
 
     /**
      * Mutator of the pairwise id.
+     *
      * @param pairwise_measure_id the new id of the measure configuration
      */
     public void setPairwise_measure_id(String pairwise_measure_id) {
@@ -261,5 +283,20 @@ public class SMconf extends Conf {
 
         out += "Extra parameters : " + super.toString();
         return out;
+    }
+
+    /**
+     * Add the parameter to the configuration Override existing parameter if one
+     * exists.
+     *
+     * @param p the parameter flag
+     * @param v the value associated
+     * @return the configuration object from which the method is called (auto
+     * complete feature)
+     */
+    @Override
+    public SMconf addParam(String p, Object v) {
+        super.addParam(p, v);
+        return this;
     }
 }

@@ -85,6 +85,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybr
 import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Wang_2007;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL_GraSM;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Harispe_2013;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_3W_IC;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_IC;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jiang_Conrath_1997;
@@ -850,6 +851,7 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995";
+   
     /**
      *
      */
@@ -874,6 +876,8 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = "SIM_PAIRWISE_DAG_NODE_SIM_IC_2010";
+    
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_HARISPE_2013 = "SIM_PAIRWISE_DAG_NODE_HARISPE_2O13";
     /**
      *
      */
@@ -954,6 +958,9 @@ public final class SMConstants {
      *
      */
     public static final String SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = Sim_pairwise_DAG_node_Sim_IC_2010.class.getName();
+   
+    public static final String SIM_PAIRWISE_DAG_NODE_HARISPE_2013 = Sim_pairwise_DAG_node_Harispe_2013.class.getName();
+    
     /**
      *
      */
@@ -981,6 +988,7 @@ public final class SMConstants {
             put(FLAG_SIM_PAIRWISE_DAG_NODE_GL, SIM_PAIRWISE_DAG_NODE_GL);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_GL_GRASM, SIM_PAIRWISE_DAG_NODE_GL_GRASM);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_MAZANDU_2012, SIM_PAIRWISE_DAG_NODE_MAZANDU_2012);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_HARISPE_2013, SIM_PAIRWISE_DAG_NODE_HARISPE_2013 );
 
         }
     };
