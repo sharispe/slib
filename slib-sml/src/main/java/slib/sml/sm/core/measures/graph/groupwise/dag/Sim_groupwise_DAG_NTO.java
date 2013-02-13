@@ -62,6 +62,7 @@ public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract{
      * @param conf
      * @return
      */
+    @Override
     public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf conf) {
 		
 		Set<V> ancA = rc.getAncestorsInc(setA);
@@ -69,7 +70,13 @@ public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract{
 		
 		Set<V> intersection = SetUtils.intersection(ancA, ancB);
 		
-		return (double) intersection.size()/ Math.min(ancA.size(), ancB.size());
+                double min = Math.min(ancA.size(), ancB.size());
+                
+                if(min == 0){
+                    return 0;
+                }
+                
+		return (double) intersection.size()/ min;
 	}
 }
 
