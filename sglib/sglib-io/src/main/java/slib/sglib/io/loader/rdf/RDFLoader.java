@@ -53,12 +53,13 @@ public class RDFLoader implements GraphLoader {
         return GraphLoaderGeneric.load(conf);
     }
 
+    @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
         loadConf(conf);
 
 
-        logger.info("Populate graph " + g.getURI());
+        logger.info("Populate graph " + g.getURI()+" from "+conf.getLoc());
         load(g, conf.getLoc());
         logger.info("Graph " + g.getURI() + " populated by RDF data ");
 

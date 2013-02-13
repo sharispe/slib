@@ -50,15 +50,15 @@ public class SlibRdfHandler implements RDFHandler {
 
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
-
-        //logger.debug(st.toString());
         
         V subject = g.getV(st.getSubject());
-        V object = g.getV(st.getObject());
 
         if (subject == null) {
             subject = new VertexTyped(g, st.getSubject(), null);
+            g.addV(subject);
         }
+        
+        V object  = g.getV(st.getObject());
 
         if (object == null) {
             object = new VertexTyped(g, st.getObject(), null);
