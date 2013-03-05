@@ -68,6 +68,7 @@ import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_Ali_Deane
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_GIC;
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_LP;
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_Lee_2004;
+import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_NTO_MAX;
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_NTO;
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_TO;
 import slib.sml.sm.core.measures.graph.groupwise.dag.Sim_groupwise_DAG_UI;
@@ -416,6 +417,8 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_GROUPWISE_DAG_NTO = "SIM_GROUPWISE_DAG_NTO";
+    
+    public static final String FLAG_SIM_GROUPWISE_DAG_NTO_MAX = "SIM_GROUPWISE_DAG_NTO_MAX";
     /**
      *
      */
@@ -448,6 +451,8 @@ public final class SMConstants {
      *
      */
     public static final String SIM_GROUPWISE_DAG_NTO = Sim_groupwise_DAG_NTO.class.getName();
+    
+    public static final String SIM_GROUPWISE_DAG_NTO_MAX = Sim_groupwise_DAG_NTO_MAX.class.getName();
     /**
      *
      */
@@ -475,6 +480,7 @@ public final class SMConstants {
             put(FLAG_SIM_GROUPWISE_DAG_LEE_2004, SIM_GROUPWISE_DAG_LEE_2004);
             put(FLAG_SIM_GROUPWISE_DAG_LP, SIM_GROUPWISE_DAG_LP);
             put(FLAG_SIM_GROUPWISE_DAG_NTO, SIM_GROUPWISE_DAG_NTO);
+            put(FLAG_SIM_GROUPWISE_DAG_NTO_MAX, SIM_GROUPWISE_DAG_NTO_MAX);
             put(FLAG_SIM_GROUPWISE_DAG_TO, SIM_GROUPWISE_DAG_TO);
             put(FLAG_SIM_GROUPWISE_DAG_UI, SIM_GROUPWISE_DAG_UI);
             put(FLAG_SIM_GROUPWISE_DAG_ALI_DEANE, SIM_GROUPWISE_DAG_ALI_DEANE);
