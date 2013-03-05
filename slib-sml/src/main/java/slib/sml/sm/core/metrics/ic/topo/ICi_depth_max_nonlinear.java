@@ -35,12 +35,11 @@
 package slib.sml.sm.core.metrics.ic.topo;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.ResultStack;
 
 /**
@@ -70,6 +69,11 @@ public class ICi_depth_max_nonlinear extends LogBasedMetric implements ICtopo {
         double max_depth = alldepths.getMax() + 1;
 
         int depth;
+        
+        
+        Double logbase = getLogBase();
+        if(logbase == null){logbase = 2.;}
+        double den = MathSML.log(max_depth,logbase);
 
         double cur_ic;
 
@@ -77,7 +81,7 @@ public class ICi_depth_max_nonlinear extends LogBasedMetric implements ICtopo {
 
             depth = alldepths.get(v);
 
-            cur_ic = MathSML.log(depth + 1.,getLogBase()) / MathSML.log(max_depth,getLogBase());
+            cur_ic = MathSML.log(depth + 1.,logbase) / den ;
 
             results.add(v, cur_ic);
         }
