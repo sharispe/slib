@@ -164,7 +164,7 @@ public class SM_Engine {
 
         groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
         groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
-        
+
         dcaFinder = new LCAFinderImpl();
     }
 
@@ -511,9 +511,9 @@ public class SM_Engine {
         if (cache.metrics_results.get(icConf) == null) {
             computeIC(icConf);
         }
-        return IcUtils.searchMax_IC_MICA(a,b,getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
+        return IcUtils.searchMax_IC_MICA(a, b, getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
-    
+
     public V getMICA(ICconf icConf, V a, V b) throws SLIB_Exception {
 
         if (cache.metrics_results.get(icConf) == null) {
@@ -521,7 +521,7 @@ public class SM_Engine {
         }
 
 
-        return IcUtils.searchMICA(a,b,getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
+        return IcUtils.searchMICA(a, b, getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
     /**
@@ -596,11 +596,10 @@ public class SM_Engine {
 
         if (icConf == null) {
             throw new SLIB_Ex_Critic("IC configuration cannot be set to null... " + icConf);
-        }
-        else if (cache.metrics_results.get(icConf) != null) {
+        } else if (cache.metrics_results.get(icConf) != null) {
             return cache.metrics_results.get(icConf);
         }
-        
+
         logger.info("computing IC " + icConf.getId());
 
         Class<?> cl;
@@ -647,9 +646,7 @@ public class SM_Engine {
             return cache.metrics_results.get(icConf);
 
         } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                e.printStackTrace();
-            }
+            e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
@@ -891,10 +888,8 @@ public class SM_Engine {
             sim = gMeasure.sim(setA, setB, this, confGroupwise);
 
         } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                e.printStackTrace();
-            }
-            throw new SLIB_Ex_Critic(e);
+            e.printStackTrace();
+            throw new SLIB_Ex_Critic(e.getMessage());
         }
         return sim;
     }
@@ -942,6 +937,7 @@ public class SM_Engine {
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
+            e.printStackTrace();
             throw new SLIB_Ex_Critic(e);
         }
 
@@ -976,7 +972,7 @@ public class SM_Engine {
             if (annots != null) {
                 for (V c : annots) {
                     if (linkedEntities.get(c) == null) {
-                        linkedEntities.put(c,new HashSet<V>());
+                        linkedEntities.put(c, new HashSet<V>());
                     }
                     linkedEntities.get(c).add(i);
                 }
@@ -986,7 +982,7 @@ public class SM_Engine {
         // Get Topological ordering trough DFS
         // - get roots
         Set<V> roots = new ValidatorDAG().getDAGRoots(graph, goToSuperClassETypes, Direction.OUT);
-        
+
         DFS dfs = new DFS(graph, roots, goToSuperClassETypes, Direction.IN);
         List<V> topoOrdering = dfs.getTraversalOrder();
 
