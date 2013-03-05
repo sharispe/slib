@@ -37,7 +37,6 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.graph.groupwise.dag;
 
 import java.util.Set;
-
 import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
@@ -62,6 +61,7 @@ public class Sim_groupwise_DAG_Lee_2004 extends Sim_groupwise_DAG_abstract{
      * @param conf
      * @return
      */
+    @Override
     public double sim(Set<V> setA, Set<V> setB, SM_Engine c, SMconf conf) {
 
 		Set<V> ancA = c.getAncestorsInc(setA);
