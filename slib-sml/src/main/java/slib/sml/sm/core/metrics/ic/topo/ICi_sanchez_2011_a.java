@@ -85,9 +85,6 @@ public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
 
             cur_ic = compute(nbLeavesExclusif, nbAncestorsInc, max_leaves);
 
-            //logger.info(v+" --> "+cur_ic);
-
-
             results.add(v, cur_ic);
         }
 
