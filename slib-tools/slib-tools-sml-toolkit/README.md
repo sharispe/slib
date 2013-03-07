@@ -3,4 +3,4 @@ Semantic Measures Library - ToolKit
 
 Java Toolkit dedicated to semantic measures computation and analysis.
 
-http://http://www.semantic-measures-library.org
+http://www.semantic-measures-library.org
