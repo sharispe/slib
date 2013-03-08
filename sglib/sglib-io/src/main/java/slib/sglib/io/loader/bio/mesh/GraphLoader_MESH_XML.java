@@ -1,6 +1,33 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * 
+ * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ * LGI2P research center
+ * This software is governed by the CeCILL  license under French law and
+ * abiding by the rules of distribution of free software.  You can  use, 
+ * modify and/ or redistribute the software under the terms of the CeCILL
+ * license as circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info". 
+ * 
+ * As a counterpart to the access to the source code and  rights to copy,
+ * modify and redistribute granted by the license, users are provided only
+ * with a limited warranty  and the software's author,  the holder of the
+ * economic rights,  and the successive licensors  have only  limited
+ * liability. 
+ * 
+ * In this respect, the user's attention is drawn to the risks associated
+ * with loading,  using,  modifying and/or developing or reproducing the
+ * software by the user in light of its specific status of free software,
+ * that may mean  that it is complicated to manipulate,  and  that  also
+ * therefore means  that it is reserved for developers  and  experienced
+ * professionals having in-depth computer knowledge. Users are therefore
+ * encouraged to load and test the software's suitability as regards their
+ * requirements in conditions enabling the security of their systems and/or 
+ * data to be ensured and,  more generally, to use and operate it in the 
+ * same conditions as regards security. 
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL license and that you accept its terms.
+ * 
  */
 package slib.sglib.io.loader.bio.mesh;
 
@@ -26,18 +53,22 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.EdgeTyped;
 import slib.sglib.model.impl.graph.elements.VertexTyped;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.UtilDebug;
 
 /**
- *
- * @author seb
+ * MeSH Loader.
+ * This class permits to load the MeSH trees into a Directed Acyclic Graph
+ * http://www.nlm.nih.gov/mesh/trees.html
+ * 
+ * The loader was designed for the 2013 XML version of the MeSH.
+ * 
+ * @author Harispe Sébastien
  */
 public class GraphLoader_MESH_XML implements GraphLoader {
 
@@ -111,13 +142,11 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             logger.info("Number of descriptor loaded " + concepts.size());
             logger.info("Loading relationships ");
 
-            // create relationships 
+            // create relationships and roots of each tree
             for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
 
                 MeshConcept c = e.getValue();
 
-                // @TODO add possibility to set URI prefix
-                //System.out.println(c.descriptorUI);
                 V vConcept = getOrCreateVertex(c.descriptorUI);
 
 
@@ -125,7 +154,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
                     String parentId = getParentId(treeNumber);
 
-                    if (parentId != null) { // roots
+                    if (parentId != null) {
 
                         MeshConcept parent = idToConcepts.get(parentId);
 
@@ -140,15 +169,32 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                             g.addE(edge);
                         }
                     } else {
-//                        logger.debug("Creating Tree root");
-//                        logger.debug("ID ROOT : " + treeNumber);
+                        /* Those vertices are the inner roots of each trees, 
+                         * i.e. Psychiatry and Psychology [F] tree has for inner roots:
+                         *  - Behavior and Behavior Mechanisms [F01] 
+                         *  - Psychological Phenomena and Processes [F02] 
+                         *  - Mental Disorders [F03] 
+                         *  - Behavioral Disciplines and Activities [F04] 
+                         * A vertex has already been created for each inner root (e.g. F01, F02, F03, F04) 
+                         * , we therefore create a vertex for the tree root (e.g. F).
+                         * Finally all the tree roots are rooted by a global root which do not 
+                         * correspond to a concept specified into the mesh.
+                         * 
+                         * More information about MeSH trees at http://www.nlm.nih.gov/mesh/trees.html
+                         */
 
-                        char localNameTreeRoot = treeNumber.charAt(0);
+                        // we link the concept to the corresponding tree inner root
+                        V innerRootTree = getOrCreateVertex(treeNumber); // e.g. F01
+                        E edgeConceptToTreeInnerRoot = new EdgeTyped(vConcept, innerRootTree, RDFS.SUBCLASSOF);
+                        g.addE(edgeConceptToTreeInnerRoot);
+                        logger.debug("Creating Edge : " + edgeConceptToTreeInnerRoot);
                         
-                        V vParent = getOrCreateVertex(localNameTreeRoot+"");
-                        E edge = new EdgeTyped(vConcept, vParent, RDFS.SUBCLASSOF);
-
-                        g.addE(edge);
+                        // we link the tree inner root to the root tree
+                        char localNameTreeRoot = treeNumber.charAt(0); // id of the tree root
+                        V rootTree = getOrCreateVertex(localNameTreeRoot+""); // e.g. F
+                        E treeInnerRootToTreeRoot = new EdgeTyped(innerRootTree, rootTree, RDFS.SUBCLASSOF);
+                        g.addE(treeInnerRootToTreeRoot);
+                        logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
                     }
                 }
             }
