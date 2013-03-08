@@ -41,20 +41,21 @@ import org.openrdf.model.impl.URIImpl;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class SLIBVOC {
 
-	/**
+    /**
      *
      */
     public final static  String SLIB_NS = "http://www.lgi2p.ema.fr/";
 	
 	
-	/**
-     *
+    /**
+     * http://www.w3.org/2002/07/owl#Thing URI
+     * Must be used as universal root
      */
-    public final static URI UNIVERSAL_ROOT 		= new URIImpl(SLIB_NS+"Thing");
+    public final static URI THING_OWL 	= new URIImpl("http://www.w3.org/2002/07/owl#Thing");
 	
 	/**
      *
