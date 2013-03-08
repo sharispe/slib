@@ -36,6 +36,7 @@ package slib.sglib.io.loader.bio.gaf2;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -73,73 +74,22 @@ import slib.utils.impl.BigFileReader;
  */
 public class GraphLoader_GAF_2 implements GraphLoader {
 
-    /**
-     *
-     */
     public final static int DB = 0;
-    /**
-     *
-     */
     public final static int DB_OBJECT_ID = 1;
-    /**
-     *
-     */
     public final static int DB_OBJECT_SYMBOL = 2;
-    /**
-     *
-     */
     public final static int QUALIFIER = 3;
-    /**
-     *
-     */
     public final static int GOID = 4;
-    /**
-     *
-     */
     public final static int REFERENCE = 5;
-    /**
-     *
-     */
     public final static int EVIDENCE_CODE = 6;
-    /**
-     *
-     */
     public final static int WITH = 7;
-    /**
-     *
-     */
     public final static int ASPECT = 8;
-    /**
-     *
-     */
     public final static int DB_OBJECT_NAME = 9;
-    /**
-     *
-     */
     public final static int DB_OBJECT_SYNONYM = 10;
-    /**
-     *
-     */
     public final static int DB_OBJECT_TYPE = 11;
-    /**
-     *
-     */
     public final static int TAXON = 12;
-    /**
-     *
-     */
     public final static int DATE = 13;
-    /**
-     *
-     */
     public final static int ASSIGNED_BY = 14;
-    /**
-     *
-     */
     public final static int ANNOTATION_XP = 15;
-    /**
-     *
-     */
     public final static int GENE_PRODUCT_ISOFORM = 16;
     private G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -191,11 +141,11 @@ public class GraphLoader_GAF_2 implements GraphLoader {
             prefixUriInstance = g.getURI().getNamespace();
         }
 
-        logger.info("Instance URIs will be prefixed by: "+prefixUriInstance);
-        
+        logger.info("Instance URIs will be prefixed by: " + prefixUriInstance);
+
         defaultURIprefix = prefixUriInstance;
-        logger.info("Default URI prefix is set to: "+prefixUriInstance);
-        
+        logger.info("Default URI prefix is set to: " + prefixUriInstance);
+
 
 
         Set<Filter> filters = new HashSet<Filter>();
@@ -204,13 +154,13 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         if (filtersAsStrings != null) {
             String[] filterNames = filtersAsStrings.split(",");
-            
+
             FilterRepository filtersRepo = FilterRepository.getInstance();
 
             for (String fname : filterNames) {
                 Filter f = filtersRepo.getFilter(fname);
-                if(f == null){
-                    throw new SLIB_Ex_Critic("Cannot locate filter associated to id "+fname);
+                if (f == null) {
+                    throw new SLIB_Ex_Critic("Cannot locate filter associated to id " + fname);
                 }
                 filters.add(f);
             }
@@ -230,11 +180,11 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                     if (filter != null) {
                         throw new SLIB_Ex_Critic("Two filters " + FilterGraph_GAF2_cst.TYPE + " have been specified. Only one admitted");
                     } else {
-                        
+
                         filter = (FilterGraph_GAF2) f;
-                        logger.info("Filtering according to filter "+filter.getId()+"\ttype"+filter.getType());
-                        
-                        
+                        logger.info("Filtering according to filter " + filter.getId() + "\ttype" + filter.getType());
+
+
                         taxons = filter.getTaxons();
                         excludedEC = filter.getExcludedEC();
                     }
@@ -271,27 +221,27 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         logger.info("Loading...");
 
-        
+
 
         DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
 
         boolean validHeader = false;
         String line, qualifier, gotermURI, evidenceCode, taxon_ids;
+        int c = 0;
 
         try {
 
             BigFileReader file = new BigFileReader(fileLocation);
+            String[] data;
+            URI uriNode, entityID;
 
             while (file.hasNext()) {
 
-
                 line = file.nextTrimmed();
-
-
 
                 if (line.startsWith("!")) {
 
-                    String[] data = line.split(":");
+                    data = line.split(":");
 
                     if (data.length == 2) {
                         String flag = data[0].trim().substring(1);
@@ -303,13 +253,13 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                     }
                 } else if (validHeader) {
 
-                    String[] data = p_tab.split(line);
+                    data = p_tab.split(line);
 
 
 
-                    URI entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
-                    qualifier = data[QUALIFIER];
+                    entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
                     gotermURI = buildURI(data[GOID]);
+                    qualifier = data[QUALIFIER];
                     evidenceCode = data[EVIDENCE_CODE];
                     taxon_ids = data[TAXON];
 
@@ -318,8 +268,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                     if (excludedEC == null || (excludedEC != null && EvidenceCodeRules.areValid(excludedEC, evidenceCode))) {
 
 
-                        //System.out.println(data[protID]+" ->  "+qualifier+"  "+gotermid);
-
                         // We do not consider go term associated with a qualifier 
                         // e.g. NOT, contributes_to ...
                         // TODO take into consideration this information !
@@ -327,14 +275,13 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
                             V term = null;
 
-                            URI uriNode = uriManager.createURI(gotermURI);
+                            uriNode = uriManager.createURI(gotermURI);
 
                             if (g.containsVertex(uriNode)) {
                                 term = g.getV(uriNode);
                             }
 
                             if (term != null) {
-
                                 // Check if annotation was already loaded 
                                 // only considering the object pointed by 
                                 // the annotation.
@@ -367,7 +314,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                                     if (!entitiesAnnots.containsKey(entityID)) {
                                         entitiesAnnots.put(entityID, new HashSet< V>());
                                     }
-
                                     entitiesAnnots.get(entityID).add(term);
                                 } else if (valid == false) {
                                     taxonsRestriction++;
@@ -383,6 +329,11 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                         eC_restriction++;
                     }
                 }
+                c++;
+
+                if (c % 1000000 == 0) {
+                    logger.info(c + " lines processed");
+                }
             }
             file.close();
 
@@ -394,26 +345,29 @@ public class GraphLoader_GAF_2 implements GraphLoader {
             throw new SLIB_Ex_Critic("Invalid header for GAF-2 file " + fileLocation + "\nExpecting \"!gaf-version: 2.0\" as first line");
         }
 
-        logger.info("\tExcluded  - Taxons restriction  		  : " + taxonsRestriction);
+        logger.info("\tExcluded  - Taxons restriction         : " + taxonsRestriction);
         logger.info("\tExcluded  - Evidence Code restriction  : " + eC_restriction);
         logger.info("\tExcluded  - Contains qualifier 	      : " + existsQualifier);
         logger.info("\tNot found unexisting term in the graph :	" + not_found);
 
-        logger.info("\tAdding instances to the graph");
+        logger.info("\tAdding instances to the graph, number of instances " + entitiesAnnots.size());
 
         // Build Instance
         long vnumber = 0;
         long vedges = 0;
 
-        for (Entry<URI, HashSet<V>> entry : entitiesAnnots.entrySet()) {
+        c = 0;
+        Iterator<Entry<URI, HashSet<V>>> it = entitiesAnnots.entrySet().iterator();
+        while(it.hasNext()){
+            Entry<URI, HashSet<V>> entry = it.next();
+            it.remove();
 
             URI instanceURI = entry.getKey();
 
             V i = new VertexTyped(g, instanceURI, VType.INSTANCE);
+            g.addV(i);
 
             Set<V> annotations = entry.getValue();
-
-            g.addV(i);
 
             for (V v : annotations) {
                 g.addE(new EdgeTyped(i, v, RDF.TYPE));
@@ -421,6 +375,10 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
             vnumber++;
             vedges += annotations.size();
+            c++;
+            if (c % 10000 == 0) {
+                logger.info(c + " instances loaded ");
+            }
         }
 
         logger.info("Number of Instance loaded 	  	: " + vnumber);
@@ -458,7 +416,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         if (data.length > 1) {
             data[1] = data[1].trim();
         }
-
         return data;
     }
 }
