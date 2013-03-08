@@ -40,8 +40,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
@@ -60,6 +58,8 @@ import slib.utils.impl.SetUtils;
  *
  */
 public class RVF_DAG extends RVF {
+    
+    boolean acceptIncoherences = false;
 
     /**
      * Create a basic RVF object considering an acyclic graph and a only one
@@ -67,10 +67,18 @@ public class RVF_DAG extends RVF {
      * Note that graph acyclicity is required to ensure coherency but is not evaluated.
      *
      * @param g the Semantic Graph to consider
-     * @param wc  
+     * @param wc  the walk constraint defining the way to reach the vertices which must be returned by the object
+     * @param acceptIncoherences define if an error must be thrown if an incoherence is detected.
+     * An incoherence can be detected if no topological order can be obtained with regard to the specified walk constraints, i.e.
+     * if the subgraph defined by the walk constraints is not a Directed Acyclic Graph (DAG).
+     * Indeed, this class take advantage of optimizations which can only be applied to DAG. 
+     * If you accept incoherences only a warning will be logged, if you don't, an exception will be thrown if any incoherence is detected.
+     * Accepting incoherences can lead to highly incoherent results, special cares must be taken. 
+     * DO NOT set this parameter to true if you don't understand the implications.
      */
-    public RVF_DAG(G g, WalkConstraints wc) {
+    public RVF_DAG(G g, WalkConstraints wc, boolean acceptIncoherences) {
         super(g, wc);
+        this.acceptIncoherences = acceptIncoherences;
     }
 
     /**
@@ -164,7 +172,7 @@ public class RVF_DAG extends RVF {
 
         //TOREMOVE 
 
-        logger.debug("Checking Treatment coherency");
+        logger.info("Checking Treatment coherency, accepting incoherences: "+acceptIncoherences);
         long incoherencies = 0;
         for (V c : inDegree.keySet()) {
 
@@ -174,12 +182,18 @@ public class RVF_DAG extends RVF {
                 incoherencies++;
             }
         }
-        logger.debug("Incoherencies : "+incoherencies);
+        logger.info("Incoherencies : "+incoherencies);
         if(incoherencies != 0){
-            throw new SLIB_Ex_Critic("Error incoherencies found during a treatment, "
-                    + "this can be due to incoherencies with regard to the graph properties "
+            String incoherenceMessage = "incoherences found during a treatment, "
+                    + "this can be due to incoherences with regard to the graph properties "
                     + "expected by the treatment performed. "
-                    + "Please check the processed graph is acyclic, i.e. is a Directed Acyclic Graph.");
+                    + "Please check the processed graph is acyclic, i.e. is a Directed Acyclic Graph.";
+            if(acceptIncoherences){
+                logger.warn("WARNING ! "+incoherenceMessage+". You accepted such incoherences, process not stopped...");
+            }
+            else{
+                throw new SLIB_Ex_Critic("ERROR "+incoherenceMessage);
+            }
         }
 
 
@@ -292,8 +306,6 @@ public class RVF_DAG extends RVF {
         for (V v : nbOccurrence.getValues().keySet()) {
             nbOcc_prop.add(v, nbOccurrence.get(v));
         }
-
-
         // Initialize DataStructure + queue considering setEdgeTypes
         List<V> queue = new ArrayList<V>();
 
@@ -301,7 +313,6 @@ public class RVF_DAG extends RVF {
 
             allVertices.put(v, new HashSet<V>());
             int sizeOpposite = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT).size();
-
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
 

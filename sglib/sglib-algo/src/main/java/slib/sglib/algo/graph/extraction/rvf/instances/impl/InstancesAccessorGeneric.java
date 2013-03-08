@@ -35,7 +35,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import org.openrdf.model.URI;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;

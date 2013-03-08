@@ -48,7 +48,14 @@ public class AncestorEngine extends RVF_TAX {
      * @param g the graph on which the engine must work
      */
     public AncestorEngine(G g) {
-        super(g, Direction.OUT);
+        super(g, Direction.OUT, false);
+    }
+    
+    /**
+     * @param g the graph on which the engine must work
+     */
+    public AncestorEngine(G g, boolean acceptIncoherences) {
+        super(g, Direction.OUT, acceptIncoherences);
     }
 
     /**

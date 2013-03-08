@@ -49,28 +49,38 @@ public class DescendantEngine extends RVF_TAX {
      * @param g
      */
     public DescendantEngine(G g) {
-        super(g, Direction.IN);
+        super(g, Direction.IN, false);
     }
 
     /**
-     * Compute the set of exclusive descendants of a class. 
-     * Exclusive process: the focused vertex will NOT be
-     * included its the set of descendants.
+     *
+     * @param g
+     * @param acceptIncoherences true: accept to perform the process on cyclic graph... this can lead to highly incoherent results, special cares must be taken. DO NOT set this parameter to true if you don't understand the implications.
+     */
+    public DescendantEngine(G g, boolean acceptIncoherences) {
+        super(g, Direction.IN, acceptIncoherences);
+    }
+
+    /**
+     * Compute the set of exclusive descendants of a class. Exclusive process:
+     * the focused vertex will NOT be included its the set of descendants.
      *
      * @param v the vertex of interest
-     * @return the exclusive set of descendants of the concept (empty set if any).
+     * @return the exclusive set of descendants of the concept (empty set if
+     * any).
      */
     public Set<V> getDescendants(V v) {
         return getRV(v);
     }
 
     /**
-     * Compute the set of exclusive descendants of all vertices contained in the graph. 
-     * Exclusive process: the focused vertex will NOT be
-     * included its the set of ancestors.
+     * Compute the set of exclusive descendants of all vertices contained in the
+     * graph. Exclusive process: the focused vertex will NOT be included its the
+     * set of ancestors.
      *
-     * @return a map containing the exclusive set of descendants of each vertex concept (empty set if any).
-     * @throws SLIB_Ex_Critic  
+     * @return a map containing the exclusive set of descendants of each vertex
+     * concept (empty set if any).
+     * @throws SLIB_Ex_Critic
      */
     public Map<V, Set<V>> getAllDescendants() throws SLIB_Ex_Critic {
         return getAllRV();

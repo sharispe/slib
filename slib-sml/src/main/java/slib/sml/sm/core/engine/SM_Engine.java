@@ -92,7 +92,6 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.MatrixDouble;
 import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
-import slib.utils.impl.UtilDebug;
 
 /**
  * This class is used to facilitate the access of commonly required methods for
@@ -126,7 +125,7 @@ public class SM_Engine {
      * TODO Move to {@link GWS}
      */
     ResultStack<V, Double> vectorWeights = null;
-    ValidatorDAG validator;
+//    ValidatorDAG validator;
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
@@ -139,11 +138,10 @@ public class SM_Engine {
      * @param setEtypes_a
      * @throws SLIB_Ex_Critic
      */
-    public SM_Engine(ValidatorDAG validatorDag, G g,
-            Set<URI> setEtypes_a) throws SLIB_Ex_Critic {
+    public SM_Engine(G g,
+            Set<URI> setEtypes_a, boolean acceptIncoherences) throws SLIB_Ex_Critic {
 
         this.graph = g;
-        this.validator = validatorDag;
 
         this.goToSuperClassETypes = setEtypes_a;
 
@@ -151,8 +149,8 @@ public class SM_Engine {
         allRelTypes = new HashSet<URI>();
         allRelTypes.addAll(goToSuperClassETypes);
 
-        ancGetter = new AncestorEngine(g);
-        descGetter = new DescendantEngine(g);
+        ancGetter = new AncestorEngine(g,acceptIncoherences);
+        descGetter = new DescendantEngine(g,acceptIncoherences);
 
         init();
     }
@@ -174,7 +172,16 @@ public class SM_Engine {
      * @throws SLIB_Exception
      */
     public SM_Engine(G g) throws SLIB_Exception {
-        this(new ValidatorDAG(), g, SetUtils.buildSet(RDFS.SUBCLASSOF));
+        this(g, SetUtils.buildSet(RDFS.SUBCLASSOF),false);
+    }
+
+    /**
+     *
+     * @param g
+     * @throws SLIB_Exception
+     */
+    public SM_Engine(G g, boolean acceptIncoherences) throws SLIB_Exception {
+        this(g, SetUtils.buildSet(RDFS.SUBCLASSOF), acceptIncoherences);
     }
 
     /**
@@ -395,7 +402,7 @@ public class SM_Engine {
      */
     public synchronized V getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
-            URI rooturi = RooterDAG.rootUnderlyingTaxonomicDAG(graph, SLIBVOC.UNIVERSAL_ROOT);
+            URI rooturi = RooterDAG.rootUnderlyingTaxonomicDAG(graph, SLIBVOC.THING_OWL);
             root = (V) graph.getV(rooturi);
         }
         return root;

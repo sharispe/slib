@@ -4,16 +4,12 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.vocabulary.RDF;
-import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
-import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.Util;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
