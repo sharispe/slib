@@ -89,7 +89,6 @@ public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
 
             results.add(v, cur_ic_norm);
         }
-
         return results;
     }
 

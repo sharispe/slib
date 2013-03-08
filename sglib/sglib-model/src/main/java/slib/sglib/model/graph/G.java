@@ -48,8 +48,8 @@ import slib.sglib.model.repo.DataFactory;
 
 /**
  * Generic interface of a multi directed Graph defined as a set of vertices and a set of oriented edges.
- * The interface extends NotifyingSail, e.g. in order to be able to use
- * a Sesame reasoner on the model encompassed in the graph.
+ * The interface extends NotifyingSail, e.g. in order to be able to use a Sesame reasoner onto the model 
+ * encompassed into the graph.
  *
  * @author Sebastien Harispe
  */

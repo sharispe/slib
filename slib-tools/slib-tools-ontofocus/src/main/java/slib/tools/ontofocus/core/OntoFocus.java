@@ -207,7 +207,7 @@ public class OntoFocus {
     private void root() throws SLIB_Ex_Critic {
 
         if (c.rootURI == null) {
-            rootURI = RooterDAG.rootUnderlyingTaxonomicDAG(baseGraph, SLIBVOC.UNIVERSAL_ROOT);
+            rootURI = RooterDAG.rootUnderlyingTaxonomicDAG(baseGraph, SLIBVOC.THING_OWL);
         } else {
 //			if(data.vTypes.containsLinkedURI(c.rootURI, baseGraph)){// TODO check URI exists
             rootURI = factory.createURI(c.rootURI);
