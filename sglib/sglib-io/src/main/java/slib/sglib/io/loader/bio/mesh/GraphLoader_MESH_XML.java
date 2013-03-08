@@ -43,6 +43,7 @@ import java.util.Set;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +58,18 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.EdgeTyped;
 import slib.sglib.model.impl.graph.elements.VertexTyped;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * MeSH Loader.
- * This class permits to load the MeSH trees into a Directed Acyclic Graph
- * http://www.nlm.nih.gov/mesh/trees.html
- * 
- * The loader was designed for the 2013 XML version of the MeSH.
- * 
+ * MeSH Loader. This class permits to load the MeSH trees into a Directed
+ * Acyclic Graph http://www.nlm.nih.gov/mesh/trees.html
+ *
+ * The loader was designed for the 2013 XML version of the MeSH, coherency with
+ * prior or older version hasn't been tested.
+ *
  * @author Harispe Sébastien
  */
 public class GraphLoader_MESH_XML implements GraphLoader {
@@ -127,8 +129,6 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         if (default_namespace == null) {
             default_namespace = graph.getURI().getNamespace();
         }
-
-
         try {
             logger.info("Loading Mesh XML");
             idToConcepts = new HashMap<String, MeshConcept>();
@@ -141,6 +141,14 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
             logger.info("Number of descriptor loaded " + concepts.size());
             logger.info("Loading relationships ");
+
+            // Create universal root if required
+            V universalRoot = graph.getV(SLIBVOC.THING_OWL);
+
+            if (universalRoot == null) {
+                URI universalRootURI = factory.createURI(SLIBVOC.THING_OWL.stringValue());
+                universalRoot = graph.addV(new VertexTyped(graph, universalRootURI, VType.CLASS));
+            }
 
             // create relationships and roots of each tree
             for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
@@ -188,13 +196,18 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                         E edgeConceptToTreeInnerRoot = new EdgeTyped(vConcept, innerRootTree, RDFS.SUBCLASSOF);
                         g.addE(edgeConceptToTreeInnerRoot);
                         logger.debug("Creating Edge : " + edgeConceptToTreeInnerRoot);
-                        
+
                         // we link the tree inner root to the root tree
                         char localNameTreeRoot = treeNumber.charAt(0); // id of the tree root
-                        V rootTree = getOrCreateVertex(localNameTreeRoot+""); // e.g. F
+                        V rootTree = getOrCreateVertex(localNameTreeRoot + ""); // e.g. F
                         E treeInnerRootToTreeRoot = new EdgeTyped(innerRootTree, rootTree, RDFS.SUBCLASSOF);
                         g.addE(treeInnerRootToTreeRoot);
                         logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
+
+                        // we link the tree root to the universal root
+                        E treeRootToUniversalRoot = new EdgeTyped(rootTree, universalRoot, RDFS.SUBCLASSOF);
+                        g.addE(treeRootToUniversalRoot);
+                        logger.debug("Creating Edge : " + treeRootToUniversalRoot);
                     }
                 }
             }
