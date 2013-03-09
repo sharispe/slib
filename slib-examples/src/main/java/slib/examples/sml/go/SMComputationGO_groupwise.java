@@ -32,7 +32,7 @@ import slib.utils.ex.SLIB_Exception;
  * The Gene Ontology is expressed in OBO format. 
  * The similarity is estimated using an indirect groupwise measure based on: Lin's pairwise measure, Best Match Average aggregation strategy.
  * 
- * More information at http://www.lgi2p.ema.fr/kid/tools/sml/
+ * More information at http://www.semantic-measures-library.org/
  *
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
  * element, change value="INFO" to value="DEBUG"

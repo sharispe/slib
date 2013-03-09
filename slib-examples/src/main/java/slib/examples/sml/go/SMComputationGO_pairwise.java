@@ -28,7 +28,7 @@ import slib.utils.ex.SLIB_Exception;
  * in the Gene Ontology. The Gene Ontology is expressed in OBO format. The
  * similarity is estimated using Lin's measure.
  *
- * More information at http://www.lgi2p.ema.fr/kid/tools/sml/
+ * More information at http://www.semantic-measures-library.org/
  *
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
  * element, change value="INFO" to value="DEBUG"

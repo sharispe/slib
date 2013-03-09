@@ -20,7 +20,7 @@ import slib.utils.ex.SLIB_Exception;
  * Snippet of code showing how to interact with the graph, i.e. add vertices, edges
  * The example also shows how to retrieve all the ancestors and descendants of a particular vertex
  * 
- * More information at http://www.lgi2p.ema.fr/kid/tools/sml/
+ * More information at http://www.semantic-measures-library.org/
  * 
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
