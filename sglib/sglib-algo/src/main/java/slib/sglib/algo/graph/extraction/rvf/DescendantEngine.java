@@ -63,26 +63,57 @@ public class DescendantEngine extends RVF_TAX {
 
     /**
      * Compute the set of exclusive descendants of a class. Exclusive process:
-     * the focused vertex will NOT be included its the set of descendants.
+     * the focused vertex will NOT be included in the set of descendants.
      *
      * @param v the vertex of interest
      * @return the exclusive set of descendants of the concept (empty set if
      * any).
      */
-    public Set<V> getDescendants(V v) {
+    public Set<V> getDescendantsExc(V v) {
         return getRV(v);
+    }
+    
+    /**
+     * Compute the set of inclusive descendants of a class. 
+     * The focused vertex will be included in the set of descendants.
+     *
+     * @param v the vertex of interest
+     * @return the exclusive set of descendants of the concept (empty set if
+     * any).
+     */
+    public Set<V> getDescendantsInc(V v) {
+        Set<V> set = getRV(v);
+        set.add(v);
+        return set;
     }
 
     /**
      * Compute the set of exclusive descendants of all vertices contained in the
-     * graph. Exclusive process: the focused vertex will NOT be included its the
+     * graph. Exclusive process: the focused vertex will NOT be included in the
      * set of ancestors.
      *
      * @return a map containing the exclusive set of descendants of each vertex
      * concept (empty set if any).
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllDescendants() throws SLIB_Ex_Critic {
+    public Map<V, Set<V>> getAllDescendantsExc() throws SLIB_Ex_Critic {
         return getAllRV();
+    }
+    
+    /**
+     * Compute the set of inclusive descendants of all vertices contained in the
+     * graph. Exclusive process: the focused vertex will be included in the
+     * set of ancestors.
+     *
+     * @return a map containing the inclusive set of descendants of each vertex
+     * concept.
+     * @throws SLIB_Ex_Critic
+     */
+    public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
+        Map<V, Set<V>> allDescs = getAllRV();
+        for (V v : allDescs.keySet()) {
+            allDescs.get(v).add(v);
+        }
+        return allDescs;
     }
 }

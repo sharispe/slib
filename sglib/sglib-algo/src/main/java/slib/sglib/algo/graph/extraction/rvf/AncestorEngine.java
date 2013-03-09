@@ -50,7 +50,7 @@ public class AncestorEngine extends RVF_TAX {
     public AncestorEngine(G g) {
         super(g, Direction.OUT, false);
     }
-    
+
     /**
      * @param g the graph on which the engine must work
      */
@@ -59,26 +59,58 @@ public class AncestorEngine extends RVF_TAX {
     }
 
     /**
-     * Compute the set of exclusive ancestors of a class. 
-     * Exclusive process: the focused vertex will NOT be
-     * included its the set of ancestors.
+     * Compute the set of exclusive ancestors of a class. Exclusive process: the
+     * focused vertex will NOT be included in the set of ancestors.
      *
      * @param v the vertex of interest
      * @return the exclusive set of ancestors of the concept (empty set if any).
      */
-    public Set<V> getAncestors(V v) {
+    public Set<V> getAncestorsExc(V v) {
         return getRV(v);
     }
 
     /**
-     * Compute the set of exclusive ancestors of all vertices contained in the graph. 
-     * Exclusive process: the focused vertex will NOT be
-     * included its the set of ancestors.
+     * Compute the set of inclusive ancestors of a class. 
+     * The focused vertex will be included in the set of ancestors.
      *
-     * @return a map containing the exclusive set of ancestors of each vertex concept (empty set if any).
-     * @throws SLIB_Ex_Critic  
+     * @param v the vertex of interest
+     * @return the set composed of the ancestors of the concept + the concept.
      */
-    public Map<V, Set<V>> getAllAncestors() throws SLIB_Ex_Critic {
+    public Set<V> getAncestorsInc(V v) {
+        Set<V> set = getRV(v);
+        set.add(v);
+        return set;
+    }
+
+    /**
+     * Compute the set of exclusive ancestors of all vertices contained in the
+     * graph. Exclusive process: the focused vertex will NOT be included in the
+     * set of ancestors.
+     *
+     * @return a map containing the exclusive set of ancestors of each vertex
+     * concept (empty set if any).
+     * @throws SLIB_Ex_Critic
+     */
+    public Map<V, Set<V>> getAllAncestorsExc() throws SLIB_Ex_Critic {
+
         return getAllRV();
+    }
+
+    /**
+     * Compute the set of inclusive ancestors of all vertices contained in the
+     * graph. The focused vertex will be included in the
+     * set of ancestors.
+     *
+     * @return a map containing the inclusive set of ancestors of each vertex
+     * concept.
+     * @throws SLIB_Ex_Critic
+     */
+    public Map<V, Set<V>> getAllAncestorsInc() throws SLIB_Ex_Critic {
+
+        Map<V, Set<V>> allAncs = getAllRV();
+        for (V v : allAncs.keySet()) {
+            allAncs.get(v).add(v);
+        }
+        return allAncs;
     }
 }
