@@ -174,7 +174,7 @@ public class Test_GraphReduction_Transitive {
         assertTrue(ancestorsMap.get(root).isEmpty());
         
         DescendantEngine rvd = new DescendantEngine(g);
-        assertTrue(rvd.getDescendants(root).size() == g.getVClass().size()-1);
+        assertTrue(rvd.getDescendantsExc(root).size() == g.getVClass().size()-1);
 
         /*
          * We check all remove edges can be inferred

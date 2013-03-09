@@ -214,7 +214,7 @@ public class SM_Engine {
     public Set<V> getAncestorsInc(V v) {
 
         if (cache.ancestors.get(v) == null) {
-            Set<V> anc = ancGetter.getAncestors(v);
+            Set<V> anc = ancGetter.getAncestorsExc(v);
             anc.add(v);
             cache.ancestors.put(v, anc);
         }
@@ -464,7 +464,7 @@ public class SM_Engine {
      */
     public synchronized Set<V> getDescendantsInc(V v) {
         if (cache.descendants.get(v) == null) {
-            Set<V> rv = descGetter.getDescendants(v);
+            Set<V> rv = descGetter.getDescendantsExc(v);
             rv.add(v);
             cache.descendants.put(v, rv);
         }
@@ -553,7 +553,7 @@ public class SM_Engine {
      */
     public ResultStack<V, Long> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allDescendants = descGetter.getAllDescendants();
+        Map<V, Set<V>> allDescendants = descGetter.getAllDescendantsExc();
         ResultStack<V, Long> allNbDescendants = new ResultStack<V, Long>();
 
         for (V c : graph.getVClass()) {
@@ -719,7 +719,7 @@ public class SM_Engine {
      */
     public ResultStack<V, Double> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allAncestors = ancGetter.getAllAncestors();
+        Map<V, Set<V>> allAncestors = ancGetter.getAllAncestorsExc();
         ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
 
         for (V c : graph.getVClass()) {

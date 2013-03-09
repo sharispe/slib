@@ -132,7 +132,7 @@ public class GraphActionExecutor {
                 }
                 
                 DescendantEngine descEngine = new DescendantEngine(g);
-                Set<V> descsInclusive = descEngine.getDescendants(root);
+                Set<V> descsInclusive = descEngine.getDescendantsExc(root);
                 descsInclusive.add(root);
                 
                 

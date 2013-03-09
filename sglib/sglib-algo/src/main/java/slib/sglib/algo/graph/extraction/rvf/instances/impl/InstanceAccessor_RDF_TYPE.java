@@ -75,7 +75,7 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
         Set<V> instances = new HashSet<V>();
         
         instances.addAll(getDirectInstances(v));
-        for(V d : descendantsEngine.getDescendants(v)){
+        for(V d : descendantsEngine.getDescendantsExc(v)){
             instances.addAll(getDirectInstances(d));
         }
         return instances;
