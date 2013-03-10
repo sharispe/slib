@@ -83,10 +83,9 @@ public class TestDepthAnalyser {
         try {
             testvalues = new SLIB_UnitTestValues();
             g = TestUtils.loadTestGraph(GFormat.SGL, SLIB_UnitTestValues.G_DAG_BASIC);
-            DataFactory factory = DataFactoryMemory.getSingleton();
-            depthAnalyser = new DepthAnalyserAG(factory, g, wc);
+            depthAnalyser = new DepthAnalyserAG(df, g, wc);
 
-        } catch (SLIB_Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
             Logger.getLogger(TestDepthAnalyser.class.getName()).log(Level.SEVERE, null, ex);
         }

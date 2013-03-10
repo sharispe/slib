@@ -65,14 +65,14 @@ public class GraphAccessor {
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
             for (V v : vSel) {
+                
                 Set<E> edgesSel = g.getE(v, Direction.OUT);
 
                 boolean isValid = true;
 
                 for (E e : edgesSel) {
-                    if (eTypes == null
-                            || eTypes.contains(e.getURI())) {
-
+                    
+                    if (eTypes == null || eTypes.contains(e.getURI())) {
                         isValid = false;
                         break;
                     }
@@ -90,8 +90,7 @@ public class GraphAccessor {
                 boolean isValid = true;
 
                 for (E e : edges) {
-                    if (eTypes == null
-                            || eTypes.contains(e.getURI())) {
+                    if (eTypes == null || eTypes.contains(e.getURI())) {
 
                         isValid = false;
                         break;

@@ -62,6 +62,8 @@ public class TestUtils {
         GraphConf conf = new GraphConf();
         conf.setUri(DataFactoryMemory.getSingleton().createURI("http://example/"));
         conf.addGDataConf(new GDataConf(gFormat, filePath));
+        
+        System.out.println("Loading :::");
         G g = GraphLoaderGeneric.load(conf);
         
         System.out.println("info "+g.toString());

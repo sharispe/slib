@@ -264,7 +264,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
             edgesCol.addAll(vertexInEdges.get(v));
         }
 
-        if ((dir == Direction.BOTH || dir == Direction.OUT) && vertexInEdges.containsKey(v)) {
+        if ((dir == Direction.BOTH || dir == Direction.OUT) && vertexOutEdges.containsKey(v)) {
             edgesCol.addAll(vertexOutEdges.get(v));
         }
 
@@ -282,8 +282,8 @@ public class GraphMemory extends NotifyingSailBase implements G {
             if (!vertexOutEdges.containsKey(e.getSource())) {
                 vertexOutEdges.put(e.getSource(), new HashSet<E>());
             }
-            if (!vertexInEdges.containsKey(e.getSource())) {
-                vertexInEdges.put(e.getSource(), new HashSet<E>());
+            if (!vertexInEdges.containsKey(e.getTarget())) {
+                vertexInEdges.put(e.getTarget(), new HashSet<E>());
             }
 
             vertexOutEdges.get(e.getSource()).add(e);

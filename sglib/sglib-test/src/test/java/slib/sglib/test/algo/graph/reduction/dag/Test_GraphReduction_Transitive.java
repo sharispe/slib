@@ -34,20 +34,14 @@
  */
 package slib.sglib.test.algo.graph.reduction.dag;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Map;
 import java.util.Set;
-
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-
-import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
-import slib.sglib.test.algo.graph.TestUtils;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
-import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.io.conf.GDataConf;
@@ -57,12 +51,11 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.utils.ex.SLIB_Exception;
-
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
+import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
+import slib.sglib.test.algo.graph.TestUtils;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  *
@@ -93,7 +86,7 @@ public class Test_GraphReduction_Transitive {
 
         removedEdges = GraphReduction_Transitive.process(g);
 
-        assertTrue(removedEdges.size() == 0);
+        assertTrue(removedEdges.isEmpty());
 
         V a = g.getV(test.G_BASIC_SPIDERMAN);
         V b = g.getV(test.G_BASIC_ORGANISM);
@@ -126,7 +119,7 @@ public class Test_GraphReduction_Transitive {
      *
      * @throws SLIB_Exception
      */
-    @Test
+//    @Test
     public void transitiveReductionGO() throws SLIB_Exception {
 
         String gofilePath = SLIB_UnitTestValues.G_GO;
