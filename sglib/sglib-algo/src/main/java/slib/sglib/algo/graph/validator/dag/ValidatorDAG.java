@@ -301,7 +301,6 @@ public class ValidatorDAG {
      */
     public Set<V> getDAGRoots(G g, Set<URI> etypes, Direction dir) {
 
-        System.out.println("Passs");
         Set<V> roots = GraphAccessor.getV_NoEdgeType(g, VType.CLASS, etypes, dir);
         return roots;
     }
