@@ -1,16 +1,15 @@
 package slib.examples.sml.snomedct;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import org.openrdf.model.URI;
-import slib.sglib.algo.graph.utils.GAction;
-import slib.sglib.algo.graph.utils.GActionType;
-import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
+import slib.sglib.io.loader.bio.snomedct.GraphLoaderSnomedCT_RF2;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
@@ -20,6 +19,7 @@ import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.Timer;
 
 /**
  *
@@ -29,72 +29,94 @@ import slib.utils.ex.SLIB_Exception;
  * 
  * More information at http://www.semantic-measures-library.org/
  *
- * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
- * element, change value="INFO" to value="DEBUG"
+ * Note that you can set the LOG level in specified in log4j.xml, 
+ * e.g. in root element, change value="INFO" to value="DEBUG"
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class SMComputationSnomedCT {
 
     public static void main(String[] params) throws SLIB_Exception {
-
-        // Configuration files, set the file path according to your configuration.
-        // The Gene Ontology (OBO format)
-        String goOBO = "/data/go/gene_ontology_ext.obo";
-
+        
+        // Some variables defining the location of the file from which the Snomed-CT will be loaded
+        // The loader is suited for Snomed-CT expressed in RF2 format 
+        String DATA_DIR = "/data"; // this is the directory in which the donwloaded snomed version has been extracted
+        String SNOMEDCT_VERSION = "20120731";
+        String SNOMEDCT_DIR = DATA_DIR + "/SnomedCT_Release_INT_" + SNOMEDCT_VERSION + "/RF2Release/Full/Terminology";
+        String SNOMEDCT_CONCEPT = SNOMEDCT_DIR + "/sct2_Concept_Full_INT_" + SNOMEDCT_VERSION + ".txt";
+        String SNOMEDCT_RELATIONSHIPS = SNOMEDCT_DIR + "/sct2_Relationship_Full_INT_" + SNOMEDCT_VERSION + ".txt";
+        
+        // We configure a timer
+        Timer t = new Timer();
+        t.start();
+    
+        // We create an in-memory graph in which we will load Snomed-ct.
+        // Notice that Snomed-ct is quite large (e.g. 296433 concepts, 872318 relationships ) so you will need to 
+        // allocate extra memory to the JVM e.g -Xmx3000m
         DataFactory factory = DataFactoryMemory.getSingleton();
-        URI graph_uri = factory.createURI("http://go/");
+        URI snomedctURI = factory.createURI("http://snomedct/");
+        G g = new GraphMemory(snomedctURI);
 
-        // We define a prefix in order to set 
-        factory.loadNamespacePrefix("GO", graph_uri.toString());
+        GDataConf conf = new GDataConf(GFormat.SNOMED_CT_RF2);
+        conf.addParameter(GraphLoaderSnomedCT_RF2.ARG_CONCEPT_FILE, SNOMEDCT_CONCEPT);
+        conf.addParameter(GraphLoaderSnomedCT_RF2.ARG_RELATIONSHIP_FILE, SNOMEDCT_RELATIONSHIPS);
 
+        GraphLoaderGeneric.populate(conf, g);
 
-        G graph = new GraphMemory(graph_uri);
-
-        GDataConf graphconf = new GDataConf(GFormat.OBO, goOBO);
-        GraphLoaderGeneric.populate(graphconf, graph);
-
-        // General information about the graph
-        System.out.println(graph.toString());
+        System.out.println(g.toString());
         
-        // The Gene Ontology is not rooted, i.e. Molecular Function, Biological Process, Cellular Component, the three sub-ontologies of 
-        // the GO are not rooted. We create such a virtual root in order to be able to compare 
-        // the concepts expressed in different sub-ontologies.
+        // We compute the similarity between the concepts 
+        // associated to Heart	and Myocardium, i.e. 80891009 and 74281007 respectively
+        // We first build URIs correspondind to those concepts
+        URI heartURI      = factory.createURI(snomedctURI.stringValue()+"80891009"); // i.e http://snomedct/230690007
+        URI myocardiumURI = factory.createURI(snomedctURI.stringValue()+"74281007"); 
         
-        // We create a vertex corresponding to the virtual root
-        // and we add it to the graph
-        URI uriVR = factory.createURI("http://go/virtualRoot");
-        V virtualRoot = new Vertex(uriVR, VType.CLASS);
-        graph.addV(virtualRoot);
+        // First we configure an intrincic IC 
+        ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SECO_2004);
+        // Then we configure the pairwise measure to use, we here choose to use Lin formula
+        SMconf smConf = new SMconf("Lin", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
         
-        // We root the graphs using the virtual root as root
-        GAction rooting = new GAction(GActionType.REROOTING);
-        rooting.addParameter("root_uri", uriVR.stringValue());
-        GraphActionExecutor.applyAction(factory, rooting, graph);
+        // We define the engine used to compute the similarity
+        SM_Engine engine = new SM_Engine(g);
         
-        System.out.println(graph.toString());
-
-        int nbVertices = graph.getV(VType.CLASS).size();
-
-        System.out.println("Nb vertices : " + nbVertices);
-
-
-        // We compute the similarity between http://go/0071869 and the collection of vertices
-        V concept = graph.getV(factory.createURI("http://go/0071869"));
-
-        ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011_a);
-
-        // Then we define the Semantic measure configuration
-        SMconf smConf = new SMconf("Lin", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998);
-        smConf.setICconf(icConf);
-
-        SM_Engine engine = new SM_Engine(graph);
-
-        double sim;
-        for (V v : graph.getV(VType.CLASS)) {
-
-            sim = engine.computePairwiseSim(smConf, concept, v);
-            System.out.println(concept+"\t"+v+"\t"+sim);
+        // We retrieve the vertices corresponding to the two concepts
+        V strokeVertex = g.getV(heartURI);
+        V myocardiumVertex = g.getV(myocardiumURI);
+        
+        double sim = engine.computePairwiseSim(smConf, strokeVertex, myocardiumVertex);
+        System.out.println("Similarity Heart/Myocardium: "+sim);
+        
+        /* Notice that the first computation is expensive as the engine compute the IC and extra information 
+        * which are cached by the engine
+        * Let's perform 100000 random computations (we only print some results).
+        * We retrieve the set of vertices as a list
+        */
+        int totalComparison = 100000;
+        
+        List<V> listVertices = new ArrayList<V>(g.getV());
+        int nbConcepts = listVertices.size();
+        int id1,id2;
+        V c1,c2;
+        String idC1, idC2;
+        Random r = new Random();
+        
+        for (int i = 0; i < totalComparison; i++) {
+            id1 = r.nextInt(nbConcepts);
+            id2 = r.nextInt(nbConcepts);
+            
+            c1 = listVertices.get(id1);
+            c2 = listVertices.get(id2);
+            
+            sim = engine.computePairwiseSim(smConf, c1, c2);
+            
+            if( (i+1) % 1000 == 0){
+                idC1 = ((URI) c1.getValue()).getLocalName();
+                idC2 = ((URI) c2.getValue()).getLocalName();
+                
+                System.out.println("Sim "+(i+1)+"/"+totalComparison+"\t"+idC1+"/"+idC2+": "+sim);
+            }
         }
+        t.stop();
+        t.elapsedTime();
     }
 }
