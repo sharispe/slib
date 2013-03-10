@@ -52,7 +52,7 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.impl.voc.SLIBVOC;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
 import slib.utils.ex.SLIB_Exception;
@@ -119,7 +119,7 @@ public class Test_GraphReduction_Transitive {
      *
      * @throws SLIB_Exception
      */
-//    @Test
+    @Test
     public void transitiveReductionGO() throws SLIB_Exception {
 
         String gofilePath = SLIB_UnitTestValues.G_GO;
@@ -136,7 +136,7 @@ public class Test_GraphReduction_Transitive {
 
         System.out.println(g.toString());
 
-        URI root_uri = DataFactoryMemory.getSingleton().createURI(SLIBVOC.SLIB_NS, "FICTIVE_ROOT");
+        URI root_uri = SLIBVOC.THING_OWL;
 
         RooterDAG.rootUnderlyingTaxonomicDAG(g, root_uri);
 

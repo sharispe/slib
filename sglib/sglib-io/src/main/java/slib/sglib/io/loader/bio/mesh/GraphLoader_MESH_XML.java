@@ -58,7 +58,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.impl.voc.SLIBVOC;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;

@@ -65,7 +65,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.impl.voc.SLIBVOC;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;

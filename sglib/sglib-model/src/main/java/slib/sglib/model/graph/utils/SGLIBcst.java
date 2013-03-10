@@ -38,14 +38,11 @@ package slib.sglib.model.graph.utils;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class SGLIBcst {
 	
-	/**
-     *
-     */
     public static final String FICTIVE_ROOT_FLAG = "__FICTIVE__";
-    public static final String FICTIVE_ROOT_URI  = "http://ema.lig2p.fr/fictive_root";
+    
 
 }

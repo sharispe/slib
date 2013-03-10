@@ -35,6 +35,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.SGLIBcst;
 import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.Util;
 
@@ -126,40 +127,40 @@ public class GraphActionExecutor {
             try {
                 URI rootURI = factory.createURI(rootURIs);
                 V root = g.getV(rootURI);
-                
-                if(root == null){
-                    throw new SLIB_Ex_Critic("Error cannot state vertex associated to URI "+rootURI+" in graph "+g.getURI());
+
+                if (root == null) {
+                    throw new SLIB_Ex_Critic("Error cannot state vertex associated to URI " + rootURI + " in graph " + g.getURI());
                 }
-                
+
                 DescendantEngine descEngine = new DescendantEngine(g);
                 Set<V> descsInclusive = descEngine.getDescendantsExc(root);
                 descsInclusive.add(root);
-                
-                
+
+
                 Set<V> classesToRemove = g.getV(VType.CLASS);
                 classesToRemove.removeAll(descsInclusive);
-                
-                logger.info("Removing "+classesToRemove.size()+" classes of the graph");
+
+                logger.info("Removing " + classesToRemove.size() + " classes of the graph");
                 g.removeV(classesToRemove);
-                
+
                 // We then remove the entities which are not 
                 // linked to the graph current underlyign taxonomic graph
-                
+
                 Set<V> instancesToRemove = new HashSet<V>();
-                
-                for(V v : g.getV(VType.INSTANCE)){
+
+                for (V v : g.getV(VType.INSTANCE)) {
                     // No links to taxonomic graph anymore 
-                    if(g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()){ 
-                       instancesToRemove.add(v); 
+                    if (g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()) {
+                        instancesToRemove.add(v);
                     }
                 }
-                
-                logger.info("Removing "+instancesToRemove.size()+" instances of the graph");
+
+                logger.info("Removing " + instancesToRemove.size() + " instances of the graph");
                 g.removeV(instancesToRemove);
-                
-                
-                
-                
+
+
+
+
             } catch (IllegalArgumentException e) {
                 throw new SLIB_Ex_Critic("Error value specified for parameter root_uri, i.e. " + rootURIs + " cannot be converted into an URI");
             }
@@ -334,35 +335,29 @@ public class GraphActionExecutor {
         logger.info("Rerooting");
 
         // Re-rooting
-        String rootURIs = (String) action.getParameter("root_uri");
+        String rootURIstring = (String) action.getParameter("root_uri");
 
-        logger.info("Fetching root node, uri: " + rootURIs);
+        logger.info("Fetching root node, uri: " + rootURIstring);
 
+        URI rootURI;
 
-        if (rootURIs != null && !rootURIs.isEmpty()) {
-
-            URI rootURI;
-
-            if (rootURIs.equals(SGLIBcst.FICTIVE_ROOT_FLAG)) {
-                rootURI = factory.createURI(SGLIBcst.FICTIVE_ROOT_URI);
-                g.createVertex(rootURI);
-                
-
-            }
-            else{
-                rootURI = factory.createURI(rootURIs);
-            }
+        if (rootURIstring == null) {
+            rootURI = SLIBVOC.THING_OWL;
+            g.createVertex(rootURI);
+            logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
             
-            if (g.getV(rootURI) == null) {
-                throw new SLIB_Ex_Critic("Cannot resolve specified root:" + rootURI);
-            } else {
-                RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
-            }
-
+        } else if (rootURIstring.equals(SGLIBcst.FICTIVE_ROOT_FLAG)) {
+            rootURI = SLIBVOC.THING_OWL;
+            g.createVertex(rootURI);
         } else {
-            throw new SLIB_Ex_Critic("Please specify a 'root_uri' associated to the action rerooting");
+            rootURI = factory.createURI(rootURIstring);
         }
 
+        if (g.getV(rootURI) == null) {
+            throw new SLIB_Ex_Critic("Cannot resolve specified root:" + rootURI);
+        } else {
+            RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
+        }
     }
 
     private static void transitive_reduction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {

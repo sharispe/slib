@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.PredicateFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -102,24 +101,11 @@ public class PredicateURIRepo implements PredicateFactory {
         return uri;
     }
     
-    /**
-     *
-     * @param eType
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
-    public URI createInverse(URI eType) throws SLIB_Ex_Critic {
-        URI inverse = load(SLIBVOC.SLIB_NS + eType.getLocalName() + "_inverse");
-        return inverse;
-    }
-
-
     @Override
     public URI createPURI(String uri) {
         URI u = factory.createURI(uri);
         pURIs.add(u);
         return u;
-
     }
 
     @Override

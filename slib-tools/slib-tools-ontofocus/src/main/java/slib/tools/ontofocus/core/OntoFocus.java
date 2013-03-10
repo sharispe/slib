@@ -64,7 +64,7 @@ import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.impl.voc.SLIBVOC;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.utils.OntoFocusConf;

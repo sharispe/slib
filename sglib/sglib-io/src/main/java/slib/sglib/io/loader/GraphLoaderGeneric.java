@@ -124,8 +124,10 @@ public class GraphLoaderGeneric {
         logger.info("Loading Graph "+graphConf.getUri());
 
         G g = createGraph(graphConf.getUri());
-
-
+        return load(graphConf,g);
+    }
+    
+    public static G load(GraphConf graphConf, G g) throws SLIB_Exception {
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
         }

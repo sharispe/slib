@@ -84,7 +84,7 @@ public class TypeInferencer {
             }
 
             toResolve -= infCurrentIt;
-            logger.debug("Inference made " + infCurrentIt);
+//            logger.debug("Inference made " + infCurrentIt);
 
             if (infCurrentIt == 0) {
                 stable = true;
@@ -92,14 +92,14 @@ public class TypeInferencer {
         }
         logger.info("Final undefined: " + toResolve + "/" + total);
 
-        if (toResolve != 0) {
-            for (V v : g.getV()) {
-                if (v.getType() == VType.UNDEFINED) {
-                    logger.debug(v.getType() + "" + "\t\t" + v.getValue());
-                }
-
-            }
-        }
+//        if (toResolve != 0) {
+//            for (V v : g.getV()) {
+//                if (v.getType() == VType.UNDEFINED) {
+//                    logger.debug(v.getType() + "" + "\t\t" + v.getValue());
+//                }
+//
+//            }
+//        }
 
         return toResolve == 0;
 
@@ -134,7 +134,7 @@ public class TypeInferencer {
 
             if (type != null) {
 
-                logger.debug("SUBJECT " + s + "  " + type + "  >" + e);
+//                logger.debug("SUBJECT " + s + "  " + type + "  >" + e);
                 s.setType(type);
                 return true;
             }
@@ -154,7 +154,7 @@ public class TypeInferencer {
             }
 
             if (type != null) {
-                logger.debug("OBJECT " + o + "  " + type + "  >" + e);
+//                logger.debug("OBJECT " + o + "  " + type + "  >" + e);
                 o.setType(type);
                 return true;
             }
