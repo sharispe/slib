@@ -65,15 +65,15 @@ public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
      */
     public double sim(V a, V b, SM_Engine c, SMconf conf) {
 
-		Map<V, Double> sc_A = c.computeSemanticContribution(a);
-		Map<V, Double> sc_B = c.computeSemanticContribution(b);
+		Map<V, Double> sc_A = c.computeSemanticContribution(a,conf);
+		Map<V, Double> sc_B = c.computeSemanticContribution(b,conf);
 
 
 		Set<V> ancestors_A = c.getAncestorsInc(a);
 		Set<V> ancestors_B = c.getAncestorsInc(b);
 
-		double svA = c.computeSV_Wang_2007(a);
-		double svB = c.computeSV_Wang_2007(b);
+		double svA = c.computeSV_Wang_2007(a,conf);
+		double svB = c.computeSV_Wang_2007(b,conf);
 
 		return sim(a,b,sc_A,sc_B,svA,svB,ancestors_A,ancestors_B);
 	}

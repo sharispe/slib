@@ -42,6 +42,7 @@ import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.utils.VColor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -301,7 +302,7 @@ public class ValidatorDAG {
     public Set<V> getDAGRoots(G g, Set<URI> etypes, Direction dir) {
 
 
-        Set<V> roots = g.getV_NoEdgeType(VType.CLASS, etypes, dir);
+        Set<V> roots = GraphAccessor.getV_NoEdgeType(g, VType.CLASS, etypes, dir);
         return roots;
     }
 

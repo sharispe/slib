@@ -59,7 +59,7 @@ import slib.sglib.io.loader.bio.obo.utils.OboTerm;
 import slib.sglib.io.loader.bio.obo.utils.OboType;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -474,7 +474,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
                 URI termURI = data.createURI(e.getKey());
 
-                VertexTyped v = new VertexTyped(g, termURI, VType.CLASS);
+                Vertex v = new Vertex(termURI, VType.CLASS);
                 g.addV(v);
             } else {
                 nbObsolete++;
@@ -521,7 +521,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
                         // In some case links are defined
                         // between elements not defined in the graph
                         if (target == null) {
-                            VertexTyped v = new VertexTyped(g, targetURI, VType.CLASS);
+                            Vertex v = new Vertex(targetURI, VType.CLASS);
                             target = g.addV(v);
                         }
 

@@ -343,11 +343,13 @@ public class SLIBValueFactory extends ValueFactoryBase implements ISLIBValueFact
         return getOrCreateLiteral(tempLiteral);
     }
 
+    @Override
     public synchronized Literal createLiteral(String value, String language) {
         Literal tempLiteral = new LiteralImpl(value, language);
         return getOrCreateLiteral(tempLiteral);
     }
 
+    @Override
     public synchronized Literal createLiteral(String value, URI datatype) {
         Literal tempLiteral = new LiteralImpl(value, datatype);
         return getOrCreateLiteral(tempLiteral);

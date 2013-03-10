@@ -28,8 +28,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 
 
@@ -213,10 +213,10 @@ public class GSailConnection extends NotifyingSailConnectionBase implements Infe
 		V vsub = graph.getV(  (Value) subj);
 		V vobj = graph.getV(obj);
 
-		if(vsub == null) vsub = graph.addV( new VertexTyped(graph, (Value) subj, null) );
-		if(vobj == null) vobj = graph.addV( new VertexTyped(graph, obj, null) );
+		if(vsub == null) vsub = graph.addV( new Vertex((Value) subj, null) );
+		if(vobj == null) vobj = graph.addV( new Vertex(obj, null) );
 
-		E edge = new EdgeTyped(vsub, vobj, pred);
+		E edge = new Edge(vsub, vobj, pred);
 
 		return edge;
 	}

@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 
 /**
  *
@@ -54,17 +54,17 @@ public class SlibRdfHandler implements RDFHandler {
         V subject = g.getV(st.getSubject());
 
         if (subject == null) {
-            subject = new VertexTyped(g, st.getSubject(), null);
+            subject = new Vertex(st.getSubject(), null);
             g.addV(subject);
         }
         
         V object  = g.getV(st.getObject());
 
         if (object == null) {
-            object = new VertexTyped(g, st.getObject(), null);
+            object = new Vertex(st.getObject(), null);
         }
 
-        E e = new EdgeTyped(subject, object, st.getPredicate());
+        E e = new Edge(subject, object, st.getPredicate());
 
         count++;
         

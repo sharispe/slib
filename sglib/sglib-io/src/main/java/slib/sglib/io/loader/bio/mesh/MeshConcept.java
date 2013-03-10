@@ -6,7 +6,7 @@ package slib.sglib.io.loader.bio.mesh;
 
 import java.util.HashSet;
 import java.util.Set;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 
 /**
  * Dummy representation of a Mesh Concept

@@ -59,7 +59,7 @@ public class TypeInferencer {
 
         while (!stable) {
 
-            logger.info("Iteration " + it + " undefined: " + toResolve + "/" + total);
+            logger.info("Iteration " + it + ", undefined types: " + toResolve + "/" + total);
             it++;
 
             long infCurrentIt = 0; // inference next it

@@ -37,6 +37,7 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
@@ -68,8 +69,9 @@ public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstr
 
 		int maxDepth   = c.getMaxDepth();
 
-		double sp_AtoB = c.getShortestPath(a,b);
-		double sp_BtoA = c.getShortestPath(b,a);
+                GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+		double sp_AtoB = c.getShortestPath(a,b,weightingScheme);
+		double sp_BtoA = c.getShortestPath(b,a,weightingScheme);
 
 		return sim(maxDepth,sp_AtoB,sp_BtoA);
 	}

@@ -51,7 +51,7 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
@@ -117,7 +117,7 @@ public class GraphLoader_SLIB implements GraphLoader {
                 dataTMP = line.split("\t");
                 if (dataTMP.length == 1) { // vertex
                     URI vURI = factory.createURI(dataTMP[0]);
-                    g.addV(new VertexTyped(g, vURI, VType.CLASS));
+                    g.addV(new Vertex(vURI, VType.CLASS));
                 } else if (dataTMP.length == 3) {
                     URI sURI = factory.createURI(dataTMP[0]);
                     URI pURI = factory.createURI(dataTMP[1]);
@@ -127,10 +127,10 @@ public class GraphLoader_SLIB implements GraphLoader {
                     V o = g.getV(oURI);
 
                     if (s == null) {
-                        s = g.addV(new VertexTyped(g, sURI, VType.CLASS));
+                        s = g.addV(new Vertex(sURI, VType.CLASS));
                     }
                     if (o == null) {
-                        o = g.addV(new VertexTyped(g, oURI, VType.CLASS));
+                        o = g.addV(new Vertex(oURI, VType.CLASS));
                     }
                     g.addE(s, o, pURI);
                 } else {

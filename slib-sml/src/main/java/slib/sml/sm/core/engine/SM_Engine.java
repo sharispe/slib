@@ -48,6 +48,7 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
@@ -370,10 +371,10 @@ public class SM_Engine {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public double getShortestPath(V a, V b) throws SLIB_Ex_Critic {
+    public double getShortestPath(V a, V b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
-            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes);
+            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes,weightingScheme);
             ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
             cache.shortestPath.put(a, minDists_cA);
         }
@@ -388,11 +389,11 @@ public class SM_Engine {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public V getMSA(V a, V b) throws SLIB_Ex_Critic {
+    public V getMSA(V a, V b,GWS weightingScheme) throws SLIB_Ex_Critic {
 
-        Dijkstra dijkstra = new Dijkstra(graph, allRelTypes);
+        Dijkstra dijkstra = new Dijkstra(graph, allRelTypes,weightingScheme);
 
-        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a), getAllShortestPath(b), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
+        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a,weightingScheme), getAllShortestPath(b,weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
 
         return msa_pk;
     }
@@ -417,10 +418,10 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    public synchronized Map<V, Double> getAllShortestPath(V a) throws SLIB_Ex_Critic {
+    public synchronized Map<V, Double> getAllShortestPath(V a,GWS weightingScheme) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
-            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes);
+            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes, weightingScheme);
             ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
             cache.shortestPath.put(a, minDists_cA);
         }
@@ -484,9 +485,10 @@ public class SM_Engine {
      * @param v
      * @return
      */
-    public Map<V, Double> computeSemanticContribution(V v) {
+    public Map<V, Double> computeSemanticContribution(V v,SMconf conf) {
         SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes);
+        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes,weightingScheme);
 
         return sContrib_A;
     }
@@ -497,9 +499,10 @@ public class SM_Engine {
      * @param v
      * @return
      */
-    public double computeSV_Wang_2007(V v) {
+    public double computeSV_Wang_2007(V v, SMconf conf) {
         SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes);
+        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes,weightingScheme);
         double sv_A = SimDagHybridUtil.computeSV_Wang_2007(sContrib_A);
         return sv_A;
     }
@@ -678,7 +681,7 @@ public class SM_Engine {
      * @return
      */
     public Set<V> getLeaves() {
-        return graph.getV_NoEdgeType(VType.CLASS, goToSuperClassETypes, Direction.IN);
+        return GraphAccessor.getV_NoEdgeType(graph,VType.CLASS, goToSuperClassETypes, Direction.IN);
     }
 
     /**
@@ -1213,5 +1216,15 @@ public class SM_Engine {
 
     public Set<V> getLCA(V a, V b) throws SLIB_Exception {
         return dcaFinder.getLCA(graph, a, b);
+    }
+
+    /**
+     * TODO store the weighting scheme in a Map<String,GWS>
+     * Provide a way to load edge weight from file or to compute them using specific methods
+     * @param param the key corresponding to the id of the weighting scheme to retrieve
+     * @return 
+     */
+    public GWS getWeightingScheme(String param) {
+        throw new UnsupportedOperationException("Not yet implemented");
     }
 }

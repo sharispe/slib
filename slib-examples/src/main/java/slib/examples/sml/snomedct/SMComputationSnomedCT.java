@@ -10,7 +10,7 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
@@ -64,7 +64,7 @@ public class SMComputationSnomedCT {
         // We create a vertex corresponding to the virtual root
         // and we add it to the graph
         URI uriVR = factory.createURI("http://go/virtualRoot");
-        V virtualRoot = new VertexTyped(graph, uriVR, VType.CLASS);
+        V virtualRoot = new Vertex(uriVR, VType.CLASS);
         graph.addV(virtualRoot);
         
         // We root the graphs using the virtual root as root

@@ -55,8 +55,8 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
@@ -147,7 +147,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
             if (universalRoot == null) {
                 URI universalRootURI = factory.createURI(SLIBVOC.THING_OWL.stringValue());
-                universalRoot = graph.addV(new VertexTyped(graph, universalRootURI, VType.CLASS));
+                universalRoot = graph.addV(new Vertex(universalRootURI, VType.CLASS));
             }
 
             // create relationships and roots of each tree
@@ -172,7 +172,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
                             //System.out.println("\t" + parentId + "\t" + parent.descriptorUI);
                             V vParent = getOrCreateVertex(parent.descriptorUI);
-                            E edge = new EdgeTyped(vConcept, vParent, RDFS.SUBCLASSOF);
+                            E edge = new Edge(vConcept, vParent, RDFS.SUBCLASSOF);
 
                             g.addE(edge);
                         }
@@ -193,19 +193,19 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
                         // we link the concept to the corresponding tree inner root
                         V innerRootTree = getOrCreateVertex(treeNumber); // e.g. F01
-                        E edgeConceptToTreeInnerRoot = new EdgeTyped(vConcept, innerRootTree, RDFS.SUBCLASSOF);
+                        E edgeConceptToTreeInnerRoot = new Edge(vConcept, innerRootTree, RDFS.SUBCLASSOF);
                         g.addE(edgeConceptToTreeInnerRoot);
                         logger.debug("Creating Edge : " + edgeConceptToTreeInnerRoot);
 
                         // we link the tree inner root to the root tree
                         char localNameTreeRoot = treeNumber.charAt(0); // id of the tree root
                         V rootTree = getOrCreateVertex(localNameTreeRoot + ""); // e.g. F
-                        E treeInnerRootToTreeRoot = new EdgeTyped(innerRootTree, rootTree, RDFS.SUBCLASSOF);
+                        E treeInnerRootToTreeRoot = new Edge(innerRootTree, rootTree, RDFS.SUBCLASSOF);
                         g.addE(treeInnerRootToTreeRoot);
                         logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
 
                         // we link the tree root to the universal root
-                        E treeRootToUniversalRoot = new EdgeTyped(rootTree, universalRoot, RDFS.SUBCLASSOF);
+                        E treeRootToUniversalRoot = new Edge(rootTree, universalRoot, RDFS.SUBCLASSOF);
                         g.addE(treeRootToUniversalRoot);
                         logger.debug("Creating Edge : " + treeRootToUniversalRoot);
                     }
@@ -227,7 +227,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         V vConcept = graph.getV(uriConcept);
 
         if (vConcept == null) {
-            vConcept = graph.addV(new VertexTyped(graph, uriConcept, VType.CLASS));
+            vConcept = graph.addV(new Vertex(uriConcept, VType.CLASS));
         }
         return vConcept;
     }

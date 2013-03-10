@@ -56,8 +56,8 @@ import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -364,13 +364,13 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
             URI instanceURI = entry.getKey();
 
-            V i = new VertexTyped(g, instanceURI, VType.INSTANCE);
+            V i = new Vertex(instanceURI, VType.INSTANCE);
             g.addV(i);
 
             Set<V> annotations = entry.getValue();
 
             for (V v : annotations) {
-                g.addE(new EdgeTyped(i, v, RDF.TYPE));
+                g.addE(new Edge(i, v, RDF.TYPE));
             }
 
             vnumber++;

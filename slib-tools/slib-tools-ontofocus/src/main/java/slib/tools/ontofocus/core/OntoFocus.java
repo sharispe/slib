@@ -61,7 +61,7 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.impl.voc.SLIBVOC;
@@ -218,7 +218,7 @@ public class OntoFocus {
             if (baseGraph.containsVertex(rootURI)) {
                 root = baseGraph.getV(rootURI);
             } else {
-                root = new VertexTyped(baseGraph, rootURI, VType.CLASS);
+                root = new Vertex(rootURI, VType.CLASS);
             }
 
             if (!new ValidatorDAG().isUniqueRootedTaxonomicDag(baseGraph, root)) {

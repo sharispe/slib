@@ -8,8 +8,8 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.sglib.model.repo.DataFactory;
@@ -46,12 +46,12 @@ public class GraphExample {
         System.out.println(graph.toString());
         
         // We create vertices and an edge
-        V vA = new VertexTyped(graph, uriVa, VType.CLASS);
-        V vB = new VertexTyped(graph, uriVb, VType.CLASS);
-        V vC = new VertexTyped(graph, uriVc, VType.CLASS);
-        V vD = new VertexTyped(graph, uriVd, VType.CLASS);
+        V vA = new Vertex(uriVa, VType.CLASS);
+        V vB = new Vertex(uriVb, VType.CLASS);
+        V vC = new Vertex(uriVc, VType.CLASS);
+        V vD = new Vertex(uriVd, VType.CLASS);
  
-        E e = new EdgeTyped(vD, vA, RDFS.SUBCLASSOF);
+        E e = new Edge(vD, vA, RDFS.SUBCLASSOF);
         
         // You can therfore add a vertex or an edge
         graph.addV(vA);

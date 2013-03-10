@@ -23,8 +23,8 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
@@ -121,8 +121,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
                         URI s = dataRepo.createURI(uriPrefix + synset_offset);
                         URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
                         
-                        V vs = graph.addV(new VertexTyped(graph, s, VType.CLASS));
-                        V vo = graph.addV(new VertexTyped(graph, o, VType.CLASS));
+                        V vs = graph.addV(new Vertex(s, VType.CLASS));
+                        V vo = graph.addV(new Vertex(o, VType.CLASS));
                         
                         E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(vs, vo);
                         
@@ -249,9 +249,9 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
             E e = null;
             if (fromSourceToTarget) {
-                e = new EdgeTyped(srcPointer, targetPointer, rel);
+                e = new Edge(srcPointer, targetPointer, rel);
             } else {
-                e = new EdgeTyped(targetPointer, srcPointer, rel);
+                e = new Edge(targetPointer, srcPointer, rel);
             }
             return e;
         }

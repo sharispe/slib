@@ -45,7 +45,7 @@ import org.junit.Test;
 
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
@@ -65,12 +65,12 @@ public class TestSetUtils {
 	G g1;
 	G g2;
 	
-	V a = new VertexTyped(null, data.createURI("http://#a"), null); 
-	V b = new VertexTyped(null, data.createURI("http://#b"), null);
-	V c = new VertexTyped(null, data.createURI("http://#c"), null); 
-	V d = new VertexTyped(null, data.createURI("http://#d"), null); 
-	V e = new VertexTyped(null, data.createURI("http://#e"), null); 
-	V f = new VertexTyped(null, data.createURI("http://#f"), null); 
+	V a = new Vertex(data.createURI("http://#a"), null); 
+	V b = new Vertex(data.createURI("http://#b"), null);
+	V c = new Vertex(data.createURI("http://#c"), null); 
+	V d = new Vertex(data.createURI("http://#d"), null); 
+	V e = new Vertex(data.createURI("http://#e"), null); 
+	V f = new Vertex(data.createURI("http://#f"), null); 
 
 	int c1_intersection = 0;
 	int c1_union		= 1;

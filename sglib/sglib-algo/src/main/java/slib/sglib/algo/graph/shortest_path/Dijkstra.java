@@ -72,21 +72,7 @@ public class Dijkstra{
 	GWS ws = null;
 
 
-	/**
-	 * Create an Dijkstra algorithm used to compute shortest paths considering
-	 * the weighting scheme associated to the graph
-	 * @param g the graph on which the shortest path has to be computed
-         * @param setEdgeTypes the set of edge types to consider
-         * @throws SLIB_Ex_Critic  
-	 */
-	public Dijkstra(G g, Set<URI> setEdgeTypes) throws SLIB_Ex_Critic{
-		this.g = g;
-		this.setEdgeTypes = setEdgeTypes;
-		this.ws = g.getWeightingScheme();
-		
-		checkGWSisNonNegative();
-		
-	}
+	
 	
 	/**
 	 * Check the weighting scheme only contains non negative weights

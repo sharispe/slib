@@ -35,6 +35,7 @@
 package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -52,7 +53,8 @@ public class Sim_pairwise_DAG_edge_Rada_1989 extends Sim_DAG_edge_abstract {
 
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
-        double sp = c.getShortestPath(a, b);
+        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        double sp = c.getShortestPath(a, b,weightingScheme);
         return sim(sp);
     }
 

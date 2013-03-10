@@ -26,8 +26,8 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.EdgeTyped;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
@@ -110,7 +110,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             throw new SLIB_Ex_Critic("Please specify a file containing the relationship specification, argument " + ARG_RELATIONSHIP_FILE);
         }
 
-        if (prefix == null) {
+        if (prefix == null && g.getURI() != null) {
             prefix = g.getURI().getNamespace();
         }
 
@@ -164,7 +164,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
                 if (concept.active) {
                     URI cURI = repo.createURI(prefix + concept.id);
-                    V v = g.addV(new VertexTyped(g, cURI, VType.CLASS));
+                    V v = g.addV(new Vertex(cURI, VType.CLASS));
                     conceptMap.put(concept.id, v);
                     loaded++;
                 }
@@ -235,7 +235,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                         } else {
                             pred = repo.createURI(prefix + r.relationshipID);
                         }
-                        E e = new EdgeTyped(src, tar, pred);
+                        E e = new Edge(src, tar, pred);
 
                         g.addE(e);
                         relationship_count++;
@@ -244,6 +244,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             }
             logger.info("Number of relationships loaded: " + relationship_count);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
     }

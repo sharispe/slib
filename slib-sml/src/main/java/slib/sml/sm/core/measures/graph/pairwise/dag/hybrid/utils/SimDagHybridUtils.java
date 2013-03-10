@@ -75,7 +75,8 @@ public class SimDagHybridUtils {
             V v,
             Set<V> ancestors,
             G g,
-            Set<URI> setEdgeTypes) {
+            Set<URI> setEdgeTypes,
+            GWS ws) {
 
 //		logger.info("computeSemanticContribution_Wang_2007 for "+v);
 
@@ -132,7 +133,7 @@ public class SimDagHybridUtils {
         queue = new ArrayList<V>();
         queue.add(v);
 
-        GWS ws = g.getWeightingScheme();
+        
 
         while (!queue.isEmpty()) {
 

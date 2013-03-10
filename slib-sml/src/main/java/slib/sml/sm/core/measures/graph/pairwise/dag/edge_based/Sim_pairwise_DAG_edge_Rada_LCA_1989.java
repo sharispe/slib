@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Set;
 
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
@@ -61,8 +62,10 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
     @Override
     public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        Map<V, Double> minDists_cA = c.getAllShortestPath(a);
-        Map<V, Double> minDists_cB = c.getAllShortestPath(b);
+        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        
+        Map<V, Double> minDists_cA = c.getAllShortestPath(a,weightingScheme);
+        Map<V, Double> minDists_cB = c.getAllShortestPath(b,weightingScheme);
         Set<V> ancestors_A = c.getAncestorsInc(a);
         Set<V> ancestors_B = c.getAncestorsInc(b);
         ResultStack<V, Integer> maxDepths = c.getMaxDepths();

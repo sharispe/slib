@@ -51,7 +51,7 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
@@ -194,9 +194,9 @@ public class GraphLoader_SGL implements GraphLoader {
             V v;
 
             if (vertexTypes[idType] == VType.CLASS) {
-                v = new VertexTyped(g, u, VType.CLASS);
+                v = new Vertex(u, VType.CLASS);
             } else if (vertexTypes[idType] == VType.INSTANCE) {
-                v = new VertexTyped(g, u, VType.INSTANCE);
+                v = new Vertex(u, VType.INSTANCE);
             } else {
                 throw new SLIB_Exception("Vertex type not supported " + vertexTypes[idType]);
             }

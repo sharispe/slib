@@ -19,7 +19,7 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.VertexTyped;
+import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -227,7 +227,7 @@ public class GraphLoader_CSV implements GraphLoader {
             uriAsString = vmap.prefix + uriAsString;
         }
 
-        V v = new VertexTyped(g, dataRepo.createURI(uriAsString), vmap.type);
+        V v = new Vertex(dataRepo.createURI(uriAsString), vmap.type);
 
         return v;
     }

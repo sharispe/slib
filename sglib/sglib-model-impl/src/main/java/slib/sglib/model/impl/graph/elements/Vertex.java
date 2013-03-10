@@ -4,53 +4,38 @@ import org.openrdf.model.Value;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
-import slib.utils.impl.OProperty;
 
 
 /**
- *
- * @author seb
+ * @author Harispe Sébastien
  */
-public class VertexTyped extends OProperty implements V {
+public class Vertex implements V {
 
     /**
-     *
-     */
-    protected G g;
-    /**
-     *
+     * The value associated to the vertex
      */
     protected Value value;
+    
     /**
-     *
+     * The type associated to the vertex
      */
     protected VType type;
 
     /**
-     *
-     * @param g
      * @param v
      * @param type
      */
-    public VertexTyped(G g, Value v, VType type) {
-        this.g = g;
+    public Vertex(Value v, VType type) {
         this.value = v;
 
         if (type == null) {
             type = VType.UNDEFINED;
         }
-
         this.type = type;
     }
 
-    /**
-     *
-     * @return
-     */
-    public String stringValue() {
-        return value.stringValue();
-    }
 
+    @Override
     public VType getType() {
         return type;
     }
@@ -59,6 +44,7 @@ public class VertexTyped extends OProperty implements V {
      * If the specified type is null Undefined is used
      * @param type 
      */
+    @Override
     public void setType(VType type) {
 
         if (type == null) {
@@ -68,6 +54,7 @@ public class VertexTyped extends OProperty implements V {
         this.type = type;
     }
 
+    @Override
     public Value getValue() {
         return value;
     }
@@ -88,7 +75,7 @@ public class VertexTyped extends OProperty implements V {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        VertexTyped other = (VertexTyped) obj;
+        Vertex other = (Vertex) obj;
         if (value == null) {
             if (other.value != null) {
                 return false;
