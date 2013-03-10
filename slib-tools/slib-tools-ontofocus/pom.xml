@@ -3,7 +3,7 @@
   <parent>
     <artifactId>slib-tools</artifactId>
     <groupId>fr.lgi2p.kid</groupId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5-beta-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>slib-tools-ontofocus</artifactId>
@@ -11,22 +11,22 @@
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-algo</artifactId>
-  		<version>0.0.5-SNAPSHOT</version>
+  		<version>0.0.5-beta-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-model-impl</artifactId>
-  		<version>0.0.5-SNAPSHOT</version>
+  		<version>0.0.5-beta-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>sglib-io</artifactId>
-  		<version>0.0.5-SNAPSHOT</version>
+  		<version>0.0.5-beta-SNAPSHOT</version>
   	</dependency>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>slib-tools-module</artifactId>
-  		<version>0.0.5-SNAPSHOT</version>
+  		<version>0.0.5-beta-SNAPSHOT</version>
   	</dependency>
   </dependencies>
   
