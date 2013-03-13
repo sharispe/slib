@@ -39,8 +39,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
-import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.conf.GDataConf;
@@ -64,9 +62,7 @@ import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 import slib.utils.impl.Timer;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -74,16 +70,195 @@ import slib.utils.impl.UtilDebug;
  */
 public class MeSHExample_SKOS {
 
+    
+
+    public static void main(String[] args) {
+
+        try {
+
+            // Start a timer
+            Timer t = new Timer();
+            t.start();
+
+            // The factory is used to build URIs. The factory caches the URIs to avoid useless object creation
+            DataFactory factory = DataFactoryMemory.getSingleton();
+
+            // We create the URI of the graph
+            URI meshURI = factory.createURI("http://www.nlm.nih.gov/mesh/");
+
+            // We create an in-memory graph
+            G meshGraph = new GraphMemory(meshURI);
+
+            // We configure a data set expressed in RDF XML
+            GDataConf dataMeshSKOS = new GDataConf(GFormat.RDF_XML, "/data/mesh/mesh2013.rdf");
+
+            // We populate the graph with the data set
+            GraphLoaderGeneric.populate(dataMeshSKOS, meshGraph);
+
+            System.out.println(meshGraph);
+
+            // We create some URIs we will use during the process
+            URI skosConceptURI = factory.createURI("http://www.w3.org/2004/02/skos/core#Concept");
+            URI skosBroader = factory.createURI("http://www.w3.org/2004/02/skos/core#broader");
+            URI skosNarrower = factory.createURI("http://www.w3.org/2004/02/skos/core#narrower");
+
+            // We retrieve the graph vertex associated to the URI http://www.w3.org/2004/02/skos/core#Concept
+            V skosConcept = meshGraph.getV(skosConceptURI);
+
+            // We retrieve all the MeSH concepts, 
+            // i.e. the vertices x for which a triplet x RDF.TYPE http://www.w3.org/2004/02/skos/core#Concept is found
+            Set<V> concepts = meshGraph.getV(skosConcept, RDF.TYPE, Direction.IN);
+
+            /*
+             * We associate a type to the concepts
+             * The type is VType.CLASS, this is required by the Semantic Measures engine
+             * which requieres a clear distinction between classes and instances (e.g. for information content computation)
+             */
+            for (V v : concepts) {
+                v.setType(VType.CLASS);
+            }
+
+            // we retrieve the current roots of the graph, at this stage the roots are the roots of the trees
+            ValidatorDAG valDAG = new ValidatorDAG();
+            // WalConstraint is an object enabling to define contraints to reach the neighbors of a vertex
+            WalkConstraintTax wcBroader = new WalkConstraintTax(skosBroader, Direction.OUT);
+            Set<V> roots = valDAG.getDAGRoots(meshGraph, wcBroader);
+
+            /*
+             * We create a global root which will subsume the roots of the trees. 
+             * Notice that it would be preferable to: 
+             * - first: create a unique tree root to stress that the roots of each tree are initially part of the same hierachy.
+             * - Second: create a virtual root subsuming the unique root of each tree.
+             * 
+             * This two step process is performed by the XML Loader but cannot be performed as the SKOS format do not specify the tree nodes .
+             */
+
+            // We create the virtual root as http://www.nlm.nih.gov/mesh/virtualRoot#concept
+
+            URI virtualRootURI = factory.createURI("http://www.nlm.nih.gov/mesh/virtualRoot#concept");
+            V virtualRoot = new Vertex(virtualRootURI, VType.CLASS);
+            // We add it to the graph
+            meshGraph.addV(virtualRoot);
+            meshGraph.addE(virtualRoot, skosConcept, RDF.TYPE);
+//            concepts.add(virtualRoot);
+
+            // for each tree root we create a skos:broader relationship to the virtualRoot
+            for (V v : roots) {
+                System.out.println("Add " + v + "\t" + skosBroader + "\t" + virtualRoot);
+                meshGraph.addE(v, virtualRoot, skosBroader);
+                meshGraph.addE(virtualRoot, v, skosNarrower);
+            }
+
+            /*
+             * At this stage the Mesh Graph is unified, i.e. all tree roots are subsumed
+             * by the virtual root. We now remove the cycles in order to obtain a rooted Directed Acyclic Graph (rDAG).
+             * Most semantic similarity measures requires rDAG to be computed.
+             * The Semantic Measures Engine will throw an error if the graph contains cycles and you use a measure requiring such graph constraints
+             *
+             * We therefore remove the relationships which create cycles.
+             * see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh for more information
+             */
+
+            // We check the graph is a DAG: answer NO
+            ValidatorDAG validatorDAG = new ValidatorDAG();
+            boolean isDAG = validatorDAG.isDag(meshGraph, wcBroader);
+            System.out.println("MeSH Graph is a DAG - SKOS broader OUT : " + isDAG);
+
+            // We remove the cycles
+            MeSHExample_SKOS.removeMeshCycles(meshGraph);
+
+            // Is the graph acyclic?
+            isDAG = validatorDAG.isDag(meshGraph, wcBroader);
+
+            // Yes it is
+            System.out.println("MeSH Graph is a DAG: " + isDAG);
+
+            /* 
+             * Now we can start the configuration of the engine to
+             * compute Semantic Similarities between pairs of vertices
+             *
+             * We first define the configuration of the pairwise measure.
+             * We use Lin formula driven by Sanchez et al. intrinsic IC.
+             */
+            ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a);
+            SMconf measureConf = new SMconf("Lin_icSanchez", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
+
+
+            // We define the semantic measure engine to use 
+            SM_Engine engine = new SM_Engine(meshGraph);
+
+            // We define the constraints to retrieve the parents and the child of a vertex
+            WalkConstraints wcToBroader = new WalkConstraintTax(skosBroader, Direction.OUT);
+            WalkConstraints wcToNarrower = new WalkConstraintTax(skosBroader, Direction.IN);
+            // we can also define wcToNarrower = new WalkConstraintTax(skosNarrower, Direction.OUT); 
+
+            /* We now redefine the underlying configuration of the engine.
+             * The engine is originally defined to process taxonomies structured by RDFS.SUBCLASSOF relationships.
+             * Here we tune the engine to consider skos:broader as a substitute to RDFS.SUBCLASSOF
+             */
+            engine.getAncestorEngine().setWalkConstraint(wcToBroader);
+            engine.getDescendantEngine().setWalkConstraint(wcToNarrower);
+
+            // We finally compute semantic similarities between two concepts (groups of concepts can also be compared)
+            // e.g. between Paranoid Disorders (D010259) and Schizophrenia, Paranoid (D012563)
+            URI c1URI = factory.createURI("http://www.nlm.nih.gov/mesh/D010259#concept");
+            URI c2URI = factory.createURI("http://www.nlm.nih.gov/mesh/D012563#concept");
+
+            V c1 = meshGraph.getV(c1URI); // Paranoid Disorders
+            V c2 = meshGraph.getV(c2URI); // Schizophrenia, Paranoid
+            
+            double sim = engine.computePairwiseSim(measureConf, c1, c2);
+            System.out.println("Sim " + c1.getValue() + "\t" + c2.getValue() + "\t" + sim);
+
+//            UtilDebug.exit();
+            
+            /* 
+             * The computation of the first similarity is not very fast because   
+             * the engine compute extra informations which are cached to boost next computations.
+             * Lets now compute 1000000 random pairwise similarities.
+             */
+            
+            int totalComparison = 1000000;
+            // We create a list containing all concepts, i.e. the elements associated to the type CLASS
+            List<V> conceptsList = new ArrayList<V>(meshGraph.getV(VType.CLASS));
+            int id1, id2;
+            Random r = new Random();
+
+            for (int i = 0; i < totalComparison; i++) {
+                id1 = r.nextInt(concepts.size());
+                id2 = r.nextInt(concepts.size());
+
+                c1 = conceptsList.get(id1);
+                c2 = conceptsList.get(id2);
+
+                sim = engine.computePairwiseSim(measureConf, c1, c2);
+
+                // We only print 20 results but all are computed (see above)
+                if ((i + 1) % 50000 == 0) {
+                    System.out.println("Sim " + (i + 1) + "/" + totalComparison + "\t" + c1.getValue() + "/" + c2.getValue() + ": " + sim);
+                }
+            }
+            // We print the time elapsed
+            t.stop();
+            t.elapsedTime();
+
+
+        } catch (SLIB_Exception ex) {
+            Logger.getLogger(MeSHExample_SKOS.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
     /**
-     * Remove the cycles from the MeSH Graph see
-     * http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh for
-     * more information
+     * Static method used to remove the cycles from the MeSH Graph 
+     * see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh for more information
      *
      * @param meshGraph the graph associated to the MeSH
      *
      * @throws SLIB_Ex_Critic
      */
     public static void removeMeshCycles(G meshGraph) throws SLIB_Ex_Critic {
+        
         DataFactory factory = DataFactoryMemory.getSingleton();
 
         URI skosBroader = factory.createURI("http://www.w3.org/2004/02/skos/core#broader");
@@ -99,7 +274,6 @@ public class MeSHExample_SKOS {
         Set<E> moralsEdges = meshGraph.getE(skosBroader, moralsV, Direction.OUT);
         for (E e : moralsEdges) {
 
-            System.out.println("\t" + e);
             if (e.getTarget().equals(ethicsV)) {
 
                 System.out.println("\t*** Removing edge " + e);
@@ -111,24 +285,17 @@ public class MeSHExample_SKOS {
             }
         }
 
-        ValidatorDAG validatorDAG = new ValidatorDAG();
-        boolean isDAG = validatorDAG.containsTaxonomicDag(meshGraph);
-
-        System.out.println("MeSH Graph is a DAG: " + isDAG);
-
-        // We remove the edges creating cycles
-        // see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
+        // The second one
 
         URI hydroxybutyratesURI = factory.createURI("http://www.nlm.nih.gov/mesh/D006885#concept");
         URI hydroxybutyricAcidURI = factory.createURI("http://www.nlm.nih.gov/mesh/D020155#concept");
         V hydroxybutyratesV = meshGraph.getV(hydroxybutyratesURI);
         V hydroxybutyricAcidV = meshGraph.getV(hydroxybutyricAcidURI);
 
-        // We retrieve the direct subsumers of the concept (D009014)
+        // We retrieve the direct subsumers of the concept (D020155)
         Set<E> hydroxybutyricAcidEdges = meshGraph.getE(skosBroader, hydroxybutyricAcidV, Direction.OUT);
         for (E e : hydroxybutyricAcidEdges) {
 
-            System.out.println("\t" + e);
             if (e.getTarget().equals(hydroxybutyratesV)) {
                 System.out.println("\t*** Removing edge " + e);
                 meshGraph.removeE(e);
@@ -139,185 +306,5 @@ public class MeSHExample_SKOS {
             }
         }
 
-    }
-
-    public static void main(String[] args) {
-
-        try {
-
-            Timer t = new Timer();
-            t.start();
-
-            DataFactory factory = DataFactoryMemory.getSingleton();
-            URI meshURI = factory.createURI("http://www.nlm.nih.gov/mesh/");
-
-            G meshGraph = new GraphMemory(meshURI);
-
-            GDataConf dataMeshSKOS = new GDataConf(GFormat.RDF_XML, "/data/mesh/mesh2013.rdf");
-            GraphLoaderGeneric.populate(dataMeshSKOS, meshGraph);
-
-            System.out.println(meshGraph);
-
-            URI skosConceptURI = factory.createURI("http://www.w3.org/2004/02/skos/core#Concept");
-            URI skosBroader  = factory.createURI("http://www.w3.org/2004/02/skos/core#broader");
-            URI skosNarrower = factory.createURI("http://www.w3.org/2004/02/skos/core#narrower");
-
-            V skosConcept = meshGraph.getV(skosConceptURI);
-
-            /**
-             * We retrieve all the concepts and we associate to them the type
-             * CLASS. This is a hack to compute semantic similarities between
-             * instances considering them as hierarchically structured (will be
-             * change in next versions).
-             */
-            Set<V> concepts = meshGraph.getV(skosConcept, RDF.TYPE, Direction.IN);
-
-            for (V v : concepts) {
-                v.setType(VType.CLASS);
-            }
-
-            
-            
-            // we retrieve the current roots, i.e. the tree roots
-            ValidatorDAG valDAG = new ValidatorDAG();
-            WalkConstraintTax wcBroader = new WalkConstraintTax(skosBroader, Direction.OUT);
-            Set<V> roots = valDAG.getDAGRoots(meshGraph, wcBroader);
-            
-            // We create the global root Notice that the tree root cannot be created
-            URI virtualRootURI = factory.createURI("http://www.nlm.nih.gov/mesh/virtualRoot#concept");
-            V virtualRoot = new Vertex(virtualRootURI, VType.CLASS);
-            meshGraph.addV(virtualRoot);
-            meshGraph.addE(virtualRoot,skosConcept, RDF.TYPE);
-            concepts.add(virtualRoot);
-
-            // for each tree root we create a skos:broader relationship to the virtualRoot
-            for (V v : roots) { 
-                System.out.println("Add "+v+"\t"+skosBroader+"\t"+virtualRoot);
-                meshGraph.addE(v, virtualRoot, skosBroader);
-                meshGraph.addE(virtualRoot,v, skosNarrower);
-            }
-
-
-            /*
-             * We remove the cycles of the graph in order to obtain 
-             * a rooted directed acyclic graph (DAG) and therefore be able to 
-             * use most of semantic similarity measures.
-             * see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
-             */
-
-            // We check the graph is a DAG: answer NO
-            ValidatorDAG validatorDAG = new ValidatorDAG();
-            boolean isDAG = validatorDAG.isDag(meshGraph, wcBroader);
-            System.out.println("MeSH Graph is a DAG - SKOS broader OUT : " + isDAG);
-
-//            isDAG = validatorDAG.isDag(meshGraph, skosBroader, Direction.IN);
-//            System.out.println("MeSH Graph is a DAG - SKOS broader IN : " + isDAG);
-//            
-            // We remove the cycles
-            MeSHExample_SKOS.removeMeshCycles(meshGraph);
-
-            isDAG = validatorDAG.isDag(meshGraph, wcBroader);
-
-            // We check the graph is a DAG: answer Yes
-            System.out.println("MeSH Graph is a DAG: " + isDAG);
-            
-//            UtilDebug.exit();
-
-            /* 
-             * Now we can compute Semantic Similarities between pairs vertices
-             */
-
-            // we first configure a pairwise measure
-            ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a);
-            SMconf measureConf = new SMconf("Lin_icSanchez", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
-
-
-            // We define the semantic measure engine to use 
-            SM_Engine engine = new SM_Engine(meshGraph);
-
-            WalkConstraints wcToBroader = new WalkConstraintTax(skosBroader, Direction.OUT);
-            WalkConstraints wcToNarrower = new WalkConstraintTax(skosBroader, Direction.IN);
-            // we can also define wcToNarrower = new WalkConstraintTax(skosNarrower, Direction.OUT); 
-
-            engine.getAncestorEngine().setWalkConstraint(wcToBroader);
-            engine.getDescendantEngine().setWalkConstraint(wcToNarrower);
-
-            // We compute semantic similarities between concepts
-            // e.g. between Paranoid Disorders (D010259) and Schizophrenia, Paranoid (D012563)
-            URI c1URI = factory.createURI("http://www.nlm.nih.gov/mesh/D010259#concept");
-            URI c2URI = factory.createURI("http://www.nlm.nih.gov/mesh/D012563#concept");
-
-            V c1 = meshGraph.getV(c1URI); // Paranoid Disorders
-            V c2 = meshGraph.getV(c2URI); // Schizophrenia, Paranoid
-
-            for (E e : meshGraph.getE(c1, wcToBroader)) {
-                System.out.println(e);
-            }
-
-            System.out.println("Ancestors "+c1);
-            Set<V> ancC1 = engine.getAncestorEngine().getAncestorsInc(c1);
-            for (V a : ancC1) {
-                System.out.println("\t" + a);
-            }
-            
-            for(V v : concepts){
-                Set<V> anc = meshGraph.getV(v, skosBroader, Direction.OUT);
-                Set<V> ancWC = meshGraph.getV(v, wcToBroader);
-                if(anc.isEmpty()){
-                    System.out.println("******** "+v+"\t"+ancWC.size());
-                }
-            }
-            
-            System.out.println("Contraint");
-            System.out.println(wcToBroader);
-            
-//            UtilDebug.exit();
-
-            ResultStack<V, Double> ics = engine.computeIC(icConf);
-            System.out.println("IC root "+ics.get(virtualRoot));
-            
-
-            // We compute the similarity
-            double sim = engine.computePairwiseSim(measureConf, c1, c2);
-            System.out.println("Sim " + c1.getValue() + "\t" + c2.getValue() + "\t" + sim);
-
-            
-//            UtilDebug.exit();
-            /* 
-             * The computation of the first similarity is not very fast because   
-             * the engine compute extra informations which are cached for next computations.
-             * Lets compute 1000000 random pairwise similarities
-             */
-            int totalComparison = 1000000;
-            List<V> conceptsList = new ArrayList<V>(meshGraph.getV(VType.CLASS));
-            int id1, id2;
-            String idC1, idC2;
-            Random r = new Random();
-
-            for (int i = 0; i < totalComparison; i++) {
-                id1 = r.nextInt(concepts.size());
-                id2 = r.nextInt(concepts.size());
-
-                c1 = conceptsList.get(id1);
-                c2 = conceptsList.get(id2);
-
-                sim = engine.computePairwiseSim(measureConf, c1, c2);
-
-                if ((i + 1) % 50000 == 0) {
-                    idC1 = ((URI) c1.getValue()).getLocalName();
-                    idC2 = ((URI) c2.getValue()).getLocalName();
-
-                    System.out.println("Sim " + (i + 1) + "/" + totalComparison + "\t" + idC1 + "/" + idC2 + ": " + sim);
-                }
-            }
-            t.stop();
-            t.elapsedTime();
-
-
-
-
-        } catch (SLIB_Exception ex) {
-            Logger.getLogger(MeSHExample_SKOS.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }
