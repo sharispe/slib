@@ -139,13 +139,15 @@ public class ValidatorDAG {
         if (!verticesColors.containsKey(v)) {
 
             verticesColors.put(v, VColor.ORANGE);
-            currentPath.addVertex(v);
+            
 
             Set<E> edges = graph.getE(edgeTypes, v, VType.CLASS, direction);
 
 
             for (E e : edges) {
 
+                
+                
                 if (!valid) {
                     return;
                 }
@@ -157,6 +159,7 @@ public class ValidatorDAG {
                 }
 
                 if (verticesColors.get(target) != VColor.RED) {
+                    currentPath.addEdge(e);
                     lastEdge = e;
                     performDFS(target);
                 }
@@ -165,7 +168,7 @@ public class ValidatorDAG {
             if (!valid) {
                 return;
             }
-            currentPath.removeLastVertex();
+            currentPath.removeLastEdge();
             verticesColors.put(v, VColor.RED);
 
         } else if (verticesColors.get(v) == VColor.ORANGE) {

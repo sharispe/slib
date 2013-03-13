@@ -34,7 +34,6 @@ package slib.sglib.algo.graph.validator.dag;
 import java.util.LinkedList;
 import java.util.List;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 
 /**
  *
@@ -44,24 +43,13 @@ import slib.sglib.model.graph.elements.V;
  */
 public class Path {
 
-    List<V> vertices = new LinkedList<V>();
     List<E> edges = new LinkedList<E>();
 
     /**
      * Clear the path.
      */
     public void clear() {
-        vertices = new LinkedList<V>();
         edges = new LinkedList<E>();
-    }
-
-    /**
-     * Add a vertex to the path
-     *
-     * @param v the vertex to add
-     */
-    void addVertex(V v) {
-        vertices.add(v);
     }
 
     /**
@@ -76,10 +64,10 @@ public class Path {
     @Override
     public String toString() {
 
-        String out = "";
+        String out = "Path: ";
 
-        for (V v : vertices) {
-            out += " " + v.getValue();
+        for (E e : edges) {
+            out += "\n\t" + e;
         }
         return out;
     }
@@ -87,9 +75,9 @@ public class Path {
     /**
      * Remove the last vertex of the path (if any)
      */
-    void removeLastVertex() {
-        if (vertices.size() > 0) {
-            vertices.remove(vertices.size() - 1);
+    void removeLastEdge() {
+        if (edges.size() > 0) {
+            edges.remove(edges.size()-1);
         }
     }
 }

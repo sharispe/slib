@@ -29,20 +29,20 @@ public class WalkConstraintTax implements WalkConstraints {
     public String toString() {
 
         String out = "Walconstraint\n"
-                + "AcceptedWalkIN\n";
+                + "\tAcceptedWalkIN: \n";
 
         for (Entry<URI, Direction> e : acceptedWalksIN.entrySet()) {
-            out += "\t" + e.getKey() + "\t" + e.getValue() + "\n";
+            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
         }
-        out += "AcceptedWalkOUT\n";
+        out += "\tAcceptedWalkOUT:\n";
         for (Entry<URI, Direction> e : acceptedWalksOUT.entrySet()) {
-            out += "\t" + e.getKey() + "\t" + e.getValue() + "\n";
+            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
         }
 
-        out += "ValidatedTypes\n";
+        out += "\tValidatedTypes\n";
 
         for (VType type : validVTypes) {
-            out += "\t" + type;
+            out += "\t\t" + type;
         }
 
         return out;
