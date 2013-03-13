@@ -70,8 +70,6 @@ import slib.utils.impl.Timer;
  */
 public class MeSHExample_SKOS {
 
-    
-
     public static void main(String[] args) {
 
         try {
@@ -216,6 +214,8 @@ public class MeSHExample_SKOS {
              * The computation of the first similarity is not very fast because   
              * the engine compute extra informations which are cached to boost next computations.
              * Lets now compute 1000000 random pairwise similarities.
+             * Notice that most of them will be set to 0 since their Most Information Common Ancestors
+             * will be the root (which have an IC equals to 0).
              */
             
             int totalComparison = 1000000;
