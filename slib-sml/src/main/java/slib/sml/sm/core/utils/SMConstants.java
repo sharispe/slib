@@ -83,7 +83,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Stojanovic_2001;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Wu_Palmer_1994;
 import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Ranwez_2006;
-import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Wang_2007;
+//import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Wang_2007;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL_GraSM;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Harispe_2013;
@@ -121,7 +121,7 @@ import slib.sml.sm.core.metrics.ic.annot.IDF;
 import slib.sml.sm.core.metrics.ic.topo.ICi_ancestors_norm;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_max_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_min_nonlinear;
-import slib.sml.sm.core.metrics.ic.topo.ICi_mazandu_2012;
+//import slib.sml.sm.core.metrics.ic.topo.ICi_mazandu_2012;
 import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence;
 import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence_propagatted;
 import slib.sml.sm.core.metrics.ic.topo.ICi_resnik_1995;
@@ -742,7 +742,7 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String ICI_MAZANDU_2012 = ICi_mazandu_2012.class.getName();
+//    public static final String ICI_MAZANDU_2012 = ICi_mazandu_2012.class.getName();
     /**
      *
      */
@@ -784,7 +784,7 @@ public final class SMConstants {
             put(FLAG_ICI_DEPTH_MIN_NONLINEAR, ICI_DEPTH_MIN_NONLINEAR);
             put(FLAG_ICI_PROB_OCCURENCE, ICI_PROB_OCCURENCE);
             put(FLAG_ICI_PROB_OCCURENCE_PROPAGATED, ICI_PROB_OCCURENCE_PROPAGATED);
-            put(FLAG_ICI_MAZANDU_2012, ICI_MAZANDU_2012);
+//            put(FLAG_ICI_MAZANDU_2012, ICI_MAZANDU_2012);
             put(FLAG_ICI_ANCESTORS_NORM, ICI_ANCESTORS_NORM);
         }
     };
@@ -1020,7 +1020,7 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String SIM_PAIRWISE_DAG_HYBRID_WANG_2007 = Sim_pairwise_DAG_hybrid_Wang_2007.class.getName();
+//    public static final String SIM_PAIRWISE_DAG_HYBRID_WANG_2007 = Sim_pairwise_DAG_hybrid_Wang_2007.class.getName();
     /**
      *
      */
@@ -1029,7 +1029,7 @@ public final class SMConstants {
 
         {
             put("SIM_PAIRWISE_DAG_HYBRID_RANWEZ_2006", SIM_PAIRWISE_DAG_HYBRID_RANWEZ_2006);
-            put("SIM_PAIRWISE_DAG_HYBRID_WANG_2007", SIM_PAIRWISE_DAG_HYBRID_WANG_2007);
+//            put("SIM_PAIRWISE_DAG_HYBRID_WANG_2007", SIM_PAIRWISE_DAG_HYBRID_WANG_2007);
         }
     };
     /**

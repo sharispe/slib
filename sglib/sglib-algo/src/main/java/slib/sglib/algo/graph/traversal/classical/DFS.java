@@ -39,17 +39,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.algo.graph.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.repo.PredicateFactory;
+import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.impl.SetUtils;
 
 /**
@@ -70,65 +66,36 @@ public class DFS implements GraphTraversal {
     G g;
     Set<V> sources;
     HashMap<V, Boolean> coloredVertex;
-    Set<URI> edgesTypes;
+    private WalkConstraints wc;
     List<V> topoSort;
-    Direction dir;
     int current_id = 0;
     boolean removePerformed = false;
 
     /**
      * Create a DFS iterator, note that DFS is performed at instance creation.
      * The resulting topological sort can be accessed through
-     * {@link DFS#getTraversalOrder()}
-     *
-     * @param g	the graph to consider
-     * @param sources the set of vertices {@link V} from which the DFS need to
-     * be performed
-     * @param edgesTypes the set of {@link EType} to consider during traversal.
-     * If set to null only native edge types are considered see
-     * {@link IPredicateURIRepo#getEtypeNative(G)} for more information about
-     * native edge types.
-     *
-     * TODO Use WalkConstraint
-     * @param dir  
      */
-    public DFS(G g, Set<V> sources, Set<URI> edgesTypes, Direction dir) {
-        init(g, sources, edgesTypes, dir);
-    }
-
-    /**
-     * Shortcut of {@link DFS#DFS(G, Set, Set)}
-     *
-     * @param g
-     * @param source
-     * @param etype
-     * @param dir  
-     */
-    public DFS(G g, V source, URI etype, Direction dir) {
-        this(g, SetUtils.buildSet(source), SetUtils.buildSet(etype), dir);
-    }
-
-    /**
-     * Shortcut of {@link DFS#DFS(G, Set, Set)}
-     *
-     * @param g
-     * @param source
-     * @param edgesTypes
-     * @param dir  
-     */
-    public DFS(G g, V source, Set<URI> edgesTypes, Direction dir) {
-        this(g, SetUtils.buildSet(source), edgesTypes, dir);
-    }
-
-    private void init(G g, Set<V> sources, Set<URI> edgesTypes, Direction dir) {
-
+    public DFS(G g, Set<V> sources, WalkConstraints wc) {
         this.g = g;
-        this.dir = dir;
         this.sources = sources;
+        this.wc = wc;
+        init();
+    }
+
+    /**
+     * Shortcut of {@link DFS#DFS(G, Set, Set)}
+     *
+     */
+    public DFS(G g, V source, WalkConstraints wc) {
+        this(g, SetUtils.buildSet(source), wc);
+    }
+
+    
+    private void init() {
+
         this.coloredVertex = new HashMap<V, Boolean>();
         this.topoSort = new ArrayList<V>();
 
-        this.edgesTypes = edgesTypes;
 
         if (logger.isDebugEnabled()) { // avoid large debug information
             String sources_s = "";
@@ -146,7 +113,7 @@ public class DFS implements GraphTraversal {
             }
 
             logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources_s);
-            logger.debug("Considering relationship types " + edgesTypes);
+            logger.debug("Considering Walconstraint " + wc);
         }
 
         logger.debug("Start DFS");
@@ -165,14 +132,16 @@ public class DFS implements GraphTraversal {
 
             coloredVertex.put(v, true);
 
-            Iterator<E> it = g.getE(edgesTypes, v, dir).iterator();
+            
+            Iterator<E> it = g.getE(v, wc).iterator();
 
             while (it.hasNext()) {
-                if (dir == Direction.OUT) {
-                    performDFS(it.next().getTarget());
+                E e = it.next();
+                if (!e.getTarget().equals(v)) {
+                    performDFS(e.getTarget());
                 }
-                if (dir == Direction.IN) {
-                    performDFS(it.next().getSource());
+                else{
+                    performDFS(e.getSource());
                 }
             }
             topoSort.add(v);
@@ -183,6 +152,7 @@ public class DFS implements GraphTraversal {
      *
      * @return
      */
+    @Override
     public boolean hasNext() {
         return current_id > 0;
     }
@@ -191,6 +161,7 @@ public class DFS implements GraphTraversal {
      *
      * @return
      */
+    @Override
     public V next() {
         removePerformed = false;
         current_id--;

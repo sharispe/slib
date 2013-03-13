@@ -25,28 +25,7 @@ public class WalkConstraintTax implements WalkConstraints {
     Set<URI> validPredicates = new HashSet<URI>();
     Set<VType> validVTypes = new HashSet<VType>();
 
-    @Override
-    public String toString() {
-
-        String out = "Walconstraint\n"
-                + "\tAcceptedWalkIN: \n";
-
-        for (Entry<URI, Direction> e : acceptedWalksIN.entrySet()) {
-            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
-        }
-        out += "\tAcceptedWalkOUT:\n";
-        for (Entry<URI, Direction> e : acceptedWalksOUT.entrySet()) {
-            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
-        }
-
-        out += "\tValidatedTypes\n";
-
-        for (VType type : validVTypes) {
-            out += "\t\t" + type;
-        }
-
-        return out;
-    }
+    public WalkConstraintTax() {validVTypes.add(VType.CLASS);};
 
     /**
      * Build an instance of walk constraint considering the walk rule.
@@ -192,5 +171,28 @@ public class WalkConstraintTax implements WalkConstraints {
         // TODO Auto-generated method stub Aug 29, 2012
         throw new UnsupportedOperationException("Not supported yet.");
 
+    }
+    
+    @Override
+    public String toString() {
+
+        String out = "Walconstraint\n"
+                + "\tAcceptedWalkIN: \n";
+
+        for (Entry<URI, Direction> e : acceptedWalksIN.entrySet()) {
+            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
+        }
+        out += "\tAcceptedWalkOUT:\n";
+        for (Entry<URI, Direction> e : acceptedWalksOUT.entrySet()) {
+            out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
+        }
+
+        out += "\tValidatedTypes\n";
+
+        for (VType type : validVTypes) {
+            out += "\t\t" + type;
+        }
+
+        return out;
     }
 }

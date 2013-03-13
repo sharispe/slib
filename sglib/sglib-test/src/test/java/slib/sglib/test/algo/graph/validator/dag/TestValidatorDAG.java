@@ -43,6 +43,7 @@ import java.util.Set;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
@@ -113,7 +114,7 @@ public class TestValidatorDAG {
 
 		System.out.println(g.toString());
 		
-		Set<V> roots = new ValidatorDAG().getDAGRoots(g,RDFS.SUBCLASSOF,Direction.OUT);
+		Set<V> roots = new ValidatorDAG().getDAGRoots(g,new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT));
 		
 		assertTrue(roots.size() == 1);
 		assertTrue(((URI) roots.iterator().next().getValue()).equals(testValues.G_BASIC_THING));
@@ -126,7 +127,7 @@ public class TestValidatorDAG {
     @Test
 	public void test_true_dag() throws SLIB_Ex_Critic{
                 V root = new Vertex(rootURI, VType.CLASS);
-		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, RDFS.SUBCLASSOF,Direction.IN);
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN));
 		assertTrue(isDag);
 	}
 	
@@ -137,7 +138,7 @@ public class TestValidatorDAG {
     @Test
 	public void test_true_tax_dag() throws SLIB_Ex_Critic{
 
-		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		boolean isDag = new ValidatorDAG().containsTaxonomicDag(g);
 		
 		assertTrue(isDag == true);
 		
@@ -149,7 +150,7 @@ public class TestValidatorDAG {
 		E e = new Edge(root, human, RDFS.SUBCLASSOF);
 		g.addE(e);
 		
-		isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		isDag = new ValidatorDAG().containsTaxonomicDag(g);
 		assertTrue(isDag == false);
 	}
 	
@@ -190,7 +191,7 @@ public class TestValidatorDAG {
 		g.addE(g.getV(testValues.G_BASIC_FICTIV_ORGANISM),newRoot, RDFS.SUBCLASSOF);
 		g.addE(newRoot, g.getV(testValues.G_BASIC_FICTIV_ORGANISM), RDFS.SUBCLASSOF);
 		
-		isDag = new ValidatorDAG().isDag(g, RDFS.SUBCLASSOF,Direction.IN);
+		isDag = new ValidatorDAG().isDag(g, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN));
 		assertTrue(isDag == false);
 		
 		isDag = new ValidatorDAG().containsTaxonomicDag(g);
@@ -217,7 +218,7 @@ public class TestValidatorDAG {
 		
 		System.out.println(g.toString());
 		
-		boolean isDag = new ValidatorDAG().containsTaxonomicalDag(g);
+		boolean isDag = new ValidatorDAG().containsTaxonomicDag(g);
 		
 		assertTrue(isDag == false);
 	}
@@ -239,10 +240,10 @@ public class TestValidatorDAG {
 		
 		System.out.println(g.toString());
 		
-		assertTrue(new ValidatorDAG().isDag(g, RDFS.SUBCLASSOF,Direction.IN) == false);
+		assertTrue(new ValidatorDAG().isDag(g, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.IN)) == false);
 		
                 V root = new Vertex(rootURI, VType.CLASS);
-		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, RDFS.SUBCLASSOF);
+		boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, root, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT));
 		
 		assertTrue(isDag == false);
 	}

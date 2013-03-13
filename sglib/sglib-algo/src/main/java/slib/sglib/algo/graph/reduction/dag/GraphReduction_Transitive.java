@@ -43,6 +43,7 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.classical.DFS;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -102,7 +103,8 @@ public class GraphReduction_Transitive {
 
         logger.info("Processing transitive reduction src: " + src);
 
-        DFS dfs = new DFS(g, src, RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        DFS dfs = new DFS(g, src, wc);
 
         List<V> topoOrder = dfs.getTraversalOrder();
 

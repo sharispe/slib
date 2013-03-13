@@ -37,20 +37,16 @@ knowledge of the CeCILL license and that you accept its terms.
 package slib.sglib.algo.graph.shortest_path;
 
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -68,19 +64,16 @@ public class Dijkstra{
 	Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	G 	g;
-	Set<URI> setEdgeTypes;
+	WalkConstraints walkConstraints;
 	GWS ws = null;
 
-
-	
-	
 	/**
 	 * Check the weighting scheme only contains non negative weights
 	 * @throws SGL_Ex_Critic
 	 */
 	private void checkGWSisNonNegative() throws SLIB_Ex_Critic {
 		
-		for(E e : g.getE(setEdgeTypes)){
+		for(E e : g.getE(walkConstraints.getAcceptedPredicates())){
 			if(ws.getWeight(e) < 0)
 				throw new SLIB_Ex_Critic("Dijkstra algorithm cannot be used for a weighting scheme composed of negative weight");
 		}
@@ -94,9 +87,9 @@ public class Dijkstra{
          * @param weightingScheme a
          * @throws SLIB_Ex_Critic  
 	 */
-	public Dijkstra(G g, Set<URI> setEdgeTypes, GWS weightingScheme) throws SLIB_Ex_Critic{
+	public Dijkstra(G g, WalkConstraints walconstraints, GWS weightingScheme) throws SLIB_Ex_Critic{
 		this.g = g;
-		this.setEdgeTypes = setEdgeTypes;
+		this.walkConstraints = walconstraints;
 		this.ws = weightingScheme;
 		
 		checkGWSisNonNegative();
@@ -140,31 +133,24 @@ public class Dijkstra{
 			
 			visited.put(next,true);
 			
-			
-			Set<E> outEdges = g.getE(setEdgeTypes, next, Direction.OUT);
-
-
-			for (E e : outEdges) {
-				
-				
-				V target = (V) e.getTarget();
-				Double d = dists.get(next) + ws.getWeight(e);
-				
-				if (dists.get(target) > d)
+                        Set<E> edges = g.getE(next, walkConstraints);
+                        
+                        for(E e : edges){
+                            
+                            Double d = dists.get(next) + ws.getWeight(e);
+                            
+                            V target = e.getTarget();
+                            
+                            if(!target.equals(next)){ // outEdge
+                                if (dists.get(target) > d)
 					dists.put(target,d);
-			}
-			
-			Collection<E> inEdges = g.getE(setEdgeTypes, next, Direction.IN);
-			
-			for (E e : inEdges) {
-				
-				V src = (V) e.getSource();
-				
-				Double d = dists.get(next) + ws.getWeight(e);
-				
-				if (dists.get(src) > d)
+                            }
+                            else{ // in Edges
+                                V src = (V) e.getSource();
+                                if (dists.get(src) > d)
 					dists.put(src,d);
-			}
+                            }
+                        }
 		}
 		
 		return dists.get(t);
@@ -202,31 +188,25 @@ public class Dijkstra{
 				break;
 			
 			visited.put(next,true);
-			
-			
-			Collection<E> outEdges = g.getE(setEdgeTypes, next, Direction.OUT);
-			
-			for (E e : outEdges) {
-				
-				V target = (V) e.getTarget();
-				
-				Double d = dists.get(next) + ws.getWeight(e);
-				
-				if (dists.get(target) > d)
+                        
+                        Set<E> edges = g.getE(next, walkConstraints);
+                        
+                        for(E e : edges){
+                            
+                            Double d = dists.get(next) + ws.getWeight(e);
+                            
+                            V target = e.getTarget();
+                            
+                            if(!target.equals(next)){ // outEdge
+                                if (dists.get(target) > d)
 					dists.put(target,d);
-			}
-			
-			Collection<E> inEdges = g.getE(setEdgeTypes, next, Direction.IN);
-			
-			for (E e : inEdges) {
-				
-				V src = (V) e.getSource();
-				
-				Double d = dists.get(next) + ws.getWeight(e);
-				
-				if (dists.get(src) > d)
+                            }
+                            else{ // in Edges
+                                V src = (V) e.getSource();
+                                if (dists.get(src) > d)
 					dists.put(src,d);
-			}
+                            }
+                        }
 		}
 		
 //		for(V v: g.getVertices())

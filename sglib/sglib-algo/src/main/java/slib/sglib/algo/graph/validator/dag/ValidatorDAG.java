@@ -42,30 +42,30 @@ import org.openrdf.model.Value;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.utils.VColor;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
+import sun.security.krb5.internal.crypto.EType;
 
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
- * 
- * @todo use {@link WalkConstraints} to simplify the code and the parameters passed to the methods.
+ *
+ * @todo use {@link WalkConstraints} to simplify the code and the parameters
+ * passed to the methods.
  * @author Sebastien Harispe
  */
 public class ValidatorDAG {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
-    Set<URI> edgeTypes;
+    WalkConstraints wc;
     HashMap<V, VColor> verticesColors;
-    Direction direction;
     boolean valid;
     E lastEdge;
     Path currentPath;
@@ -82,19 +82,17 @@ public class ValidatorDAG {
      * @return true if the graph is a DAG
      * @throws SLIB_Ex_Critic
      */
-    public boolean isDag(G graph, Set<URI> startingURIs, Set<URI> edgesTypes, Direction dir) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, Set<URI> startingURIs, WalkConstraints wc) throws SLIB_Ex_Critic {
 
-        this.direction = dir;
+        this.wc = wc;
 
         this.graph = graph;
-        this.edgeTypes = edgesTypes;
         this.verticesColors = new HashMap<V, VColor>();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
         logger.debug("starting nodes          : " + startingURIs.size());
-        logger.debug("eTypes                  : " + edgesTypes);
-        logger.debug("Dir                     : " + direction);
+        logger.debug("WalkConstraint                  : " + wc);
 
         if (startingURIs.size() < 10) {
             logger.debug("starting vertices : " + startingURIs);
@@ -139,23 +137,23 @@ public class ValidatorDAG {
         if (!verticesColors.containsKey(v)) {
 
             verticesColors.put(v, VColor.ORANGE);
-            
 
-            Set<E> edges = graph.getE(edgeTypes, v, VType.CLASS, direction);
+
+            Set<E> edges = graph.getE(v, wc);
 
 
             for (E e : edges) {
 
-                
-                
+
+
                 if (!valid) {
                     return;
                 }
 
-                V target = e.getSource();
+                V target = e.getTarget();
 
-                if (direction == Direction.OUT) {
-                    target = e.getTarget();
+                if (target.equals(v)) { // IN
+                    target = e.getSource();
                 }
 
                 if (verticesColors.get(target) != VColor.RED) {
@@ -180,51 +178,21 @@ public class ValidatorDAG {
      *  Utils
      *---------------------------------------------------------------------*/
     /**
-     * Check if a taxonomic graph or the underlying taxonomic graph of a graph
-     * is a DAG. shortcut of only considering
-     * SUPERCLASSOF as set of edge types
-     *
-     * @param graph the graph on which the evaluation has to be made
-     * @return true if the the (underlying) taxonomic graph is a DAG
-     *
-     * @throws SLIB_Ex_Critic 
-     */
-    public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic {
-        return isDag(graph, RDFS.SUBCLASSOF, Direction.IN);
-    }
-
-    /**
-     * Check if the underlying graph defined by the edges of the given edge type
-     * is a DAG. shortcut of {@link ValidatorDAG#isDag(G, Set)} only considering
-     * the given edge type
-     *
-     * @param graph the graph on which the evaluation has to be made
-     * @param type 
-     * @param dir 
-     * @return true if the the (underlying) graph reduction is a DAG
-     * @throws SLIB_Ex_Critic  
-     *
-     */
-    public boolean isDag(G graph, URI type, Direction dir) throws SLIB_Ex_Critic {
-        return isDag(graph, SetUtils.buildSet(type), dir);
-    }
-
-    /**
      * Check if the underlying graph defined by the edges of the given edge
      * types and build using a traversal starting from the given root node is a
      * DAG. shortcut of {@link ValidatorDAG#isDag(G, Set, Set)} only considering
      * the given set of edge types
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param rootURI 
-     * @param edgeTypes 
-     * @param dir 
+     * @param rootURI
+     * @param edgeTypes
+     * @param dir
      * @return true if the the (underlying) graph reduction is a DAG
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      *
      */
-    public boolean isDag(G graph, URI rootURI, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
-        return isDag(graph, SetUtils.buildSet(rootURI), edgeTypes, dir);
+    public boolean isDag(G graph, URI rootURI, WalkConstraints wc) throws SLIB_Ex_Critic {
+        return isDag(graph, SetUtils.buildSet(rootURI), wc);
     }
 
     /**
@@ -233,26 +201,9 @@ public class ValidatorDAG {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public boolean containsTaxonomicalDag(G graph) throws SLIB_Ex_Critic {
-        return isDag(graph, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
-    }
-
-    /**
-     * Check if the underlying graph defined by the edges of the given edges
-     * type and build using a traversal starting from the given root node is a
-     * DAG. shortcut of {@link ValidatorDAG#isDag(G, URI, Set)} only considering
-     * the given edge type
-     *
-     * @param graph the graph on which the evaluation has to be made
-     * @param rootURI 
-     * @param type 
-     * @param dir 
-     * @return true if the the (underlying) graph reduction is a DAG
-     *
-     * @throws SLIB_Ex_Critic 
-     */
-    public boolean isDag(G graph, URI rootURI, URI type, Direction dir) throws SLIB_Ex_Critic {
-        return isDag(graph, rootURI, SetUtils.buildSet(type), dir);
+    public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic {
+        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        return isDag(graph, wc);
     }
 
     /**
@@ -264,17 +215,17 @@ public class ValidatorDAG {
      * types as root (see {@link ValidatorDAG#getDAGRoots(G, EType)})
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param edgeTypes 
-     * @param dir 
+     * @param edgeTypes
+     * @param dir
      * @return true if the the (underlying) graph reduction is a DAG
      *
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
-    public boolean isDag(G graph, Set<URI> edgeTypes, Direction dir) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, WalkConstraints wc) throws SLIB_Ex_Critic {
 
-        Set<V> startingNodes = getDAGRoots(graph, edgeTypes, dir.getOpposite());
-        
-        logger.info("Starting process from "+startingNodes.size()+" vertices");
+        Set<V> startingNodes = getDAGRoots(graph, wc.getInverse(false));
+
+        logger.info("Starting process from " + startingNodes.size() + " vertices");
 
         if (startingNodes.isEmpty()) // No root No Dag
         {
@@ -287,37 +238,34 @@ public class ValidatorDAG {
             startingURIs.add((URI) v.getValue());
         }
 
-        return isDag(graph, startingURIs, edgeTypes, dir);
+        return isDag(graph, startingURIs, wc);
     }
 
     /**
-     * Root vertices (terminal vertices) are considered respect the following
-     * restrictions :<br/> <ul> <li> must not contains an edges of the given
-     * types and direction </li> </ul>
+     * Root vertices (terminal vertices) are those of type CLASS which respect
+     * the following restrictions :<br/> <ul> <li> must not contains an edges of
+     * the given types and direction </li> </ul>
      *
      * Do not check if the graph is a DAG
      *
      * @param g the graph on which the root vertices need to be retrieve
      * @param etypes e.g. if taxonomic graph use SUPERCLASSOF
-     * @param dir 
+     * @param dir
      * @return The set of vertices matching the predefined conditions
      */
-    public Set<V> getDAGRoots(G g, Set<URI> etypes, Direction dir) {
+    public Set<V> getDAGRoots(G g, WalkConstraints wc) {
 
-        Set<V> roots = GraphAccessor.getV_NoEdgeType(g, VType.CLASS, etypes, dir);
+        Set<V> roots = new HashSet<V>();
+        for (V v : g.getVClass()) {
+
+            if (g.getV(v, wc).isEmpty()) {
+                roots.add(v);
+            }
+        }
         return roots;
     }
 
-    /**
-     *
-     * @param g
-     * @param etypes
-     * @param dir
-     * @return
-     */
-    public Set<V> getDAGRoots(G g, URI etypes, Direction dir) {
-        return getDAGRoots(g, SetUtils.buildSet(etypes), dir);
-    }
+    
 
     /**
      * Check if the given graph contains a unique underlying rooted taxonomic
@@ -329,17 +277,18 @@ public class ValidatorDAG {
      * @return true if the graph contains a unique underlying rooted taxonomic
      * graph
      *
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public boolean containsRootedTaxonomicDag(G g) throws SLIB_Ex_Critic {
 
+        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
 
-        Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
+        Set<V> roots = getDAGRoots(g, wc);
 
         logger.info("Number of roots " + roots.size());
 
         if (roots.size() == 1) {
-            isDag(g, (URI) roots.iterator().next().getValue(), RDFS.SUBCLASSOF, Direction.IN);
+            isDag(g, (URI) roots.iterator().next().getValue(), new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
         } else {
             valid = false;
         }
@@ -364,12 +313,13 @@ public class ValidatorDAG {
      * @return the root vertex
      *
      * @throws SLIB_Ex_Critic if multiple roots are detected
-     * 
+     *
      * @see
      */
     public V getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
 
-        Set<V> roots = getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
+        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        Set<V> roots = getDAGRoots(g, wc);
 
         if (roots.size() != 1) {
             throw new SLIB_Ex_Critic("Multiple root detected");
@@ -385,30 +335,24 @@ public class ValidatorDAG {
      * @return
      */
     public Set<V> getTaxonomicDAGRoots(G g) {
-        return getDAGRoots(g, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
+        return getDAGRoots(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
     }
 
+
     /**
-     * Do not check if the graph is a DAG
+     * Test if the given URI corresponds to a root of the graph build according
+     * to the specified edge types.
      *
-     * @param g
-     * @param etype
-     * @return
-     */
-    public Set<V> getDAGRoots(G g, URI etype) {
-        return getDAGRoots(g, SetUtils.buildSet(etype), Direction.OUT);
-    }
-
-    /**
-     * Test if the given URI corresponds to a root of the graph build according to the specified edge types.
      * @param g the graph to consider
-     * @param rootURI the URI to test 
-     * @param edgesType the edge type to consider only OUT direction is considered
-     * @return true if the graph defined by the specified constraint is rooted by the given URI
+     * @param rootURI the URI to test
+     * @param edgesType the edge type to consider only OUT direction is
+     * considered
+     * @return true if the graph defined by the specified constraint is rooted
+     * by the given URI
      */
-    public boolean containsRootedDagRoot(G g, URI rootURI, Set<URI> edgesType) {
+    public boolean containsRootedDagRoot(G g, URI rootURI, WalkConstraints wc) {
 
-        for (V v : getDAGRoots(g, edgesType, Direction.OUT)) {
+        for (V v : getDAGRoots(g, wc)) {
             if (v.equals(rootURI)) {
                 return true;
             }
@@ -417,53 +361,22 @@ public class ValidatorDAG {
         return false;
     }
 
-    /**
-     * @param g
-     * @param root 
-     * @param edgesType
-     * @return
-     * @throws SLIB_Ex_Critic 
-     */
-    public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType) throws SLIB_Ex_Critic {
-
-        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(edgesType), Direction.IN);
-    }
+   
 
     /**
      * @param g
-     * @param root 
+     * @param root
      * @return
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public boolean isUniqueRootedTaxonomicDag(G g, V root) throws SLIB_Ex_Critic {
 
-        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.IN);
+        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        return isUniqueRootedDagRoot(g, root, wc);
     }
 
     /**
      * Do not check if the graph is a DAG
-     *
-     * @param g
-     * @param root 
-     * @param edgesType
-     * @param dir 
-     * @return
-     * @throws SLIB_Ex_Critic  
-     */
-    public boolean isUniqueRootedDagRoot(G g, V root, Set<URI> edgesType, Direction dir) throws SLIB_Ex_Critic {
-
-        if (isDag(g, edgesType, dir)) {
-
-            Set<V> roots = getDAGRoots(g, edgesType, dir.getOpposite());
-
-            if (roots.size() == 1 && roots.iterator().next().equals(root)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      *
      * @param g
      * @param root
@@ -472,11 +385,20 @@ public class ValidatorDAG {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public boolean isUniqueRootedDagRoot(G g, V root, URI edgesType, Direction dir) throws SLIB_Ex_Critic {
+    public boolean isUniqueRootedDagRoot(G g, V root, WalkConstraints wc) throws SLIB_Ex_Critic {
 
-        return isUniqueRootedDagRoot(g, root, SetUtils.buildSet(edgesType), dir);
+        if (isDag(g, wc)) {
+
+            Set<V> roots = getDAGRoots(g, wc.getInverse(false));
+
+            if (roots.size() == 1 && roots.iterator().next().equals(root)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    
     /**
      *
      * @return

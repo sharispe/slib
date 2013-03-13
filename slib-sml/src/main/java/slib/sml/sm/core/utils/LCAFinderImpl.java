@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.extraction.rvf.RVF;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.traversal.classical.DFS;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
@@ -124,7 +125,8 @@ public class LCAFinderImpl implements LCAFinder {
         Set<V> queries = SetUtils.buildSet(a);
 
         queries.add(b);
-        DFS dfs = new DFS(graph, queries, SetUtils.buildSet(RDFS.SUBCLASSOF), Direction.OUT);
+        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        DFS dfs = new DFS(graph, queries, wc);
         List<V> to = dfs.getTraversalOrder();
         
         // We remove the queried vertices from the topological order

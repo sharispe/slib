@@ -120,7 +120,8 @@ public class RVF_DAG extends RVF {
         }
 
         if (queue.isEmpty()) {
-            throw new SLIB_Ex_Critic("Walk Constraint are to restrictive to use getAllVertices Method, cannot buil initialized queue");
+            throw new SLIB_Ex_Critic("Walk Constraint are to restrictive to use getAllVertices Method, cannot buil initialized queue..."
+                    + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n"+wc+"\nNumber of vertices tested "+allVertices.size());
         }
 
         logger.debug("queue : " + queue);
@@ -177,6 +178,10 @@ public class RVF_DAG extends RVF {
         for (V c : inDegree.keySet()) {
 
             if (!inDegree.get(c).equals(inDegreeDone.get(c))) {
+                
+                if(incoherencies == 0){
+                    logger.debug("\tURI\tIndegree\tInDegreeDone");
+                }
 
                 logger.debug("\t" + c.getValue() + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
                 incoherencies++;

@@ -43,6 +43,7 @@ import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -93,15 +94,15 @@ public class RooterDAG {
      * @throws SLIB_Ex_Critic  
      *
      */
-    public static URI rootUnderlyingDAG(G g, URI etypeDAG, boolean checkUnderlyingDAG, URI rootUri, Direction dir) throws SLIB_Ex_Critic {
+    public static URI rootUnderlyingDAG(G g, URI rootUri, WalkConstraints wc, boolean checkUnderlyingDAG) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 
         ValidatorDAG validator = new ValidatorDAG();
 
-        if (checkUnderlyingDAG && !validator.isDag(g, etypeDAG, dir)) {
+        if (checkUnderlyingDAG && !validator.isDag(g, wc)) {
             throw new SLIB_Ex_Critic("Error during rerooting: "
-                    + "Underlying graph build from the set of edge types " + etypeDAG + ""
+                    + "Underlying graph build from  contraint " + wc + ""
                     + "is not a DAG");
         }
 
@@ -110,7 +111,7 @@ public class RooterDAG {
         // roots are considered as vertices 
         // - with out edge of type etypeDAG (vertices contained in uDAG)
         // - without out edges of type invEtypeDAG
-        Set<V> roots = new ValidatorDAG().getDAGRoots(g, etypeDAG, dir);
+        Set<V> roots = new ValidatorDAG().getDAGRoots(g, wc);
 
         int nbRoot = roots.size();
 
@@ -132,7 +133,7 @@ public class RooterDAG {
 
             for (V v : roots) {
                 c++;
-                g.addE(v, root, etypeDAG);
+                g.addE(v, root, RDFS.SUBCLASSOF);
             }
             
             
@@ -160,7 +161,7 @@ public class RooterDAG {
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsRootedTaxonomicDag(g)) {
-            return rootUnderlyingDAG(g, RDFS.SUBCLASSOF, true, rootUri, Direction.OUT);
+            return rootUnderlyingDAG(g, rootUri, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT),true);
         } else {
             return (URI) validator.getRootedTaxonomicDAGRoot(g).getValue();
         }

@@ -48,7 +48,6 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
@@ -63,10 +62,11 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.voc.SLIBVOC;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.measures.Sim_Pairwise;
@@ -108,25 +108,20 @@ public class SM_Engine {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     DataFactory factory = DataFactoryMemory.getSingleton();
     final G graph;
-    AncestorEngine ancGetter;
+    AncestorEngine   ancGetter;
     DescendantEngine descGetter;
-    Set<URI> allRelTypes;
+    
     LCAFinder dcaFinder;
-    /**
-     * Set of URI associated to the predicates admitted to perform bottom up
-     * traversal on the underlying taxonomic graph of the considered graph e.g.
-     * SUBCLASSOF (PART_OF)
-     */
-    Set<URI> goToSuperClassETypes;
+    
+    
     V root = null;
-//	VirtualInstancesAccessor iAccessorCorpus;
     SMProxResultStorage cache;
     boolean cachePairwiseResults = false;
     /**
      * TODO Move to {@link GWS}
      */
     ResultStack<V, Double> vectorWeights = null;
-//    ValidatorDAG validator;
+
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
@@ -139,19 +134,12 @@ public class SM_Engine {
      * @param setEtypes_a
      * @throws SLIB_Ex_Critic
      */
-    public SM_Engine(G g,
-            Set<URI> setEtypes_a, boolean acceptIncoherences) throws SLIB_Ex_Critic {
+    public SM_Engine(G g,boolean acceptIncoherences) throws SLIB_Ex_Critic {
 
         this.graph = g;
 
-        this.goToSuperClassETypes = setEtypes_a;
-
-        // store all relationship
-        allRelTypes = new HashSet<URI>();
-        allRelTypes.addAll(goToSuperClassETypes);
-
-        ancGetter = new AncestorEngine(g,acceptIncoherences);
-        descGetter = new DescendantEngine(g,acceptIncoherences);
+        ancGetter = new AncestorEngine(g, acceptIncoherences);
+        descGetter = new DescendantEngine(g, acceptIncoherences);
 
         init();
     }
@@ -173,16 +161,7 @@ public class SM_Engine {
      * @throws SLIB_Exception
      */
     public SM_Engine(G g) throws SLIB_Exception {
-        this(g, SetUtils.buildSet(RDFS.SUBCLASSOF),false);
-    }
-
-    /**
-     *
-     * @param g
-     * @throws SLIB_Exception
-     */
-    public SM_Engine(G g, boolean acceptIncoherences) throws SLIB_Exception {
-        this(g, SetUtils.buildSet(RDFS.SUBCLASSOF), acceptIncoherences);
+        this(g,false);
     }
 
     /**
@@ -231,13 +210,7 @@ public class SM_Engine {
      */
     public Set<V> getParents(V v) {
 
-        Set<E> edges = graph.getE(goToSuperClassETypes, v, VType.CLASS, Direction.OUT);
-        Set<V> parents = new HashSet<V>();
-
-        for (E e : edges) {
-            parents.add(e.getTarget());
-        }
-
+        Set<V> parents = graph.getV(v, ancGetter.getWalkConstraint());
         return parents;
     }
 
@@ -374,7 +347,13 @@ public class SM_Engine {
     public double getShortestPath(V a, V b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
-            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes,weightingScheme);
+            WalkConstraints wc = ancGetter.getWalkConstraint();
+            
+            for(Entry<URI,Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()){
+                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
+            }
+            
+            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
             cache.shortestPath.put(a, minDists_cA);
         }
@@ -389,11 +368,11 @@ public class SM_Engine {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public V getMSA(V a, V b,GWS weightingScheme) throws SLIB_Ex_Critic {
+    public V getMSA(V a, V b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
-        Dijkstra dijkstra = new Dijkstra(graph, allRelTypes,weightingScheme);
+        Dijkstra dijkstra = new Dijkstra(graph, ancGetter.getWalkConstraint(), weightingScheme);
 
-        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a,weightingScheme), getAllShortestPath(b,weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
+        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a, weightingScheme), getAllShortestPath(b, weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
 
         return msa_pk;
     }
@@ -418,10 +397,17 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    public synchronized Map<V, Double> getAllShortestPath(V a,GWS weightingScheme) throws SLIB_Ex_Critic {
+    public synchronized Map<V, Double> getAllShortestPath(V a, GWS weightingScheme) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
-            Dijkstra dijkstra = new Dijkstra(graph, allRelTypes, weightingScheme);
+            
+            WalkConstraints wc = ancGetter.getWalkConstraint();
+            
+            for(Entry<URI,Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()){
+                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
+            }
+            
+            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
             cache.shortestPath.put(a, minDists_cA);
         }
@@ -485,27 +471,27 @@ public class SM_Engine {
      * @param v
      * @return
      */
-    public Map<V, Double> computeSemanticContribution(V v,SMconf conf) {
-        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes,weightingScheme);
-
-        return sContrib_A;
-    }
-
-    /**
-     * NOT_CACHED
-     *
-     * @param v
-     * @return
-     */
-    public double computeSV_Wang_2007(V v, SMconf conf) {
-        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes,weightingScheme);
-        double sv_A = SimDagHybridUtil.computeSV_Wang_2007(sContrib_A);
-        return sv_A;
-    }
+//    public Map<V, Double> computeSemanticContribution(V v, SMconf conf) {
+//        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
+//        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+//        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes, weightingScheme);
+//
+//        return sContrib_A;
+//    }
+//
+//    /**
+//     * NOT_CACHED
+//     *
+//     * @param v
+//     * @return
+//     */
+//    public double computeSV_Wang_2007(V v, SMconf conf) {
+//        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
+//        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+//        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes, weightingScheme);
+//        double sv_A = SimDagHybridUtil.computeSV_Wang_2007(sContrib_A);
+//        return sv_A;
+//    }
 
     /**
      * CACHED
@@ -676,12 +662,19 @@ public class SM_Engine {
     }
 
     /**
-     * Inclusive i.e. a leaf will contain itself in it set of reachable leaves
+     * set of Leaves
      *
      * @return
      */
     public Set<V> getLeaves() {
-        return GraphAccessor.getV_NoEdgeType(graph,VType.CLASS, goToSuperClassETypes, Direction.IN);
+        Set<V> leaves = new HashSet<V>();
+        WalkConstraints wc = descGetter.getWalkConstraint();
+        for(V v : graph.getV(VType.CLASS)){
+            if(graph.getV(v, wc).isEmpty()){
+                leaves.add(v);
+            }
+        }
+        return leaves;
     }
 
     /**
@@ -991,9 +984,9 @@ public class SM_Engine {
         }
         // Get Topological ordering trough DFS
         // - get roots
-        Set<V> roots = new ValidatorDAG().getDAGRoots(graph, goToSuperClassETypes, Direction.OUT);
+        Set<V> roots = new ValidatorDAG().getDAGRoots(graph, ancGetter.getWalkConstraint());
 
-        DFS dfs = new DFS(graph, roots, goToSuperClassETypes, Direction.IN);
+        DFS dfs = new DFS(graph, roots, ancGetter.getWalkConstraint().getInverse(false));
         List<V> topoOrdering = dfs.getTraversalOrder();
 
 
@@ -1012,7 +1005,7 @@ public class SM_Engine {
             Set<V> entities = linkedEntities.get(currentV);
 
             // propagate Linked Entities in a bottom up fashion according the topological order
-            for (E e : graph.getE(goToSuperClassETypes, currentV, Direction.OUT)) {
+            for (E e : graph.getE(currentV, ancGetter.getWalkConstraint())) {
                 if (!entities.isEmpty()) {
                     linkedEntities.get(e.getTarget()).addAll(entities);
                 }
@@ -1135,32 +1128,6 @@ public class SM_Engine {
         return vector;
     }
 
-//	public void applyPostLoadingFilters(GraphConf gConf) throws SGL_Exception {
-//
-//
-//			Set<FilterGraph> filters = FilterRepository.getInstance().getFilters();
-//
-//			for(FilterGraph f : filters){
-//
-//				if(f instanceof FilterGraph_Metrics){
-//
-//					FilterGraph_Metrics fm = (FilterGraph_Metrics)f ;
-//
-//					ResultStack<V,Double> metric_resutls = null;
-//					// retrieve associated metric results
-//					for(ICconf confIC : cache.metrics_results.keySet()){
-//
-//						if(confIC.getId().equals( fm.getMetric()) ){
-//							metric_resutls = cache.metrics_results.get(confIC);
-//						}
-//					}
-//					if(metric_resutls == null)
-//						throw new SGL_Ex_Critic("Cannot find result for metric "+fm.getMetric()+" use in filter "+fm.getId());
-//
-//					GraphCleaner.removeAnnotationsFromMetric(g,metric_resutls,fm.getValue(),fm.isRemoveEmpty());
-//				}
-//		}
-//	}
     /**
      *
      * @param a
@@ -1179,29 +1146,6 @@ public class SM_Engine {
         return graph;
     }
 
-    /**
-     *
-     * @return
-     */
-    public Set<URI> getGoToSuperClassETypes() {
-        return goToSuperClassETypes;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public AncestorEngine getAncGetter() {
-        return ancGetter;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public DescendantEngine getDescGetter() {
-        return descGetter;
-    }
 
     /**
      * Set the ICS stored for the given IC configuration to the specified set of
@@ -1219,12 +1163,22 @@ public class SM_Engine {
     }
 
     /**
-     * TODO store the weighting scheme in a Map<String,GWS>
-     * Provide a way to load edge weight from file or to compute them using specific methods
-     * @param param the key corresponding to the id of the weighting scheme to retrieve
-     * @return 
+     * TODO store the weighting scheme in a Map<String,GWS> Provide a way to
+     * load edge weight from file or to compute them using specific methods
+     *
+     * @param param the key corresponding to the id of the weighting scheme to
+     * retrieve
+     * @return
      */
     public GWS getWeightingScheme(String param) {
         throw new UnsupportedOperationException("Not yet implemented");
+    }
+
+    public AncestorEngine getAncestorEngine() {
+        return ancGetter;
+    }
+
+    public DescendantEngine getDescendantEngine() {
+        return descGetter;
     }
 }

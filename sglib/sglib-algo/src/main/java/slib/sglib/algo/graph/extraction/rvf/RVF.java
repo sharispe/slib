@@ -157,4 +157,12 @@ public class RVF {
 
         return results;
     }
+    
+    public WalkConstraints getWalkConstraint(){
+        return wc;
+    }
+    
+    public void setWalkConstraint(WalkConstraints nwc){
+        this.wc = nwc;
+    }
 }

@@ -45,6 +45,7 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.classical.DFS;
+import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -154,8 +155,13 @@ public class GraphReduction_DAG_Ranwez_2011 {
             logger.debug("Checking DAG property");
 
             ValidatorDAG vdag = new ValidatorDAG();
+            
+            WalkConstraintTax wc = new WalkConstraintTax();
+            for(URI edgeType : edgesTypes){
+                wc.addAcceptedTraversal(edgeType, Direction.IN);
+            }
 
-            boolean isDag = vdag.isDag(graph, edgesTypes, Direction.IN);// (graph, rootURI , edgesTypeInverse);
+            boolean isDag = vdag.isDag(graph, wc);// (graph, rootURI , edgesTypeInverse);
 
             if (!isDag) {
                 throw new SLIB_Ex_Critic(
@@ -269,7 +275,12 @@ public class GraphReduction_DAG_Ranwez_2011 {
     }
 
     private void computeTraversalRestriction() {
-        DFS dfs = new DFS(graph, rootVertex, edgesTypes, Direction.IN);
+        WalkConstraintTax wc = new WalkConstraintTax();
+        for(URI edgesType : edgesTypes){
+            wc.addAcceptedTraversal(edgesType, Direction.IN);
+        }
+        
+        DFS dfs = new DFS(graph, rootVertex, wc);
         traversalOrder = dfs.getTraversalOrder(); // rootID as last element
     }
 

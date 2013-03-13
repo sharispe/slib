@@ -61,7 +61,6 @@ public class BFS implements GraphTraversal {
     V current;
     List<V> queue;
     Set<V> visited;
-    boolean removePerformed = false;
 
     /**
      * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
@@ -74,6 +73,7 @@ public class BFS implements GraphTraversal {
 
         this.g = g;
         this.wc = wc;
+        
         this.queue = new ArrayList<V>(sources);
 
         visited = new HashSet<V>();
@@ -106,8 +106,6 @@ public class BFS implements GraphTraversal {
      */
     @Override
     public V next() {
-
-        removePerformed = false;
 
         V src = queue.get(0);
         queue.remove(0);
