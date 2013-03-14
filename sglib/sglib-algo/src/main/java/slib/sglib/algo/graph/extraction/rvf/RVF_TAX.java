@@ -52,16 +52,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class RVF_TAX extends RVF_DAG {
 
-    /**
-     * @param g	the graph
-     * @param dir 
-     */
-    public RVF_TAX(G g, Direction dir, boolean acceptIncoherences) {
-        super(g, new WalkConstraintTax(RDFS.SUBCLASSOF, dir), acceptIncoherences);
-    }
+    
     
     public RVF_TAX(G g, Direction dir) {
-        super(g, new WalkConstraintTax(RDFS.SUBCLASSOF, dir), false);
+        super(g, new WalkConstraintTax(RDFS.SUBCLASSOF, dir));
     }
 
     /**

@@ -58,37 +58,40 @@ import slib.utils.impl.SetUtils;
  *
  */
 public class RVF_DAG extends RVF {
-    
-    boolean acceptIncoherences = false;
 
     /**
      * Create a basic RVF object considering an acyclic graph and a only one
-     * type of relationships to consider during the traversal. 
-     * Note that graph acyclicity is required to ensure coherency but is not evaluated.
+     * type of relationships to consider during the traversal. Note that graph
+     * acyclicity is required to ensure coherency but is not evaluated.
      *
      * @param g the Semantic Graph to consider
-     * @param wc  the walk constraint defining the way to reach the vertices which must be returned by the object
-     * @param acceptIncoherences define if an error must be thrown if an incoherence is detected.
-     * An incoherence can be detected if no topological order can be obtained with regard to the specified walk constraints, i.e.
-     * if the subgraph defined by the walk constraints is not a Directed Acyclic Graph (DAG).
-     * Indeed, this class take advantage of optimizations which can only be applied to DAG. 
-     * If you accept incoherences only a warning will be logged, if you don't, an exception will be thrown if any incoherence is detected.
-     * Accepting incoherences can lead to highly incoherent results, special cares must be taken. 
-     * DO NOT set this parameter to true if you don't understand the implications.
+     * @param wc the walk constraint defining the way to reach the vertices
+     * which must be returned by the object
+     * @param acceptIncoherences define if an error must be thrown if an
+     * incoherence is detected. An incoherence can be detected if no topological
+     * order can be obtained with regard to the specified walk constraints, i.e.
+     * if the subgraph defined by the walk constraints is not a Directed Acyclic
+     * Graph (DAG). Indeed, this class take advantage of optimizations which can
+     * only be applied to DAG. If you accept incoherences only a warning will be
+     * logged, if you don't, an exception will be thrown if any incoherence is
+     * detected. Accepting incoherences can lead to highly incoherent results,
+     * special cares must be taken. DO NOT set this parameter to true if you
+     * don't understand the implications.
      */
-    public RVF_DAG(G g, WalkConstraints wc, boolean acceptIncoherences) {
+    public RVF_DAG(G g, WalkConstraints wc) {
         super(g, wc);
-        this.acceptIncoherences = acceptIncoherences;
     }
 
     /**
-     * Compute the set of reachable vertices for each vertices contained in the graph according to the specified constraint associated to the instance in use.
-     * Exclusive process, i.e. the process doesn't consider that vertex v is contained in the set of reachable vertices from v.
-     * 
+     * Compute the set of reachable vertices for each vertices contained in the
+     * graph according to the specified constraint associated to the instance in
+     * use. Exclusive process, i.e. the process doesn't consider that vertex v
+     * is contained in the set of reachable vertices from v.
+     *
      * Optimized through a topological ordering
      *
      * @return an Map key V value the set of vertices reachable from the key
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
     public Map<V, Set<V>> getAllRV() throws SLIB_Ex_Critic {
 
@@ -97,7 +100,7 @@ public class RVF_DAG extends RVF {
 
         Map<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
 
-        Map<V, Integer> inDegree     = new HashMap<V, Integer>();
+        Map<V, Integer> inDegree = new HashMap<V, Integer>();
         Map<V, Integer> inDegreeDone = new HashMap<V, Integer>();
 
         // Initialize DataStructure + queue considering walk constraint
@@ -121,7 +124,7 @@ public class RVF_DAG extends RVF {
 
         if (queue.isEmpty()) {
             throw new SLIB_Ex_Critic("Walk Constraint are to restrictive to use getAllVertices Method, cannot buil initialized queue..."
-                    + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n"+wc+"\nNumber of vertices tested "+allVertices.size());
+                    + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n" + wc + "\nNumber of vertices tested " + allVertices.size());
         }
 
         logger.debug("queue : " + queue);
@@ -167,19 +170,19 @@ public class RVF_DAG extends RVF {
 //                    logger.debug("*** Adding "+dest);
                 }
             }
-            
+
             //logger.debug("*** Done "+current+"\t"+allVertices.get(current));
         }
 
         //TOREMOVE 
 
-        logger.info("Checking Treatment coherency, accepting incoherences: "+acceptIncoherences);
+        logger.info("Checking Treatment coherency");
         long incoherencies = 0;
         for (V c : inDegree.keySet()) {
 
             if (!inDegree.get(c).equals(inDegreeDone.get(c))) {
-                
-                if(incoherencies == 0){
+
+                if (incoherencies == 0) {
                     logger.debug("\tURI\tIndegree\tInDegreeDone");
                 }
 
@@ -187,18 +190,13 @@ public class RVF_DAG extends RVF {
                 incoherencies++;
             }
         }
-        logger.info("Incoherencies : "+incoherencies);
-        if(incoherencies != 0){
+        logger.info("Incoherencies : " + incoherencies);
+        if (incoherencies != 0) {
             String incoherenceMessage = "incoherences found during a treatment, "
                     + "this can be due to incoherences with regard to the graph properties "
                     + "expected by the treatment performed. "
                     + "Please check the processed graph is acyclic, i.e. is a Directed Acyclic Graph.";
-            if(acceptIncoherences){
-                logger.warn("WARNING ! "+incoherenceMessage+". You accepted such incoherences, process not stopped...");
-            }
-            else{
-                throw new SLIB_Ex_Critic("ERROR "+incoherenceMessage);
-            }
+            throw new SLIB_Ex_Critic("ERROR " + incoherenceMessage);
         }
 
 
@@ -206,22 +204,21 @@ public class RVF_DAG extends RVF {
         return allVertices;
     }
 
-
     /**
      * Return the set of terminal vertices (leaves) reachable for all vertices
      * composing the loaded graph
-     * 
+     *
      * @TODO Precise if the process is exclusive or inclusive
      *
      * @return an HashMap key V, value the set of terminal vertices reachable
      * from the key Set<V>
      */
     public HashMap<V, Set<V>> getTerminalVertices() {
-        
+
         logger.info("Retrieving all reachable leaves");
 
         HashMap<V, Set<V>> allReachableLeaves = new HashMap<V, Set<V>>();
-        HashMap<V, Integer> inDegrees     = new HashMap<V, Integer>();
+        HashMap<V, Integer> inDegrees = new HashMap<V, Integer>();
         HashMap<V, Integer> inDegreesDone = new HashMap<V, Integer>();
 
         // Retrieve all leaves
@@ -241,20 +238,20 @@ public class RVF_DAG extends RVF {
                 allReachableLeaves.get(v).add(v);
             }
         }
-        
-        logger.info("Propagation of leave counts start from "+queue.size()+" leaves on "+g.getV().size()+" concepts");
-        
+
+        logger.info("Propagation of leave counts start from " + queue.size() + " leaves on " + g.getV().size() + " concepts");
+
         long c = 0;
-        
+
         while (!queue.isEmpty()) {
-            
+
             V v = queue.get(0);
             queue.remove(0);
             Set<E> edges = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT);
 
             //logger.info(c+"/"+g.getV().size()+" "+v.getValue().stringValue());
             c++;
-            
+
             for (E e : edges) {
 
                 V target = e.getTarget();
@@ -274,8 +271,7 @@ public class RVF_DAG extends RVF {
 
     /**
      *
-     * @return
-     * @throws SLIB_Ex_Critic
+     * @return @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Long> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
@@ -299,7 +295,7 @@ public class RVF_DAG extends RVF {
      * occurrences of each vertices
      * @return ResultStack of type Double representing the number occurrences
      * propagated of each vertices
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
     public ResultStack<V, Long> propagateNbOccurences(ResultStack<V, Long> nbOccurrence) throws SLIB_Ex_Critic {
 

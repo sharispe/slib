@@ -74,7 +74,6 @@ import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
 import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
 import slib.sml.sm.core.measures.framework.core.measures.Sim_FrameworkAbstracted;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
-import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.utils.SimDagHybridUtils;
 import slib.sml.sm.core.metrics.ic.annot.ICcorpus;
 import slib.sml.sm.core.metrics.ic.topo.ICtopo;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Corpus;
@@ -134,12 +133,12 @@ public class SM_Engine {
      * @param setEtypes_a
      * @throws SLIB_Ex_Critic
      */
-    public SM_Engine(G g,boolean acceptIncoherences) throws SLIB_Ex_Critic {
+    public SM_Engine(G g) throws SLIB_Ex_Critic {
 
         this.graph = g;
 
-        ancGetter = new AncestorEngine(g, acceptIncoherences);
-        descGetter = new DescendantEngine(g, acceptIncoherences);
+        ancGetter = new AncestorEngine(g);
+        descGetter = new DescendantEngine(g);
 
         init();
     }
@@ -155,14 +154,7 @@ public class SM_Engine {
         dcaFinder = new LCAFinderImpl();
     }
 
-    /**
-     *
-     * @param g
-     * @throws SLIB_Exception
-     */
-    public SM_Engine(G g) throws SLIB_Exception {
-        this(g,false);
-    }
+    
 
     /**
      * Compute the union of the inclusive ancestors of a set of classes

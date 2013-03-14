@@ -49,16 +49,7 @@ public class DescendantEngine extends RVF_TAX {
      * @param g
      */
     public DescendantEngine(G g) {
-        super(g, Direction.IN, false);
-    }
-
-    /**
-     *
-     * @param g
-     * @param acceptIncoherences true: accept to perform the process on cyclic graph... this can lead to highly incoherent results, special cares must be taken. DO NOT set this parameter to true if you don't understand the implications.
-     */
-    public DescendantEngine(G g, boolean acceptIncoherences) {
-        super(g, Direction.IN, acceptIncoherences);
+        super(g, Direction.IN);
     }
 
     /**

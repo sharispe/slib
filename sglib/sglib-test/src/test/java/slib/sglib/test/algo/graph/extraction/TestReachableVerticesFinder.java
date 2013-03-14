@@ -91,7 +91,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_descendant_1() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
 
         V v = g.getV(testValues.G_BASIC_THING);
 
@@ -111,7 +111,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_descendant_2() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
 
         V v = g.getV(testValues.G_BASIC_SPIDER);
 
@@ -129,7 +129,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_descendant_3() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_OBJECT);
 
         Set<V> desc = rvf.getRV(v);
@@ -144,7 +144,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_descendant_4() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_SPIDERMAN);
 
         Set<V> desc = rvf.getRV(v);
@@ -159,7 +159,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_ancestors_1() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_OBJECT);
 
         HashSet<V> anc = (HashSet<V>) rvf.getRV(v);
@@ -192,7 +192,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_ancestors_2() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_MEN);
 
         HashSet<V> anc = (HashSet<V>) rvf.getRV(v);
@@ -208,7 +208,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_ancestors_3() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_THING);
 
         HashSet<V> anc = (HashSet<V>) rvf.getRV(v);
@@ -223,7 +223,7 @@ public class TestReachableVerticesFinder {
     public void test_dag_all_1() throws SLIB_Ex_Critic {
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_ANIMAL);
 
         HashSet<V> all = (HashSet<V>) rvf.getRV(v);
@@ -242,7 +242,7 @@ public class TestReachableVerticesFinder {
         setEdge.add(RDFS.SUBCLASSOF);
 
         WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH);
-        rvf = new RVF_DAG(g, wc, false);
+        rvf = new RVF_DAG(g, wc);
         V v = g.getV(testValues.G_BASIC_TABLE);
 
         HashSet<V> all = (HashSet<V>) rvf.getRV(v);

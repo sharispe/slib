@@ -48,15 +48,9 @@ public class AncestorEngine extends RVF_TAX {
      * @param g the graph on which the engine must work
      */
     public AncestorEngine(G g) {
-        super(g, Direction.OUT, false);
+        super(g, Direction.OUT);
     }
 
-    /**
-     * @param g the graph on which the engine must work
-     */
-    public AncestorEngine(G g, boolean acceptIncoherences) {
-        super(g, Direction.OUT, acceptIncoherences);
-    }
 
     /**
      * Compute the set of exclusive ancestors of a class. Exclusive process: the
