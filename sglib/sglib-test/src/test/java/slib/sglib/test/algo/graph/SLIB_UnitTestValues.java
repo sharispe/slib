@@ -36,7 +36,6 @@ package slib.sglib.test.algo.graph;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
-
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**

@@ -37,16 +37,8 @@ package slib.utils.impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- *
- * @author seb
- */
 public class UtilDebug {
 
-    /**
-     *
-     * @param fromClass
-     */
     public static void exit(Object fromClass) {
 
         Logger logger = LoggerFactory.getLogger(UtilDebug.class);
@@ -63,15 +55,17 @@ public class UtilDebug {
         System.exit(0);
     }
 
-    /**
-     *
-     */
     public static void exit() {
 
         Logger logger = LoggerFactory.getLogger(UtilDebug.class);
-        String className = null;
-
         logger.info("Execution Volontary Stopped ");
+        System.exit(0);
+    }
+
+    public static void exitAndPrint(String message) {
+
+        Logger logger = LoggerFactory.getLogger(UtilDebug.class);
+        logger.info("Execution Volontary Stopped message: "+message);
         System.exit(0);
     }
 }
