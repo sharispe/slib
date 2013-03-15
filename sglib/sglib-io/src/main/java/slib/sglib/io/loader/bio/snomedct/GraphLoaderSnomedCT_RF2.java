@@ -51,6 +51,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
      *
      */
     public static String ARG_PREFIX = "prefix";
+    
+    public static String ARG_LOAD_INACTIVE = "load_inactive";
     /**
      *
      */
@@ -81,6 +83,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     private int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
     private int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
     private int RELATIONSHIP_TYPE_ID = 7;
+    
+    private boolean LOAD_ONLY_ACTIVE = true;
 
     @Override
     public G load(GraphConf conf) throws SLIB_Exception {
@@ -98,6 +102,11 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
         String concept_file = (String) conf.getParameter(ARG_CONCEPT_FILE);
         String relationship_file = (String) conf.getParameter(ARG_RELATIONSHIP_FILE);
         String prefix = (String) conf.getParameter(ARG_PREFIX);
+        String load_inactive =  conf.getParameter(ARG_LOAD_INACTIVE).toString();
+        
+        if(load_inactive.equalsIgnoreCase("true")){
+            LOAD_ONLY_ACTIVE = false;
+        }
 
         logger.info("Loading SNOMED-CT [RF2]      ");
         logger.info("Concept file:      " + concept_file);
@@ -162,7 +171,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
             for (ConceptSnomedCT concept : concepts.values()) {
 
-                if (concept.active) {
+                if (!LOAD_ONLY_ACTIVE || concept.active) {
                     URI cURI = repo.createURI(prefix + concept.id);
                     V v = g.addV(new Vertex(cURI, VType.CLASS));
                     conceptMap.put(concept.id, v);
@@ -223,7 +232,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             logger.info("Loading relationships... please wait");
             for (RelationshipSnomedCT r : relationships.values()) {
 
-                if (r.active) {
+                if (!LOAD_ONLY_ACTIVE || r.active) {
                     if (conceptMap.containsKey(r.source) && conceptMap.containsKey(r.target)) {
 
                         V src = conceptMap.get(r.source);
