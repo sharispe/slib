@@ -191,16 +191,10 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                          * More information about MeSH trees at http://www.nlm.nih.gov/mesh/trees.html
                          */
 
-                        // we link the concept to the corresponding tree inner root
-                        V innerRootTree = getOrCreateVertex(treeNumber); // e.g. F01
-                        E edgeConceptToTreeInnerRoot = new Edge(vConcept, innerRootTree, RDFS.SUBCLASSOF);
-                        g.addE(edgeConceptToTreeInnerRoot);
-                        logger.debug("Creating Edge : " + edgeConceptToTreeInnerRoot);
-
                         // we link the tree inner root to the root tree
                         char localNameTreeRoot = treeNumber.charAt(0); // id of the tree root
                         V rootTree = getOrCreateVertex(localNameTreeRoot + ""); // e.g. F
-                        E treeInnerRootToTreeRoot = new Edge(innerRootTree, rootTree, RDFS.SUBCLASSOF);
+                        E treeInnerRootToTreeRoot = new Edge(vConcept, rootTree, RDFS.SUBCLASSOF);
                         g.addE(treeInnerRootToTreeRoot);
                         logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
 
@@ -212,7 +206,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                 }
             }
 
-        } catch (Exception ex) { // sorry
+        } catch (Exception ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
 
