@@ -39,6 +39,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
+import org.openrdf.sail.memory.model.MemValueFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.DataFactory;
 import slib.sglib.model.repo.PredicateFactory;
@@ -46,8 +47,8 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * This class defines the singleton used as an in memory repository which manage
- * all used URI and storage element i.e. graphs and knowledge base. The main
- * goal of the DataFactory singleton is to avoid URI and NameSpace object
+ * all used URI and storage element i.e. graphs. 
+ * The main goal of the DataFactory singleton is to avoid URI and NameSpace object
  * duplicates and must therefore be used to create and load URIs.
  *
  * The repository must be in agreement to graph representation i.e. URI loaded
@@ -57,7 +58,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * @author Sebastien Harispe
  *
  */
-public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
+public class DataFactoryMemory extends MemValueFactory implements DataFactory {
 
     private static DataFactoryMemory repository;
     private  PredicateFactory eTypes;
@@ -140,10 +141,6 @@ public class DataFactoryMemory extends SLIBValueFactory implements DataFactory {
         return eTypes;
     }
 
-    @Override
-    public Set<URI> getURIs() {
-        return getMemURIs();
-    }
     
     @Override
     public void clear() {

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package slib.sglib.io.loader.bio.snomedct;
 
 import java.io.BufferedReader;
@@ -9,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,11 +21,11 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.elements.V;
+import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.repo.DataFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -39,29 +34,18 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
-    /**
-     *
-     */
     public static String ARG_CONCEPT_FILE = "concept_file";
-    /**
-     *
-     */
     public static String ARG_RELATIONSHIP_FILE = "relationship_file";
-    /**
-     *
-     */
     public static String ARG_PREFIX = "prefix";
-    
-    public static String ARG_LOAD_INACTIVE = "load_inactive";
-    /**
-     *
-     */
+    public static String ARG_LOAD_INACTIVE_CONCEPTS = "load_inactive_concepts";
+    public static String ARG_LOAD_INACTIVE_RELATIONSHIPS = "load_inactive_relationships";
     public static String ID_SUBCLASSOF_SNOMED = "116680003";
     
-    HashMap<String, V> conceptMap = new HashMap<String, V>();
+    
+    Map<String, V> conceptMap = new HashMap<String, V>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Pattern p_tab = Pattern.compile("\\t");
-    DataFactoryMemory repo = DataFactoryMemory.getSingleton();
+    DataFactory repo = DataFactoryMemory.getSingleton();
     /**
      *
      */
@@ -83,8 +67,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     private int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
     private int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
     private int RELATIONSHIP_TYPE_ID = 7;
-    
-    private boolean LOAD_ONLY_ACTIVE = true;
+    private boolean LOAD_ONLY_ACTIVE_CONCEPTS = true;
+    private boolean LOAD_ONLY_ACTIVE_RELATIONSHIPS = true;
 
     @Override
     public G load(GraphConf conf) throws SLIB_Exception {
@@ -102,10 +86,21 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
         String concept_file = (String) conf.getParameter(ARG_CONCEPT_FILE);
         String relationship_file = (String) conf.getParameter(ARG_RELATIONSHIP_FILE);
         String prefix = (String) conf.getParameter(ARG_PREFIX);
-        String load_inactive =  conf.getParameter(ARG_LOAD_INACTIVE).toString();
-        
-        if(load_inactive.equalsIgnoreCase("true")){
-            LOAD_ONLY_ACTIVE = false;
+
+        if (conf.existsParam(ARG_LOAD_INACTIVE_CONCEPTS)) {
+            String load_inactive_concepts = conf.getParameter(ARG_LOAD_INACTIVE_CONCEPTS).toString();
+
+            if (load_inactive_concepts.equalsIgnoreCase("true")) {
+                LOAD_ONLY_ACTIVE_CONCEPTS = false;
+            }
+        }
+
+        if (conf.existsParam(ARG_LOAD_INACTIVE_RELATIONSHIPS)) {
+            String load_inactive_relationships = conf.getParameter(ARG_LOAD_INACTIVE_RELATIONSHIPS).toString();
+
+            if (load_inactive_relationships.equalsIgnoreCase("true")) {
+                LOAD_ONLY_ACTIVE_RELATIONSHIPS = false;
+            }
         }
 
         logger.info("Loading SNOMED-CT [RF2]      ");
@@ -171,8 +166,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
             for (ConceptSnomedCT concept : concepts.values()) {
 
-                if (!LOAD_ONLY_ACTIVE || concept.active) {
-                    URI cURI = repo.createURI(prefix + concept.id);
+                if (!LOAD_ONLY_ACTIVE_CONCEPTS || concept.active) {
+                    URI cURI = repo.createURI(prefix,concept.id);
                     V v = g.addV(new Vertex(cURI, VType.CLASS));
                     conceptMap.put(concept.id, v);
                     loaded++;
@@ -232,7 +227,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             logger.info("Loading relationships... please wait");
             for (RelationshipSnomedCT r : relationships.values()) {
 
-                if (!LOAD_ONLY_ACTIVE || r.active) {
+                if (!LOAD_ONLY_ACTIVE_RELATIONSHIPS || r.active) {
                     if (conceptMap.containsKey(r.source) && conceptMap.containsKey(r.target)) {
 
                         V src = conceptMap.get(r.source);
@@ -242,7 +237,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                         if (idMapping.containsKey(r.relationshipID)) {
                             pred = idMapping.get(r.relationshipID);
                         } else {
-                            pred = repo.createURI(prefix + r.relationshipID);
+                            pred = repo.createURI(prefix,r.relationshipID);
                         }
                         E e = new Edge(src, tar, pred);
 
@@ -256,53 +251,6 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             ex.printStackTrace();
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
-    }
-
-    /**
-     *
-     */
-    public class SnomedCT_concept {
-
-        String id;
-        V vertex;
-
-        /**
-         *
-         * @param id
-         * @param v
-         */
-        public SnomedCT_concept(String id, V v) {
-            this.id = id;
-            this.vertex = v;
-        }
-
-        /**
-         *
-         * @return
-         */
-        public V getVertex() {
-            return vertex;
-        }
-    }
-
-    /**
-     *
-     * @param a
-     * @throws SLIB_Exception
-     * @throws ParseException
-     */
-    public static void main(String[] a) throws SLIB_Exception, ParseException {
-
-
-        G g = new GraphMemory(DataFactoryMemory.getSingleton().createURI("http://graph/snomed-ct/"));
-        GraphLoaderSnomedCT_RF2 loader = new GraphLoaderSnomedCT_RF2();
-        loader.populate(null, g);
-
-
-
-
-
-
     }
 
     /**

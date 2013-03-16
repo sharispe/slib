@@ -37,6 +37,7 @@ package slib.sglib.model.repo;
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
+import org.openrdf.model.ValueFactory;
 import slib.sglib.model.graph.G;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -47,7 +48,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * @author Sebastien Harispe
  *
  */
-public interface DataFactory extends ISLIBValueFactory {
+public interface DataFactory extends ValueFactory {
 
     /**
      *
@@ -96,9 +97,5 @@ public interface DataFactory extends ISLIBValueFactory {
      */
     public PredicateFactory getPredicateFactory();
     
-    /**
-     *
-     * @return
-     */
-    public Set<URI> getURIs();
+
 }

@@ -186,7 +186,6 @@ public class OntoFocus {
                             flushResultOnFile(gviz, out);
 
                             logger.info("Consult result : " + out);
-                            logger.info("Number of URI loaded : " + factory.getURIs().size());
                         }
 
                         //UtilDebug.exit(this);

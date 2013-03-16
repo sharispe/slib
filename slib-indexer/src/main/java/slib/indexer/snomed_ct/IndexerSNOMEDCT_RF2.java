@@ -52,7 +52,7 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory,G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
 
 
 
@@ -98,7 +98,7 @@ public class IndexerSNOMEDCT_RF2 {
 
                     URI cURI = repo.createURI(defaultNamespace + split[DESCRIPTION_CONCEPT_ID]);
 
-                    if (repo.getURI(cURI) != null) { // the concept is loaded in the repository
+                    if (graph.getV(cURI) != null) { // the concept is loaded in the repository
 
                         Date date = formatter.parse(split[DESCRIPTION_DATE]);
 
@@ -124,10 +124,6 @@ public class IndexerSNOMEDCT_RF2 {
                         }
                     }
                 }
-
-//                if(added){
-//                    logger.debug("Loading "+split[DESCRIPTION_TERM]+ " [inactive "+active+"]");
-//                }
             }
             in.close();
 
@@ -157,7 +153,7 @@ public class IndexerSNOMEDCT_RF2 {
     public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
 
         logger.info("Building Index");
-        IndexHash index = buildIndex(factory, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS, EXCLUDE_OLD_DESCRIPTIONS);
+        IndexHash index = buildIndex(factory,graph, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS, EXCLUDE_OLD_DESCRIPTIONS);
 
         logger.info("Cleaning Index");
         Set<Value> toRemove = new HashSet<Value>();

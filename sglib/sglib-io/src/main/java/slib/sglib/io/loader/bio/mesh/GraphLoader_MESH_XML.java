@@ -196,12 +196,12 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                         V rootTree = getOrCreateVertex(localNameTreeRoot + ""); // e.g. F
                         E treeInnerRootToTreeRoot = new Edge(vConcept, rootTree, RDFS.SUBCLASSOF);
                         g.addE(treeInnerRootToTreeRoot);
-                        logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
+//                        logger.debug("Creating Edge : " + treeInnerRootToTreeRoot);
 
                         // we link the tree root to the universal root
                         E treeRootToUniversalRoot = new Edge(rootTree, universalRoot, RDFS.SUBCLASSOF);
                         g.addE(treeRootToUniversalRoot);
-                        logger.debug("Creating Edge : " + treeRootToUniversalRoot);
+//                        logger.debug("Creating Edge : " + treeRootToUniversalRoot);
                     }
                 }
             }
