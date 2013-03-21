@@ -46,7 +46,8 @@ public class SMComputationGO_pairwise {
         DataFactory factory = DataFactoryMemory.getSingleton();
         URI graph_uri = factory.createURI("http://go/");
 
-        // We define a prefix in order to set 
+        // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
+        // considering the configuration specified below the URI associated to GO:XXXXX will be http://go/XXXXX
         factory.loadNamespacePrefix("GO", graph_uri.toString());
 
 

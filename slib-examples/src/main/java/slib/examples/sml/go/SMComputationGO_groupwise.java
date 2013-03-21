@@ -27,11 +27,12 @@ import slib.utils.ex.SLIB_Exception;
 /**
  *
  * Example of a Semantic measure computation using the Semantic Measures
- * Library. In this snippet we estimate the similarity of two genes annotated by concepts (terms) 
- * defined in the Gene Ontology.
- * The Gene Ontology is expressed in OBO format. 
- * The similarity is estimated using an indirect groupwise measure based on: Lin's pairwise measure, Best Match Average aggregation strategy.
- * 
+ * Library. In this snippet we estimate the similarity of two genes annotated by
+ * concepts (terms) defined in the Gene Ontology. The Gene Ontology is expressed
+ * in OBO format. The similarity is estimated using an indirect groupwise
+ * measure based on: Lin's pairwise measure, Best Match Average aggregation
+ * strategy.
+ *
  * More information at http://www.semantic-measures-library.org/
  *
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
@@ -52,37 +53,38 @@ public class SMComputationGO_groupwise {
         DataFactory factory = DataFactoryMemory.getSingleton();
         URI graph_uri = factory.createURI("http://go/");
 
-        // We define a prefix in order to set 
+        // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
+        // considering the configuration specified below the URI associated to GO:XXXXX will be http://go/XXXXX
         factory.loadNamespacePrefix("GO", graph_uri.toString());
 
 
         G graph = new GraphMemory(graph_uri);
 
-        GDataConf goConf    = new GDataConf(GFormat.OBO, goOBO);
+        GDataConf goConf = new GDataConf(GFormat.OBO, goOBO);
         GDataConf annotConf = new GDataConf(GFormat.GAF2, annot);
-        
+
         GraphLoaderGeneric.populate(goConf, graph);
         GraphLoaderGeneric.populate(annotConf, graph);
-        
+
 
         // General information about the graph
         System.out.println(graph.toString());
-        
+
         // The Gene Ontology is not rooted, i.e. Molecular Function, Biological Process, Cellular Component, the three sub-ontologies of 
         // the GO are not rooted. We create such a virtual root in order to be able to compare 
         // the concepts expressed in different sub-ontologies.
-        
+
         // We create a vertex corresponding to the virtual root
         // and we add it to the graph
         URI uriVR = factory.createURI("http://go/virtualRoot");
         V virtualRoot = new Vertex(uriVR, VType.CLASS);
         graph.addV(virtualRoot);
-        
+
         // We root the graphs using the virtual root as root
         GAction rooting = new GAction(GActionType.REROOTING);
         rooting.addParameter("root_uri", uriVR.stringValue());
         GraphActionExecutor.applyAction(factory, rooting, graph);
-        
+
         System.out.println(graph.toString());
 
         int nbVertices = graph.getV(VType.CLASS).size();
@@ -101,27 +103,27 @@ public class SMComputationGO_groupwise {
 
         SMconf smConfGroupwise = new SMconf("BMA_LIN", SMConstants.FLAG_SIM_GROUPWISE_BMA);
         smConfGroupwise.setPairwise_measure_id(smConfPairwise.id);
-        
-        SM_Engine engine = new SM_Engine(graph);     
-        
+
+        SM_Engine engine = new SM_Engine(graph);
+
         V i = graph.getV(factory.createURI("http://go/I3L2H2"));
-        
+
         // An object used to retrieve the annotation of an instance according 
         // to a particular semantic projection 
         InstancesAccessor iAccessor = new InstanceAccessor_RDF_TYPE(graph);
-        
+
         Set<V> annotations_i = iAccessor.getDirectClass(i);
-        System.out.println("http://go/I3L2H2 is annotated by "+annotations_i.size()+" concepts");   
-        
-        
+        System.out.println("http://go/I3L2H2 is annotated by " + annotations_i.size() + " concepts");
+
+
         double sim;
-        
+
         for (V v : graph.getV(VType.INSTANCE)) {
 
-              Set<V> annotations_v = iAccessor.getDirectClass(v);
-              
-              sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
-              System.out.println(i+"\t"+v+"\t"+sim);
+            Set<V> annotations_v = iAccessor.getDirectClass(v);
+
+            sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
+            System.out.println(i + "\t" + v + "\t" + sim);
         }
     }
 }
