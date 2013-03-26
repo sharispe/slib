@@ -44,15 +44,15 @@ public class IndexerSNOMEDCT_RF2 {
     /**
      * Only load an index for the URI already loaded
      *
-     * @param factory 
+     * @param factory
      * @param description_file
      * @param defaultNamespace
-     * @param EXCLUDE_INACTIVE_DESCRIPTIONS 
-     * @param EXCLUDE_OLD_DESCRIPTIONS 
+     * @param EXCLUDE_INACTIVE_DESCRIPTIONS
+     * @param EXCLUDE_OLD_DESCRIPTIONS
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory,G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
 
 
@@ -60,13 +60,8 @@ public class IndexerSNOMEDCT_RF2 {
         logger.info("Building Index");
         logger.info("Description file: " + description_file);
         logger.info("EXCLUDE_INACTIVE_DESCRIPTIONS: " + EXCLUDE_INACTIVE_DESCRIPTIONS);
-        logger.info("EXCLUDE_OLD_DESCRIPTIONS: " + EXCLUDE_OLD_DESCRIPTIONS);
 
         IndexHash index = new IndexHash();
-
-
-        Map<URI, Date> lastValidDesc = new HashMap<URI, Date>();
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd");
 
         FileInputStream fstream;
         try {
@@ -79,7 +74,6 @@ public class IndexerSNOMEDCT_RF2 {
             String[] split;
 
             boolean header = true;
-            boolean added = false;
 
 
             while ((line = br.readLine()) != null) {
@@ -88,7 +82,6 @@ public class IndexerSNOMEDCT_RF2 {
                     header = false;
                     continue;
                 }
-                added = false;
 
                 split = p_tab.split(line);
 
@@ -100,27 +93,12 @@ public class IndexerSNOMEDCT_RF2 {
 
                     if (graph.getV(cURI) != null) { // the concept is loaded in the repository
 
-                        Date date = formatter.parse(split[DESCRIPTION_DATE]);
-
                         if (!index.getMapping().containsKey(cURI)) { // we add the entry to the collection
 
                             IndexElementBasic i = new IndexElementBasic(cURI, split[DESCRIPTION_TERM]);
                             index.getMapping().put(cURI, i);
-                            lastValidDesc.put(cURI, date);
-                            added = true;
-
                         } else {
-                            // we reload the preferred description if the one processed is more recent
-                            if (!lastValidDesc.get(cURI).after(date)) {
-                                index.getMapping().get(cURI).setPreferredDescription(split[DESCRIPTION_TERM]);
-                                index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
-                                added = true;
-                            }
-
-                            if (!EXCLUDE_OLD_DESCRIPTIONS) {
-                                index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
-                                added = true;
-                            }
+                            index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
                         }
                     }
                 }
@@ -145,15 +123,15 @@ public class IndexerSNOMEDCT_RF2 {
      * @param description_file
      * @param defaultNamespace
      * @param graph
-     * @param EXCLUDE_INACTIVE_DESCRIPTIONS 
-     * @param EXCLUDE_OLD_DESCRIPTIONS 
+     * @param EXCLUDE_INACTIVE_DESCRIPTIONS
+     * @param EXCLUDE_OLD_DESCRIPTIONS
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS, boolean EXCLUDE_OLD_DESCRIPTIONS) throws SLIB_Exception {
+    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
         logger.info("Building Index");
-        IndexHash index = buildIndex(factory,graph, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS, EXCLUDE_OLD_DESCRIPTIONS);
+        IndexHash index = buildIndex(factory, graph, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS);
 
         logger.info("Cleaning Index");
         Set<Value> toRemove = new HashSet<Value>();

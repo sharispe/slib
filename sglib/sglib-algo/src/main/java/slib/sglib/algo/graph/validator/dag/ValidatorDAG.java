@@ -51,7 +51,6 @@ import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
-import sun.security.krb5.internal.crypto.EType;
 
 /**
  * Used to validate if a graph is directed and acyclic (DAG)

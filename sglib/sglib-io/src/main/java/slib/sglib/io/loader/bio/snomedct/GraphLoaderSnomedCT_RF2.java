@@ -148,12 +148,11 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                 if (concepts.containsKey(data[CONCEPT_ID])) {
                     ConceptSnomedCT cExists = concepts.get(data[CONCEPT_ID]);
 
-                    if (!cExists.date.after(date)) { // the current specification is more recent than the other loaded, we only consider the last one
+                    if (cExists.date.before(date)) { // the current specification is more recent than the other loaded, we alsways consider the last one
                         ConceptSnomedCT newConcept = new ConceptSnomedCT(data[CONCEPT_ID], date, data[CONCEPT_ACTIVE].trim().equals("1"));
-                        // we replace the older
                         concepts.put(data[CONCEPT_ID], newConcept);
                     }
-                    // else do nothing the current relationship is obsolete regarding th one we already strore
+                    // else do nothing the current concept is obsolete compared to the one we already strore
                 } else {
                     ConceptSnomedCT concept = new ConceptSnomedCT(data[CONCEPT_ID], date, data[CONCEPT_ACTIVE].trim().equals("1"));
                     concepts.put(data[CONCEPT_ID], concept);
@@ -174,7 +173,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                 }
             }
 
-            logger.info("Number of concepts loaded " + loaded);
+            logger.info("Number of activeconcepts loaded " + loaded + " on "+concepts.size()+" concepts");            
             logger.info("Relationship file: " + relationship_file);
 
             in = new DataInputStream(new FileInputStream(relationship_file));
@@ -199,8 +198,6 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                 if (c % 100000 == 0) {
                     logger.debug("Processed " + c + "\t" + relationships.size() + " relationships loaded");
                 }
-
-
                 data = p_tab.split(line);
 
                 Date date = formatter.parse(data[RELATIONSHIP_DATE]);
