@@ -35,7 +35,7 @@
 package slib.sml.sm.core.measures;
 
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
@@ -60,5 +60,5 @@ public interface Sim_Groupwise_Indirect extends Sim_Groupwise {
      * @return the semantic similarity of the pair of groups of concepts
      * @throws SLIB_Exception
      */
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SLIB_Exception;
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SLIB_Exception;
 }

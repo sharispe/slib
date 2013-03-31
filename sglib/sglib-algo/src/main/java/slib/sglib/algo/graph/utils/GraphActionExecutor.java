@@ -24,20 +24,17 @@ import org.openrdf.sail.Sail;
 import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
-import slib.sglib.algo.graph.inf.TypeInferencer;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.SGLIBcst;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.Util;
 
 /**
  * Class managing the execution of {@link GAction} over a graph.
@@ -57,18 +54,17 @@ public class GraphActionExecutor {
      * @param g the graph on which the action must be performed
      * @throws SLIB_Ex_Critic
      */
-    public static void applyAction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+    public static void applyAction(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
         GActionType actionType = action.type;
 
         if (actionType == GActionType.TRANSITIVE_REDUCTION) {
-            transitive_reduction(factory, action, g);
+            transitive_reduction(action, g);
         } else if (actionType == GActionType.REROOTING) {
             rerooting(factory, action, g);
-        } else if (actionType == GActionType.TYPE_VERTICES) {
-            type_vertices(factory, action, g);
         } else if (actionType == GActionType.RDFS_INFERENCE) {
-            rdfsInference(factory, action, g);
+            //rdfsInference(factory, action, g);
+            throw new SLIB_Ex_Critic("Method not supported in this version");
         } else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
         } else {
@@ -103,7 +99,7 @@ public class GraphActionExecutor {
      * @param g the graph on which the action must be performed
      * @throws SLIB_Ex_Critic
      */
-    private static void verticeReduction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+    private static void verticeReduction(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
         logger.debug("Starting " + GActionType.VERTICES_REDUCTION);
 
@@ -111,9 +107,12 @@ public class GraphActionExecutor {
         String vocVal = (String) action.getParameter("vocabulary");
         String file_uris = (String) action.getParameter("file_uris");
         String rootURIs = (String) action.getParameter("root_uri");
+        
+        Set<URI> classes   = GraphAccessor.getClasses(g);
+        Set<URI> instances = GraphAccessor.getInstances(g);
 
 
-        Set<V> toRemove = new HashSet<V>();
+        Set<URI> toRemove = new HashSet<URI>();
 
         if (rootURIs != null) {
 
@@ -126,18 +125,15 @@ public class GraphActionExecutor {
 
             try {
                 URI rootURI = factory.createURI(rootURIs);
-                V root = g.getV(rootURI);
 
-                if (root == null) {
+                if (!g.containsVertex(rootURI)) {
                     throw new SLIB_Ex_Critic("Error cannot state vertex associated to URI " + rootURI + " in graph " + g.getURI());
                 }
 
                 DescendantEngine descEngine = new DescendantEngine(g);
-                Set<V> descsInclusive = descEngine.getDescendantsExc(root);
-                descsInclusive.add(root);
+                Set<URI> descsInclusive = descEngine.getDescendantsInc(rootURI);
 
-
-                Set<V> classesToRemove = g.getV(VType.CLASS);
+                Set<URI> classesToRemove = classes;
                 classesToRemove.removeAll(descsInclusive);
 
                 logger.info("Removing " + classesToRemove.size() + " classes of the graph");
@@ -146,9 +142,9 @@ public class GraphActionExecutor {
                 // We then remove the entities which are not 
                 // linked to the graph current underlyign taxonomic graph
 
-                Set<V> instancesToRemove = new HashSet<V>();
+                Set<URI> instancesToRemove = new HashSet<URI>();
 
-                for (V v : g.getV(VType.INSTANCE)) {
+                for (URI v : instances) {
                     // No links to taxonomic graph anymore 
                     if (g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()) {
                         instancesToRemove.add(v);
@@ -178,8 +174,8 @@ public class GraphActionExecutor {
 
             Matcher matcher;
 
-            for (V v : g.getV()) {
-                matcher = pattern.matcher(v.getValue().stringValue());
+            for (URI v : g.getV()) {
+                matcher = pattern.matcher(v.stringValue());
 
                 if (matcher.find()) {
                     toRemove.add(v);
@@ -229,10 +225,8 @@ public class GraphActionExecutor {
                     while ((line = br.readLine()) != null) {
 
                         line = line.trim();
-                        V v = g.getV(factory.createURI(line));
-                        if (v != null) {
-                            g.removeV(v);
-                        }
+
+                        g.removeV(factory.createURI(line));
                     }
                     in.close();
                 } catch (IOException e) {
@@ -243,30 +237,30 @@ public class GraphActionExecutor {
 
     }
 
-    private static void rdfsInference(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
-
-        logger.info("Apply inference engine");
-        Sail sail = new ForwardChainingRDFSInferencer(g);
-        Repository repo = new SailRepository(sail);
-
-        try {
-            repo.initialize();
-            RepositoryConnection con = repo.getConnection();
-            con.setAutoCommit(false);
-
-            for (E e : g.getE()) {
-                con.add(factory.createStatement((Resource) e.getSource().getValue(), e.getURI(), e.getTarget().getValue()));
-            }
-
-            con.commit();
-            con.close();
-            repo.shutDown();
-
-        } catch (RepositoryException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        }
-
-    }
+//    private static void rdfsInference(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+//
+//        logger.info("Apply inference engine");
+//        Sail sail = new ForwardChainingRDFSInferencer(g);
+//        Repository repo = new SailRepository(sail);
+//
+//        try {
+//            repo.initialize();
+//            RepositoryConnection con = repo.getConnection();
+//            con.setAutoCommit(false);
+//
+//            for (E e : g.getE()) {
+//                con.add(factory.createStatement((Resource) e.getSource(), e.getURI(), e.getTarget()));
+//            }
+//
+//            con.commit();
+//            con.close();
+//            repo.shutDown();
+//
+//        } catch (RepositoryException e) {
+//            throw new SLIB_Ex_Critic(e.getMessage());
+//        }
+//
+//    }
 
     /**
      * Vocabulary associated to RDF
@@ -276,21 +270,21 @@ public class GraphActionExecutor {
     private static String[] getRDFVocURIs() {
 
         return new String[]{
-                    "http://www.w3.org/1999/02/22-rdf-syntax-ns#first", "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil", "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest", "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral", "http://www.w3.org/1999/02/22-rdf-syntax-ns#object", "http://www.w3.org/1999/02/22-rdf-syntax-ns#List", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement", "http://www.w3.org/1999/02/22-rdf-syntax-ns#subject", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", "http://www.w3.org/1999/02/22-rdf-syntax-ns#li"
-                };
+            "http://www.w3.org/1999/02/22-rdf-syntax-ns#first", "http://www.w3.org/1999/02/22-rdf-syntax-ns#nil", "http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://www.w3.org/1999/02/22-rdf-syntax-ns#rest", "http://www.w3.org/1999/02/22-rdf-syntax-ns#value", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Property", "http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral", "http://www.w3.org/1999/02/22-rdf-syntax-ns#object", "http://www.w3.org/1999/02/22-rdf-syntax-ns#List", "http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement", "http://www.w3.org/1999/02/22-rdf-syntax-ns#subject", "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString", "http://www.w3.org/1999/02/22-rdf-syntax-ns#li"
+        };
 
     }
 
     private static String[] getRDFSVocURIs() {
         return new String[]{
-                    "http://www.w3.org/2000/01/rdf-schema#subClassOf", "http://www.w3.org/2000/01/rdf-schema#label", "http://www.w3.org/2000/01/rdf-schema#Class", "http://www.w3.org/2000/01/rdf-schema#member", "http://www.w3.org/2000/01/rdf-schema#comment", "http://www.w3.org/2000/01/rdf-schema#Literal", "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://www.w3.org/2000/01/rdf-schema#Resource", "http://www.w3.org/2000/01/rdf-schema#Container", "http://www.w3.org/2000/01/rdf-schema#isDefinedBy", "http://www.w3.org/2000/01/rdf-schema#domain", "http://www.w3.org/2000/01/rdf-schema#subPropertyOf", "http://www.w3.org/2000/01/rdf-schema#Datatype", "http://www.w3.org/2000/01/rdf-schema#range", "http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty"
-                };
+            "http://www.w3.org/2000/01/rdf-schema#subClassOf", "http://www.w3.org/2000/01/rdf-schema#label", "http://www.w3.org/2000/01/rdf-schema#Class", "http://www.w3.org/2000/01/rdf-schema#member", "http://www.w3.org/2000/01/rdf-schema#comment", "http://www.w3.org/2000/01/rdf-schema#Literal", "http://www.w3.org/2000/01/rdf-schema#seeAlso", "http://www.w3.org/2000/01/rdf-schema#Resource", "http://www.w3.org/2000/01/rdf-schema#Container", "http://www.w3.org/2000/01/rdf-schema#isDefinedBy", "http://www.w3.org/2000/01/rdf-schema#domain", "http://www.w3.org/2000/01/rdf-schema#subPropertyOf", "http://www.w3.org/2000/01/rdf-schema#Datatype", "http://www.w3.org/2000/01/rdf-schema#range", "http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty"
+        };
     }
 
     private static String[] getOWLVocURIs() {
         return new String[]{
-                    "http://www.w3.org/2002/07/owl#AllDifferent", "http://www.w3.org/2002/07/owl#allValuesFrom", "http://www.w3.org/2002/07/owl#AnnotationProperty", "http://www.w3.org/2002/07/owl#backwardCompatibleWith", "http://www.w3.org/2002/07/owl#cardinality", "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#complementOf", "http://www.w3.org/2002/07/owl#DatatypeProperty", "http://www.w3.org/2002/07/owl#DeprecatedClass", "http://www.w3.org/2002/07/owl#DeprecatedProperty", "http://www.w3.org/2002/07/owl#differentFrom", "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#distinctMembers", "http://www.w3.org/2002/07/owl#equivalentClass", "http://www.w3.org/2002/07/owl#equivalentProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty", "http://www.w3.org/2002/07/owl#hasValue", "http://www.w3.org/2002/07/owl#imports", "http://www.w3.org/2002/07/owl#incompatibleWith", "http://www.w3.org/2002/07/owl#Individual", "http://www.w3.org/2002/07/owl#intersectionOf", "http://www.w3.org/2002/07/owl#InverseFunctionalProperty", "http://www.w3.org/2002/07/owl#inverseOf", "http://www.w3.org/2002/07/owl#maxCardinality", "http://www.w3.org/2002/07/owl#minCardinality", "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#oneOf", "http://www.w3.org/2002/07/owl#onProperty", "http://www.w3.org/2002/07/owl#Ontology", "http://www.w3.org/2002/07/owl#OntologyProperty", "http://www.w3.org/2002/07/owl#priorVersion", "http://www.w3.org/2002/07/owl#Restriction", "http://www.w3.org/2002/07/owl#sameAs", "http://www.w3.org/2002/07/owl#someValuesFrom", "http://www.w3.org/2002/07/owl#SymmetricProperty", "http://www.w3.org/2002/07/owl#TransitiveProperty", "http://www.w3.org/2002/07/owl#unionOf", "http://www.w3.org/2002/07/owl#versionInfo"
-                };
+            "http://www.w3.org/2002/07/owl#AllDifferent", "http://www.w3.org/2002/07/owl#allValuesFrom", "http://www.w3.org/2002/07/owl#AnnotationProperty", "http://www.w3.org/2002/07/owl#backwardCompatibleWith", "http://www.w3.org/2002/07/owl#cardinality", "http://www.w3.org/2002/07/owl#Class", "http://www.w3.org/2002/07/owl#complementOf", "http://www.w3.org/2002/07/owl#DatatypeProperty", "http://www.w3.org/2002/07/owl#DeprecatedClass", "http://www.w3.org/2002/07/owl#DeprecatedProperty", "http://www.w3.org/2002/07/owl#differentFrom", "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#distinctMembers", "http://www.w3.org/2002/07/owl#equivalentClass", "http://www.w3.org/2002/07/owl#equivalentProperty", "http://www.w3.org/2002/07/owl#FunctionalProperty", "http://www.w3.org/2002/07/owl#hasValue", "http://www.w3.org/2002/07/owl#imports", "http://www.w3.org/2002/07/owl#incompatibleWith", "http://www.w3.org/2002/07/owl#Individual", "http://www.w3.org/2002/07/owl#intersectionOf", "http://www.w3.org/2002/07/owl#InverseFunctionalProperty", "http://www.w3.org/2002/07/owl#inverseOf", "http://www.w3.org/2002/07/owl#maxCardinality", "http://www.w3.org/2002/07/owl#minCardinality", "http://www.w3.org/2002/07/owl#ObjectProperty", "http://www.w3.org/2002/07/owl#oneOf", "http://www.w3.org/2002/07/owl#onProperty", "http://www.w3.org/2002/07/owl#Ontology", "http://www.w3.org/2002/07/owl#OntologyProperty", "http://www.w3.org/2002/07/owl#priorVersion", "http://www.w3.org/2002/07/owl#Restriction", "http://www.w3.org/2002/07/owl#sameAs", "http://www.w3.org/2002/07/owl#someValuesFrom", "http://www.w3.org/2002/07/owl#SymmetricProperty", "http://www.w3.org/2002/07/owl#TransitiveProperty", "http://www.w3.org/2002/07/owl#unionOf", "http://www.w3.org/2002/07/owl#versionInfo"
+        };
     }
 
     /**
@@ -301,35 +295,16 @@ public class GraphActionExecutor {
      * @param toRemove set of strings corresponding to the URIs to remove
      * @param g the graph in which the treatment require to be performed.
      */
-    private static void removeVocURIs(DataFactory factory, String[] toRemove, G g) {
+    private static void removeVocURIs(URIFactory factory, String[] toRemove, G g) {
 
         for (String s : toRemove) {
-            V v = g.getV(factory.createURI(s));
-            if (v != null) {
-                g.removeV(v);
-            }
+            g.removeV(factory.createURI(s));
         }
     }
 
-    private static void type_vertices(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+    
 
-        logger.debug("Start Typing vertices");
-
-        TypeInferencer inf = new TypeInferencer();
-        boolean complete = inf.inferTypes(g, false);
-
-        String fails = (String) action.getParameter("stopfail");
-
-        if (fails != null) {
-            if (Util.stringToBoolean(fails) && !complete) {
-                throw new SLIB_Ex_Critic("Type inferencer fails to resolve all types...");
-            }
-        }
-
-        logger.debug("End Typing vertices");
-    }
-
-    private static void rerooting(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+    private static void rerooting(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 
         logger.info("Rerooting");
@@ -343,24 +318,24 @@ public class GraphActionExecutor {
 
         if (rootURIstring == null) {
             rootURI = SLIBVOC.THING_OWL;
-            g.createVertex(rootURI);
+            g.addV(rootURI);
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
-            
+
         } else if (rootURIstring.equals(SGLIBcst.FICTIVE_ROOT_FLAG)) {
             rootURI = SLIBVOC.THING_OWL;
-            g.createVertex(rootURI);
+            g.addV(rootURI);
         } else {
             rootURI = factory.createURI(rootURIstring);
         }
 
-        if (g.getV(rootURI) == null) {
+        if (!g.containsVertex(rootURI)) {
             throw new SLIB_Ex_Critic("Cannot resolve specified root:" + rootURI);
         } else {
             RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
         }
     }
 
-    private static void transitive_reduction(DataFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+    private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
 
         String target = (String) action.getParameter("target");
 
@@ -388,6 +363,8 @@ public class GraphActionExecutor {
         int invalidInstanceNb = 0;
         int annotNbBase = 0;
         int annotDeleted = 0;
+        
+        Set<URI> instances = GraphAccessor.getInstances(g);
 
         logger.info("Cleaning RDF.TYPE of " + g.getURI());
         System.out.println(g);
@@ -395,11 +372,10 @@ public class GraphActionExecutor {
         RVF_TAX rvf = new RVF_TAX(g, Direction.IN);
 
         // Retrieve descendants for all vertices
-        Map<V, Set<V>> descs = rvf.getAllRVClass();
+        Map<URI, Set<URI>> descs = rvf.getAllRVClass();
 
-        Set<V> entities = g.getV(VType.INSTANCE);
 
-        for (V instance : entities) {
+        for (URI instance : instances) {
 
             HashSet<E> redundants = new HashSet<E>();
             Set<E> eToclasses = g.getE(RDF.TYPE, instance, Direction.OUT);
@@ -421,7 +397,7 @@ public class GraphActionExecutor {
                 }
             }
 
-            if (redundants.size() != 0) {
+            if (!redundants.isEmpty()) {
                 g.removeE(redundants);
                 invalidInstanceNb++;
                 annotDeleted += redundants.size();
@@ -429,8 +405,8 @@ public class GraphActionExecutor {
         }
 
         double invalidInstanceP = 0;
-        if (entities.size() > 0) {
-            invalidInstanceP = invalidInstanceNb * 100 / entities.size();
+        if (instances.size() > 0) {
+            invalidInstanceP = invalidInstanceNb * 100 / instances.size();
         }
 
         double annotDelP = 0;
@@ -438,7 +414,7 @@ public class GraphActionExecutor {
             annotDelP = annotDeleted * 100 / annotNbBase;
         }
 
-        logger.info("Number of instance containing abnormal annotation: " + invalidInstanceNb + "/" + entities.size() + "  i.e. (" + invalidInstanceP + "%)");
+        logger.info("Number of instance containing abnormal annotation: " + invalidInstanceNb + "/" + instances.size() + "  i.e. (" + invalidInstanceP + "%)");
         logger.info("Number of annotations: " + annotNbBase + ", deleted: " + annotDeleted + " (" + (annotDelP) + "%), current annotation number " + (annotNbBase - annotDeleted));
 
 
@@ -451,7 +427,7 @@ public class GraphActionExecutor {
      * @param g
      * @throws SLIB_Ex_Critic
      */
-    public static void applyActions(DataFactory factory, List<GAction> actions, G g) throws SLIB_Ex_Critic {
+    public static void applyActions(URIFactory factory, List<GAction> actions, G g) throws SLIB_Ex_Critic {
 
         for (GAction action : actions) {
 

@@ -34,13 +34,13 @@
  */
 package slib.sml.sm.core.metrics.ic.annot;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Corpus;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -55,11 +55,10 @@ public class IC_probOccurence_propagatted extends LogBasedMetric implements ICco
      * @return
      * @throws SLIB_Exception
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> NbOccurrenceAnnotPropagatted) throws SLIB_Exception {
+    public Map<URI, Double> compute(Map<URI, Integer> NbOccurrenceAnnotPropagatted) throws SLIB_Exception {
 
         return ProbOccurence.compute(NbOccurrenceAnnotPropagatted, 0);
     }
-
 
     /**
      *
@@ -69,7 +68,7 @@ public class IC_probOccurence_propagatted extends LogBasedMetric implements ICco
      * @throws SLIB_Exception
      */
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
+    public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);
         return compute(manager.getNbInstancesInferredPropFromCorpus());
     }

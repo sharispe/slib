@@ -39,7 +39,7 @@ import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -60,7 +60,7 @@ public class TestUtils {
         System.out.println("Loading graph:::");
         
         GraphConf conf = new GraphConf();
-        conf.setUri(DataFactoryMemory.getSingleton().createURI("http://example/"));
+        conf.setUri(URIFactoryMemory.getSingleton().createURI("http://example/"));
         conf.addGDataConf(new GDataConf(gFormat, filePath));
         
         System.out.println("Loading :::");

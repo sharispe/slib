@@ -35,7 +35,7 @@
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -51,10 +51,11 @@ public class Sim_groupwise_Average extends Sim_groupwise_general_abstract {
 
     /**
      * Compute the average of the values stored in the given matrix.
+     *
      * @param mat
      * @return the average of the matrix values
      */
-    public double computeAverage(MatrixDouble<V, V> mat) {
+    public double computeAverage(MatrixDouble<URI, URI> mat) {
 
         double sum = 0;
         int c = 0;
@@ -71,13 +72,14 @@ public class Sim_groupwise_Average extends Sim_groupwise_general_abstract {
     }
 
     /**
-     * Compute the average of the scores obtained comparing the two sets of concepts.
-     * Note that the measure is expected to be symmetric i.e. sim(a,b) is expected to be equal to sim(b,a)
+     * Compute the average of the scores obtained comparing the two sets of
+     * concepts. Note that the measure is expected to be symmetric i.e. sim(a,b)
+     * is expected to be equal to sim(b,a)
      */
     @Override
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
-        MatrixDouble<V, V> results_setA = rc.getMatrixScore(setA, setB, conf);
+        MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
 
         double score = computeAverage(results_setA);
 

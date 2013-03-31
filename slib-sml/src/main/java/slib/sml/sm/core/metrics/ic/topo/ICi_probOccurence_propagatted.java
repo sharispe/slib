@@ -34,13 +34,12 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  * ICi_resnik_1995
@@ -67,13 +66,13 @@ public class ICi_probOccurence_propagatted implements ICtopo {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> allNbPathLeadingToAllVertex) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> allNbPathLeadingToAllVertex) throws SLIB_Ex_Critic {
 
         return ProbOccurence.compute(allNbPathLeadingToAllVertex, 0);
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
         return compute(manager.getnbPathLeadingToAllVertex());
     }

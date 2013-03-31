@@ -40,9 +40,6 @@ package slib.tools.smltoolkit.sm.cli.utils;
  */
 public class ThreadResultsQueryLoader {
 
-    /**
-     *
-     */
     public StringBuilder buffer;
     int skipped = 0;
     int setValue = 0;

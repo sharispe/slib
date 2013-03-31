@@ -35,7 +35,8 @@
 package slib.sglib.test.algo.graph;
 
 import org.openrdf.model.URI;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -51,7 +52,7 @@ public class SLIB_UnitTestValues {
     /**
      *
      */
-    public static final String G_DAG_BASIC = path + "sgl/g.sgl";
+    public static final String G_DAG_BASIC = path + "sgl/g.rdf";
     /**
      *
      */
@@ -59,7 +60,7 @@ public class SLIB_UnitTestValues {
     /**
      *
      */
-    public static final URI uriGraph = DataFactoryMemory.getSingleton().createURI("http://g/");
+    public static final URI uriGraph = URIFactoryMemory.getSingleton().createURI("http://g/");
     /**
      *
      */
@@ -144,7 +145,7 @@ public class SLIB_UnitTestValues {
      *
      */
     public int G_DAG_BASIC_MAX_DEPTH = 8;
-    DataFactoryMemory data = DataFactoryMemory.getSingleton();
+    URIFactoryMemory data = URIFactoryMemory.getSingleton();
 
     /**
      *

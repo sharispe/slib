@@ -37,21 +37,6 @@ package slib.sml.sm.core.utils;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_3W_Jaccard;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Commonalities;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Dice_1945;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Jaccard_1901;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Nei_Li;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Sokal_Sneath_I;
-import slib.sml.sm.core.measures.framework.core.measures.impl.Sim_Framework_Tversky_1977;
-import slib.sml.sm.core.measures.framework.impl.set.GraphRepresentationAsSet;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_IC;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_ICA_Grasm;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_ICA_Grasm_IC;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_MAX_IC;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_MICA;
-import slib.sml.sm.core.measures.framework.impl.set.OperatorsSet_MICA_IC;
 import slib.sml.sm.core.measures.graph.framework.dag.Sim_Framework_DAG_Set_Bader_2003;
 import slib.sml.sm.core.measures.graph.framework.dag.Sim_Framework_DAG_Set_Batet_2010;
 import slib.sml.sm.core.measures.graph.framework.dag.Sim_Framework_DAG_Set_Braun_Blanquet_1932;
@@ -117,11 +102,10 @@ import slib.sml.sm.core.measures.others.pairwise.Sim_pairwise_Random;
 import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995;
 import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995_Normalized;
 import slib.sml.sm.core.metrics.ic.annot.IC_probOccurence_propagatted;
-import slib.sml.sm.core.metrics.ic.annot.IDF;
 import slib.sml.sm.core.metrics.ic.topo.ICi_ancestors_norm;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_max_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_min_nonlinear;
-//import slib.sml.sm.core.metrics.ic.topo.ICi_mazandu_2012;
+import slib.sml.sm.core.metrics.ic.topo.ICi_harispe_2012;
 import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence;
 import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence_propagatted;
 import slib.sml.sm.core.metrics.ic.topo.ICi_resnik_1995;
@@ -141,112 +125,7 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
  */
 public final class SMConstants {
 
-    //-------------------------------------------------------------------------------
-    // Framework
-    //-------------------------------------------------------------------------------
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_COMMONALITIES = Sim_Framework_Commonalities.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_JACCARD_1901 = Sim_Framework_Jaccard_1901.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_DICE_1945 = Sim_Framework_Dice_1945.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_TVERSKY_1977 = Sim_Framework_Tversky_1977.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_3W_JACCARD_1901 = Sim_Framework_3W_Jaccard.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_NEI_LI = Sim_Framework_Nei_Li.class.getName();
-    /**
-     *
-     */
-    public static final String SIM_FRAMEWORK_SOKAL_SNEATH_I = Sim_Framework_Sokal_Sneath_I.class.getName();
-    /**
-     *
-     */
-    public static final Map<String, String> SIM_FRAMEWORK = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("SIM_FRAMEWORK_COMMONALITIES", SIM_FRAMEWORK_COMMONALITIES);
-            put("SIM_FRAMEWORK_JACCARD_1901", SIM_FRAMEWORK_JACCARD_1901);
-            put("SIM_FRAMEWORK_DICE_1945", SIM_FRAMEWORK_DICE_1945);
-            put("SIM_FRAMEWORK_TVERSKY_1977", SIM_FRAMEWORK_TVERSKY_1977);
-
-            put("SIM_FRAMEWORK_3W_JACCARD_1901", SIM_FRAMEWORK_3W_JACCARD_1901);
-            put("SIM_FRAMEWORK_NEI_LI", SIM_FRAMEWORK_NEI_LI);
-            put("SIM_FRAMEWORK_SOKAL_SNEATH_I", SIM_FRAMEWORK_SOKAL_SNEATH_I);
-        }
-    };
-    /**
-     *
-     */
-    public static final String SET_DAG = GraphRepresentationAsSet.class.getName();
-    /**
-     *
-     */
-    public static final Map<String, String> representation = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("SET_DAG", SET_DAG);
-        }
-    };
-    /**
-     *
-     */
-    public static final String OPERATOR_SET = OperatorsSet.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_ICA_GRASM = OperatorsSet_ICA_Grasm.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_MICA = OperatorsSet_MICA.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_MAX_IC = OperatorsSet_MAX_IC.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_IC = OperatorsSet_IC.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_ICA_GRASM_IC = OperatorsSet_ICA_Grasm_IC.class.getName();
-    /**
-     *
-     */
-    public static final String OPERATOR_SET_MICA_IC = OperatorsSet_MICA_IC.class.getName();
-    /**
-     *
-     */
-    public static final Map<String, String> operators = new HashMap<String, String>() {
-        private static final long serialVersionUID = 1L;
-
-        {
-            put("SET", OPERATOR_SET);
-            put("SET_MAX_IC", OPERATOR_SET_MAX_IC);
-            put("SET_IC", OPERATOR_SET_IC);
-            put("SET_ICA_GRASM", OPERATOR_SET_ICA_GRASM);
-            put("SET_ICA_GRASM_IC", OPERATOR_SET_ICA_GRASM_IC);
-            put("SET_MICA", OPERATOR_SET_MICA);
-            put("SET_MICA_IC", OPERATOR_SET_MICA_IC);
-        }
-    };
+    
     //-------------------------------------------------------------------------------
     // Framework Set implementation
     //-------------------------------------------------------------------------------
@@ -508,7 +387,6 @@ public final class SMConstants {
             putAll(SIM_GROUPWISE_ADD_ON);
             putAll(SIM_GROUPWISE_DAG);
             putAll(SIM_GROUPWISE_OTHERS);
-            putAll(SIM_FRAMEWORK);
         }
     };
     /**
@@ -660,6 +538,8 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_ICI_SECO_2004 = "ICI_SECO_2004";
+    
+    public static final String FLAG_ICI_HARISPE_2012 = "ICI_HARISPE_2012";
     /**
      *
      */
@@ -729,6 +609,8 @@ public final class SMConstants {
      *
      */
     public static final String ICI_ZHOU_2008 = ICi_zhou_2008.class.getName();
+    
+    public static final String ICI_HARISPE_2012 = ICi_harispe_2012.class.getName();
     /**
      *
      */
@@ -758,10 +640,6 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String IC_ANNOT_IDF = IDF.class.getName();
-    /**
-     *
-     */
     public static final String IC_ANNOT_RESNIK_1995_NORMALIZED = IC_annot_resnik_1995_Normalized.class.getName();
     /**
      *
@@ -780,6 +658,7 @@ public final class SMConstants {
             put(FLAG_ICI_SANCHEZ_2011_b, ICI_SANCHEZ_2011_b);
             put(FLAG_ICI_SECO_2004, ICI_SECO_2004);
             put(FLAG_ICI_ZHOU_2008, ICI_ZHOU_2008);
+            put(FLAG_ICI_HARISPE_2012, ICI_HARISPE_2012);
             put(FLAG_ICI_DEPTH_MAX_NONLINEAR, ICI_DEPTH_MAX_NONLINEAR);
             put(FLAG_ICI_DEPTH_MIN_NONLINEAR, ICI_DEPTH_MIN_NONLINEAR);
             put(FLAG_ICI_PROB_OCCURENCE, ICI_PROB_OCCURENCE);
@@ -1044,7 +923,6 @@ public final class SMConstants {
             putAll(SIM_PAIRWISE_DAG_NODE_BASED);
             putAll(SIM_PAIRWISE_DAG_HYBRID_BASED);
             putAll(SIM_FRAMEWORK_DAG_SET_BASED);
-            putAll(SIM_FRAMEWORK);
         }
     };
     /**

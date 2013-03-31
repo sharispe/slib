@@ -40,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
@@ -50,8 +51,7 @@ import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
@@ -71,7 +71,7 @@ public class Test_GraphReduction_Transitive {
      * @throws SLIB_Exception
      */
     public Test_GraphReduction_Transitive() throws SLIB_Exception {
-        g = TestUtils.loadTestGraph(GFormat.SGL, SLIB_UnitTestValues.G_DAG_BASIC);
+        g = TestUtils.loadTestGraph(GFormat.NTRIPLES, SLIB_UnitTestValues.G_DAG_BASIC);
     }
 
     /**
@@ -88,10 +88,7 @@ public class Test_GraphReduction_Transitive {
 
         assertTrue(removedEdges.isEmpty());
 
-        V a = g.getV(test.G_BASIC_SPIDERMAN);
-        V b = g.getV(test.G_BASIC_ORGANISM);
-
-        g.addE(a, b, RDFS.SUBCLASSOF);
+        g.addE(test.G_BASIC_SPIDERMAN, RDFS.SUBCLASSOF, test.G_BASIC_ORGANISM);
 
         removedEdges = GraphReduction_Transitive.process(g);
 
@@ -105,10 +102,10 @@ public class Test_GraphReduction_Transitive {
             }
         }
 
-        assertTrue(er.getSource().equals(a) && er.getTarget().equals(b));
+        assertTrue(er.getSource().equals(test.G_BASIC_SPIDERMAN) && er.getTarget().equals(test.G_BASIC_ORGANISM));
 
 
-        g.addE(g.getV(test.G_BASIC_ORGANISM), g.getV(test.G_BASIC_THING), RDFS.SUBCLASSOF);
+        g.addE(test.G_BASIC_ORGANISM, RDFS.SUBCLASSOF, test.G_BASIC_THING);
 
         removedEdges = GraphReduction_Transitive.process(g);
         System.out.println(removedEdges);
@@ -124,7 +121,7 @@ public class Test_GraphReduction_Transitive {
 
         String gofilePath = SLIB_UnitTestValues.G_GO;
 
-        DataFactoryMemory.getSingleton().loadNamespacePrefix("GO", "http://GO#");
+        URIFactoryMemory.getSingleton().loadNamespacePrefix("GO", "http://GO#");
         GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
 
         GraphConf gconf = new GraphConf();
@@ -160,14 +157,15 @@ public class Test_GraphReduction_Transitive {
         // Get all ancestors 
 
         AncestorEngine rvf = new AncestorEngine(g);
-        Map<V, Set<V>> ancestorsMap = rvf.getAllRVClass();
+        Map<URI, Set<URI>> ancestorsMap = rvf.getAllRVClass();
 
         // we check the root do not contains ancestors
-        V root = g.getV(root_uri);
-        assertTrue(ancestorsMap.get(root).isEmpty());
+        
+        assertTrue(ancestorsMap.get(root_uri).isEmpty());
         
         DescendantEngine rvd = new DescendantEngine(g);
-        assertTrue(rvd.getDescendantsExc(root).size() == g.getVClass().size()-1);
+        Set<URI> classes = GraphAccessor.getClasses(g);
+        assertTrue(rvd.getDescendantsExc(root_uri).size() == classes.size()-1);
 
         /*
          * We check all remove edges can be inferred
@@ -179,8 +177,8 @@ public class Test_GraphReduction_Transitive {
 
             if (e.getURI().equals(RDFS.SUBCLASSOF)) {
 
-                V v = (V) e.getSource();
-                V inferableAncestor = e.getTarget();
+                URI v = e.getSource();
+                URI inferableAncestor = e.getTarget();
                 if (!ancestorsMap.get(v).contains(inferableAncestor)) {
                     valid = false;
                     System.out.println(e + " was removed but cannot be infered");

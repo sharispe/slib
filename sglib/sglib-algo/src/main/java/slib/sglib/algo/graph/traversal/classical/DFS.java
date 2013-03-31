@@ -39,12 +39,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.impl.SetUtils;
 
@@ -64,10 +64,10 @@ public class DFS implements GraphTraversal {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     G g;
-    Set<V> sources;
-    HashMap<V, Boolean> coloredVertex;
+    Set<URI> sources;
+    HashMap<URI, Boolean> coloredVertex;
     private WalkConstraints wc;
-    List<V> topoSort;
+    List<URI> topoSort;
     int current_id = 0;
     boolean removePerformed = false;
 
@@ -75,7 +75,7 @@ public class DFS implements GraphTraversal {
      * Create a DFS iterator, note that DFS is performed at instance creation.
      * The resulting topological sort can be accessed through
      */
-    public DFS(G g, Set<V> sources, WalkConstraints wc) {
+    public DFS(G g, Set<URI> sources, WalkConstraints wc) {
         this.g = g;
         this.sources = sources;
         this.wc = wc;
@@ -86,22 +86,22 @@ public class DFS implements GraphTraversal {
      * Shortcut of {@link DFS#DFS(G, Set, Set)}
      *
      */
-    public DFS(G g, V source, WalkConstraints wc) {
+    public DFS(G g, URI source, WalkConstraints wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
 
     
     private void init() {
 
-        this.coloredVertex = new HashMap<V, Boolean>();
-        this.topoSort = new ArrayList<V>();
+        this.coloredVertex = new HashMap<URI, Boolean>();
+        this.topoSort = new ArrayList<URI>();
 
 
         if (logger.isDebugEnabled()) { // avoid large debug information
             String sources_s = "";
             if (sources.size() > 10) {
                 int l = 0;
-                for (V v : sources) {
+                for (URI v : sources) {
                     sources_s += "\t" + v;
                     l++;
                     if (l == 10) {
@@ -117,7 +117,7 @@ public class DFS implements GraphTraversal {
         }
 
         logger.debug("Start DFS");
-        for (V r : sources) {
+        for (URI r : sources) {
             performDFS(r);
         }
 
@@ -126,7 +126,7 @@ public class DFS implements GraphTraversal {
 
     }
 
-    private void performDFS(V v) {
+    private void performDFS(URI v) {
 
         if (!coloredVertex.containsKey(v)) {
 
@@ -162,7 +162,7 @@ public class DFS implements GraphTraversal {
      * @return
      */
     @Override
-    public V next() {
+    public URI next() {
         removePerformed = false;
         current_id--;
         return topoSort.get(current_id + 1);
@@ -177,7 +177,7 @@ public class DFS implements GraphTraversal {
      * @return the data structure on which the iterator relies i.e. precomputed
      * topological ordering as an {@link ArrayList} of {@link V}
      */
-    public List<V> getTraversalOrder() {
+    public List<URI> getTraversalOrder() {
         return topoSort;
     }
 }

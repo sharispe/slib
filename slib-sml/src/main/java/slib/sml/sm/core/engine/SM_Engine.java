@@ -35,6 +35,7 @@
 package slib.sml.sm.core.engine;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -42,37 +43,28 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.metric.DepthAnalyserAG;
+import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.algo.graph.shortest_path.Dijkstra;
 import slib.sglib.algo.graph.traversal.classical.DFS;
-import slib.sglib.algo.graph.utils.RooterDAG;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.measures.Sim_Pairwise;
-import slib.sml.sm.core.measures.framework.core.engine.GraphRepresentation;
-import slib.sml.sm.core.measures.framework.core.engine.RepresentationOperators;
-import slib.sml.sm.core.measures.framework.core.measures.Sim_FrameworkAbstracted;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.metrics.ic.annot.ICcorpus;
 import slib.sml.sm.core.metrics.ic.topo.ICtopo;
@@ -83,67 +75,118 @@ import slib.sml.sm.core.metrics.ic.utils.IcUtils;
 import slib.sml.sm.core.metrics.vector.VectorWeight_Chabalier_2007;
 import slib.sml.sm.core.utils.LCAFinder;
 import slib.sml.sm.core.utils.LCAFinderImpl;
-import slib.sml.sm.core.utils.OperatorConf;
-import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.MatrixDouble;
-import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
- * This class is used to facilitate the access of commonly required methods for
- * SMs computation. Depending on the tuning of the engine some caching systems
- * can be taken into account in order to boost some processes by avoiding to
- * recompute some results.
+ * This class defines a Semantic Measures Engine giving access to numerous
+ * methods commonly used to define graph-based semantic measures.
+ *
+ * The engine distinguished two types of vertices in the graph:
+ * <ul>
+ * <li>
+ * Classes: vertices corresponding to classes as defined by
+ * {@link GraphAccessor}. In short, classes are the vertices composing the
+ * taxonomic graph included in the given graph. In most cases the graph only
+ * contains vertices associated to classes.
+ * </li>
+ * <li>
+ * Instances: vertices corresponding to instances as defined by
+ * {@link GraphAccessor}. Those instances are the vertices which are typed by
+ * classes.
+ * </li>
+ * </ul>
+ * More information between classes and instances can be found in the web site
+ * of the library.
+ *
+ * Notice that this documentation to refer to classes and instances even if the
+ * underlying object referring to them in the graph are URIs. Please, consider
+ * that we refer to the classes/instances identified by the URIs.
+ *
+ * Accesses to ancestors/parents and descendants are only constrained by the
+ * partial ordering defined by the RDFS.SUBCLASSOF relationships. As an example
+ * an ancestors is any class which is link by a path composed of RDFS.SUBCLASSOF
+ * relationships.
+ *
+ * <b>Important</b>:<br/>
+ * Note that the graph associated to the engine is expected to be immutable even
+ * if this condition will not be checked during the process. Indeed, the engine
+ * expects the graph not to be modified and will not work on a copy of the given
+ * graph. The engine stores some results to ensure performances, as a conclusion
+ * coherency of results will be impacted if the graph is modified next to engine
+ * construction.
+ *
+ * Some methods provided by the class expect the underlying taxonomic graph to
+ * be transitively reduced. In other words if z is a sub class of y and y is a
+ * sub class of x an edge z is a sub class of x is not expected. As an example
+ * this is important to ensure coherency of parent retrieval. Such transitive
+ * reduction can be performed though the {@link GraphReduction_Transitive} class
+ * or even more easily using the {@link GraphActionExecutor} class.
+ *
+ * The engine stores commonly accessed results (e.g. ancestors of a class) which
+ * can lead to high memory consumption dealing with large graphs.
  *
  * @author Harispe Sébastien
- *
  */
 public class SM_Engine {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataFactory factory = DataFactoryMemory.getSingleton();
     final G graph;
-    AncestorEngine   ancGetter;
+    AncestorEngine ancGetter;
     DescendantEngine descGetter;
-    
-    LCAFinder dcaFinder;
-    
-    
-    V root = null;
+    LCAFinder lcaFinder;
+    Set<URI> classes;
+    Set<URI> classesLeaves;
+    Set<URI> instances;
+    URI root = null;
     SMProxResultStorage cache;
     boolean cachePairwiseResults = false;
     /**
-     * TODO Move to {@link GWS}
+     * TODO Replace by {@link GWS}
      */
-    ResultStack<V, Double> vectorWeights = null;
-
+    Map<URI, Double> vectorWeights = null;
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
-    ResultStack<V, Double> allNbReachableLeaves;
+    
 
     /**
+     * Constructor of an engine associated to the given graph.
      *
-     * @param validatorDag
-     * @param g
-     * @param setEtypes_a
+     * Note that the engine expects the graph not to be modified and coherency
+     * of results are only ensured in this case. Please refer to the general
+     * documentation of the class for more information considering this specific
+     * restriction.
+     *
+     * The engine creation is expensive, avoid useless calls to the constructor.
+     * Indeed, some information such as classes and instances of the graph are
+     * computed at engine creation which could lead to performance issues
+     * dealing with large graph.
+     *
+     * @param graph the graph associated to the engine.
      * @throws SLIB_Ex_Critic
      */
     public SM_Engine(G g) throws SLIB_Ex_Critic {
 
         this.graph = g;
 
-        ancGetter = new AncestorEngine(g);
-        descGetter = new DescendantEngine(g);
+        logger.info("Loading Semantic Measures Engine for graph " + graph.getURI());
+        logger.info(g.toString());
 
-        init();
-    }
+        ancGetter = new AncestorEngine(graph);
+        descGetter = new DescendantEngine(graph);
 
-    private void init() throws SLIB_Ex_Critic {
+        logger.info("Computing classes");
+        classes = GraphAccessor.getClasses(graph);
+        logger.info("Computing instances");
+        instances = GraphAccessor.getInstances(graph);
+
+        logger.info("Classes  : " + classes.size());
+        logger.info("Instances: " + instances.size());
 
         cache = new SMProxResultStorage();
         pairwiseMeasures = new ConcurrentHashMap<SMconf, Sim_Pairwise>();
@@ -151,115 +194,114 @@ public class SM_Engine {
         groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
         groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
 
-        dcaFinder = new LCAFinderImpl();
+        lcaFinder = new LCAFinderImpl();
+
+        logger.info("Infering ancestors");
+        computeAllclassesAncestors();
+        logger.info("Infering descendants");
+        computeAllclassesDescendants();
+        computeLeaves();
     }
 
-    
+    private void computeAllclassesAncestors() throws SLIB_Ex_Critic {
+        cache.ancestorsInc = ancGetter.getAllAncestorsInc();
+    }
+
+    private void computeAllclassesDescendants() throws SLIB_Ex_Critic {
+        cache.descendantsInc = descGetter.getAllDescendantsInc();
+    }
 
     /**
-     * Compute the union of the inclusive ancestors of a set of classes
+     * Compute the union of the inclusive ancestors of a set of classes.
      *
-     * NOT_CACHED
+     * The given classes are included in the result (inclusive). This process
+     * can be computationally expensive if the number of ancestors is important.
+     * The result is not cached by the engine.
      *
      * @param setClasses the set of classes considered
      * @return the union of the inclusive ancestors of the given classes
+     * @throws IllegalAccessException if the given set contains an URI which
+     * cannot be associated to a class
      */
-    public Set<V> getAncestorsInc(Set<V> setClasses) {
+    public Set<URI> getAncestorsInc(Set<URI> setClasses) {
 
-        Set<V> unionAnc = new HashSet<V>();
+        throwErrorIfNotClass(setClasses);
 
-        for (V v : setClasses) {
-            unionAnc = SetUtils.union(unionAnc, getAncestorsInc(v));
+        Set<URI> unionAnc = new HashSet<URI>();
+
+        for (URI v : setClasses) {
+            unionAnc.addAll(getAncestorsInc(v));
         }
         return unionAnc;
     }
 
     /**
-     * Return inclusive ancestors of a class as a set of vertices i.e v its
-     * exclusive ancestors.
+     * Compute the inclusive ancestors of a class.
      *
-     * CACHED
+     * The given class will therefore be include in the results. The result is
+     * cached by the engine for fast access.
      *
      * @param v the considered class
-     * @return the set of inclusive ancestors of the given class
+     * @return the set of inclusive ancestors of the given class (v included)
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
-    public Set<V> getAncestorsInc(V v) {
+    public Set<URI> getAncestorsInc(URI v) {
 
-        if (cache.ancestors.get(v) == null) {
-            Set<V> anc = ancGetter.getAncestorsExc(v);
-            anc.add(v);
-            cache.ancestors.put(v, anc);
-        }
-        return cache.ancestors.get(v);
+        throwErrorIfNotClass(v);
+        return cache.ancestorsInc.get(v);
     }
 
     /**
-     * Get the parents of a vertex. A parent is a concept which is of type
-     * {@link VType#CLASS}.
+     * Compute the inclusive descendants of a class.
+     *
+     * The given class will therefore be include in the results. The result is
+     * cached by the engine for fast access.
+     *
+     * @param v the considered class
+     * @return the set of inclusive descendants of the given class (v included)
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
+     */
+    public synchronized Set<URI> getDescendantsInc(URI v) {
+        throwErrorIfNotClass(v);
+        return cache.descendantsInc.get(v);
+    }
+
+    /**
+     * Get the parents of a class, that is to say its direct ancestors.
+     *
+     * <b>Important:<b/><br/>
+     * The direct parent of a class are all classes x linked to the given class
+     * c to a an edge x RDFS.SUBLASSOF c. The result is not cached by the
+     * engine. To ensure result coherency the underlying requires to be
+     * transitively reduced, refer to the class documentation for more
+     * information.
      *
      * @param v the focus vertex
-     * @return the set of parent of the given vertex
+     * @return the set of parents of the given vertex
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
-    public Set<V> getParents(V v) {
+    public Set<URI> getParents(URI v) {
 
-        Set<V> parents = graph.getV(v, ancGetter.getWalkConstraint());
+        throwErrorIfNotClass(v);
+
+        Set<URI> parents = graph.getV(v, ancGetter.getWalkConstraint());
         return parents;
     }
 
     /**
-     * Compute disjoint ancestors. TO OPTIMIZE
+     * Compute the maximal depth of all classes. The result is stored by the
+     * engine.
      *
-     * @param c1
-     * @param c2
-     * @return a set containing disjoint ancestors as a set of vertices
-     */
-    public Set<V> getDisjointCommonAncestors(V c1, V c2) {
-
-        Set<V> ancC1 = getAncestorsInc(c1);
-        Set<V> ancC2 = getAncestorsInc(c2);
-
-        Set<V> commonAncs = SetUtils.intersection(ancC1, ancC2);
-
-        // search for disjoint ancestors
-
-        Map<V, Set<V>> ancestorsMapping = new HashMap<V, Set<V>>();
-
-        for (V v : commonAncs) {
-            ancestorsMapping.put(v, getAncestorsInc(v));
-        }
-
-        Set<V> disjointAncs = new HashSet<V>();
-
-        for (Entry<V, Set<V>> entry : ancestorsMapping.entrySet()) {
-
-            Set<V> anc = entry.getValue();
-            boolean valid = true;
-
-            for (Entry<V, Set<V>> entry2 : ancestorsMapping.entrySet()) {
-
-                if (!(entry2.getKey().equals(entry.getKey())) && entry2.getValue().containsAll(anc)) {
-                    //logger.debug(entry2.getKey()+" contains "+entry.getKey());
-                    valid = false;
-                    break;
-                }
-            }
-            if (valid) {
-                disjointAncs.add(entry.getKey());
-            }
-        }
-        return disjointAncs;
-    }
-
-    /**
-     * CACHED
-     *
-     * @return a resultStack containing the maximal depths
+     * @return a resultStack containing the maximal depths for all classes
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Integer> getMaxDepths() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getMaxDepths() throws SLIB_Ex_Critic {
 
         if (cache.maxDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, descGetter.getWalkConstraint());
             cache.maxDepths = dephtAnalyser.getVMaxDepths();
         }
 
@@ -267,33 +309,41 @@ public class SM_Engine {
     }
 
     /**
-     * CACHED
+     * Compute the minimal depth of all classes. The result is stored by the
+     * engine.
      *
-     * @return a resultStack containing the minimal depths
+     * @return a resultStack containing the maximal depths for all classes
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Integer> getMinDepths() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getMinDepths() throws SLIB_Ex_Critic {
 
         if (cache.minDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(factory, graph, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, descGetter.getWalkConstraint());
             cache.minDepths = dephtAnalyser.getVMinDepths();
         }
-
         return cache.minDepths;
     }
 
     /**
-     * CACHED
+     * Get the Information Content of a class. The information content to
+     * considered is defined by the given configuration.
      *
-     * @param icConf
-     * @param v
-     * @return the information content of the specified vertex.
+     * @param icConf The configuration of the information content
+     * @param v the class
+     * @return the information content of the specified class according to the
+     * specified configuration.
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      * @throws SLIB_Exception
+     *
      */
-    public double getIC(ICconf icConf, V v) throws SLIB_Exception {
+    public double getIC(ICconf icConf, URI v) throws SLIB_Exception {
+
+        throwErrorIfNotClass(v);
 
         if (icConf == null) {
             throw new SLIB_Ex_Critic("Specified IC cannot be null");
+        } else if (!classes.contains(v)) {
         }
 
         if (cache.metrics_results.get(icConf) == null) {
@@ -304,7 +354,7 @@ public class SM_Engine {
     }
 
     /**
-     * CACHED
+     * Access to the maximal depth of a class in the underlying taxonomic graph.
      *
      * @return the maximal depth of the graph.
      * @throws SLIB_Exception
@@ -312,189 +362,45 @@ public class SM_Engine {
     public int getMaxDepth() throws SLIB_Exception {
 
         if (cache.maxDepth == null) {
-
-            ResultStack<V, Integer> maxDepths = getMaxDepths();
-
-            int maxDepth = 0;
-
-            // Compute max depth
-            for (V v : maxDepths.keySet()) {
-                if (maxDepths.get(v) > maxDepth) {
-                    maxDepth = maxDepths.get(v);
-                }
-            }
-            cache.maxDepth = maxDepth;
+            cache.maxDepth = Collections.max(getMaxDepths().values());
         }
         return cache.maxDepth.intValue();
     }
 
     /**
-     * CACHED ! Be careful modification of RelTypes requires cache clearing
+     * Get the root of the taxonomic graph contained in the graph associated to
+     * the engine. An exception will be thrown if the taxonomic graph contains
+     * multiple roots.
      *
-     * @param a
-     * @param b
-     * @return
-     * @throws SLIB_Ex_Critic
+     * @return the class corresponding to the root.
      */
-    public double getShortestPath(V a, V b, GWS weightingScheme) throws SLIB_Ex_Critic {
-
-        if (cache.shortestPath.get(a) == null) {
-            WalkConstraints wc = ancGetter.getWalkConstraint();
-            
-            for(Entry<URI,Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()){
-                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
-            }
-            
-            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
-            ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
-            cache.shortestPath.put(a, minDists_cA);
-        }
-        return cache.shortestPath.get(a).get(b);
-    }
-
-    /**
-     * NOT_CACHED
-     *
-     * @param a
-     * @param b
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
-    public V getMSA(V a, V b, GWS weightingScheme) throws SLIB_Ex_Critic {
-
-        Dijkstra dijkstra = new Dijkstra(graph, ancGetter.getWalkConstraint(), weightingScheme);
-
-        V msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a, weightingScheme), getAllShortestPath(b, weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
-
-        return msa_pk;
-    }
-
-    /**
-     * @return @throws SLIB_Ex_Critic
-     */
-    public synchronized V getRoot() throws SLIB_Ex_Critic {
+    public synchronized URI getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
-            URI rooturi = RooterDAG.rootUnderlyingTaxonomicDAG(graph, SLIBVOC.THING_OWL);
-            root = (V) graph.getV(rooturi);
+            URI rooturi = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
+            root = rooturi;
         }
         return root;
     }
 
     /**
-     * CACHED
+     * Get the information content of the most informative common ancestor
+     * (MICA) of two classes. The MICA is the class with the maximal IC found
+     * among the sets of ancestors of the two given classes.
      *
-     * @param a
-     * @return a map containing the weight of the shortest path linking a the
-     * given vertex.
-     *
-     * @throws SLIB_Ex_Critic
+     * @param icConf the configuration of the information content
+     * @param a the first class
+     * @param b the second class
+     * @return the IC of the most informative common ancestor of the two
+     * classes.
+     * @throws SLIB_Exception if no common ancestor is found between the two
+     * classes
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * a class
      */
-    public synchronized Map<V, Double> getAllShortestPath(V a, GWS weightingScheme) throws SLIB_Ex_Critic {
+    public double getIC_MICA(ICconf icConf, URI a, URI b) throws SLIB_Exception {
 
-        if (cache.shortestPath.get(a) == null) {
-            
-            WalkConstraints wc = ancGetter.getWalkConstraint();
-            
-            for(Entry<URI,Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()){
-                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
-            }
-            
-            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
-            ConcurrentHashMap<V, Double> minDists_cA = dijkstra.shortestPath(a);
-            cache.shortestPath.put(a, minDists_cA);
-        }
-
-        return cache.shortestPath.get(a);
-    }
-
-    /**
-     * NOT_CACHED
-     *
-     * @param a
-     * @param b
-     * @return
-     */
-    public Set<V> getHypoAncEx(V a, V b) {
-
-        Set<V> anc_a = getAncestorsInc(a);
-        Set<V> anc_b = getAncestorsInc(b);
-
-        Set<V> unionAncestors = SetUtils.union(anc_a, anc_b);
-        Set<V> interAncestors = SetUtils.union(anc_a, anc_b);
-
-        Set<V> ancsEx = unionAncestors;
-        unionAncestors.removeAll(interAncestors);
-
-        Set<V> hypoAncsEx = new HashSet<V>();
-
-        for (V v : ancsEx) {
-            Set<V> descCurAnc = descGetter.getRV(v);
-            hypoAncsEx = SetUtils.union(hypoAncsEx, descCurAnc);
-        }
-        return hypoAncsEx;
-    }
-
-    /**
-     * CACHED Return a set of vertices corresponding to the inclusive
-     * descendants of a term t i.e t + descendants of t
-     *
-     * @param v
-     * @return
-     */
-    public synchronized Set<V> getDescendantsInc(V v) {
-        if (cache.descendants.get(v) == null) {
-            Set<V> rv = descGetter.getDescendantsExc(v);
-            rv.add(v);
-            cache.descendants.put(v, rv);
-        }
-        return cache.descendants.get(v);
-    }
-
-    //	/**
-    //	 * NOT_CACHED
-    //	 * @return
-    //	 */
-    //	public HashMap< V,Collection<V> > getAllHypo(){
-    //		return rvfDesc.getAllVertices();
-    //	}
-    /**
-     * NOT_CACHED
-     *
-     * @param v
-     * @return
-     */
-//    public Map<V, Double> computeSemanticContribution(V v, SMconf conf) {
-//        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-//        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-//        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes, weightingScheme);
-//
-//        return sContrib_A;
-//    }
-//
-//    /**
-//     * NOT_CACHED
-//     *
-//     * @param v
-//     * @return
-//     */
-//    public double computeSV_Wang_2007(V v, SMconf conf) {
-//        SimDagHybridUtils SimDagHybridUtil = new SimDagHybridUtils();
-//        GWS weightingScheme = getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-//        Map<V, Double> sContrib_A = SimDagHybridUtil.computeSemanticContribution_Wang_2007(v, getAncestorsInc(v), graph, goToSuperClassETypes, weightingScheme);
-//        double sv_A = SimDagHybridUtil.computeSV_Wang_2007(sContrib_A);
-//        return sv_A;
-//    }
-
-    /**
-     * CACHED
-     *
-     * @param icConf
-     * @param a
-     * @param b
-     * @return
-     * @throws SLIB_Exception
-     */
-    public double getIC_MICA(ICconf icConf, V a, V b) throws SLIB_Exception {
+        throwErrorIfNotClass(a);
+        throwErrorIfNotClass(b);
 
         if (cache.metrics_results.get(icConf) == null) {
             computeIC(icConf);
@@ -502,85 +408,95 @@ public class SM_Engine {
         return IcUtils.searchMax_IC_MICA(a, b, getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
-    public V getMICA(ICconf icConf, V a, V b) throws SLIB_Exception {
+    /**
+     * Get the most informative common ancestor (MICA) of two classes. The MICA
+     * is the class with the maximal IC found among the sets of ancestors of the
+     * two given classes.
+     *
+     * @param icConf the configuration of the information content
+     * @param a the first class
+     * @param b the second class
+     * @return the most informative common ancestor of the two classes.
+     * @throws SLIB_Exception if no common ancestor is found between the two
+     * classes
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * a class
+     */
+    public URI getMICA(ICconf icConf, URI a, URI b) throws SLIB_Exception {
+
+        throwErrorIfNotClass(a);
+        throwErrorIfNotClass(b);
 
         if (cache.metrics_results.get(icConf) == null) {
             computeIC(icConf);
         }
-
-
         return IcUtils.searchMICA(a, b, getAncestorsInc(a), getAncestorsInc(b), getIC_results(icConf));
     }
 
     /**
+     * Compute the number of inclusive descendants for all classes
      *
-     * @param conf
-     * @param a
-     * @param b
-     * @return
-     * @throws SLIB_Exception
-     */
-    public double getP_MICA(ICconf conf, V a, V b) throws SLIB_Exception {
-
-        double prob_mica = IcUtils.searchMin_pOc_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(conf));
-        return prob_mica;
-    }
-
-    /**
-     * Compute the number of inclusive descendants
-     *
-     * @return
+     * @return a map containing the number of inclusive descendants
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Long> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allDescendants = descGetter.getAllDescendantsExc();
-        ResultStack<V, Long> allNbDescendants = new ResultStack<V, Long>();
 
-        for (V c : graph.getVClass()) {
-            int nbDesc = allDescendants.get(c).size();
-            allNbDescendants.add(c, (long) nbDesc + 1); //  getAllDescendants() is exlusive
+        Map<URI, Integer> allNbDescendants = new HashMap<URI, Integer>();
+
+        for (URI c : classes) {
+
+            allNbDescendants.put(c, getAllDescendantsInc().get(c).size());
         }
         return allNbDescendants;
     }
 
     /**
-     * @TODO add caching
-     * @return
+     *
+     * Access to the inclusive descendants for all classes.
+     * This is not a copy.
+     * @return the inclusive descendants for all classes
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
-        Map<V, Set<V>> descs = descGetter.getAllRVClass();
-        for (V v : descs.keySet()) {
-            descs.get(v).add(v);
-        }
-        return descs;
+    public Map<URI, Set<URI>> getAllDescendantsInc() throws SLIB_Ex_Critic {
+        return cache.descendantsInc;
+    }
+    
+     /**
+     * Access to the inclusive ancestors for all classes.
+     * This is not a copy. 
+     * @return the inclusive ancestors for all classes
+     * @throws SLIB_Ex_Critic
+     */
+    public Map<URI, Set<URI>> getAllAncestorsInc() throws SLIB_Ex_Critic {
+        return cache.ancestorsInc;
     }
 
     /**
+     * Access to the information content of all classes
      *
-     * @param icConf
-     * @return
+     * @param icConf the information content considered.
+     * @return the information content of all classes
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
+    public Map<URI, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
 
 
-        if (cache.metrics_results.get(icConf) == null) {
+        if (!cache.metrics_results.containsKey(icConf)) {
             cache.metrics_results.put(icConf, computeIC(icConf));
         }
-
-
         return cache.metrics_results.get(icConf);
     }
 
     /**
+     * Compute the information content for all classes. Results are stored for
+     * fast access.
      *
-     * @param icConf
-     * @return
+     * @param icConf the configuration to consider
+     * @return the IC for all classes
      * @throws SLIB_Ex_Critic
      */
-    public synchronized ResultStack<V, Double> computeIC(ICconf icConf) throws SLIB_Ex_Critic {
+    public synchronized Map<URI, Double> computeIC(ICconf icConf) throws SLIB_Ex_Critic {
 
         if (icConf == null) {
             throw new SLIB_Ex_Critic("IC configuration cannot be set to null... " + icConf);
@@ -591,11 +507,9 @@ public class SM_Engine {
         logger.info("computing IC " + icConf.getId());
 
         Class<?> cl;
-        ResultStack<V, Double> results;
+        Map<URI, Double> results;
 
         try {
-
-
 
             String icClassName = icConf.getClassName();
             logger.info("Computing IC " + icClassName);
@@ -622,81 +536,73 @@ public class SM_Engine {
 
             cache.metrics_results.put(icConf, results);
 
-            logger.debug(results.toString());
+            logger.info("Checking null or infinite in the ICs computed");
 
-            logger.info("Checking IC coherency");
-
-            for (Entry<V, Double> e : results.entrySet()) {
+            for (Entry<URI, Double> e : results.entrySet()) {
                 if (Double.isNaN(e.getValue()) || Double.isInfinite(e.getValue())) {
                     throw new SLIB_Ex_Critic("Incoherency found in IC " + icConf.className + "\nIC of vertex " + e.getKey() + " is set to " + e.getValue());
                 }
             }
-            return cache.metrics_results.get(icConf);
+
 
         } catch (Exception e) {
             e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
+        logger.info("ic "+icConf.id+" computed");
+        return cache.metrics_results.get(icConf);
     }
 
     /**
-     * Inclusive i.e. a leaf will contain itself in it set of reachable leaves
+     * Compute for each class x the classes which are leaves which are subsumed
+     * by x. Inclusive i.e. a leaf will contain itself in it set of reachable
+     * leaves. The result is cached for fast access.
      *
-     * @return
+     *
+     * @return the subsumed leaves for each classes
      */
-    public synchronized Map<V, Set<V>> getReachableLeaves() {
+    public synchronized Map<URI, Set<URI>> getReachableLeaves() {
 
         if (cache.reachableLeaves.isEmpty()) {
             cache.reachableLeaves = descGetter.getTerminalVertices();
         }
         return cache.reachableLeaves;
-
     }
 
     /**
-     * set of Leaves
-     *
-     * @return
+     * Access to the set of leaves of the underlying taxonomic graph
+     * @return the set of classes which are leaves
      */
-    public Set<V> getLeaves() {
-        Set<V> leaves = new HashSet<V>();
-        WalkConstraints wc = descGetter.getWalkConstraint();
-        for(V v : graph.getV(VType.CLASS)){
-            if(graph.getV(v, wc).isEmpty()){
-                leaves.add(v);
-            }
-        }
-        return leaves;
+    public Set<URI> getTaxonomicLeaves() {
+        return classesLeaves;
     }
 
     /**
+     * Compute for each class x the number classes which are leaves which are subsumed
+     * by x. Inclusive i.e. a leaf will contain itself in it set of reachable
+     * leaves. The result is cached for fast access.
      *
-     * @return
+     *
+     * @return the number subsumed leaves for each classes
      */
-    public ResultStack<V, Double> getAllNbReachableLeaves() {
+    public synchronized Map<URI, Integer> getAllNbReachableLeaves() {
 
-        logger.debug("Computing Nb Reachable Leaves : start");
+        logger.info("Computing Nb Reachable Leaves : start");
 
+        if (cache.allNbReachableLeaves == null) {
 
+            Map<URI, Set<URI>> allReachableLeaves = getReachableLeaves();
+            cache.allNbReachableLeaves = new HashMap<URI, Integer>();
 
-        if (allNbReachableLeaves == null) {
-
-            HashMap<V, Set<V>> allReachableLeaves = descGetter.getTerminalVertices();
-            ResultStack<V, Double> allNbReachableLeaves = new ResultStack<V, Double>();
-
-            for (V c : graph.getVClass()) {
-
-                int nbLeaves = allReachableLeaves.get(c).size();
-                allNbReachableLeaves.add(c, (double) nbLeaves);
+            for (URI c : classes) {
+                cache.allNbReachableLeaves.put(c, allReachableLeaves.get(c).size());
             }
-
-            this.allNbReachableLeaves = allNbReachableLeaves;
         }
 
 
-        logger.debug("Computing Nb Reachable Leaves : end");
+        logger.info("Computing Nb Reachable Leaves : end");
 
-        return this.allNbReachableLeaves;
+        return cache.allNbReachableLeaves;
     }
 
     /**
@@ -705,25 +611,17 @@ public class SM_Engine {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allAncestors = ancGetter.getAllAncestorsExc();
-        ResultStack<V, Double> allNbancestors = new ResultStack<V, Double>();
+        Map<URI, Set<URI>> allAncestors = cache.ancestorsInc;
+        Map<URI, Integer> allNbancestors = new HashMap<URI, Integer>();
 
-        for (V c : graph.getVClass()) {
-            int nbAnc = allAncestors.get(c).size();
-            allNbancestors.add(c, (double) nbAnc + 1); // getAllRVClass() is exlusive
+        for (URI c : classes) {
+            allNbancestors.put(c, allAncestors.get(c).size()); 
         }
         return allNbancestors;
     }
 
-    /**
-     *
-     * @return
-     */
-    public int getNbVertices() {
-        return graph.getV().size();
-    }
 
     /**
      * NOT_CACHED by default
@@ -733,8 +631,10 @@ public class SM_Engine {
      * @param b
      * @return
      * @throws SLIB_Ex_Critic
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
-    public double computePairwiseSim(SMconf pairwiseConf, V a, V b) throws SLIB_Ex_Critic {
+    public double computePairwiseSim(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
 
         double sim = -Double.MAX_VALUE;
 
@@ -749,32 +649,28 @@ public class SM_Engine {
             } else {
 
 
-                if (SMConstants.SIM_FRAMEWORK.containsKey(pairwiseConf.flag)) {
-
-                    sim = computeSimFramework(pairwiseConf, a, b);
-
-                } else {
-
-                    Sim_Pairwise pMeasure;
-
-                    synchronized (pairwiseMeasures) {
-
-                        if (pairwiseMeasures.containsKey(pairwiseConf)) {
-                            pMeasure = pairwiseMeasures.get(pairwiseConf);
-                        } else {
-
-                            Class<?> cl;
-                            cl = Class.forName(pairwiseConf.className);
-                            Constructor<?> co = cl.getConstructor();
 
 
-                            pMeasure = (Sim_Pairwise) co.newInstance();
-                            pairwiseMeasures.put(pairwiseConf, pMeasure);
-                        }
+                Sim_Pairwise pMeasure;
+
+                synchronized (pairwiseMeasures) {
+
+                    if (pairwiseMeasures.containsKey(pairwiseConf)) {
+                        pMeasure = pairwiseMeasures.get(pairwiseConf);
+                    } else {
+
+                        Class<?> cl;
+                        cl = Class.forName(pairwiseConf.className);
+                        Constructor<?> co = cl.getConstructor();
+
+
+                        pMeasure = (Sim_Pairwise) co.newInstance();
+                        pairwiseMeasures.put(pairwiseConf, pMeasure);
                     }
-                    sim = pMeasure.sim(a, b, this, pairwiseConf);
-
                 }
+                sim = pMeasure.sim(a, b, this, pairwiseConf);
+
+
 
                 if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                     SMutils.throwArithmeticCriticalException(pairwiseConf, a, b, sim);
@@ -786,16 +682,16 @@ public class SM_Engine {
 
                     if (cache.pairwise_results.get(pairwiseConf) == null) {
 
-                        ConcurrentHashMap<V, ResultStack<V, Double>> pairwise_result = new ConcurrentHashMap<V, ResultStack<V, Double>>();
+                        ConcurrentHashMap<URI, Map<URI, Double>> pairwise_result = new ConcurrentHashMap<URI, Map<URI, Double>>();
 
                         cache.pairwise_results.put(pairwiseConf, pairwise_result);
                     }
 
                     if (cache.pairwise_results.get(pairwiseConf).get(a) == null) {
-                        cache.pairwise_results.get(pairwiseConf).put(a, new ResultStack<V, Double>());
+                        cache.pairwise_results.get(pairwiseConf).put(a, new HashMap<URI, Double>());
                     }
 
-                    cache.pairwise_results.get(pairwiseConf).get(a).add(b, sim);
+                    cache.pairwise_results.get(pairwiseConf).get(a).put(b, sim);
                 }
             }
         } catch (Exception e) {
@@ -807,57 +703,22 @@ public class SM_Engine {
         return sim;
     }
 
-    private double computeSimFramework(SMconf measure_conf, V a, V b) throws Exception {
-
-        String measureClass = measure_conf.className;
-        String representation = SMConstants.representation.get(measure_conf.representation);
-        String operator = SMConstants.operators.get(measure_conf.operator.flag);
-
-        //		System.out.println("Framework measure");
-        //		
-        //		
-        //		System.out.println(": Measure "+measureClass);
-        //		System.out.println(": Representation "+representation);
-        //		System.out.println(": Operator "+operator);
-
-        Class<?> cl;
-
-        // Measure
-        cl = Class.forName(measureClass);
-        Constructor<?> co_measure = cl.getConstructor();
-
-        // Representation
-        cl = Class.forName(representation);
-        Constructor<?> co_representation = cl.getConstructor(Resource.class, this.getClass());
-
-        // Operator
-        cl = Class.forName(operator);
-        Constructor<?> co_operator = cl.getConstructor(OperatorConf.class);
-
-
-        Sim_FrameworkAbstracted measure = (Sim_FrameworkAbstracted) co_measure.newInstance();
-        GraphRepresentation a_rep = (GraphRepresentation) co_representation.newInstance(a, this);
-        GraphRepresentation b_rep = (GraphRepresentation) co_representation.newInstance(b, this);
-        RepresentationOperators op = (RepresentationOperators) co_operator.newInstance(measure_conf.operator);
-
-        double sim = measure.sim(a_rep, b_rep, this, op, measure_conf);
-
-        return sim;
-    }
-
     /**
      * NOT_CACHED
      *
      * @param confGroupwise
      * @param setA
      * @param setB
+     *
      * @return
      * @throws SLIB_Ex_Critic
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
-            Set<V> setA,
-            Set<V> setB) throws SLIB_Ex_Critic {
+            Set<URI> setA,
+            Set<URI> setB) throws SLIB_Ex_Critic {
 
         double sim = -Double.MAX_VALUE;
 
@@ -898,12 +759,14 @@ public class SM_Engine {
      * @param setA
      * @return
      * @throws SLIB_Ex_Critic
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,
             SMconf confPairwise,
-            Set<V> setA,
-            Set<V> setB) throws SLIB_Ex_Critic {
+            Set<URI> setA,
+            Set<URI> setB) throws SLIB_Ex_Critic {
 
         double sim = -Double.MAX_VALUE;
 
@@ -932,7 +795,6 @@ public class SM_Engine {
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
-            e.printStackTrace();
             throw new SLIB_Ex_Critic(e);
         }
 
@@ -942,11 +804,12 @@ public class SM_Engine {
     /**
      *
      * @return @throws SLIB_Ex_Critic
+     *
      */
-    public ResultStack<V, Long> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
 
         if (cache.nbPathLeadingToAllVertices == null) {
-            cache.nbPathLeadingToAllVertices = (ResultStack<V, Long>) descGetter.computeNbPathLeadingToAllVertices();
+            cache.nbPathLeadingToAllVertices = descGetter.computeNbPathLeadingToAllVertices();
         }
 
         return cache.nbPathLeadingToAllVertices;
@@ -956,18 +819,17 @@ public class SM_Engine {
      *
      * @return
      */
-    public ResultStack<V, Long> getNbInstancesInferredPropFromCorpus() {
+    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus() {
 
-        HashMap<V, Set<V>> linkedEntities = new HashMap<V, Set<V>>();
-        Set<V> instances = graph.getV(VType.INSTANCE);
+        Map<URI, Set<URI>> linkedEntities = new HashMap<URI, Set<URI>>();
 
-        for (V i : instances) {
-            Set<V> annots = graph.getV(i, RDF.TYPE, Direction.OUT);
+        for (URI i : instances) {
+            Set<URI> annots = graph.getV(i, RDF.TYPE, Direction.OUT);
 
             if (annots != null) {
-                for (V c : annots) {
+                for (URI c : annots) {
                     if (linkedEntities.get(c) == null) {
-                        linkedEntities.put(c, new HashSet<V>());
+                        linkedEntities.put(c, new HashSet<URI>());
                     }
                     linkedEntities.get(c).add(i);
                 }
@@ -976,25 +838,25 @@ public class SM_Engine {
         }
         // Get Topological ordering trough DFS
         // - get roots
-        Set<V> roots = new ValidatorDAG().getDAGRoots(graph, ancGetter.getWalkConstraint());
+        Set<URI> roots = new ValidatorDAG().getDAGRoots(graph, ancGetter.getWalkConstraint());
 
         DFS dfs = new DFS(graph, roots, ancGetter.getWalkConstraint().getInverse(false));
-        List<V> topoOrdering = dfs.getTraversalOrder();
+        List<URI> topoOrdering = dfs.getTraversalOrder();
 
 
-        ResultStack<V, Long> rStack = new ResultStack<V, Long>();
+        Map<URI, Integer> rStack = new HashMap<URI, Integer>();
 
         // initialize data structure
         for (int i = 0; i < topoOrdering.size(); i++) {
             if (linkedEntities.get(topoOrdering.get(i)) == null) {
-                linkedEntities.put(topoOrdering.get(i), new HashSet<V>());
+                linkedEntities.put(topoOrdering.get(i), new HashSet<URI>());
             }
         }
 
         for (int i = 0; i < topoOrdering.size(); i++) {
 
-            V currentV = topoOrdering.get(i);
-            Set<V> entities = linkedEntities.get(currentV);
+            URI currentV = topoOrdering.get(i);
+            Set<URI> entities = linkedEntities.get(currentV);
 
             // propagate Linked Entities in a bottom up fashion according the topological order
             for (E e : graph.getE(currentV, ancGetter.getWalkConstraint())) {
@@ -1003,7 +865,7 @@ public class SM_Engine {
                 }
             }
 
-            rStack.add(currentV, (long) entities.size());
+            rStack.put(currentV, entities.size());
         }
         cache.nbOccurrencePropagatted = rStack;
 
@@ -1016,18 +878,18 @@ public class SM_Engine {
      * @return
      * @throws SLIB_Exception
      */
-    public ResultStack<V, Long> getNbOccurrenceProp() throws SLIB_Exception {
+    public Map<URI, Integer> getNbOccurrenceProp() throws SLIB_Exception {
 
         if (cache.nbOccurrencePropagatted == null) {
 
             RVF_TAX RVF = new RVF_TAX(graph, Direction.IN);
-            ResultStack<V, Long> nbOccurrences = new ResultStack<V, Long>();
+            Map<URI, Integer> nbOccurrences = new HashMap<URI, Integer>();
 
-            for (V o : graph.getVClass()) {
-                nbOccurrences.add(o, (long) 1);
+            for (URI o : classes) {
+                nbOccurrences.put(o,1);
             }
 
-            ResultStack<V, Long> nbOccurrencesPropagated = (ResultStack<V, Long>) RVF.propagateNbOccurences(nbOccurrences);
+            Map<URI, Integer> nbOccurrencesPropagated = RVF.propagateNbOccurences(nbOccurrences);
             cache.nbOccurrencePropagatted = nbOccurrencesPropagated;
         }
 
@@ -1042,18 +904,19 @@ public class SM_Engine {
      * @param pairwiseConf
      * @return
      * @throws SLIB_Ex_Critic
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
      */
-    public MatrixDouble<V, V> getMatrixScore(
-            Set<V> setA,
-            Set<V> setB,
+    public MatrixDouble<URI, URI> getMatrixScore(
+            Set<URI> setA,
+            Set<URI> setB,
             SMconf pairwiseConf) throws SLIB_Ex_Critic {
 
 
-        MatrixDouble<V, V> m = new MatrixDouble<V, V>(setA, setB);
+        MatrixDouble<URI, URI> m = new MatrixDouble<URI, URI>(setA, setB);
 
-        for (V a : setA) {
-
-            for (V b : setB) {
+        for (URI a : setA) {
+            for (URI b : setB) {
                 m.setValue(a, b, computePairwiseSim(pairwiseConf, a, b));
             }
         }
@@ -1079,41 +942,30 @@ public class SM_Engine {
 
     /**
      *
-     * @param a
-     * @return
-     */
-    public ResultStack<V, Double> getSvalues(V a) {
-
-        throw new UnsupportedOperationException();
-
-    }
-
-    /**
-     *
      * @param set
      * @param groupwiseconf
      * @return
      */
-    public ResultStack<V, Double> getVector(Set<V> set, SMconf groupwiseconf) {
+    public Map<URI, Double> getVector(Set<URI> set, SMconf groupwiseconf) {
 
         if (vectorWeights == null) {
-            vectorWeights = VectorWeight_Chabalier_2007.compute(graph);
+            vectorWeights = VectorWeight_Chabalier_2007.compute(this);
         }
 
-        ResultStack<V, Double> vector = new ResultStack<V, Double>();
+        Map<URI, Double> vector = new HashMap<URI, Double>();
 
-        Set<V> setAncestors;
+        Set<URI> setAncestors;
         setAncestors = set; // unpropragatted
         //		setAncestors = getAncestors(set);
 
-        for (Entry<V, Double> e : vectorWeights.getValues().entrySet()) {
+        for (Entry<URI, Double> e : vectorWeights.entrySet()) {
 
-            V v = e.getKey();
+            URI v = e.getKey();
 
             if (setAncestors.contains(v)) {
-                vector.add(v, e.getValue());
+                vector.put(v, e.getValue());
             } else {
-                vector.add(v, 0.);
+                vector.put(v, 0.);
             }
 
         }
@@ -1121,23 +973,13 @@ public class SM_Engine {
     }
 
     /**
+     * Access to the graph associated to the engine.
      *
-     * @param a
-     * @param conf
-     * @return
-     */
-    public GraphRepresentation getRepresentation(V a, SMconf conf) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     *
-     * @return
+     * @return the graph associated to the engine
      */
     public G getGraph() {
         return graph;
     }
-
 
     /**
      * Set the ICS stored for the given IC configuration to the specified set of
@@ -1146,12 +988,12 @@ public class SM_Engine {
      * @param icConf
      * @param ics
      */
-    public void setICSvalues(ICconf icConf, ResultStack<V, Double> ics) {
+    public void setICSvalues(ICconf icConf, Map<URI, Double> ics) {
         cache.metrics_results.put(icConf, ics);
     }
 
-    public Set<V> getLCA(V a, V b) throws SLIB_Exception {
-        return dcaFinder.getLCA(graph, a, b);
+    public Set<URI> getLCAs(URI a, URI b) throws SLIB_Exception {
+        return lcaFinder.getLCAs(graph, a, b);
     }
 
     /**
@@ -1172,5 +1014,161 @@ public class SM_Engine {
 
     public DescendantEngine getDescendantEngine() {
         return descGetter;
+    }
+
+    private void computeLeaves() {
+        classesLeaves = new HashSet<URI>();
+
+        WalkConstraints wc = descGetter.getWalkConstraint();
+        for (URI v : classes) {
+            if (graph.getV(v, wc).isEmpty()) {
+                classesLeaves.add(v);
+            }
+        }
+    }
+
+    /**
+     * Access to the set of URI of the graph considered as classes.
+     *
+     * @return the set of classes
+     */
+    public Set<URI> getClasses() {
+        return classes;
+    }
+
+    /**
+     * Access to the set of URI of the graph considered as instances.
+     *
+     * @return the set of instances
+     */
+    public Set<URI> getInstances() {
+        return instances;
+    }
+
+    private void throwErrorIfNotClass(URI c) {
+        if (!classes.contains(c)) {
+            throw new IllegalArgumentException("The given URI " + c + " cannot be associated to a class");
+        }
+    }
+
+    private void throwErrorIfNotClass(Set<URI> c) {
+        if (!classes.containsAll(c)) {
+            throw new IllegalArgumentException("The given URI " + c + " cannot be associated to a class");
+        }
+    }
+
+    /**
+     * CACHED ! Be careful modification of RelTypes requires cache clearing
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double getShortestPath(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
+
+        if (cache.shortestPath.get(a) == null) {
+            WalkConstraints wc = ancGetter.getWalkConstraint();
+
+            for (Entry<URI, Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()) {
+                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
+            }
+
+            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
+            ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
+            cache.shortestPath.put(a, minDists_cA);
+        }
+        return cache.shortestPath.get(a).get(b);
+    }
+
+    /**
+     * NOT_CACHED
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws SLIB_Ex_Critic
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
+     */
+    public URI getMSA(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
+
+        Dijkstra dijkstra = new Dijkstra(graph, ancGetter.getWalkConstraint(), weightingScheme);
+
+        URI msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a, weightingScheme), getAllShortestPath(b, weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
+
+        return msa_pk;
+    }
+
+    /**
+     * CACHED
+     *
+     * @param a
+     * @return a map containing the weight of the shortest path linking a the
+     * given vertex.
+     *
+     * @throws SLIB_Ex_Critic
+     */
+    public synchronized Map<URI, Double> getAllShortestPath(URI a, GWS weightingScheme) throws SLIB_Ex_Critic {
+
+        if (cache.shortestPath.get(a) == null) {
+
+            WalkConstraints wc = ancGetter.getWalkConstraint();
+
+            for (Entry<URI, Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()) {
+                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
+            }
+
+            Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
+            ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
+            cache.shortestPath.put(a, minDists_cA);
+        }
+
+        return cache.shortestPath.get(a);
+    }
+
+    /**
+     *
+     * @param conf
+     * @param a
+     * @param b
+     * @return
+     * @throws SLIB_Exception
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
+     */
+    public double getP_MICA(ICconf conf, URI a, URI b) throws SLIB_Exception {
+
+        double prob_mica = IcUtils.searchMin_pOc_MICA(getAncestorsInc(a), getAncestorsInc(b), getIC_results(conf));
+        return prob_mica;
+    }
+
+    /**
+     * NOT_CACHED
+     *
+     * @param a
+     * @param b
+     * @return
+     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * class
+     */
+    public Set<URI> getHypoAncEx(URI a, URI b) {
+
+        Set<URI> anc_a = getAncestorsInc(a);
+        Set<URI> anc_b = getAncestorsInc(b);
+
+        Set<URI> unionAncestors = SetUtils.union(anc_a, anc_b);
+        Set<URI> interAncestors = SetUtils.union(anc_a, anc_b);
+
+        Set<URI> ancsEx = unionAncestors;
+        unionAncestors.removeAll(interAncestors);
+
+        Set<URI> hypoAncsEx = new HashSet<URI>();
+
+        for (URI v : ancsEx) {
+            Set<URI> descCurAnc = descGetter.getRV(v);
+            hypoAncsEx = SetUtils.union(hypoAncsEx, descCurAnc);
+        }
+        return hypoAncsEx;
     }
 }

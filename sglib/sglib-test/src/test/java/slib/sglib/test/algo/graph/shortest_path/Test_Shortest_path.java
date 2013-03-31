@@ -33,12 +33,12 @@ package slib.sglib.test.algo.graph.shortest_path;
 
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.shortest_path.Dijkstra;
 import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
@@ -58,7 +58,7 @@ public class Test_Shortest_path {
      * @throws SLIB_Exception
      */
     public Test_Shortest_path() throws SLIB_Exception {
-        g = TestUtils.loadTestGraph(GFormat.SGL, SLIB_UnitTestValues.G_DAG_BASIC);
+        g = TestUtils.loadTestGraph(GFormat.NTRIPLES, SLIB_UnitTestValues.G_DAG_BASIC);
     }
 
     /**
@@ -71,9 +71,9 @@ public class Test_Shortest_path {
         Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
-        V thing = g.getV(testValues.G_BASIC_THING);
-        V spiderman = g.getV(test.G_BASIC_SPIDERMAN);
-        V animal = g.getV(test.G_BASIC_ANIMAL);
+        URI thing = testValues.G_BASIC_THING;
+        URI spiderman = test.G_BASIC_SPIDERMAN;
+        URI animal = test.G_BASIC_ANIMAL;
         Double sp = d.shortestPath(thing, thing);
         assertTrue(sp == 0.);
 
@@ -107,9 +107,9 @@ public class Test_Shortest_path {
         Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
-        V thing = g.getV(testValues.G_BASIC_THING);
-        V spiderman = g.getV(test.G_BASIC_SPIDERMAN);
-        V animal = g.getV(test.G_BASIC_ANIMAL);
+        URI thing = testValues.G_BASIC_THING;
+        URI spiderman = test.G_BASIC_SPIDERMAN;
+        URI animal = test.G_BASIC_ANIMAL;
         Double sp = d.shortestPath(thing, thing);
         assertTrue(sp == 0.);
 
@@ -142,9 +142,9 @@ public class Test_Shortest_path {
         Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
-        V thing = g.getV(testValues.G_BASIC_THING);
-        V spiderman = g.getV(test.G_BASIC_SPIDERMAN);
-        V animal = g.getV(test.G_BASIC_ANIMAL);
+        URI thing = testValues.G_BASIC_THING;
+        URI spiderman = test.G_BASIC_SPIDERMAN;
+        URI animal = test.G_BASIC_ANIMAL;
         Double sp = d.shortestPath(thing, thing);
         assertTrue(sp == 0.);
 

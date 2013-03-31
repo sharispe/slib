@@ -1,8 +1,7 @@
 package slib.sglib.algo.graph.extraction.rvf.instances;
 
 import java.util.Map;
-
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 
 /**
  * @author Sebastien Harispe
@@ -10,34 +9,33 @@ import slib.sglib.model.graph.elements.V;
  */
 public interface VirtualInstancesAccessor {
 
-	/**
-	 * Return the number of instances associated to a class
-	 * (using RDFS.SubClassOf inferences)
-	 * @param v the class of interest
-	 * @return the number of instances associated to the specified class
-	 */
-	public long getInstancesNumber(V v);
+    /**
+     * Return the number of instances associated to a class (using
+     * RDFS.SubClassOf inferences)
+     *
+     * @param v the class of interest
+     * @return the number of instances associated to the specified class
+     */
+    public long getInstancesNumber(URI v);
 
-	
-	/**
+    /**
      *
      * @return
      */
-    public Map<V, Long> getInferredInstancesNumberMapping();
-	/**
-	 * Access to the number of vertex considered as direct instance of a class 
-	 * e.g. all x respecting <x RDF.TYPE class>
-	 * @param v the class of interest
-	 * @return the number of instances associated to the specified class
-	 */
-	public long getDirectInstancesNumber(V v);
+    public Map<URI, Long> getInferredInstancesNumberMapping();
 
-	/**
+    /**
+     * Access to the number of vertex considered as direct instance of a class
+     * e.g. all x respecting <x RDF.TYPE class>
+     *
+     * @param v the class of interest
+     * @return the number of instances associated to the specified class
+     */
+    public long getDirectInstancesNumber(URI v);
+
+    /**
      *
      * @return
      */
-    public Map<V, Long> getDirectInstancesNumberMapping();
-
-
-
+    public Map<URI, Long> getDirectInstancesNumberMapping();
 }

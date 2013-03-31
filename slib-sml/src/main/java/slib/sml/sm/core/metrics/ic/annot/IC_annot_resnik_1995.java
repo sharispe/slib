@@ -34,14 +34,15 @@
  */
 package slib.sml.sm.core.metrics.ic.annot;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Corpus;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  * Original IC definition
@@ -57,27 +58,27 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurences) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> nbOccurences) throws SLIB_Ex_Critic {
 
         // add 1 to all element occurrence counts to avoid -log(0)
-        ResultStack<V, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
+        Map<URI, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
 
         double curIc;
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        for (V v : nbOccurences.getValues().keySet()) {
+        for (URI v : nbOccurences.keySet()) {
 
-            
+
             double pc = rtemp.get(v);
 
             //long nbOccMax = (long) nbOccurences.getMax()+1;
             //System.out.println(v+"\t"+nbOccurences.get(v)+"\t"+pc+"\t"+nbOccMax);
-            
+
             curIc = -Math.log(pc);
 
-            results.add(v, curIc);
-            
+            results.put(v, curIc);
+
         }
         return results;
     }
@@ -90,7 +91,7 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
      * @throws SLIB_Exception
      */
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
+    public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
 
         setLogBase(conf);
 

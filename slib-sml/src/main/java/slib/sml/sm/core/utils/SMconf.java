@@ -34,7 +34,6 @@
  */
 package slib.sml.sm.core.utils;
 
-import java.util.HashMap;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
@@ -75,14 +74,6 @@ public class SMconf extends Conf {
      * of groupwise measures).
      */
     public String pairwise_measure_id;
-    /**
-     * The representation used by the measure.
-     */
-    public String representation;
-    /**
-     * The operator used by the measure.
-     */
-    public OperatorConf operator;
 
     /**
      * Build an instance of configuration considering the given id and flag
@@ -93,12 +84,7 @@ public class SMconf extends Conf {
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag) throws SLIB_Ex_Critic {
-
-        this.id = id;
-        this.flag = flag;
-        this.label = id;
-
-        init();
+        this(id, flag, id);
     }
 
     /**
@@ -113,16 +99,24 @@ public class SMconf extends Conf {
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag, String label) throws SLIB_Ex_Critic {
-
-        this.id = id;
-        this.flag = flag;
-        this.label = label;
-
-        init();
+        this(id, flag, label, null);
     }
 
     /**
-     * Build an instance of configuration considering the given id, flag and
+     * Build an instance of configuration considering the given flag and
+     * Information Content configuration.
+     *
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
+     * @param icConf the IC configuration associated to the configuration
+     * @throws SLIB_Ex_Critic
+     */
+    public SMconf(String flag, ICconf icConf) throws SLIB_Ex_Critic {
+        this(flag, flag, flag, icConf);
+    }
+
+        /**
+     * Build an instance of configuration considering the given flag and
      * Information Content configuration.
      *
      * @param id the id of the configuration (must be unique).
@@ -131,15 +125,9 @@ public class SMconf extends Conf {
      * @param icConf the IC configuration associated to the configuration
      * @throws SLIB_Ex_Critic
      */
-    public SMconf(String id, String flag, ICconf icConf) throws SLIB_Ex_Critic {
-
-        this.id = id;
-        this.flag = flag;
-        this.label = id;
-        this.icConf = icConf;
-        init();
+    public SMconf(String id,String flag, ICconf icConf) throws SLIB_Ex_Critic {
+        this(id, flag, id, icConf);
     }
-
     /**
      * Build an instance of configuration considering the given id, flag and
      * Information Content configuration.
@@ -157,29 +145,6 @@ public class SMconf extends Conf {
         this.flag = flag;
         this.label = label;
         this.icConf = icConf;
-        init();
-    }
-
-    /**
-     * Build an instance of configuration considering the given parameters.
-     *
-     * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to
-     * the configuration.
-     * @param label the label associated to the configuration
-     * @param icConf the IC configuration associated to the configuration
-     * @param representation The representation adopted by the measure
-     * @param operator the operator used by the measure
-     * @throws SLIB_Ex_Critic
-     */
-    public SMconf(String id, String flag, String label, ICconf icConf, String representation, OperatorConf operator) throws SLIB_Ex_Critic {
-
-        this.id = id;
-        this.flag = flag;
-        this.label = label;
-        this.icConf = icConf;
-        this.representation = representation;
-        this.operator = operator;
         init();
     }
 
@@ -217,42 +182,6 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Getter of the representation.
-     *
-     * @return the representation associated to the configuration
-     */
-    public String getRepresentation() {
-        return representation;
-    }
-
-    /**
-     * Mutator of the representation
-     *
-     * @param representation the new representation
-     */
-    public void setRepresentation(String representation) {
-        this.representation = representation;
-    }
-
-    /**
-     * Getter of the operator associated to the configuration.
-     *
-     * @return the current operator configuration
-     */
-    public OperatorConf getOperator() {
-        return operator;
-    }
-
-    /**
-     * Mutator of the operator.
-     *
-     * @param operator the new operator.
-     */
-    public void setOperator(OperatorConf operator) {
-        this.operator = operator;
-    }
-
-    /**
      * Getter of the pairwise Id
      *
      * @return the pairwise id
@@ -278,8 +207,6 @@ public class SMconf extends Conf {
         out += "label : " + label + "\n";
         out += "icConf : \n" + icConf + "\n";
         out += "Pairwise measure id : \n" + pairwise_measure_id + "\n";
-        out += "representation : " + representation + "\n";
-        out += "operator : \n" + operator + "\n";
 
         out += "Extra parameters : " + super.toString();
         return out;

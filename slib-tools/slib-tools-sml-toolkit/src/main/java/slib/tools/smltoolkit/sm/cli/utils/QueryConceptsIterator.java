@@ -33,9 +33,9 @@ package slib.tools.smltoolkit.sm.cli.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.utils.impl.QueryEntry;
 import slib.utils.impl.QueryIterator;
 
@@ -49,19 +49,18 @@ import slib.utils.impl.QueryIterator;
 public class QueryConceptsIterator implements QueryIterator {
 
     G g;
-    List<V> classes;
+    List<URI> classes;
     int i = 0;
     int j = 1;
 
-    public QueryConceptsIterator(G g) {
-        this.g = g;
-        this.classes = new ArrayList<V>(g.getV(VType.CLASS));
+    public QueryConceptsIterator(Set<URI> classes) {
+        this.classes = new ArrayList<URI>(classes);
     }
 
     @Override
     public QueryEntry next() {
 
-        QueryEntry q = new QueryEntry(classes.get(i).getValue().stringValue(), classes.get(j).getValue().stringValue());
+        QueryEntry q = new QueryEntry(classes.get(i).stringValue(), classes.get(j).stringValue());
         
         j++;
         if (j == classes.size()) {

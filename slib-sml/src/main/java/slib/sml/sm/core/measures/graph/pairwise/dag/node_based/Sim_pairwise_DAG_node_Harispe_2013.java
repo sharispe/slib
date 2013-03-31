@@ -32,122 +32,115 @@
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract {
-    
+
     public static final String aggregation_lca = "aggregation_lca";
     public static final String measure_param = "measure";
-    
-    public static final String[] acceptedMeasures = {"Resnik","Lin"};
-    public static final String[] acceptedAggregations = {"Max","Min","Avg","Agg"};
+    public static final String[] acceptedMeasures = {"Resnik", "Lin"};
+    public static final String[] acceptedAggregations = {"Max", "Min", "Avg", "Agg"};
 
     @Override
-    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
-        
-        if(!conf.containsParam(measure_param)){
-            throw new SLIB_Ex_Critic("Measure "+conf.getPairwise_measure_id()+" requires a parameter '"+measure_param+"' to be defined");
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+
+        if (!conf.containsParam(measure_param)) {
+            throw new SLIB_Ex_Critic("Measure " + conf.getPairwise_measure_id() + " requires a parameter '" + measure_param + "' to be defined");
         }
         String underlyingMeasure = (String) conf.getParam(measure_param);
-        
-        if(!conf.containsParam(aggregation_lca)){
-            throw new SLIB_Ex_Critic("Measure "+conf.getPairwise_measure_id()+" requires a parameter '"+aggregation_lca+"' to be defined");
+
+        if (!conf.containsParam(aggregation_lca)) {
+            throw new SLIB_Ex_Critic("Measure " + conf.getPairwise_measure_id() + " requires a parameter '" + aggregation_lca + "' to be defined");
         }
         String aggregationLCAstrat = (String) conf.getParam(aggregation_lca);
-        
-        
+
+
         double ic_a = computeICpropagated(c, conf.getICconf(), a);
         double ic_b = computeICpropagated(c, conf.getICconf(), b);
 
-        Set<V> lca = c.getLCA(a, b);
-        
-        double ic_lca = computeIcLCA(c,conf.getICconf(),lca,aggregationLCAstrat);
-   
+        Set<URI> lca = c.getLCAs(a, b);
+
+        double ic_lca = computeIcLCA(c, conf.getICconf(), lca, aggregationLCAstrat);
+
         // Compute the IC of the LCA layer considering the given aggregation strategy
-        
-        
+
+
 
         double sim;
-        if(underlyingMeasure.equals("Resnik")){
-            
-            sim =  ic_lca;
+        if (underlyingMeasure.equals("Resnik")) {
+
+            sim = ic_lca;
+        } else if (underlyingMeasure.equals("Lin")) {
+            sim = Sim_pairwise_DAG_node_Lin_1998.sim(ic_a, ic_b, ic_lca);
+        } else {
+            throw new SLIB_Ex_Critic("Measure " + underlyingMeasure + " is not a valid argument for the parameter '" + measure_param + "' in " + conf.getPairwise_measure_id() + " pairwise measure configuration, accepted parameters are " + Arrays.toString(acceptedMeasures));
         }
-        else if(underlyingMeasure.equals("Lin")){
-            sim =  Sim_pairwise_DAG_node_Lin_1998.sim(ic_a, ic_b, ic_lca);
-        }
-        else{
-            throw new SLIB_Ex_Critic("Measure "+underlyingMeasure+" is not a valid argument for the parameter '"+measure_param+"' in "+conf.getPairwise_measure_id()+" pairwise measure configuration, accepted parameters are "+Arrays.toString(acceptedMeasures));
-        }
-        
+
         return sim;
     }
 
-    private double computeICpropagated(SM_Engine engine, ICconf icConf, V vertex) throws SLIB_Ex_Critic {
-        ResultStack<V, Double> ics = engine.computeIC(icConf);
+    private double computeICpropagated(SM_Engine engine, ICconf icConf, URI vertex) throws SLIB_Ex_Critic {
+        Map<URI, Double> ics = engine.computeIC(icConf);
         double ic = 0;
 
-        for (V v : engine.getAncestorsInc(vertex)) {
+        for (URI v : engine.getAncestorsInc(vertex)) {
             ic += ics.get(v);
         }
         return ic;
     }
 
-    private double computeICpropagated(SM_Engine engine, ICconf icConf, Set<V> vertices) throws SLIB_Ex_Critic {
-        ResultStack<V, Double> ics = engine.computeIC(icConf);
+    private double computeICpropagated(SM_Engine engine, ICconf icConf, Set<URI> vertices) throws SLIB_Ex_Critic {
+        Map<URI, Double> ics = engine.computeIC(icConf);
         double ic = 0;
 
-        for (V v : engine.getAncestorsInc(vertices)) {
+        for (URI v : engine.getAncestorsInc(vertices)) {
             ic += ics.get(v);
         }
         return ic;
     }
 
-    private double computeIcLCA(SM_Engine c, ICconf conf, Set<V> lca, String aggregation_lca_strategy) throws SLIB_Ex_Critic {
-        
+    private double computeIcLCA(SM_Engine c, ICconf conf, Set<URI> lca, String aggregation_lca_strategy) throws SLIB_Ex_Critic {
+
         double ic_lca = 0;
 
-        if(aggregation_lca_strategy.equals("Max")){
+        if (aggregation_lca_strategy.equals("Max")) {
             double max = 0;
-            for(V v : lca){
+            for (URI v : lca) {
                 double ic = computeICpropagated(c, conf, v);
-                if(ic > max){
+                if (ic > max) {
                     max = ic;
                 }
             }
             ic_lca = max;
-        }
-        else if(aggregation_lca_strategy.equals("Min")){
+        } else if (aggregation_lca_strategy.equals("Min")) {
             Double min = null;
-            for(V v : lca){
+            for (URI v : lca) {
                 double ic = computeICpropagated(c, conf, v);
-                if(min == null || ic < min){
+                if (min == null || ic < min) {
                     min = ic;
                 }
             }
             ic_lca = min;
-        }
-        else if(aggregation_lca_strategy.equals("Avg")){
+        } else if (aggregation_lca_strategy.equals("Avg")) {
             double avg = 0;
-            for(V v : lca){
+            for (URI v : lca) {
                 avg += computeICpropagated(c, conf, v);
             }
             ic_lca = avg / (double) lca.size();
-        }
-        else if(aggregation_lca_strategy.equals("Agg")){
+        } else if (aggregation_lca_strategy.equals("Agg")) {
             ic_lca = computeICpropagated(c, conf, lca);
-        }
-        else{
-            throw new SLIB_Ex_Critic("Aggregation Strategy "+aggregation_lca_strategy+" is not a valid argument for the parameter '"+aggregation_lca+"', accepted parameters are "+Arrays.toString(acceptedAggregations));
+        } else {
+            throw new SLIB_Ex_Critic("Aggregation Strategy " + aggregation_lca_strategy + " is not a valid argument for the parameter '" + aggregation_lca + "', accepted parameters are " + Arrays.toString(acceptedAggregations));
         }
         return ic_lca;
     }

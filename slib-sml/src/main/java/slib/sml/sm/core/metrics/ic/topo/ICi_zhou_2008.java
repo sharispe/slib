@@ -34,13 +34,16 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -85,22 +88,22 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
      * @return a result stack containing the IC for each vertices.
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Integer> alldepths,
-            ResultStack<V, Long> allNbDescendants) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> alldepths,
+            Map<URI, Set<URI>> allDescendantsIncs) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_depth = alldepths.getMax() + 1;
+        double max_depth = Collections.max(alldepths.values()) + 1;
 
         int nbHypo, depth;
         int nbConcepts = alldepths.size();
 
         double x, y, cur_ic;
 
-        for (V v : alldepths.keySet()) {
+        for (URI v : alldepths.keySet()) {
 
             depth = alldepths.get(v);
-            nbHypo = allNbDescendants.get(v).intValue();
+            nbHypo = allDescendantsIncs.get(v).size();
 
 
             x = k * (1. - MathSML.log(nbHypo, getLogBase()) / MathSML.log(nbConcepts, getLogBase()));
@@ -108,14 +111,14 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
 
             cur_ic = x + y;
 
-            results.add(v, cur_ic);
+            results.put(v, cur_ic);
         }
 
         return results;
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
 
         setLogBase(conf);
@@ -124,6 +127,6 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
             k = Double.parseDouble((String) conf.getParam("k"));
         }
 
-        return compute(manager.getMaxDepths(), manager.getAllNbDescendantsInc());
+        return compute(manager.getMaxDepths(), manager.getAllDescendantsInc());
     }
 }

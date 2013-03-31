@@ -34,41 +34,44 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
- * Modification of Sanchez et al. IC in order to authorize various non uniformity of ICs among the leafs
- * 
- *  IC(u) = -log(  ( leavesInc(u) / ancsInc(u) ) / (MAX_LEAVES)) 
- * 
- *  with leaves(u) a function computing the set of reachable leaves from a concept
- *  considering (in opposition to the Sanchez et al. definition) that the function 
- *  leavesInc(c) = |{c}| when c is a root.
- *  MAX_LEAVES the number of leaves in the graph i.e. the number of leaves reachable from the root 
- *  ancsInc, the number of inclusive ancestors of a node
- * 
- *  Original definition 
- *  IC(u) = -log(  ( leaves(u) / ancsInc(u) +1 ) / (MAX_LEAVES + 1)) 
- * 
- * 
- *  See Sanchez et al for original definition
- * ﻿Sanchez D, Batet M, Isern D: Ontology-based information content computation.
- *  Knowledge-Based Systems 2011, 24:297-303.
- * 
- * 
+ * Modification of Sanchez et al. IC in order to authorize various non
+ * uniformity of ICs among the leafs
+ *
+ * IC(u) = -log( ( leavesInc(u) / ancsInc(u) ) / (MAX_LEAVES))
+ *
+ * with leaves(u) a function computing the set of reachable leaves from a
+ * concept considering (in opposition to the Sanchez et al. definition) that the
+ * function leavesInc(c) = |{c}| when c is a root. MAX_LEAVES the number of
+ * leaves in the graph i.e. the number of leaves reachable from the root
+ * ancsInc, the number of inclusive ancestors of a node
+ *
+ * Original definition IC(u) = -log( ( leaves(u) / ancsInc(u) +1 ) / (MAX_LEAVES
+ * + 1))
+ *
+ *
+ * See Sanchez et al for original definition ﻿Sanchez D, Batet M, Isern D:
+ * Ontology-based information content computation. Knowledge-Based Systems 2011,
+ * 24:297-303.
+ *
+ *
  * @author Sebastien Harispe
  */
 public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
-    
+
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
@@ -78,26 +81,26 @@ public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves,
-            ResultStack<V, Double> allNbAncestors) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> allNbOfReachableLeaves,
+            Map<URI, Integer> allNbAncestors) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_leaves = allNbOfReachableLeaves.getMax();
+        double max_leaves = Collections.max(allNbOfReachableLeaves.values());
 
         double nbLeavesExclusif, nbAncestorsInc, cur_ic;
 
-        for (V v : allNbAncestors.keySet()) {
+        for (URI v : allNbAncestors.keySet()) {
 
             nbAncestorsInc = allNbAncestors.get(v).doubleValue();
             nbLeavesExclusif = allNbOfReachableLeaves.get(v).doubleValue();
 
             cur_ic = compute(nbLeavesExclusif, nbAncestorsInc, max_leaves);
-            results.add(v, cur_ic);            
+            results.put(v, cur_ic);
         }
         return results;
     }
-    
+
     /**
      *
      * @param nbLeaves
@@ -105,22 +108,22 @@ public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
      * @param maxLeaves
      * @return
      */
-    public double compute(double nbLeaves, double nbAncestors, double maxLeaves){
-        
-        double x = nbLeaves / nbAncestors;
-        
-        return - MathSML.log(x,getLogBase()); 
+    public double compute(double nbLeaves, double nbAncestors, double maxLeaves) {
+
+        double x = (nbLeaves / nbAncestors) / maxLeaves;
+
+        return -MathSML.log(x, getLogBase());
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
-        
+
         setLogBase(conf);
 
-        ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestorsInc();
-        ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();
-        
+        Map<URI, Integer> allNbAncestors = manager.getAllNbAncestorsInc();
+        Map<URI, Integer> allNbReachableLeaves = manager.getAllNbReachableLeaves();
+
         return compute(allNbReachableLeaves, allNbAncestors);
     }
 }

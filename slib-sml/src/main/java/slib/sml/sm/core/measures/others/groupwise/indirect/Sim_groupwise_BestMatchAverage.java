@@ -35,7 +35,7 @@
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -58,18 +58,18 @@ public class Sim_groupwise_BestMatchAverage extends Sim_groupwise_general_abstra
      * @throws SLIB_Ex_Critic
      */
     @Override
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
-        MatrixDouble<V, V> results_setA = rc.getMatrixScore(setA, setB, conf);
+        MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
 
         double sumMaxColumn = 0;
         double sumMaxRow = 0;
 
-        for (V v : setA) {
+        for (URI v : setA) {
             sumMaxColumn += results_setA.getMaxColumn(v);
         }
 
-        for (V v : setB) {
+        for (URI v : setB) {
             sumMaxRow += results_setA.getMaxRow(v);
         }
 

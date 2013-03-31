@@ -36,30 +36,24 @@ package slib.sglib.model.graph;
 
 import java.util.Set;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.sail.NotifyingSail;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 
 /**
  * Generic interface of a multi directed Graph defined as a set of vertices and a set of oriented edges.
- * The interface extends NotifyingSail, e.g. in order to be able to use a Sesame reasoner onto the model 
- * encompassed into the graph.
- *
+ * 
  * @author Sebastien Harispe
  */
-public interface G extends NotifyingSail {
+public interface G {
 
     /**
      * Access to the DataFactory used to create the basic element of the graph e.g. URIs
      *
-     * @return the DataFactory used by the graph
+     * @return the factory used to create the URIs
      */
-    public DataFactory getDataFactory();
+    public URIFactory getURIFactory();
 
     /**
      * @return a copy of the set of edges contained in the graph
@@ -78,7 +72,7 @@ public interface G extends NotifyingSail {
      * @return the set of edges corresponding to the query.
      * The method return an empty set if no results are associated to the query. 
      */
-    public Set<E> getE(V v, Direction dir);
+    public Set<E> getE(URI v, Direction dir);
 
     /**
      * Retrieve all edges characterized by the specified URI predicate.
@@ -114,7 +108,7 @@ public interface G extends NotifyingSail {
      * @param dir the direction to consider
      * @return a set of edges respecting the given constraint (empty Set if no results)
      */
-    public Set<E> getE(URI t, V v, Direction dir);
+    public Set<E> getE(URI t, URI v, Direction dir);
 
 
     /**
@@ -133,67 +127,16 @@ public interface G extends NotifyingSail {
      * @param dir the direction to consider
      * @return a set of edges respecting the given constraint (empty Set if no results)
      */
-    public Set<E> getE(Set<URI> t, V source, Direction dir);
+    public Set<E> getE(Set<URI> t, URI source, Direction dir);
 
+    
     /**
-     * Retrieve all edges of the graph characterized by the constraint.
-     * The constraint can be tuned based on the following parameters:
-     * <ul>
-     *  <li>the predicate URI</li>
-     *  <li>the related vertex</li>
-     *  <li>the vertex type</li>
-     *  <li>the direction to consider</li>
-     * </ul>
-     * If a parameter is set to null, the constraint is relaxed considering this parameter.
-     * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
-     * 
-     * @param t the predicate URI of the edges of interest.
-     * @param v the vertex of interest.
-     * @param type the vertex type.
-     * @param dir the direction to consider.
-     * @return a set of edges respecting the given constraint (empty Set if no results)
+     *
+     * @param v
+     * @param wc
+     * @return
      */
-    public Set<E> getE(URI t, V v, VType type, Direction dir);
-
-    /**
-     * Retrieve all edges of the graph characterized by the constraint.
-     * The constraint can be tuned based on the following parameters:
-     * <ul>
-     *  <li>the set of predicate URIs</li>
-     *  <li>the related vertex</li>
-     *  <li>the vertex type</li>
-     *  <li>the direction to consider</li>
-     * </ul>
-     * If a parameter is set to null, the constraint is relaxed considering this parameter.
-     * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
-     * 
-     * @param pTypes the set of predicate URIs of the edges of interest.
-     * @param v the vertex of interest.
-     * @param type the vertex type.
-     * @param dir the direction to consider.
-     * @return a set of edges respecting the given constraint (empty Set if no results)
-     */
-    public Set<E> getE(Set<URI> pTypes, V v, VType type, Direction dir);
-
-    /**
-     * Retrieve all edges of the graph characterized by the constraint.
-     * The constraint can be tuned based on the following parameters:
-     * <ul>
-     *  <li>the set of predicate URIs</li>
-     *  <li>the related vertex</li>
-     *  <li>the set of vertex types</li>
-     *  <li>the direction to consider</li>
-     * </ul>
-     * If a parameter is set to null, the constraint is relaxed considering this parameter.
-     * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
-     * 
-     * @param pTypes the set of predicate URIs of the edges of interest.
-     * @param v the vertex of interest.
-     * @param vTypes the vertex type.
-     * @param dir the direction to consider.
-     * @return a set of edges respecting the given constraint (empty Set if no results)
-     */
-    public Set<E> getE(Set<URI> pTypes, V v, Set<VType> vTypes, Direction dir);
+    public Set<E> getE(URI v, WalkConstraints wc);
 
     /**
      *
@@ -201,37 +144,19 @@ public interface G extends NotifyingSail {
      * @param wc
      * @return
      */
-    public Set<E> getE(V v, WalkConstraints wc);
-
-    /**
-     *
-     * @param v
-     * @param wc
-     * @return
-     */
-    public Set<V> getV(V v, WalkConstraints wc);
+    public Set<URI> getV(URI v, WalkConstraints wc);
 
     /**
      * Add an edge of the given type (URI) between the specified source and target.
      * If the given edge already exits nothing is done. 
      *
      * @param src the source of the edge
-     * @param target the target of the edge
      * @param type the predicate URI of the edge to create
-     */
-    public void addE(V src, V target, URI type);
-    
-     /**
-     * Add an edge of the given type (URI) between the specified source and target.
-     * If the given edge already exits nothing is done. 
-     *
-     * @param src the source of the edge
      * @param target the target of the edge
-     * @param type the predicate URI of the edge to create
      */
-    public void addE(Value src, Value target, URI type);
+    public void addE(URI src, URI type, URI target);
     
-
+    
     /**
      * Add the given edge to the graph
      * @param e an edge
@@ -272,14 +197,14 @@ public interface G extends NotifyingSail {
      * @param v the Vertex to add
      * @return the vertex corresponding to the added/corresponding vertex
      */
-    public V addV(V v);
+    public void addV(URI v);
 
     /**
      * Add the given set of vertices to the Graph
      *
      * @param v the set of vertices
      */
-    public void addV(Set<V> v);
+    public void addV(Set<URI> v);
 
     /**
      * Remove the given vertex to the graph. 
@@ -287,14 +212,14 @@ public interface G extends NotifyingSail {
      *
      * @param v The Vertex to remove
      */
-    public void removeV(V v);
+    public void removeV(URI v);
 
     /**
      * Remove all specified Vertices and related edges (in / out)
      *
      * @param setV The Set of vertices to remove
      */
-    public void removeV(Set<V> setV);
+    public void removeV(Set<URI> setV);
 
     /**
      * Check if the graph contains at least one edge linking vertices v1 and v2
@@ -305,7 +230,7 @@ public interface G extends NotifyingSail {
      * @param dir the direction to consider
      * @return a boolean : true if edge exists else return false
      */
-    public boolean containsEdge(V v1, V v2, Direction dir);
+    public boolean containsEdge(URI v1, URI v2, Direction dir);
 
     /**
      * Check if the graph contains an edge respecting the given constraint.
@@ -316,7 +241,7 @@ public interface G extends NotifyingSail {
      * @param predicate the URI of the edges to consider
      * @return a boolean : true if edge exists else return false
      */
-    public boolean containsEdge(V v1, V v2, Direction dir, URI predicate);
+    public boolean containsEdge(URI v1, URI v2, Direction dir, URI predicate);
 
     /**
      * Check if the graph contains at least one edge characterized by the given predicate URI. 
@@ -328,58 +253,20 @@ public interface G extends NotifyingSail {
     public boolean containsEdgeOfType(URI t);
 
     /**
-     * Check if the graph contains the specified Vertex.
-     *
-     * @param v the Vertex to test
-     * @return a boolean : true if the vertex exists else return false
-     */
-    public boolean containsVertex(V v);
-
-    /**
      * Check if the graph contains a Vertex associated to the given Value.
      *
      * @param v the value to test
      * @return a boolean : true if the vertex exists else return false
      * @see V#equals(Object)
      */
-    public boolean containsVertex(Value v);
+    public boolean containsVertex(URI v);
 
-    /**
-     * Access to the vertex associated to the given {@link Value}
-     *
-     * @param value the Value to consider
-     * @return a vertex or null
-     */
-    public V getV(Value value);
-
+    
     /**
      * @return A copy of the set of vertices contained in the graph.
      */
-    public Set<V> getV();
+    public Set<URI> getV();
 
-    /**
-     * Return graph vertices respecting the given constraint. 
-     * If the given VType is equals to null, no restriction is applied.
-     *
-     * @param type
-     * @return a set containing the corresponding set of vertices
-     */
-    public Set<V> getV(VType type);
-
-    /**
-     * Return graph vertices respecting the given constraint.
-     * 
-     * @param type types
-     * @return  a set containing the corresponding set of vertices
-     */
-    public Set<V> getV(Set<VType> type);
-
-    /**
-     * Return the set of vertices contained in the taxonomic subgraph(s) contained in the graph. 
-     *
-     * @return The set of vertices of type VType.CLASS contained in the graph.
-     */
-    public Set<V> getVClass();
 
     /**
      * Return the number of vertices
@@ -388,13 +275,7 @@ public interface G extends NotifyingSail {
      */
     public long getNumberVertices();
 
-    /**
-     * Return the number of vertices of type CLASS
-     *
-     * @return number of vertices composing the underlying taxonomic graph
-     */
-    public long getNumberVClass();
-
+  
     /**
      * @return the number of edges
      */
@@ -409,7 +290,7 @@ public interface G extends NotifyingSail {
      * @param dir the direction to consider
      * @return the set of vertices associated to the given conditions
      */
-    public Set<V> getV(V v, Set<URI> eTypes, Direction dir);
+    public Set<URI> getV(URI v, Set<URI> eTypes, Direction dir);
 
     /**
      * Return all neighbors vertices of a given vertex considering a particular
@@ -421,29 +302,11 @@ public interface G extends NotifyingSail {
      * @param dir the direction to consider
      * @return the set of vertices associated to the given conditions
      */
-    public Set<V> getV(V v, URI predicate, Direction dir);
+    public Set<URI> getV(URI v, URI predicate, Direction dir);
 
     /**
      * @return the URI associated to the graph
      */
     public URI getURI();
 
-    /**
-     * Create a vertex associated to the given value if none exists. 
-     * If the vertex is created its type is set to VType.CLASS
-     * 
-     * @param val the Value which must be associated to the vertex.
-     * @return the created vertex or the vertex corresponding to the given value
-     */
-    public V createVertex(Value val);
-
-    /**
-     * Create a vertex associated to the given value if none exists. 
-     * If the vertex is created, its type is set to the given type.
-     * 
-     * @param val the Value which must be associated to the vertex.
-     * @param type the VType associated to the created vertex
-     * @return the created vertex or the vertex corresponding to the given value
-     */
-    public V createVertex(Value val, VType type);
 }

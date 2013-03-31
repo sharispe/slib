@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,6 @@ import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
@@ -65,12 +65,12 @@ public class GraphReduction_Transitive {
 
     /**
      * Performs a transitive reduction of the given graph only taxonomic
-     * relationships are considered i.e SUBCLASSOF. 
-     * The rooted DAG property of the graph is checked considering SUBCLASSOF relationships.
+     * relationships are considered i.e SUBCLASSOF. The rooted DAG property of
+     * the graph is checked considering SUBCLASSOF relationships.
      *
      * @param graph the graph on which the transitive reduction needs to be
      * performed
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      * @return the set of edges removed.
      */
     public static Set<E> process(G graph) throws SLIB_Ex_Critic {
@@ -81,7 +81,7 @@ public class GraphReduction_Transitive {
             throw new SLIB_Ex_Critic("Transitive reduction require ROOTED DAG");
         }
 
-        V root = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
+        URI root = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
 
         logger.info("Transitive reduction considering root: " + root);
         return process(graph, root);
@@ -92,11 +92,11 @@ public class GraphReduction_Transitive {
      * vertex as root only taxonomic relationships are considered i.e
      * SUBCLASSOF, SUPERCLASSOF.
      *
-     * @param g 
-     * @param src 
+     * @param g
+     * @param src
      * @return the set of edges removed.
      */
-    public static Set<E> process(G g, V src) {
+    public static Set<E> process(G g, URI src) {
 
 
         Set<E> removableEdges = new HashSet<E>();
@@ -106,17 +106,17 @@ public class GraphReduction_Transitive {
         WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
         DFS dfs = new DFS(g, src, wc);
 
-        List<V> topoOrder = dfs.getTraversalOrder();
+        List<URI> topoOrder = dfs.getTraversalOrder();
 
-        HashMap<V, HashSet<V>> reachableV = new HashMap<V, HashSet<V>>();
+        HashMap<URI, HashSet<URI>> reachableV = new HashMap<URI, HashSet<URI>>();
 
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 
-            V currentV = topoOrder.get(i);
+            URI currentV = topoOrder.get(i);
 
 
             if (!reachableV.containsKey(currentV)) {
-                reachableV.put(currentV, new HashSet<V>());
+                reachableV.put(currentV, new HashSet<URI>());
             }
 
             reachableV.get(currentV).add(currentV);
@@ -124,13 +124,13 @@ public class GraphReduction_Transitive {
 
             for (E e : edges) {
 
-                V target = e.getSource();
+                URI target = e.getSource();
 
                 if (!reachableV.containsKey(target)) {
-                    reachableV.put(target, new HashSet<V>());
+                    reachableV.put(target, new HashSet<URI>());
                     reachableV.get(target).addAll(reachableV.get(currentV));
                 } else {
-                    Collection<V> inter = SetUtils.intersection(reachableV.get(target), reachableV.get(currentV));
+                    Collection<URI> inter = SetUtils.intersection(reachableV.get(target), reachableV.get(currentV));
 
                     Collection<E> outTarget = g.getE(RDFS.SUBCLASSOF, target, Direction.OUT);
 

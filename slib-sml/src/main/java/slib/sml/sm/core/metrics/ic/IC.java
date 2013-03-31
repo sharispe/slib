@@ -34,11 +34,11 @@
  */
 package slib.sml.sm.core.metrics.ic;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  * Interface defining the methods representing an IC computer.
@@ -48,11 +48,11 @@ import slib.utils.impl.ResultStack;
 public interface IC {
 
     /**
-     * 
+     *
      * @param conf
      * @param manager
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;
+    public Map<URI, Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;
 }

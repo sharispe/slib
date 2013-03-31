@@ -35,8 +35,7 @@
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
 import java.util.Set;
-
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -72,13 +71,12 @@ public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_genera
         return sim;
     }
 
-
     @Override
-    public double sim(Set<V> setA, Set<V> setB, SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
 
-        MatrixDouble<V, V> results_setA_B = rc.getMatrixScore(setA, setB, paiwiseconf);
-        MatrixDouble<V, V> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
-        MatrixDouble<V, V> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
+        MatrixDouble<URI, URI> results_setA_B = rc.getMatrixScore(setA, setB, paiwiseconf);
+        MatrixDouble<URI, URI> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
+        MatrixDouble<URI, URI> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
 
         double avgScore_sA_vs_sB = results_setA_B.getAverage();
         double avgScore_sA_vs_sA = results_setA_A.getAverage();

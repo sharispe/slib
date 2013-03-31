@@ -201,13 +201,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             }
         }
 
-        NodeList operators = document.getElementsByTagName(Sm_XML_Cst.OPERATORS_TAG);
-
-        for (int i = 0; i < operators.getLength(); i++) {
-            if (operators.item(i) instanceof Element) {
-                loadOperators((Element) operators.item(i));
-            }
-        }
 
         NodeList measure = document.getElementsByTagName(Sm_XML_Cst.MEASURES_TAG);
 
@@ -293,11 +286,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         gConfICs.addAll(buildICconf(gConfICsGenerics));
     }
 
-    private void loadOperators(Element item) throws SLIB_Ex_Critic {
-        NodeList list = item.getElementsByTagName(Sm_XML_Cst.OPERATOR_TAG);
-        gConfOperators.addAll(buildOperatorconf(GenericConfBuilder.build(list)));
-    }
-
     private void checkPairwiseMeasures() throws SLIB_Ex_Critic {
 
         for (SMconf m : gConfPairwise) {
@@ -359,11 +347,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                         Util.error("Cannot resolve IC '" + ic + "' specified for pairwise measure '" + label + "'");
                     }
                 }
-
-                if (SMConstants.SIM_FRAMEWORK.containsKey(flag)) {
-                    checkFrameworkMeasure(m);
-                }
-
             } else {
                 if (flag == null) {
                     Util.error("A pairwise measure have no specified flag ");
@@ -373,20 +356,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             }
         }
         logger.info(gConfPairwise.size() + " pairwise measure configurations loaded ");
-    }
-
-    private void checkFrameworkMeasure(SMconf m) throws SLIB_Ex_Critic {
-        if (m.representation == null) {
-            throw new SLIB_Ex_Critic("Please specify a representation (attribut " + Sm_XML_Cst.REPRESENTATION_ATTR + ") associated to measure id " + m.id);
-        }
-
-        if (m.operator == null) {
-            throw new SLIB_Ex_Critic("Please specify an operator engine (attribut " + Sm_XML_Cst.OPERATOR_FLAG_ATTR + " or " + Sm_XML_Cst.OPERATOR_TAG + ", see doc) associated to measure id " + m.id);
-        }
-
-        if (!SMConstants.operators.containsKey(m.operator.flag)) {
-            throw new SLIB_Ex_Critic("Unknown operator flag " + m.operator.flag + " in measure id : " + m.id);
-        }
     }
 
     private void checkGroupwiseMeasures() throws SLIB_Ex_Critic {
@@ -471,11 +440,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     }
                 }
 
-
-
-                if (SMConstants.SIM_FRAMEWORK.containsKey(flag)) {
-                    checkFrameworkMeasure(m);
-                }
             } else {
                 if (flag == null) {
                     Util.error("A groupwise measure have no specified flag ");
@@ -574,9 +538,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             XmlTags.LABEL_ATTR,
             Sm_XML_Cst.FLAG_ATTR,
             Sm_XML_Cst.IC_ATTR,
-            Sm_XML_Cst.REPRESENTATION_ATTR,
-            Sm_XML_Cst.OPERATOR_FLAG_ATTR,
-            Sm_XML_Cst.OPERATOR_ID,
             Sm_XML_Cst.IC_PROB
         };
 
@@ -585,7 +546,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         String label = (String) c.getParam(XmlTags.LABEL_ATTR);
         String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
         String icID = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
-        String representation = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
 
 
         ICconf icConf = null;
@@ -599,11 +559,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             }
         }
 
-
-        OperatorConf opConf = loadOperatorInfo(c);
-
-
-        SMconf pc = new SMconf(id, flag, label, icConf, representation, opConf);
+        SMconf pc = new SMconf(id, flag, label, icConf);
 
         // load IC used to compute prob MICA
         if (SMConstants.MEASURE_REQUIRE_EXTRA_IC.contains(flag)) {
@@ -646,41 +602,11 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         return pc;
     }
 
-    private OperatorConf loadOperatorInfo(Conf c) throws SLIB_Ex_Critic {
-
-        String id = (String) c.getParam(XmlTags.ID_ATTR);
-        String operator_flag = (String) c.getParam(Sm_XML_Cst.OPERATOR_FLAG_ATTR);
-        String operator_id = (String) c.getParam(Sm_XML_Cst.OPERATOR_ID);
-
-        OperatorConf opConf = null;
-
-        if (operator_id == null && operator_flag != null) {
-            opConf = new OperatorConf(operator_flag, operator_flag);
-        } else if (operator_id != null) {
-            opConf = getOperatorConf(operator_id);
-
-            if (opConf == null) {
-                throw new SLIB_Ex_Critic("Cannot refer to unknow operator id  " + operator_id + " in measure id : " + id);
-            }
-        }
-        return opConf;
-    }
-
     private ICconf getIC(String icID) {
 
         for (ICconf ic : gConfICs) {
             if (ic.id.equals(icID)) {
                 return ic;
-            }
-        }
-        return null;
-    }
-
-    private OperatorConf getOperatorConf(String id) {
-
-        for (OperatorConf i : gConfOperators) {
-            if (i.id.equals(id)) {
-                return i;
             }
         }
         return null;
@@ -781,18 +707,13 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             XmlTags.LABEL_ATTR,
             Sm_XML_Cst.FLAG_ATTR,
             Sm_XML_Cst.IC_ATTR,
-            Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,
-            Sm_XML_Cst.REPRESENTATION_ATTR,
-            Sm_XML_Cst.OPERATOR_FLAG_ATTR,
-            Sm_XML_Cst.OPERATOR_ID
-        };
+            Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,};
 
         String id = (String) c.getParam(XmlTags.ID_ATTR);
         String label = (String) c.getParam(XmlTags.LABEL_ATTR);
         String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
         String ic_id = (String) c.getParam(Sm_XML_Cst.IC_TAG);
         String pairwise_measure = (String) c.getParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
-        String representation = (String) c.getParam(Sm_XML_Cst.REPRESENTATION_ATTR);
 
         ICconf icConf = null;
 
@@ -810,8 +731,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         }
 
-        OperatorConf opConf = loadOperatorInfo(c);
-        SMconf pc = new SMconf(id, flag, label, icConf, representation, opConf);
+        SMconf pc = new SMconf(id, flag, label, icConf);
         pc.setPairwise_measure_id(pairwise_measure);
 
         pc = addExtraAttributs(defaultAttributs, c, pc);
@@ -903,61 +823,6 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             icConfSet.add(ic);
         }
         return icConfSet;
-    }
-
-    private LinkedHashSet<OperatorConf> buildOperatorconf(LinkedHashSet<Conf> gCong) throws SLIB_Ex_Critic {
-
-        String[] defaultAttributs = {
-            XmlTags.ID_ATTR,
-            XmlTags.LABEL_ATTR,
-            Sm_XML_Cst.FLAG_ATTR,
-            Sm_XML_Cst.FLAG_ATTR
-        };
-
-        LinkedHashSet<OperatorConf> operatorConfSet = new LinkedHashSet<OperatorConf>();
-
-        for (Conf c : gCong) {
-
-            String id = (String) c.getParam(XmlTags.ID_ATTR);
-            String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
-
-            ICconf ic_conf = null;
-            String ic_id = (String) c.getParam(Sm_XML_Cst.IC_ATTR);
-
-            if (id == null) {
-                throw new SLIB_Ex_Critic("All operators must have an attribut " + XmlTags.ID_ATTR);
-            } else if (flag == null || !SMConstants.operators.containsKey(flag)) {
-                throw new SLIB_Ex_Critic("Unknown operator " + flag + " for operator " + id);
-            } else if (ic_id != null) {
-
-                for (ICconf i : gConfICs) {
-
-                    if (i.getId().equals(ic_id)) {
-                        ic_conf = i;
-                        break;
-                    }
-                }
-
-                if (ic_conf == null) {
-                    throw new SLIB_Ex_Critic("Please specify a valid IC id associated to Operator " + id);
-                }
-            }
-
-            // check duplicate 
-
-            for (OperatorConf conf : operatorConfSet) {
-
-                if (conf.id.equals(id)) {
-                    throw new SLIB_Ex_Critic("Duplicate operator id " + id);
-                }
-            }
-
-            OperatorConf opt = new OperatorConf(flag, id, ic_conf);
-            opt = addExtraAttributs(defaultAttributs, c, opt);
-            operatorConfSet.add(opt);
-
-        }
-        return operatorConfSet;
     }
 
     /**

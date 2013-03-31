@@ -33,8 +33,8 @@ package slib.sglib.algo.graph.extraction.rvf;
 
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -59,7 +59,7 @@ public class AncestorEngine extends RVF_TAX {
      * @param v the vertex of interest
      * @return the exclusive set of ancestors of the concept (empty set if any).
      */
-    public Set<V> getAncestorsExc(V v) {
+    public Set<URI> getAncestorsExc(URI v) {
         return getRV(v);
     }
 
@@ -70,8 +70,8 @@ public class AncestorEngine extends RVF_TAX {
      * @param v the vertex of interest
      * @return the set composed of the ancestors of the concept + the concept.
      */
-    public Set<V> getAncestorsInc(V v) {
-        Set<V> set = getRV(v);
+    public Set<URI> getAncestorsInc(URI v) {
+        Set<URI> set = getRV(v);
         set.add(v);
         return set;
     }
@@ -85,7 +85,7 @@ public class AncestorEngine extends RVF_TAX {
      * concept (empty set if any).
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllAncestorsExc() throws SLIB_Ex_Critic {
+    public Map<URI, Set<URI>> getAllAncestorsExc() throws SLIB_Ex_Critic {
 
         return getAllRV();
     }
@@ -99,10 +99,10 @@ public class AncestorEngine extends RVF_TAX {
      * concept.
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllAncestorsInc() throws SLIB_Ex_Critic {
+    public Map<URI, Set<URI>> getAllAncestorsInc() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> allAncs = getAllRV();
-        for (V v : allAncs.keySet()) {
+        Map<URI, Set<URI>> allAncs = getAllRV();
+        for (URI v : allAncs.keySet()) {
             allAncs.get(v).add(v);
         }
         return allAncs;

@@ -34,11 +34,12 @@
  */
 package slib.sml.sm.core.metrics.ic.annot;
 
-import slib.sglib.model.graph.elements.V;
+
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Corpus;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -53,5 +54,5 @@ public interface ICcorpus {
      * @return
      * @throws SLIB_Exception
      */
-    public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception;
+    public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception;
 }

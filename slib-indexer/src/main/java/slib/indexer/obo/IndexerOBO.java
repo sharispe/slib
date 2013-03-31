@@ -45,7 +45,7 @@ import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
@@ -56,7 +56,7 @@ import slib.utils.impl.OBOconstants;
  */
 public class IndexerOBO {
 
-    DataFactory factory;
+    URIFactory factory;
     
     boolean onTermSpec = false;
     String currentURI = null;
@@ -75,7 +75,7 @@ public class IndexerOBO {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
         
         this.factory = factory;
         index = new IndexHash();

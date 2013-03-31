@@ -34,11 +34,13 @@
  */
 package slib.sml.sm.core.metrics.ic.utils;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.topo.ICtopo;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -50,12 +52,12 @@ public class ProbOccurence implements ICtopo {
      * @param nbOccurrence
      * @param addToOccurrence
      * @return
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
-    public static ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurrence, int addToOccurrence) throws SLIB_Ex_Critic {
+    public static Map<URI, Double> compute(Map<URI, Integer> nbOccurrence, int addToOccurrence) throws SLIB_Ex_Critic {
 
-        long max = (long) nbOccurrence.getMax();
-        ResultStack<V, Double> results = new ResultStack<V, Double>();
+        long max = Collections.max(nbOccurrence.values());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
         // we add to the max the number of occurrences added to each nodes
 
@@ -63,16 +65,16 @@ public class ProbOccurence implements ICtopo {
 
         double prob_occ;
 
-        for (V v : nbOccurrence.getValues().keySet()) {
+        for (URI v : nbOccurrence.keySet()) {
             prob_occ = (double) (nbOccurrence.get(v) + addToOccurrence) / max;
-            results.add(v, prob_occ);
+            results.put(v, prob_occ);
         }
 
         return results;
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
         return compute(manager.getAllNbDescendantsInc(), 0);
     }

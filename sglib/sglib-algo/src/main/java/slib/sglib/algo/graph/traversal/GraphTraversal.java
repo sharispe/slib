@@ -36,7 +36,8 @@ knowledge of the CeCILL license and that you accept its terms.
  
 package slib.sglib.algo.graph.traversal;
 
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
+
 
 /**
  * GraphTraversal interface extending vertex Iterator
@@ -56,6 +57,6 @@ public interface GraphTraversal{
      *
      * @return
      */
-    V next();
+    URI next();
 
 }

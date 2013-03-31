@@ -35,11 +35,11 @@
 package slib.sml.sm.core.metrics.ic.utils;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
@@ -64,20 +64,20 @@ public class IcUtils {
      * null if none is found
      * @throws SLIB_Exception
      */
-    public static V searchMICA(
-            V a,
-            V b,
-            Set<V> setA,
-            Set<V> setB,
-            ResultStack<V, Double> icScores) throws SLIB_Exception {
+    public static URI searchMICA(
+            URI a,
+            URI b,
+            Set<URI> setA,
+            Set<URI> setB,
+            Map<URI, Double> icScores) throws SLIB_Exception {
 
-        V mica = null;
+        URI mica = null;
 
         if (a.equals(b)) {
             mica = a;
         } else {
 
-            Set<V> intersec = SetUtils.intersection(setA, setB);
+            Set<URI> intersec = SetUtils.intersection(setA, setB);
 
 
 
@@ -87,13 +87,13 @@ public class IcUtils {
                 throw new SLIB_Ex_Critic("Empty IC result stack... Treatment cannot be performed");
             }
 
-            Iterator<V> it = intersec.iterator();
+            Iterator<URI> it = intersec.iterator();
             double max = -Double.MAX_VALUE;
 
             while (it.hasNext()) {
 
 
-                V v = it.next();
+                URI v = it.next();
 
                 if (mica == null || max < icScores.get(v)) {
                     max = icScores.get(v);
@@ -122,13 +122,13 @@ public class IcUtils {
      * @throws SLIB_Exception
      */
     public static Double searchMax_IC_MICA(
-            V a,
-            V b,
-            Set<V> setA,
-            Set<V> setB,
-            ResultStack<V, Double> icScores) throws SLIB_Exception {
+            URI a,
+            URI b,
+            Set<URI> setA,
+            Set<URI> setB,
+            Map<URI, Double> icScores) throws SLIB_Exception {
 
-        V mica = searchMICA(a, b, setA, setB, icScores);
+        URI mica = searchMICA(a, b, setA, setB, icScores);
 
 
         return icScores.get(mica);
@@ -148,21 +148,21 @@ public class IcUtils {
      * @throws SLIB_Exception
      */
     public static Double searchMin_pOc_MICA(
-            Set<V> setA,
-            Set<V> setB,
-            ResultStack<V, Double> icScores) throws SLIB_Exception {
+            Set<URI> setA,
+            Set<URI> setB,
+            Map<URI, Double> icScores) throws SLIB_Exception {
 
-        Set<V> intersec = SetUtils.intersection(setA, setB);
+        Set<URI> intersec = SetUtils.intersection(setA, setB);
 
         Double min = null;
 
         if (!intersec.isEmpty() && icScores != null) {
 
-            Iterator<V> it = intersec.iterator();
+            Iterator<URI> it = intersec.iterator();
             min = icScores.get(it.next());
-
+            URI v;
             while (it.hasNext()) {
-                V v = it.next();
+                v = it.next();
                 if (min > icScores.get(v)) {
                     min = icScores.get(v);
                 }

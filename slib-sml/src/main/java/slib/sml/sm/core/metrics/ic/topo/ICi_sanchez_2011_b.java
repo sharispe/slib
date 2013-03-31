@@ -34,18 +34,21 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
+import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
- * Reference: Sanchez D, Batet M, Isern D: Ontology-based information
- * content computation. Knowledge-Based Systems 2011, 24:297-303.
+ * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content
+ * computation. Knowledge-Based Systems 2011, 24:297-303.
  *
  * formula equation 9 p 299
  *
@@ -54,7 +57,7 @@ import slib.utils.impl.ResultStack;
  * IC is normalize considering spirit formulated in Faria and al in order to
  * produce results [0,1]. ﻿Faria D, Pesquita C, Couto FM, Falcão A: Proteinon: A
  * web tool for protein semantic similarity. 2007.
- * 
+ *
  * @author Harispe Sébastien ﻿
  */
 public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
@@ -66,18 +69,18 @@ public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> allNbOfReachableLeaves) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_leaves = allNbOfReachableLeaves.getMax();
+        int max_leaves = Collections.max(allNbOfReachableLeaves.values());
 
         double nbLeaves;
         double x, cur_ic, cur_ic_norm;
 
         double y = (double) max_leaves + 1;
 
-        for (V v : allNbOfReachableLeaves.getValues().keySet()) {
+        for (URI v : allNbOfReachableLeaves.keySet()) {
 
             nbLeaves = allNbOfReachableLeaves.get(v);
 
@@ -87,13 +90,13 @@ public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
 
             cur_ic_norm = cur_ic / MathSML.log(y, getLogBase());
 
-            results.add(v, cur_ic_norm);
+            results.put(v, cur_ic_norm);
         }
         return results;
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
 
         setLogBase(conf);

@@ -4,8 +4,6 @@ import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 
 
 /**
@@ -29,7 +27,7 @@ public interface WalkConstraints {
 	 * @param v the vertex to evaluates
 	 * @return a boolean value defining if the walk must continue (true:yes, false:no)
 	 */
-	public boolean respectConstaints(V v);
+	public boolean respectConstaints(URI v);
 	
 	/**
 	 * The method defines the behavior of a walk reaching the given edge.
@@ -54,19 +52,6 @@ public interface WalkConstraints {
 	 */
 	public Direction getAssociatedDirection(URI uri);
 
-	/**
-	 * Add the current type of vertex as admitted
-         * @param type the type of vertex to add.
-	 */
-	public void addAcceptedVType(VType type);
-	
-	
-	/**
-	 * Return the set of VTypes the object admits 
-	 * @return set of VTypes admitted or empty set
-	 */
-	public Set<VType> getAcceptedVTypes();
-	
 	/**
 	 * Add the current Traversal in the mapping of admitted traversal.
          * @param pred the predicate URI.

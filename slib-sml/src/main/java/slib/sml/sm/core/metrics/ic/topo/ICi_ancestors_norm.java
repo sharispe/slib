@@ -31,11 +31,12 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  * Basic definition of an estimator of specificity based on the number of ancestors.
@@ -44,16 +45,16 @@ import slib.utils.impl.ResultStack;
 public class ICi_ancestors_norm implements ICtopo{
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic {
         
-        ResultStack<V, Double> nbAncestors = engine.getAllNbAncestorsInc();
-        ResultStack<V,Double> ics = new ResultStack<V, Double>();
-        double nbConceptOnto = engine.getGraph().getNumberVClass();
+        Map<URI, Integer> nbAncestors = engine.getAllNbAncestorsInc();
+        Map<URI,Double> ics = new HashMap<URI, Double>();
+        double nbConceptOnto = engine.getClasses().size();
         
-        for(V v : nbAncestors.getValues().keySet()){
+        for(URI v : nbAncestors.keySet()){
             
             double ic = nbAncestors.get(v)/nbConceptOnto;
-            ics.add(v, ic);
+            ics.put(v, ic);
         }
         return ics;
     }

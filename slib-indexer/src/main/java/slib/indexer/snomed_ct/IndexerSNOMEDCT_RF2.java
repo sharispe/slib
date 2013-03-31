@@ -8,12 +8,7 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
@@ -23,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -39,7 +34,7 @@ public class IndexerSNOMEDCT_RF2 {
     private int DESCRIPTION_DATE = 1;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Pattern p_tab = Pattern.compile("\\t");
-    DataFactory repo;
+    URIFactory repo;
 
     /**
      * Only load an index for the URI already loaded
@@ -52,7 +47,7 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
+    public IndexHash buildIndex(URIFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
 
 
@@ -91,7 +86,7 @@ public class IndexerSNOMEDCT_RF2 {
 
                     URI cURI = repo.createURI(defaultNamespace + split[DESCRIPTION_CONCEPT_ID]);
 
-                    if (graph.getV(cURI) != null) { // the concept is loaded in the repository
+                    if (graph.containsVertex(cURI)) { // the concept is loaded in the repository
 
                         if (!index.getMapping().containsKey(cURI)) { // we add the entry to the collection
 
@@ -128,20 +123,20 @@ public class IndexerSNOMEDCT_RF2 {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
+    public IndexHash buildIndex(URIFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
         logger.info("Building Index");
         IndexHash index = buildIndex(factory, graph, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS);
 
         logger.info("Cleaning Index");
-        Set<Value> toRemove = new HashSet<Value>();
-        for (Value k : index.getMapping().keySet()) {
+        Set<URI> toRemove = new HashSet<URI>();
+        for (URI k : index.getMapping().keySet()) {
 
             if (!graph.containsVertex(k)) {
                 toRemove.add(k);
             }
         }
-        for (Value v : toRemove) {
+        for (URI v : toRemove) {
             index.getMapping().remove(v);
         }
         logger.info("Done");

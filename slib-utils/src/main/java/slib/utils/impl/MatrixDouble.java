@@ -35,6 +35,7 @@
 package slib.utils.impl;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -48,9 +49,11 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class MatrixDouble<C, R> {
 
-    HashMap<C, Integer> columnIndex;
-    HashMap<R, Integer> rowIndex;
-    Double[][] matrix;
+    private Map<C, Integer> columnIndex;
+    private Map<R, Integer> rowIndex;
+    private Double[][] matrix;
+    private int columns_number;
+    private int rows_number;
 
     /**
      * Create a matrix filled with null values considering the given indexes
@@ -59,7 +62,7 @@ public class MatrixDouble<C, R> {
      * @param rowResources
      */
     public MatrixDouble(Set<C> columResources, Set<R> rowResources) {
-        init(columResources, rowResources, null);
+        init(columResources, rowResources);
     }
 
     /**
@@ -70,14 +73,24 @@ public class MatrixDouble<C, R> {
      * @param initValue default value
      */
     public MatrixDouble(Set<C> columResources, Set<R> rowResources, Double initValue) {
-        init(columResources, rowResources, initValue);
+        init(columResources, rowResources);
+
+        if (initValue != null) {
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[i].length; j++) {
+                    matrix[i][j] = initValue;
+                }
+            }
+        }
     }
 
-    private void init(Set<C> columResources, Set<R> rowResources, Double initValue) {
-        columnIndex = new HashMap<C, Integer>(columResources.size());
-        rowIndex = new HashMap<R, Integer>(rowResources.size());
+    private void init(Set<C> columResources, Set<R> rowResources) {
+        columns_number = columResources.size();
+        rows_number = rowResources.size();
 
-        matrix = new Double[columResources.size()][rowResources.size()];
+        columnIndex = new HashMap<C, Integer>(columns_number);
+        rowIndex = new HashMap<R, Integer>(rows_number);
+        matrix = new Double[columns_number][rows_number];
 
         int id = 0;
 
@@ -91,20 +104,13 @@ public class MatrixDouble<C, R> {
             rowIndex.put(rc, id);
             id++;
         }
-
-        if (initValue != null) {
-            for (int i = 0; i < matrix.length; i++) {
-                for (int j = 0; j < matrix[i].length; j++) {
-                    matrix[i][j] = initValue;
-                }
-            }
-        }
     }
 
     /**
+     * Return the column associated to the given element
      *
-     * @param r
-     * @return
+     * @param r the element
+     * @return a tab corresponding to the values associated to the element
      */
     public Double[] getColumn(C r) {
         if (isInColumnIndex(r)) {
@@ -114,6 +120,7 @@ public class MatrixDouble<C, R> {
     }
 
     /**
+     * Return the row associated to the given element
      *
      * @param r
      * @return
@@ -124,15 +131,12 @@ public class MatrixDouble<C, R> {
             return null;
         }
 
-        Double[] row = new Double[columnIndex.keySet().size()];
-        int i = 0;
-        for (C c : columnIndex.keySet()) {
-            try {
-                row[i] = getValue(c, r);
-            } catch (SLIB_Ex_Critic e) {
-            }
-        }
+        Double[] row = new Double[columns_number];
+        int row_resource_id = rowIndex.get(r);
 
+        for (int j = 0; j < columns_number; j++) {
+            row[j] = matrix[j][row_resource_id];
+        }
         return row;
     }
 
@@ -198,7 +202,7 @@ public class MatrixDouble<C, R> {
      * @return
      */
     public int getNbColumns() {
-        return columnIndex.size();
+        return columns_number;
     }
 
     /**
@@ -206,7 +210,7 @@ public class MatrixDouble<C, R> {
      * @return
      */
     public int getNbRows() {
-        return rowIndex.size();
+        return rows_number;
     }
 
     /**
@@ -214,19 +218,17 @@ public class MatrixDouble<C, R> {
      * @return
      */
     public boolean isSquare() {
-        return columnIndex.size() == rowIndex.size();
+        return rows_number == columns_number;
     }
 
     /**
-     *
-     * @return
+     * @return the maximal value stored in the matrix
      */
     public Double getMax() {
         Double max = null;
 
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[0].length; j++) {
-
                 if (matrix[i][j] != null && (max == null || matrix[i][j] > max)) {
                     max = matrix[i][j];
                 }
@@ -236,9 +238,7 @@ public class MatrixDouble<C, R> {
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * @return the maximal value stored in the column of the given resource
      * @throws SLIB_Ex_Critic
      */
     public Double getMaxColumn(C v) throws SLIB_Ex_Critic {
@@ -249,7 +249,7 @@ public class MatrixDouble<C, R> {
 
         Double[] columnScore = getColumn(v);
         Double max = null;
-        for (int i = 0; i < columnScore.length; i++) {
+        for (int i = 0; i < rows_number; i++) {
             if (columnScore[i] != null && (max == null || max < columnScore[i])) {
                 max = columnScore[i];
             }
@@ -258,9 +258,7 @@ public class MatrixDouble<C, R> {
     }
 
     /**
-     *
-     * @param v
-     * @return
+     * @return the maximal value stored in the row of the given resource
      * @throws SLIB_Ex_Critic
      */
     public Double getMaxRow(R v) throws SLIB_Ex_Critic {
@@ -271,7 +269,7 @@ public class MatrixDouble<C, R> {
 
         Double[] rowScore = getRow(v);
         Double max = null;
-        for (int i = 0; i < rowScore.length; i++) {
+        for (int i = 0; i < columns_number; i++) {
             if (rowScore[i] != null && (max == null || max < rowScore[i])) {
                 max = rowScore[i];
             }
@@ -300,8 +298,7 @@ public class MatrixDouble<C, R> {
     }
 
     /**
-     * Return the average of contained valued i.e. sum non null values / number
-     * of non null
+     * Return the average of contained valued. Null values are excluded.
      *
      * @return null if the matrix is only composed of null value.
      */

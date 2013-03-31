@@ -33,8 +33,8 @@ package slib.sglib.algo.graph.extraction.rvf;
 
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -60,7 +60,7 @@ public class DescendantEngine extends RVF_TAX {
      * @return the exclusive set of descendants of the concept (empty set if
      * any).
      */
-    public Set<V> getDescendantsExc(V v) {
+    public Set<URI> getDescendantsExc(URI v) {
         return getRV(v);
     }
     
@@ -72,8 +72,8 @@ public class DescendantEngine extends RVF_TAX {
      * @return the exclusive set of descendants of the concept (empty set if
      * any).
      */
-    public Set<V> getDescendantsInc(V v) {
-        Set<V> set = getRV(v);
+    public Set<URI> getDescendantsInc(URI v) {
+        Set<URI> set = getRV(v);
         set.add(v);
         return set;
     }
@@ -87,7 +87,7 @@ public class DescendantEngine extends RVF_TAX {
      * concept (empty set if any).
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllDescendantsExc() throws SLIB_Ex_Critic {
+    public Map<URI, Set<URI>> getAllDescendantsExc() throws SLIB_Ex_Critic {
         return getAllRV();
     }
     
@@ -100,9 +100,9 @@ public class DescendantEngine extends RVF_TAX {
      * concept.
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllDescendantsInc() throws SLIB_Ex_Critic {
-        Map<V, Set<V>> allDescs = getAllRV();
-        for (V v : allDescs.keySet()) {
+    public Map<URI, Set<URI>> getAllDescendantsInc() throws SLIB_Ex_Critic {
+        Map<URI, Set<URI>> allDescs = getAllRV();
+        for (URI v : allDescs.keySet()) {
             allDescs.get(v).add(v);
         }
         return allDescs;

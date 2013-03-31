@@ -5,14 +5,11 @@ import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Exception;
 
@@ -29,13 +26,13 @@ public class GraphExample {
     public static void main(String[] params) throws SLIB_Exception{
        
         // We use a datafactory to create some elements such as URIs
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
         
         URI uriGraph = factory.createURI("http://graph/");
-        URI uriVa    = factory.createURI("http://graph/vA");
-        URI uriVb    = factory.createURI("http://graph/vB");
-        URI uriVc    = factory.createURI("http://graph/vC");
-        URI uriVd    = factory.createURI("http://graph/vD");
+        URI vA    = factory.createURI("http://graph/vA");
+        URI vB    = factory.createURI("http://graph/vB");
+        URI vC    = factory.createURI("http://graph/vC");
+        URI vD    = factory.createURI("http://graph/vD");
         
         URI relA    = factory.createURI("http://graph/interact");
         
@@ -46,12 +43,8 @@ public class GraphExample {
         System.out.println(graph.toString());
         
         // We create vertices and an edge
-        V vA = new Vertex(uriVa, VType.CLASS);
-        V vB = new Vertex(uriVb, VType.CLASS);
-        V vC = new Vertex(uriVc, VType.CLASS);
-        V vD = new Vertex(uriVd, VType.CLASS);
  
-        E e = new Edge(vD, vA, RDFS.SUBCLASSOF);
+        E e = new Edge(vD, RDFS.SUBCLASSOF, vA);
         
         // You can therfore add a vertex or an edge
         graph.addV(vA);
@@ -61,9 +54,9 @@ public class GraphExample {
         System.out.println(graph.toString());
 
         // It's also possible to directly add edges without explicitly create them
-        graph.addE(vB, vA, RDFS.SUBCLASSOF);
-        graph.addE(vC, vB, RDFS.SUBCLASSOF);
-        graph.addE(vB, vD, relA);
+        graph.addE(vB, RDFS.SUBCLASSOF,vA);
+        graph.addE(vC, RDFS.SUBCLASSOF,vB);
+        graph.addE(vB, relA,vD);
         
        
         System.out.println("- Graph, edges added");
@@ -84,8 +77,8 @@ public class GraphExample {
         
         // Retrieve all the ancestors/descendant of a vertex
         SM_Engine engine = new SM_Engine(graph);
-        Set<V> ancestorsB = engine.getAncestorsInc(vB);
-        Set<V> descendantsB = engine.getDescendantsInc(vB);
+        Set<URI> ancestorsB = engine.getAncestorsInc(vB);
+        Set<URI> descendantsB = engine.getDescendantsInc(vB);
         
         System.out.println("Ancestors vB:   "+ancestorsB);
         System.out.println("Descendants vB: "+descendantsB);
@@ -93,11 +86,11 @@ public class GraphExample {
         
         // Retrieve all the vertices and edges associated to a graph
         
-        Set<V> vertices = graph.getV();
+        Set<URI> vertices = graph.getV();
         Set<E> edges = graph.getE();
         
         System.out.println("-Vertices");
-        for(V v : vertices){
+        for(URI v : vertices){
             System.out.println("\t"+v);
         }
         

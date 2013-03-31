@@ -34,7 +34,6 @@
  */
 package slib.sglib.io.loader;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.openrdf.model.URI;
@@ -51,13 +50,13 @@ import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;
 import slib.sglib.io.loader.bio.snomedct.GraphLoaderSnomedCT_RF2;
 import slib.sglib.io.loader.csv.GraphLoader_CSV;
 import slib.sglib.io.loader.rdf.RDFLoader;
-import slib.sglib.io.loader.sgl.GraphLoader_SGL;
 import slib.sglib.io.loader.slibformat.GraphLoader_SLIB;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.GraphRepositoryMemory;
+import slib.sglib.model.repo.URIFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -107,7 +106,7 @@ public class GraphLoaderGeneric {
         logger.debug("Create graph " + uri);
 
         G g = new GraphMemory(uri);
-        DataFactoryMemory.getSingleton().addGraph(g);
+        GraphRepositoryMemory.getSingleton().registerGraph(uri, g);
         return g;
     }
 
@@ -124,6 +123,8 @@ public class GraphLoaderGeneric {
         logger.info("Loading Graph "+graphConf.getUri());
 
         G g = createGraph(graphConf.getUri());
+        
+        
         return load(graphConf,g);
     }
     
@@ -132,12 +133,9 @@ public class GraphLoaderGeneric {
             populate(dataConf, g);
         }
 
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
 
         GraphActionExecutor.applyActions(factory, graphConf.getActions(), g);
-
-        DataFactoryMemory.getSingleton().addGraph(g);
-
         return g;
     }
 
@@ -157,8 +155,6 @@ public class GraphLoaderGeneric {
 
         if (data.getFormat() == GFormat.OBO) {
             return new GraphLoader_OBO_1_2();
-        } else if (data.getFormat() == GFormat.SGL) {
-            return new GraphLoader_SGL();
         } else if (data.getFormat() == GFormat.GAF2) {
             return new GraphLoader_GAF_2();
         } else if (data.getFormat() == GFormat.RDF_XML) {

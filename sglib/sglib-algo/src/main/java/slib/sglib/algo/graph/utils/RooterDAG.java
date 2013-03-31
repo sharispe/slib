@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -111,19 +110,19 @@ public class RooterDAG {
         // roots are considered as vertices 
         // - with out edge of type etypeDAG (vertices contained in uDAG)
         // - without out edges of type invEtypeDAG
-        Set<V> roots = new ValidatorDAG().getDAGRoots(g, wc);
+        Set<URI> roots = new ValidatorDAG().getDAGRoots(g, wc);
 
         int nbRoot = roots.size();
 
         if (nbRoot == 1) {
             logger.info("Rooting skipped : Graph already rooted");
-            rootURI_ = (URI) roots.iterator().next().getValue();
+            rootURI_ = roots.iterator().next();
         } else {
             logger.info("Number of roots detected: " + roots.size());
-            V root = g.createVertex(rootUri);
+            g.addV(rootUri);
             
-            if(roots.contains(root)){
-                roots.remove(root);
+            if(roots.contains(rootUri)){
+                roots.remove(rootUri);
             }
 
             rootURI_ = rootUri;
@@ -131,9 +130,9 @@ public class RooterDAG {
 
             long c = 0;
 
-            for (V v : roots) {
+            for (URI v : roots) {
                 c++;
-                g.addE(v, root, RDFS.SUBCLASSOF);
+                g.addE(v, RDFS.SUBCLASSOF, rootUri);
             }
             
             
@@ -163,7 +162,7 @@ public class RooterDAG {
         if (!validator.containsRootedTaxonomicDag(g)) {
             return rootUnderlyingDAG(g, rootUri, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT),true);
         } else {
-            return (URI) validator.getRootedTaxonomicDAGRoot(g).getValue();
+            return validator.getRootedTaxonomicDAGRoot(g);
         }
     }
 }

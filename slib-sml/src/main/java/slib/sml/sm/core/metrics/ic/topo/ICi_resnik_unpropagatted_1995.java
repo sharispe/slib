@@ -34,14 +34,16 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  * ICi_resnik_1995
@@ -61,37 +63,37 @@ import slib.utils.impl.ResultStack;
  *
  */
 public class ICi_resnik_unpropagatted_1995 extends LogBasedMetric implements ICtopo {
-    
+
     /**
      *
      * @param nbDescendants
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> nbDescendants) throws SLIB_Ex_Critic {
-        
-        ResultStack<V, Double> rtemp = ProbOccurence.compute(nbDescendants, 0);
-        
+    public Map<URI, Double> compute(Map<URI, Integer> nbDescendants) throws SLIB_Ex_Critic {
+
+        Map<URI, Double> rtemp = ProbOccurence.compute(nbDescendants, 0);
+
         double curIc, curIc_norm;
-        
-        double max = nbDescendants.getMax();
-        
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
-        
-        for (V v : nbDescendants.getValues().keySet()) {
-            
-            curIc = - MathSML.log(rtemp.get(v), getLogBase());
+
+        double max = Collections.max(nbDescendants.values());
+
+        Map<URI, Double> results = new HashMap<URI, Double>();
+
+        for (URI v : nbDescendants.keySet()) {
+
+            curIc = -MathSML.log(rtemp.get(v), getLogBase());
             curIc_norm = curIc / MathSML.log(max, getLogBase());
-            
-            results.add(v, curIc_norm);
+
+            results.put(v, curIc_norm);
         }
         return results;
     }
-    
+
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
-        
+
         setLogBase(conf);
         return compute(manager.getAllNbDescendantsInc());
     }

@@ -40,34 +40,25 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
-import org.openrdf.model.ValueFactory;
-import org.openrdf.sail.NotifyingSailConnection;
-import org.openrdf.sail.SailException;
-import org.openrdf.sail.helpers.NotifyingSailBase;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
-import slib.utils.impl.SetUtils;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 
 /**
  *
  * @author Harispe Sébastien
  */
-public class GraphMemory extends NotifyingSailBase implements G {
+public class GraphMemory implements G {
 
-    private DataFactory factory;
-    private Map<Value, V> vMapping;	// value Mapping
+    private URIFactory factory;
+    private Set<URI> uris;	// value Mapping
     private Set<E> edges;
-    private Map<V, HashSet<E>> vertexOutEdges;
-    private Map<V, HashSet<E>> vertexInEdges;
+    private Map<URI, HashSet<E>> vertexOutEdges;
+    private Map<URI, HashSet<E>> vertexInEdges;
     private URI uri;
 
     /**
@@ -77,7 +68,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
      * @param uri
      */
     public GraphMemory(URI uri) {
-        this(DataFactoryMemory.getSingleton(), uri);
+        this(URIFactoryMemory.getSingleton(), uri);
     }
 
     /**
@@ -85,7 +76,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
      * @param factory
      * @param uri
      */
-    public GraphMemory(DataFactory factory, URI uri) {
+    public GraphMemory(URIFactory factory, URI uri) {
 
         this.uri = uri;
         this.factory = factory;
@@ -93,17 +84,16 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public DataFactory getDataFactory() {
+    public URIFactory getURIFactory() {
         return factory;
     }
 
     private void init() {
 
-        vMapping = new HashMap<Value, V>();
+        uris = new HashSet<URI>();
         edges = new HashSet<E>();
-        vertexOutEdges = new HashMap<V, HashSet<E>>();
-        vertexInEdges = new HashMap<V, HashSet<E>>();
-        factory.addGraph(this);
+        vertexOutEdges = new HashMap<URI, HashSet<E>>();
+        vertexInEdges = new HashMap<URI, HashSet<E>>();
     }
 
     @Override
@@ -129,7 +119,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public Set<E> getE(Set<URI> types, V v, Direction dir) {
+    public Set<E> getE(Set<URI> types, URI v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
 
@@ -161,7 +151,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public Set<E> getE(URI t, V v, Direction dir) {
+    public Set<E> getE(URI t, URI v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
 
@@ -193,70 +183,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public Set<E> getE(Set<URI> eTypes, V v, Set<VType> targetTypes, Direction dir) {
-
-        Set<E> edgesCol;
-
-        if (targetTypes == null) {
-            edgesCol = getE(eTypes, v, dir);
-        } else {
-
-            edgesCol = new HashSet<E>();
-
-            if (dir == Direction.BOTH || dir == Direction.OUT) {
-                for (E e : getE(eTypes, v, Direction.OUT)) {
-                    if (targetTypes.contains(e.getTarget().getType())) {
-                        edgesCol.add(e);
-                    }
-                }
-            }
-            if (dir == Direction.BOTH || dir == Direction.IN) {
-                for (E e : getE(eTypes, v, Direction.IN)) {
-                    if (targetTypes.contains(e.getSource().getType())) {
-                        edgesCol.add(e);
-                    }
-                }
-            }
-        }
-
-        return edgesCol;
-    }
-
-    @Override
-    public Set<E> getE(URI t, V source, VType targetType, Direction dir) {
-        return getE(SetUtils.buildSet(t), source, SetUtils.buildSet(targetType), dir);
-    }
-
-    @Override
-    public Set<E> getE(Set<URI> eTypes, V v, VType targetType, Direction dir) {
-
-        Set<E> edgesCol;
-
-        if (targetType == null) {
-            edgesCol = getE(eTypes, v, dir);
-        } else {
-
-            edgesCol = new HashSet<E>();
-
-            if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v)) {
-                for (E e : vertexInEdges.get(v)) {
-                    if (eTypes == null || eTypes.contains(e.getURI())) {
-                        edgesCol.add(e);
-                    }
-                }
-            } else if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v)) {
-                for (E e : vertexOutEdges.get(v)) {
-                    if (eTypes == null || eTypes.contains(e.getURI())) {
-                        edgesCol.add(e);
-                    }
-                }
-            }
-        }
-        return edgesCol;
-    }
-
-    @Override
-    public Set<E> getE(V v, Direction dir) {
+    public Set<E> getE(URI v, Direction dir) {
 
         Set<E> edgesCol = new HashSet<E>();
 
@@ -288,35 +215,17 @@ public class GraphMemory extends NotifyingSailBase implements G {
 
             vertexOutEdges.get(e.getSource()).add(e);
             vertexInEdges.get(e.getTarget()).add(e);
-
-            factory.getPredicateFactory().add(e.getURI());
         }
     }
 
     @Override
-    public Set<V> getV() {
-        return new HashSet<V>(vMapping.values());
+    public Set<URI> getV() {
+        return new HashSet<URI>(uris);
     }
 
     @Override
-    public void addE(V src, V target, URI type) {
-        addE(new Edge(src, target, type));
-    }
-
-    @Override
-    public void addE(Value src, Value target, URI type) {
-
-        V srcV = vMapping.get(src);
-        V targetV = vMapping.get(target);
-
-        if (srcV == null) {
-            throw new IllegalArgumentException("Graph " + this.getURI() + " doesn't contain a vertex associated to value " + src);
-        } else if (targetV == null) {
-            throw new IllegalArgumentException("Graph " + this.getURI() + " doesn't contain a vertex associated to value " + target);
-        }
-
-        E e = new Edge(srcV, targetV, type);
-        addE(e);
+    public void addE(URI src, URI predicate, URI target) {
+        addE(new Edge(src, predicate, target));
     }
 
     @Override
@@ -363,24 +272,19 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public V addV(V v) {
-
-        if (!vMapping.containsKey(v.getValue())) {
-            vMapping.put(v.getValue(), v);
-            return v;
-        }
-        return vMapping.get(v.getValue());
+    public void addV(URI v) {
+        uris.add(v);
     }
 
     @Override
-    public void addV(Set<V> vertices) {
-        for (V v : vertices) {
+    public void addV(Set<URI> vertices) {
+        for (URI v : vertices) {
             addV(v);
         }
     }
 
     @Override
-    public void removeV(V v) {
+    public void removeV(URI v) {
 
         Set<E> toRemove = new HashSet<E>();
 
@@ -397,18 +301,18 @@ public class GraphMemory extends NotifyingSailBase implements G {
             vertexInEdges.remove(v);
         }
         removeE(toRemove);
-        vMapping.remove(v.getValue());
+        uris.remove(v);
     }
 
     @Override
-    public void removeV(Set<V> setV) {
-        for (V v : setV) {
+    public void removeV(Set<URI> setV) {
+        for (URI v : setV) {
             removeV(v);
         }
     }
 
     @Override
-    public boolean containsEdge(V v1, V v2, Direction dir) {
+    public boolean containsEdge(URI v1, URI v2, Direction dir) {
 
         if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v1)) {
             for (E e : vertexOutEdges.get(v1)) {
@@ -430,7 +334,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public boolean containsEdge(V v1, V v2, Direction dir, URI type) {
+    public boolean containsEdge(URI v1, URI v2, Direction dir, URI type) {
 
         if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v1)) {
             for (E e : vertexOutEdges.get(v1)) {
@@ -469,18 +373,14 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public boolean containsVertex(V v) {
-        return vMapping.containsKey(v.getValue());
+    public boolean containsVertex(URI v) {
+        return uris.contains(v);
     }
 
-    @Override
-    public V getV(Value value) {
-        return vMapping.get(value);
-    }
-
+   
     @Override
     public long getNumberVertices() {
-        return vMapping.size();
+        return uris.size();
     }
 
     @Override
@@ -488,10 +388,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
         return edges.size();
     }
 
-    @Override
-    public boolean containsVertex(Value value) {
-        return vMapping.containsKey(value);
-    }
+   
 
     @Override
     public Set<E> getE(Set<URI> c) {
@@ -515,67 +412,14 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public Set<V> getV(VType type) {
-
-        if (type == null) {
-            return getV();
-        }
-
-        Set<V> vs = new HashSet<V>();
-
-        for (V v : vMapping.values()) {
-            if (v.getType().equals(type)) {
-                vs.add(v);
-            }
-        }
-        return vs;
-    }
-
-    @Override
-    public Set<V> getV(Set<VType> types) {
-
-        if (types == null) {
-            return getV();
-        }
-
-        Set<V> vSel = new HashSet<V>();
-
-        for (V v : vMapping.values()) {
-            if (types.contains(v.getType())) {
-                vSel.add(v);
-            }
-        }
-        return vSel;
-
-    }
-
-    @Override
-    public Set<V> getVClass() {
-
-        Set<V> vSel = new HashSet<V>();
-
-        for (V v : vMapping.values()) {
-            if (v.getType() != null && v.getType() == VType.CLASS) {
-                vSel.add(v);
-            }
-        }
-        return vSel;
-    }
-
-    @Override
-    public long getNumberVClass() {
-        return getVClass().size();
-    }
-
-    @Override
     public URI getURI() {
         return uri;
     }
 
     @Override
-    public Set<V> getV(V v, Set<URI> buildUris, Direction dir) {
+    public Set<URI> getV(URI v, Set<URI> buildUris, Direction dir) {
 
-        Set<V> vSelected = new HashSet<V>();
+        Set<URI> vSelected = new HashSet<URI>();
 
         if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v)) {
 
@@ -597,9 +441,9 @@ public class GraphMemory extends NotifyingSailBase implements G {
     }
 
     @Override
-    public Set<V> getV(V v, URI buildUri, Direction dir) {
+    public Set<URI> getV(URI v, URI buildUri, Direction dir) {
 
-        Set<V> vert = new HashSet<V>();
+        Set<URI> vert = new HashSet<URI>();
 
         if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v)) {
 
@@ -621,40 +465,7 @@ public class GraphMemory extends NotifyingSailBase implements G {
         return vert;
     }
 
-    @Override
-    public Set<E> getE(V v, WalkConstraints wc) {
-        Set<E> validEdges = getE(wc.getAcceptedWalks_DIR_IN(), v, wc.getAcceptedVTypes(), Direction.IN);
-        validEdges.addAll(getE(wc.getAcceptedWalks_DIR_OUT(), v, wc.getAcceptedVTypes(), Direction.OUT));
-        return validEdges;
-    }
-
-    /**
-     * TODO optimize to avoid source/target lookup
-     */
-    @Override
-    public Set<V> getV(V v, WalkConstraints wc) {
-        Set<E> validEdges = getE(wc.getAcceptedWalks_DIR_IN(), v, wc.getAcceptedVTypes(), Direction.IN);
-        validEdges.addAll(getE(wc.getAcceptedWalks_DIR_OUT(), v, wc.getAcceptedVTypes(), Direction.OUT));
-
-        Set<V> validV = new HashSet<V>();
-
-        for (E e : validEdges) {
-
-            V t;
-            if (v.equals(e.getTarget())) {
-                t = e.getSource();
-            } else {
-                t = e.getTarget();
-            }
-
-            if (wc.respectConstaints(t)) {
-                validV.add(t);
-            }
-        }
-
-        return validV;
-    }
-
+    
     @Override
     public String toString() {
 
@@ -667,73 +478,47 @@ public class GraphMemory extends NotifyingSailBase implements G {
         }
         String exURiVertex = "";
 
-        if (!vMapping.isEmpty()) {
-            exURiVertex = "{e.g. " + vMapping.keySet().iterator().next().toString() + "}";
+        if (!uris.isEmpty()) {
+            exURiVertex = "{e.g. " + uris.iterator().next().toString() + "}";
         }
 
         out += "Vertices\n";
-        out += "\tTotal   : " + vMapping.size() + "  " + exURiVertex + "\n";
-        out += "\tClasses : " + getVClass().size() + "  \n";
+        out += "\tTotal   : " + uris.size() + "  " + exURiVertex + "\n";
         out += "Edges 	  : " + edges.size() + "\n\n";
 
 
-        for (URI e : factory.getPredicateFactory().getURIs()) {
-
-            long size = getE(e).size();
-            if (size != 0) {
-                out += "\t" + e + " " + size + "\n";
-            }
-        }
         return out;
     }
 
-    /**
-     * *************************************************************************************
-     * NotifySail Interface
-     * *************************************************************************************
-     * @return
-     * @throws SailException
-     */
     @Override
-    public boolean isWritable() throws SailException {
-        return true;
-    }
-
-    @Override
-    public ValueFactory getValueFactory() {
-        return factory;
-    }
-
-    @Override
-    protected NotifyingSailConnection getConnectionInternal() throws SailException {
-        return new GSailConnection(this);
-    }
-
-    @Override
-    protected void shutDownInternal() throws SailException {
-        // do nothing 
-    }
-
-    @Override
-    public synchronized V createVertex(Value val) {
-        if (!containsVertex(val)) {
-            V v = new Vertex(val, VType.CLASS);
-            addV(v);
-            return v;
-        } else {
-            return getV(val);
+    public Set<E> getE(URI v, WalkConstraints wc) {
+        Set<E> valid = new HashSet<E>();
+        for(E e : getE(v, Direction.OUT)){
+            if(wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())){
+                valid.add(e);
+            }
         }
-
+        for(E e : getE(v, Direction.IN)){
+            if(wc.getAcceptedWalks_DIR_IN().contains(e.getURI())){
+                valid.add(e);
+            }
+        }
+        return valid;
     }
 
     @Override
-    public V createVertex(Value val, VType type) {
-        if (!containsVertex(val)) {
-            V v = new Vertex(val, type);
-            addV(v);
-            return v;
-        } else {
-            return getV(val);
+    public Set<URI> getV(URI v, WalkConstraints wc) {
+        Set<URI> valid = new HashSet<URI>();
+        for(E e : getE(v, Direction.OUT)){
+            if(wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())){
+                valid.add(e.getTarget());
+            }
         }
+        for(E e : getE(v, Direction.IN)){
+            if(wc.getAcceptedWalks_DIR_IN().contains(e.getURI())){
+                valid.add(e.getSource());
+            }
+        }
+        return valid;
     }
 }

@@ -34,13 +34,15 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -55,47 +57,47 @@ import slib.utils.impl.ResultStack;
  */
 public class ICi_depth_max_nonlinear extends LogBasedMetric implements ICtopo {
 
-
     /**
      *
      * @param alldepths
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Integer> alldepths) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> alldepths) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_depth = alldepths.getMax() + 1;
+        double max_depth = Collections.max(alldepths.values()) + 1;
 
         int depth;
-        
-        
+
+
         Double logbase = getLogBase();
-        if(logbase == null){logbase = 2.;}
-        double den = MathSML.log(max_depth,logbase);
+        if (logbase == null) {
+            logbase = 2.;
+        }
+        double den = MathSML.log(max_depth, logbase);
 
         double cur_ic;
 
-        for (V v : alldepths.keySet()) {
+        for (URI v : alldepths.keySet()) {
 
             depth = alldepths.get(v);
 
-            cur_ic = MathSML.log(depth + 1.,logbase) / den ;
+            cur_ic = MathSML.log(depth + 1., logbase) / den;
 
-            results.add(v, cur_ic);
+            results.put(v, cur_ic);
         }
 
         return results;
     }
 
-
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
-        
+
         setLogBase(conf);
-        
+
         return compute(manager.getMaxDepths());
     }
 }

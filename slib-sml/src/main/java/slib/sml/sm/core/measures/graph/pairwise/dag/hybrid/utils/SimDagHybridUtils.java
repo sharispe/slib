@@ -44,10 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.weight.GWS;
-
 
 /**
  *
@@ -64,16 +62,16 @@ public class SimDagHybridUtils {
      * @see ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
-     * @param v 
+     * @param v
      * @param ancestors
      *
-     * @param g 
-     * @param setEdgeTypes 
+     * @param g
+     * @param setEdgeTypes
      * @return
      */
-    public HashMap<V, Double> computeSemanticContribution_Wang_2007(
-            V v,
-            Set<V> ancestors,
+    public HashMap<URI, Double> computeSemanticContribution_Wang_2007(
+            URI v,
+            Set<URI> ancestors,
             G g,
             Set<URI> setEdgeTypes,
             GWS ws) {
@@ -84,9 +82,9 @@ public class SimDagHybridUtils {
 
         // Initialize Semantic contribution
         // Initialize DataStructure + queue considering setEdgeTypes
-        HashMap<V, Double> sc = new HashMap<V, Double>();
-        HashMap<V, Integer> inDegree = new HashMap<V, Integer>();
-        HashMap<V, Integer> inDegreeDone = new HashMap<V, Integer>();
+        HashMap<URI, Double> sc = new HashMap<URI, Double>();
+        HashMap<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        HashMap<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
 
         /* 
          * In degree have to be recomputed to consider
@@ -94,9 +92,9 @@ public class SimDagHybridUtils {
          * encountered during a BFS from v to the root
          */
 
-        HashMap<V, Boolean> visited = new HashMap<V, Boolean>();
+        HashMap<URI, Boolean> visited = new HashMap<URI, Boolean>();
 
-        for (V c : ancestors) {
+        for (URI c : ancestors) {
 
             visited.put(c, false);
             inDegree.put(c, 0);
@@ -104,7 +102,7 @@ public class SimDagHybridUtils {
             sc.put(c, new Double(0));
         }
 
-        ArrayList<V> queue = new ArrayList<V>();
+        ArrayList<URI> queue = new ArrayList<URI>();
         queue.add(v);
         visited.put(v, true);
 
@@ -112,13 +110,13 @@ public class SimDagHybridUtils {
 
         while (!queue.isEmpty()) {
 
-            V current = queue.get(0);
+            URI current = queue.get(0);
             queue.remove(0);
 
             Collection<E> edges = g.getE(setEdgeTypes, current, Direction.OUT);
 
             for (E e : edges) {
-                V dest = (V) e.getTarget();
+                URI dest = e.getTarget();
                 inDegree.put(dest, inDegree.get(dest) + 1);
 
                 if (!visited.get(dest)) {
@@ -130,21 +128,21 @@ public class SimDagHybridUtils {
 
         // use BFS to propagate Semantic Contribution
 
-        queue = new ArrayList<V>();
+        queue = new ArrayList<URI>();
         queue.add(v);
 
-        
+
 
         while (!queue.isEmpty()) {
 
-            V current = queue.get(0);
+            URI current = queue.get(0);
             queue.remove(0);
 
             Collection<E> edges = g.getE(setEdgeTypes, current, Direction.OUT);
 
             for (E e : edges) {
 
-                V dest = (V) e.getTarget();
+                URI dest = e.getTarget();
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
 
@@ -171,14 +169,14 @@ public class SimDagHybridUtils {
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
      *
-     * @param sc 
+     * @param sc
      * @return double semantic value
      */
-    public double computeSV_Wang_2007(Map<V, Double> sc) {
+    public double computeSV_Wang_2007(Map<URI, Double> sc) {
 
         double sum = 0;
 
-        for (V r : sc.keySet()) {
+        for (URI r : sc.keySet()) {
             sum += sc.get(r);
         }
 

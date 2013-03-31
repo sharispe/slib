@@ -34,10 +34,13 @@ package slib.sglib.algo.graph.accessor;
 import java.util.HashSet;
 import java.util.Set;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.impl.SetUtils;
 
@@ -46,33 +49,97 @@ import slib.utils.impl.SetUtils;
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class GraphAccessor {
-    
-    
-    public static Set<V> getV_NoEdgeType(G g, URI edgeType, Direction dir) {
+
+    static Logger logger = LoggerFactory.getLogger(GraphAccessor.class);
+
+    /**
+     * Return a set of URI corresponding to the classes of the graph. A vertex v
+     * of the graph is considered as a class if the graph contains a statement
+     * of the form :
+     * <ul>
+     * <li> v RFDS.SUBCLASSOF ? </li>
+     * <li> ? RDFS.SUBCLASSOF v </li>
+     * <li> ? RDF.TYPE v </li>
+     * </ul>
+     *
+     * @parm g the graph
+     * @return a set of URI corresponding to the classes of the graph
+     */
+    public static Set<URI> getClasses(G graph) {
+
+        logger.debug("retrieving Classes");
+
+        Set<URI> classes = new HashSet<URI>();
+        for (E e : graph.getE(RDFS.SUBCLASSOF)) {
+            classes.add(e.getSource());
+            classes.add(e.getTarget());
+        }
+        for (E e : graph.getE(RDF.TYPE)) {
+            classes.add(e.getTarget());
+        }
+
+        logger.debug("Classes detected " + classes.size());
+        return classes;
+    }
+
+    /**
+     * Return a set of URI corresponding to the instances of the graph, note
+     * that instance definition is here different from RDF the definition of an
+     * instance. A vertex v of the graph is considered as an instance if the
+     * graph contains a statement of the form :
+     * <ul>
+     * <li> v RFD.TYPE ? with ? not equals to
+     * RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL
+     * </li>
+     * Those restrictions do not cover all cases e.g. RDF instance of
+     * RDFS.CONTAINER will be considered as instance...
+     * </ul>
+     *
+     * @parm g the graph
+     * @return a set of URI corresponding to the classes of the graph
+     */
+    public static Set<URI> getInstances(G graph) {
+        Set<URI> instances = new HashSet<URI>();
+        URI o;
+        for (E e : graph.getE(RDF.TYPE)) {
+
+            o = e.getURI();
+            if (!o.equals(RDFS.RESOURCE)
+                    && !o.equals(RDFS.CLASS)
+                    && !o.equals(RDFS.LITERAL)
+                    && !o.equals(RDFS.DATATYPE)
+                    && !o.equals(RDF.PROPERTY)
+                    && !o.equals(RDF.XMLLITERAL)) {
+                instances.add(e.getSource());
+            }
+        }
+
+
+        return instances;
+    }
+
+    public static Set<URI> getV_NoEdgeType(G g, URI edgeType, Direction dir) {
         return getV_NoEdgeType(g, SetUtils.buildSet(edgeType), dir);
     }
 
-    public static Set<V> getV_NoEdgeType(G g, Set<URI> edgeTypes, Direction dir) {
-        return getV_NoEdgeType(g, null, edgeTypes, dir);
-    }
+    public static Set<URI> getV_NoEdgeType(G g, Set<URI> edgeTypes, Direction dir) {
 
-    public static Set<V> getV_NoEdgeType(G g, VType type, Set<URI> eTypes, Direction dir) {
 
-        Set<V> valid = new HashSet<V>();
+        Set<URI> valid = new HashSet<URI>();
 
-        Set<V> vSel = g.getV(type);
+        Set<URI> vSel = g.getV();
 
         if (dir == Direction.OUT || dir == Direction.BOTH) {
 
-            for (V v : vSel) {
-                
+            for (URI v : vSel) {
+
                 Set<E> edgesSel = g.getE(v, Direction.OUT);
 
                 boolean isValid = true;
 
                 for (E e : edgesSel) {
-                    
-                    if (eTypes == null || eTypes.contains(e.getURI())) {
+
+                    if (edgeTypes == null || edgeTypes.contains(e.getURI())) {
                         isValid = false;
                         break;
                     }
@@ -84,13 +151,13 @@ public class GraphAccessor {
         }
         if (dir == Direction.IN || dir == Direction.BOTH) {
 
-            for (V v : vSel) {
+            for (URI v : vSel) {
                 Set<E> edges = g.getE(v, Direction.IN);
 
                 boolean isValid = true;
 
                 for (E e : edges) {
-                    if (eTypes == null || eTypes.contains(e.getURI())) {
+                    if (edgeTypes == null || edgeTypes.contains(e.getURI())) {
 
                         isValid = false;
                         break;
@@ -103,5 +170,4 @@ public class GraphAccessor {
         }
         return valid;
     }
-    
 }

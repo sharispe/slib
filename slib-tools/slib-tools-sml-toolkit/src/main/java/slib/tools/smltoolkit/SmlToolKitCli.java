@@ -44,10 +44,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.SmCli;
-import slib.tools.smltoolkit.smbb.cli.SmbbCli;
-import slib.tools.smltoolkit.sme.cli.SmeCli;
-import slib.tools.smltoolkit.sml_server_deploy.cli.SmlDeployCli;
-import slib.tools.smltoolkit.smutils.cli.SmlUtilsCli;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -118,15 +114,16 @@ public class SmlToolKitCli extends CmdHandler {
             ending(SmlToolKitCliCst.errorTool, true);
         } else if (tool.equals(SmlToolKitCliCst.ToolName_SM)) {
             cli = new SmCli();
-        } else if (tool.equals(SmlToolKitCliCst.ToolName_SMBB)) {
-            cli = new SmbbCli();
-        } else if (tool.equals(SmlToolKitCliCst.ToolName_SME)) {
-            cli = new SmeCli();
-        } else if (tool.equals(SmlToolKitCliCst.ToolName_SMUTILS)) {
-            cli = new SmlUtilsCli();
-        } else if (tool.equals(SmlToolKitCliCst.ToolName_SML_DEPLOY)) {
-            cli = new SmlDeployCli();
-        }
+        } 
+//        else if (tool.equals(SmlToolKitCliCst.ToolName_SMBB)) {
+//            cli = new SmbbCli();
+//        } else if (tool.equals(SmlToolKitCliCst.ToolName_SME)) {
+//            cli = new SmeCli();
+//        } else if (tool.equals(SmlToolKitCliCst.ToolName_SMUTILS)) {
+//            cli = new SmlUtilsCli();
+//        } else if (tool.equals(SmlToolKitCliCst.ToolName_SML_DEPLOY)) {
+//            cli = new SmlDeployCli();
+//        }
         cli.execute(argsTool);
     }
 

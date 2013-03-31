@@ -1,15 +1,15 @@
 package slib.sglib.io.loader.rdf;
 
 import org.openrdf.model.Statement;
+import org.openrdf.model.URI;
+import org.openrdf.model.Value;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFHandlerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 
 /**
  *
@@ -20,6 +20,8 @@ public class SlibRdfHandler implements RDFHandler {
     G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     int count = 0;
+    int countSkipped = 0;
+    URIFactory factory;
 
     /**
      *
@@ -27,6 +29,7 @@ public class SlibRdfHandler implements RDFHandler {
      */
     public SlibRdfHandler(G g) {
         this.g = g;
+        factory = URIFactoryMemory.getSingleton();
     }
 
     @Override
@@ -42,39 +45,35 @@ public class SlibRdfHandler implements RDFHandler {
         logger.info("Ending Processing " + count + " statements loaded ");
         logger.info("vertices: " + g.getV().size());
         logger.info("edges   : " + g.getE().size());
+        logger.info("Skipped (statement involving non URI ressources) : " + countSkipped);
     }
 
     @Override
+    // TODO
     public void handleNamespace(String prefix, String uri) throws RDFHandlerException {
     }
 
     @Override
     public void handleStatement(Statement st) throws RDFHandlerException {
         
-        V subject = g.getV(st.getSubject());
-
-        if (subject == null) {
-            subject = new Vertex(st.getSubject(), null);
-            g.addV(subject);
-        }
+        Value s = st.getSubject();
+        Value o = st.getObject();
         
-        V object  = g.getV(st.getObject());
-
-        if (object == null) {
-            object = new Vertex(st.getObject(), null);
-        }
-
-        E e = new Edge(subject, object, st.getPredicate());
-
-        count++;
+//        logger.debug(st.toString());
         
+
+        if (s instanceof URI && o instanceof URI) {
+            g.addE((URI) s,st.getPredicate(),(URI) o);
+            count++;
+        }
+        else{
+            countSkipped++;
+        }
         if(count % 100000 == 0){
             logger.info(count+" statements already loaded");
             logger.info("Number of vertices: "+g.getV().size());
             logger.info("Number of edges   : "+g.getE().size());
         }
-
-        g.addE(e);
     }
 
     @Override

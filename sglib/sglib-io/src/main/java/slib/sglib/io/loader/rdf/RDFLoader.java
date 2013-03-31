@@ -10,6 +10,7 @@ import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.ntriples.NTriplesParser;
 import org.openrdf.rio.rdfxml.RDFXMLParser;
 import org.openrdf.rio.turtle.TurtleParser;
+import org.openrdf.sail.memory.model.MemValueFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,6 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -83,13 +83,13 @@ public class RDFLoader implements GraphLoader {
 
     private void loadFormat(RDFFormat format) throws SLIB_Ex_Critic {
         if (format.equals(RDFFormat.NTRIPLES)) {
-            parser = new NTriplesParser(DataFactoryMemory.getSingleton());
+            parser = new NTriplesParser(new MemValueFactory());
         } else if (format.equals(RDFFormat.RDFXML)) {
-            parser = new RDFXMLParser(DataFactoryMemory.getSingleton());
+            parser = new RDFXMLParser(new MemValueFactory());
             parser.setStopAtFirstError(false);
         } 
         else if (format.equals(RDFFormat.TURTLE)) {
-            parser = new TurtleParser(DataFactoryMemory.getSingleton());
+            parser = new TurtleParser(new MemValueFactory());
             //parser.setStopAtFirstError(false);
         }
         else {

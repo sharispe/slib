@@ -40,7 +40,6 @@ import org.openrdf.model.vocabulary.RDFS;
 import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 
 /**
  * TODO modification shape utilser rectangle changer la couleur des noeuds
@@ -60,7 +59,7 @@ public class GraphPlotter_Graphviz {
      * @param showLabels
      * @return
      */
-    public static String plot(G graph, Set<V> VertexUriColored, boolean showLabels) {
+    public static String plot(G graph, Set<URI> VertexUriColored, boolean showLabels) {
         return plot(graph, VertexUriColored, showLabels, null);
     }
 
@@ -72,7 +71,7 @@ public class GraphPlotter_Graphviz {
      * @param index
      * @return
      */
-    public static String plot(G graph, Set<V> VertexColored, boolean showLabels, IndexHash index) {
+    public static String plot(G graph, Set<URI> VertexColored, boolean showLabels, IndexHash index) {
 
         HashMap<URI, String> relColor = new HashMap<URI, String>();
 
@@ -95,7 +94,7 @@ public class GraphPlotter_Graphviz {
 
         String color;
 
-        for (V v : graph.getV()) {
+        for (URI v : graph.getV()) {
 
             color = defColor_v;
 
@@ -105,13 +104,13 @@ public class GraphPlotter_Graphviz {
 
             if (index != null && index.containsIndexFor(v)) {
                 
-                String indexVal = index.valuesOf(v).getPreferredDescription()+" ["+v.getValue().stringValue()+"]";
+                String indexVal = index.valuesOf(v).getPreferredDescription()+" ["+v.stringValue()+"]";
                 
                 String splittedLabel = splitString(indexVal, 20);
                 out += "\t\"" + splittedLabel + "\"[fillcolor=" + color + "];\n";
 
             } else {
-                out += "\t\"" + v.getValue().stringValue() + "\"[color=" + color + "];\n";
+                out += "\t\"" + v.stringValue() + "\"[color=" + color + "];\n";
             }
         }
 
@@ -130,19 +129,19 @@ public class GraphPlotter_Graphviz {
                 info = "[label=\"" + eType.getLocalName() + "\",color=" + color + "]";
             }
             
-            V s = e.getSource();
-            V t = e.getTarget();
+            URI s = e.getSource();
+            URI t = e.getTarget();
             
-            String source = s.getValue().stringValue();
-            String target = t.getValue().stringValue();
+            String source = s.stringValue();
+            String target = t.stringValue();
 
             if (index != null) {
 
-                if (index.containsIndexFor(s.getValue())) {
-                    source = splitString(index.valuesOf(s).getPreferredDescription()+" ["+s.getValue().stringValue()+"]", 20);
+                if (index.containsIndexFor(s)) {
+                    source = splitString(index.valuesOf(s).getPreferredDescription()+" ["+s.stringValue()+"]", 20);
                 }
-                if (index.containsIndexFor(e.getTarget().getValue())) {
-                    target = splitString(index.valuesOf(t).getPreferredDescription()+" ["+t.getValue().stringValue()+"]", 20);
+                if (index.containsIndexFor(e.getTarget())) {
+                    target = splitString(index.valuesOf(t).getPreferredDescription()+" ["+t.stringValue()+"]", 20);
                 }
             }
             out += "\t\"" + source + "\" -> \"" + target + "\" " + info + ";\n";

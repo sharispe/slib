@@ -47,7 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -60,7 +60,7 @@ public class Indexer_MESH_XML {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
-    DataFactory factory;
+    URIFactory factory;
     String default_namespace;
 
     /**
@@ -99,7 +99,7 @@ public class Indexer_MESH_XML {
      * @return
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(DataFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+    public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
 
         this.factory = factory;
 

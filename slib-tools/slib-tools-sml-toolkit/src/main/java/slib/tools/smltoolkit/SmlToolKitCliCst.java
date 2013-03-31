@@ -57,23 +57,24 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
     /**
      *
      */
-    public static final String ToolName_SMBB = "smbb";
+//    public static final String ToolName_SMBB = "smbb";
+//    /**
+//     *
+//     */
+//    public static final String ToolName_SME = "sme";
+//    /**
+//     *
+//     */
+//    public static final String ToolName_SMUTILS = "smutils";
+//    /**
+//     *
+//     */
+//    public static final String ToolName_SML_DEPLOY = "sml_deploy";
     /**
      *
      */
-    public static final String ToolName_SME = "sme";
-    /**
-     *
-     */
-    public static final String ToolName_SMUTILS = "smutils";
-    /**
-     *
-     */
-    public static final String ToolName_SML_DEPLOY = "sml_deploy";
-    /**
-     *
-     */
-    public static final String[] acceptedTools = {ToolName_SM, ToolName_SMBB, ToolName_SME, ToolName_SMUTILS, ToolName_SML_DEPLOY};
+    public static final String[] acceptedTools = {ToolName_SM};
+//    public static final String[] acceptedTools = {ToolName_SM, ToolName_SMBB, ToolName_SME, ToolName_SMUTILS, ToolName_SML_DEPLOY};
     /**
      *
      */

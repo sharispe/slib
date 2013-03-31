@@ -34,11 +34,11 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  * Class representing Topological Information Content
@@ -58,5 +58,5 @@ public interface ICtopo {
      *
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic;
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic;
 }

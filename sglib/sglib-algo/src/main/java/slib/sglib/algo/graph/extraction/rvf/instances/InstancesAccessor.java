@@ -1,7 +1,7 @@
 package slib.sglib.algo.graph.extraction.rvf.instances;
 
 import java.util.Set;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 
 /**
  *
@@ -13,7 +13,7 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      *
      * @return
      */
-    public Set<V> getInstances();
+    public Set<URI> getInstances();
 
     /**
      * Access to the set of vertex considered as instance of a class (using
@@ -22,7 +22,7 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      * @param v the class of interest
      * @return the set of instances of the specified class
      */
-    public Set<V> getInstances(V v);
+    public Set<URI> getInstances(URI v);
 
     /**
      * Access to the set of vertex considered as direct instance of a class e.g.
@@ -31,7 +31,7 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      * @param v the class of interest
      * @return the set of direct instances of the specified class
      */
-    public Set<V> getDirectInstances(V v);
+    public Set<URI> getDirectInstances(URI v);
 
     /**
      * Method providing access to the class annotating an instance. This method
@@ -41,5 +41,5 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      * @param v the vertex corresponding to the instance
      * @return the set of classes associated to the instance
      */
-    public Set<V> getDirectClass(V v);
+    public Set<URI> getDirectClass(URI v);
 }

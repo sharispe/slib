@@ -19,11 +19,6 @@ public enum GActionType {
     REROOTING,
     
     /**
-     * Action flag referring to the process of vertices typing.
-     */
-    TYPE_VERTICES,
-    
-    /**
      * Action flag corresponding to the RDFS Inference.
      */
     RDFS_INFERENCE,

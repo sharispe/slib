@@ -20,12 +20,9 @@ import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -42,10 +39,10 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     public static String ID_SUBCLASSOF_SNOMED = "116680003";
     
     
-    Map<String, V> conceptMap = new HashMap<String, V>();
+    Map<String, URI> conceptMap = new HashMap<String, URI>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Pattern p_tab = Pattern.compile("\\t");
-    DataFactory repo = DataFactoryMemory.getSingleton();
+    URIFactory repo = URIFactoryMemory.getSingleton();
     /**
      *
      */
@@ -167,8 +164,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
                 if (!LOAD_ONLY_ACTIVE_CONCEPTS || concept.active) {
                     URI cURI = repo.createURI(prefix,concept.id);
-                    V v = g.addV(new Vertex(cURI, VType.CLASS));
-                    conceptMap.put(concept.id, v);
+                    conceptMap.put(concept.id, cURI);
                     loaded++;
                 }
             }
@@ -196,7 +192,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                 }
                 c++;
                 if (c % 100000 == 0) {
-                    logger.debug("Processed " + c + "\t" + relationships.size() + " relationships loaded");
+                    logger.debug("Processed " + c + "\t" + relationships.size() + " relationships information loaded");
                 }
                 data = p_tab.split(line);
 
@@ -221,14 +217,14 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
             // Load the relationships and corresponding concepts who are not defined as inactive
             double relationship_count = 0;
-            logger.info("Loading relationships... please wait");
+            logger.info("Adding relationships to the graph... please wait");
             for (RelationshipSnomedCT r : relationships.values()) {
 
                 if (!LOAD_ONLY_ACTIVE_RELATIONSHIPS || r.active) {
                     if (conceptMap.containsKey(r.source) && conceptMap.containsKey(r.target)) {
 
-                        V src = conceptMap.get(r.source);
-                        V tar = conceptMap.get(r.target);
+                        URI src = conceptMap.get(r.source);
+                        URI tar = conceptMap.get(r.target);
                         URI pred;
 
                         if (idMapping.containsKey(r.relationshipID)) {
@@ -236,7 +232,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                         } else {
                             pred = repo.createURI(prefix,r.relationshipID);
                         }
-                        E e = new Edge(src, tar, pred);
+                        E e = new Edge(src, pred, tar);
 
                         g.addE(e);
                         relationship_count++;

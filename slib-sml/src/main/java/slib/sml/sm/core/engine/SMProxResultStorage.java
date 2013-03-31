@@ -34,13 +34,13 @@
  */
 package slib.sml.sm.core.engine;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -48,21 +48,22 @@ import slib.utils.impl.ResultStack;
  */
 public class SMProxResultStorage {
 
-    Map<ICconf, ResultStack<V, Double>> metrics_results;
-    Map<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>> pairwise_results;
-    Map<V, ConcurrentHashMap<V, Double>> shortestPath;
-    Map<V, Set<V>> ancestors;
-    Map<V, Set<V>> descendants;
-    Map<V, Set<V>> reachableLeaves;
-    ResultStack<V, Long> nbPathLeadingToAllVertices;
+    Map<ICconf, Map<URI, Double>> metrics_results;
+    Map<SMconf, ConcurrentHashMap<URI, Map<URI, Double>>> pairwise_results;
+    Map<URI, ConcurrentHashMap<URI, Double>> shortestPath;
+    Map<URI, Set<URI>> ancestorsInc;
+    Map<URI, Set<URI>> descendantsInc;
+    Map<URI, Set<URI>> reachableLeaves;
+    Map<URI, Integer> nbPathLeadingToAllVertices;
+    Map<URI, Integer> allNbReachableLeaves;
     // Depth
-    ResultStack<V, Integer> maxDepths;
-    ResultStack<V, Integer> minDepths;
+    Map<URI, Integer> maxDepths;
+    Map<URI, Integer> minDepths;
     Integer maxDepth;
     /**
      *
      */
-    public ResultStack<V, Long> nbOccurrencePropagatted;
+    public Map<URI, Integer> nbOccurrencePropagatted;
 
     /**
      *
@@ -72,21 +73,23 @@ public class SMProxResultStorage {
     }
 
     /**
-     *
+     * 
      */
     public void clearCache() {
 
-        metrics_results = new ConcurrentHashMap<ICconf, ResultStack<V, Double>>();
-        ancestors = new ConcurrentHashMap<V, Set<V>>();
-        descendants = new ConcurrentHashMap<V, Set<V>>();
-        reachableLeaves = new ConcurrentHashMap<V, Set<V>>();
-        shortestPath = new ConcurrentHashMap<V, ConcurrentHashMap<V, Double>>();
-        pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<V, ResultStack<V, Double>>>();
-        nbOccurrencePropagatted = new ResultStack<V, Long>();
+        metrics_results = new ConcurrentHashMap<ICconf, Map<URI, Double>>();
+        ancestorsInc = new ConcurrentHashMap<URI, Set<URI>>();
+        descendantsInc = new ConcurrentHashMap<URI, Set<URI>>();
+        reachableLeaves = new ConcurrentHashMap<URI, Set<URI>>();
+        shortestPath = new ConcurrentHashMap<URI, ConcurrentHashMap<URI, Double>>();
+        pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<URI, Map<URI, Double>>>();
+        nbOccurrencePropagatted = new HashMap<URI, Integer>();
 
+        // do not inialize
         nbPathLeadingToAllVertices = null;
         maxDepths = null;
         minDepths = null;
         maxDepth = null;
+        allNbReachableLeaves = null;
     }
 }

@@ -35,10 +35,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -59,15 +59,15 @@ public class InstancesAccessorGeneric implements InstancesAccessor {
     /**
      *
      */
-    public Map<V, Set<V>> instancesToClasses; // direct, i.e. without inference
+    public Map<URI, Set<URI>> instancesToClasses; // direct, i.e. without inference
     /**
      *
      */
-    public Map<V, Set<V>> classesToInstances; // direct, i.e. without inference
+    public Map<URI, Set<URI>> classesToInstances; // direct, i.e. without inference
     /**
      *
      */
-    public Map<V, Set<V>> descendants;
+    public Map<URI, Set<URI>> descendants;
 
     /**
      *
@@ -75,7 +75,7 @@ public class InstancesAccessorGeneric implements InstancesAccessor {
      * @param instancesToDirectClasses
      * @throws SLIB_Ex_Critic
      */
-    public InstancesAccessorGeneric(G graph, Map<V, Set<V>> instancesToDirectClasses) throws SLIB_Ex_Critic {
+    public InstancesAccessorGeneric(G graph, Map<URI, Set<URI>> instancesToDirectClasses) throws SLIB_Ex_Critic {
         this.graph = graph;
         this.instancesToClasses = instancesToDirectClasses;
 
@@ -83,11 +83,11 @@ public class InstancesAccessorGeneric implements InstancesAccessor {
         descendants = taxFinder.getAllRVClass();
 
         // build inverse index
-        classesToInstances = new HashMap<V, Set<V>>();
-        for (V i : instancesToClasses.keySet()) {
-            for (V c : instancesToClasses.get(i)) {
+        classesToInstances = new HashMap<URI, Set<URI>>();
+        for (URI i : instancesToClasses.keySet()) {
+            for (URI c : instancesToClasses.get(i)) {
                 if (!classesToInstances.containsKey(c)) {
-                    classesToInstances.put(c, new HashSet<V>());
+                    classesToInstances.put(c, new HashSet<URI>());
                 }
                 classesToInstances.get(c).add(i);
             }
@@ -95,42 +95,42 @@ public class InstancesAccessorGeneric implements InstancesAccessor {
     }
 
     @Override
-    public Set<V> getInstances() {
+    public Set<URI> getInstances() {
         return instancesToClasses.keySet();
     }
 
     @Override
-    public Set<V> getInstances(V v) {
+    public Set<URI> getInstances(URI v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Set<V> getDirectInstances(V v) {
+    public Set<URI> getDirectInstances(URI v) {
         return classesToInstances.get(v);
     }
 
     @Override
-    public Set<V> getDirectClass(V v) {
+    public Set<URI> getDirectClass(URI v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long getInstancesNumber(V v) {
+    public long getInstancesNumber(URI v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<V, Long> getInferredInstancesNumberMapping() {
+    public Map<URI, Long> getInferredInstancesNumberMapping() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public long getDirectInstancesNumber(V v) {
+    public long getDirectInstancesNumber(URI v) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<V, Long> getDirectInstancesNumberMapping() {
+    public Map<URI, Long> getDirectInstancesNumberMapping() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

@@ -28,12 +28,10 @@ import slib.sglib.io.loader.csv.CSV_StatementTemplate_Constraint;
 import slib.sglib.io.loader.csv.StatementTemplateElement;
 import slib.sglib.io.loader.csv.StatementTemplate_Constraint_Type;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
-import slib.sglib.io.loader.utils.filter.graph.FilterGraph;
 import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.io.util.GFormat;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.i.Parametrable;
@@ -48,18 +46,10 @@ public class XMLConfLoaderGeneric {
 
     private String xmlFile;
     private Document document;
-    private DataFactory factory;
+    private URIFactory factory;
     private LinkedList<GraphConf> graphConfs;
     private LinkedHashSet<Filter> filters;
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    static final Map<String, VType> admittedVType = new HashMap<String, VType>();
-
-    static {
-        admittedVType.put("CLASS", VType.CLASS);
-        admittedVType.put("INSTANCE", VType.INSTANCE);
-        admittedVType.put("LITERAL", VType.LITERAL);
-        admittedVType.put("UNDEFINED", VType.UNDEFINED);
-    }
     static final Map<String, URI> admittedPType = new HashMap<String, URI>();
 
     static {
@@ -75,7 +65,7 @@ public class XMLConfLoaderGeneric {
     public XMLConfLoaderGeneric(String xmlFile) throws SLIB_Ex_Critic {
 
 
-        factory = DataFactoryMemory.getSingleton();
+        factory = URIFactoryMemory.getSingleton();
 
         this.xmlFile = xmlFile;
         graphConfs = new LinkedList<GraphConf>();
@@ -353,13 +343,7 @@ public class XMLConfLoaderGeneric {
                     throw new SLIB_Ex_Critic("Cannot state field number associated to mapping definition in CSV configuration");
                 }
 
-                if (!admittedVType.containsKey(type)) {
-                    throw new SLIB_Ex_Critic("Cannot state type " + type + " associated to mapping definition in CSV configuration, admitted " + admittedVType.keySet());
-                }
-
-                VType vtype = admittedVType.get(type);
-
-                CSV_Mapping m = new CSV_Mapping(field, vtype, prefix);
+                CSV_Mapping m = new CSV_Mapping(field, prefix);
                 mappings.put(field, m);
             }
 
@@ -490,8 +474,8 @@ public class XMLConfLoaderGeneric {
         NodeList list = item.getElementsByTagName(XmlTags.FILTER_TAG);
         LinkedHashSet<Conf> gConfGenerics = GenericConfBuilder.build(list);
         filters = buildFilters(gConfGenerics);
-        
-        for(Filter f : filters){
+
+        for (Filter f : filters) {
             FilterRepository.getInstance().addFilter(f);
         }
 

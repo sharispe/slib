@@ -7,17 +7,15 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.algo.graph.utils.GAction;
 import slib.sglib.algo.graph.utils.GActionType;
-import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
@@ -50,15 +48,13 @@ public class SMComputationYago {
         
         String yagoTaxonomyFile = "/data/yago/yagoTaxonomy.ttl";
         
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
         URI yagoURI = factory.createURI("http://yago-knowledge.org/resource/");
         G g = new GraphMemory(yagoURI);
         
         // This is the configuration of the data 
         GDataConf dataConf = new GDataConf(GFormat.TURTLE, yagoTaxonomyFile);
         
-        // This is the configuration of the action we want to perform after data loading, i.e. to type the vertices
-        GAction actionTypeConf   = new GAction(GActionType.TYPE_VERTICES);
         
         // We specify an action to root the vertices, typed as class without outgoing rdfs:subclassOf relationship 
         // Those vertices are linked to owl:Thing by an eddge x  rdfs:subClassOf owl:Thing 
@@ -67,7 +63,6 @@ public class SMComputationYago {
         // We now create the configuration we will specify to the generic loader
         GraphConf gConf = new GraphConf();
         gConf.addGDataConf(dataConf);
-        gConf.addGAction(actionTypeConf);
         gConf.addGAction(actionRerootConf);
         
         GraphLoaderGeneric.load(gConf,g);
@@ -76,7 +71,7 @@ public class SMComputationYago {
         
         // The taxonomy is now a rDAG, i.e. rooted Directed Acyclic Graph.
         // Check by yourself
-        Set<V> roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+        Set<URI> roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
         System.out.println("Roots: "+roots);
         
         
@@ -87,16 +82,13 @@ public class SMComputationYago {
         // First we configure an intrincic IC 
         ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_DEPTH_MAX_NONLINEAR);
         // Then we configure the pairwise measure to use, we here choose to use Lin formula
-        SMconf smConf = new SMconf("Lin", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
+        SMconf smConf = new SMconf(SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
 
         // We define the engine used to compute the similarity
         SM_Engine engine = new SM_Engine(g);
 
-        // We retrieve the vertices corresponding to the two concepts
-        V strokeVertex = g.getV(wikiRugbyFoorballerURI);
-        V myocardiumVertex = g.getV(WordnetSoccerPlayerURI);
 
-        double sim = engine.computePairwiseSim(smConf, strokeVertex, myocardiumVertex);
+        double sim = engine.computePairwiseSim(smConf, wikiRugbyFoorballerURI, WordnetSoccerPlayerURI);
         System.out.println("Similarity: " + sim);
 
         /* 
@@ -107,10 +99,10 @@ public class SMComputationYago {
          */
         int totalComparison = 10000;
 
-        List<V> listVertices = new ArrayList<V>(g.getV());
+        List<URI> listVertices = new ArrayList<URI>(g.getV());
         int nbConcepts = listVertices.size();
         int id1, id2;
-        V c1, c2;
+        URI c1, c2;
         String idC1, idC2;
         Random r = new Random();
 
@@ -124,8 +116,8 @@ public class SMComputationYago {
             sim = engine.computePairwiseSim(smConf, c1, c2);
 
             if ((i + 1) % 1000 == 0) {
-                idC1 = ((URI) c1.getValue()).getLocalName();
-                idC2 = ((URI) c2.getValue()).getLocalName();
+                idC1 = c1.getLocalName();
+                idC2 = c2.getLocalName();
 
                 System.out.println("Sim " + (i + 1) + "/" + totalComparison + "\t" + idC1 + "/" + idC2 + ": " + sim);
             }

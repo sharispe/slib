@@ -9,10 +9,9 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.bio.snomedct.GraphLoaderSnomedCT_RF2;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
@@ -20,6 +19,7 @@ import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -53,7 +53,7 @@ public class SMComputationSnomedCT {
         // We create an in-memory graph in which we will load Snomed-CT.
         // Notice that Snomed-CT is quite large (e.g. version 20120731 contains 296433 concepts and872318 relationships ).
         // You will need to allocate extra memory to the JVM e.g add -Xmx3000m parameter to allocate 3Go.
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
         URI snomedctURI = factory.createURI("http://snomedct/");
         G g = new GraphMemory(snomedctURI);
 
@@ -74,16 +74,16 @@ public class SMComputationSnomedCT {
         // First we configure an intrincic IC 
         ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SECO_2004);
         // Then we configure the pairwise measure to use, we here choose to use Lin formula
-        SMconf smConf = new SMconf("Lin", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
+        SMconf smConf = new SMconf(SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
+        
+//        UtilDebug.exit();
 
         // We define the engine used to compute the similarity
         SM_Engine engine = new SM_Engine(g);
 
         // We retrieve the vertices corresponding to the two concepts
-        V strokeVertex = g.getV(heartURI);
-        V myocardiumVertex = g.getV(myocardiumURI);
 
-        double sim = engine.computePairwiseSim(smConf, strokeVertex, myocardiumVertex);
+        double sim = engine.computePairwiseSim(smConf, heartURI, myocardiumURI);
         System.out.println("Similarity Heart/Myocardium: " + sim);
 
         /* 
@@ -94,10 +94,10 @@ public class SMComputationSnomedCT {
          */
         int totalComparison = 100000;
 
-        List<V> listVertices = new ArrayList<V>(g.getV());
+        List<URI> listVertices = new ArrayList<URI>(g.getV());
         int nbConcepts = listVertices.size();
         int id1, id2;
-        V c1, c2;
+        URI c1, c2;
         String idC1, idC2;
         Random r = new Random();
 
@@ -111,8 +111,8 @@ public class SMComputationSnomedCT {
             sim = engine.computePairwiseSim(smConf, c1, c2);
 
             if ((i + 1) % 1000 == 0) {
-                idC1 = ((URI) c1.getValue()).getLocalName();
-                idC2 = ((URI) c2.getValue()).getLocalName();
+                idC1 = c1.getLocalName();
+                idC2 = c2.getLocalName();
 
                 System.out.println("Sim " + (i + 1) + "/" + totalComparison + "\t" + idC1 + "/" + idC2 + ": " + sim);
             }

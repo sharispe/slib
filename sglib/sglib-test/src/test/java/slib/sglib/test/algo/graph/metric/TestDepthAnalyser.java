@@ -34,24 +34,22 @@
  */
 package slib.sglib.test.algo.graph.metric;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.metric.DepthAnalyserAG;
 import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
-import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -61,7 +59,7 @@ public class TestDepthAnalyser {
 
     G g;
     DepthAnalyserAG depthAnalyser = null;
-    DataFactoryMemory df = DataFactoryMemory.getSingleton();
+    URIFactoryMemory df = URIFactoryMemory.getSingleton();
     int min_depth_spiderman = 3;
     int min_depth_real_organism = 2;
     int min_depth_plant = 3;
@@ -82,8 +80,8 @@ public class TestDepthAnalyser {
     public TestDepthAnalyser() {
         try {
             testvalues = new SLIB_UnitTestValues();
-            g = TestUtils.loadTestGraph(GFormat.SGL, SLIB_UnitTestValues.G_DAG_BASIC);
-            depthAnalyser = new DepthAnalyserAG(df, g, wc);
+            g = TestUtils.loadTestGraph(GFormat.NTRIPLES, SLIB_UnitTestValues.G_DAG_BASIC);
+            depthAnalyser = new DepthAnalyserAG(g, wc);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -98,13 +96,13 @@ public class TestDepthAnalyser {
     @Test
     public void test_max_depth() throws SLIB_Exception {
 
-        ResultStack<V, Integer> maxDepths = depthAnalyser.getVMaxDepths();
+        Map<URI, Integer> maxDepths = depthAnalyser.getVMaxDepths();
 
-        assertTrue(max_depth_spiderman == maxDepths.get(g.getV(testvalues.G_BASIC_SPIDERMAN)));
-        assertTrue(max_depth_real_organism == maxDepths.get(g.getV(testvalues.G_BASIC_REAL_ORGANISM)));
-        assertTrue(max_depth_thing == maxDepths.get(g.getV(testvalues.G_BASIC_THING)));
-        assertTrue(max_depth_plant == maxDepths.get(g.getV(testvalues.G_BASIC_PLANT)));
-        assertTrue(max_depth_women == maxDepths.get(g.getV(testvalues.G_BASIC_WOMEN)));
+        assertTrue(max_depth_spiderman == maxDepths.get(testvalues.G_BASIC_SPIDERMAN));
+        assertTrue(max_depth_real_organism == maxDepths.get(testvalues.G_BASIC_REAL_ORGANISM));
+        assertTrue(max_depth_thing == maxDepths.get(testvalues.G_BASIC_THING));
+        assertTrue(max_depth_plant == maxDepths.get(testvalues.G_BASIC_PLANT));
+        assertTrue(max_depth_women == maxDepths.get(testvalues.G_BASIC_WOMEN));
     }
 
     /**
@@ -114,14 +112,14 @@ public class TestDepthAnalyser {
     @Test
     public void test_min_depth() throws SLIB_Exception {
 
-        ResultStack<V, Integer> minDepths = depthAnalyser.getVMinDepths();
+        Map<URI, Integer> minDepths = depthAnalyser.getVMinDepths();
 
 
 
-        assertTrue(min_depth_spiderman == minDepths.get(g.getV(testvalues.G_BASIC_SPIDERMAN)));
-        assertTrue(min_depth_real_organism == minDepths.get(g.getV(testvalues.G_BASIC_REAL_ORGANISM)));
-        assertTrue(min_depth_thing == minDepths.get(g.getV(testvalues.G_BASIC_THING)));
-        assertTrue(min_depth_plant == minDepths.get(g.getV(testvalues.G_BASIC_PLANT)));
-        assertTrue(min_depth_women == minDepths.get(g.getV(testvalues.G_BASIC_WOMEN)));
+        assertTrue(min_depth_spiderman == minDepths.get(testvalues.G_BASIC_SPIDERMAN));
+        assertTrue(min_depth_real_organism == minDepths.get(testvalues.G_BASIC_REAL_ORGANISM));
+        assertTrue(min_depth_thing == minDepths.get(testvalues.G_BASIC_THING));
+        assertTrue(min_depth_plant == minDepths.get(testvalues.G_BASIC_PLANT));
+        assertTrue(min_depth_women == minDepths.get(testvalues.G_BASIC_WOMEN));
     }
 }

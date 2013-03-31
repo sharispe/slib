@@ -45,11 +45,10 @@ import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
@@ -75,20 +74,18 @@ public class MeSHExample_XML {
      * @throws SLIB_Ex_Critic
      */
     public static void removeMeshCycles(G meshGraph) throws SLIB_Ex_Critic {
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
 
         // We remove the edges creating cycles
         URI ethicsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D004989");
         URI moralsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D009014");
-        V ethicsV = meshGraph.getV(ethicsURI);
-        V moralsV = meshGraph.getV(moralsURI);
 
         // We retrieve the direct subsumers of the concept (D009014)
-        Set<E> moralsEdges = meshGraph.getE(RDFS.SUBCLASSOF, moralsV, Direction.OUT);
+        Set<E> moralsEdges = meshGraph.getE(RDFS.SUBCLASSOF, moralsURI, Direction.OUT);
         for (E e : moralsEdges) {
 
             System.out.println("\t" + e);
-            if (e.getTarget().equals(ethicsV)) {
+            if (e.getTarget().equals(ethicsURI)) {
                 System.out.println("\t*** Removing edge " + e);
                 meshGraph.removeE(e);
             }
@@ -104,15 +101,13 @@ public class MeSHExample_XML {
 
         URI hydroxybutyratesURI = factory.createURI("http://www.nlm.nih.gov/mesh/D006885");
         URI hydroxybutyricAcidURI = factory.createURI("http://www.nlm.nih.gov/mesh/D020155");
-        V hydroxybutyratesV = meshGraph.getV(hydroxybutyratesURI);
-        V hydroxybutyricAcidV = meshGraph.getV(hydroxybutyricAcidURI);
 
         // We retrieve the direct subsumers of the concept (D009014)
-        Set<E> hydroxybutyricAcidEdges = meshGraph.getE(RDFS.SUBCLASSOF, hydroxybutyricAcidV, Direction.OUT);
+        Set<E> hydroxybutyricAcidEdges = meshGraph.getE(RDFS.SUBCLASSOF, hydroxybutyricAcidURI, Direction.OUT);
         for (E e : hydroxybutyricAcidEdges) {
 
             System.out.println("\t" + e);
-            if (e.getTarget().equals(hydroxybutyratesV)) {
+            if (e.getTarget().equals(hydroxybutyratesURI)) {
                 System.out.println("\t*** Removing edge " + e);
                 meshGraph.removeE(e);
             }
@@ -127,7 +122,7 @@ public class MeSHExample_XML {
             Timer t = new Timer();
             t.start();
 
-            DataFactory factory = DataFactoryMemory.getSingleton();
+            URIFactory factory = URIFactoryMemory.getSingleton();
             URI meshURI = factory.createURI("http://www.nlm.nih.gov/mesh/");
 
             G meshGraph = new GraphMemory(meshURI);
@@ -164,7 +159,7 @@ public class MeSHExample_XML {
 
             // we first configure a pairwise measure
             ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a);
-            SMconf measureConf = new SMconf("Lin_icSanchez", SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
+            SMconf measureConf = new SMconf(SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
 
 
             // We define the semantic measure engine to use 
@@ -172,23 +167,21 @@ public class MeSHExample_XML {
 
             // We compute semantic similarities between concepts
             // e.g. between Paranoid Disorders (D010259) and Schizophrenia, Paranoid (D012563)
-            URI c1URI = factory.createURI("http://www.nlm.nih.gov/mesh/D010259");
-            URI c2URI = factory.createURI("http://www.nlm.nih.gov/mesh/D012563");
+            URI c1 = factory.createURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
+            URI c2 = factory.createURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
 
-            V c1 = meshGraph.getV(c1URI); // Paranoid Disorders
-            V c2 = meshGraph.getV(c2URI); // Schizophrenia, Paranoid
 
             // We compute the similarity
             double sim = engine.computePairwiseSim(measureConf, c1, c2);
-            System.out.println("Sim " + c1.getValue() + "\t" + c2.getValue() + "\t" + sim);
+            System.out.println("Sim " + c1 + "\t" + c2 + "\t" + sim);
 
             /* 
              * The computation of the first similarity is not very fast because   
              * the engine compute extra informations which are cached for next computations.
-             * Lets compute 1000000 random pairwise similarities
+             * Lets compute 10 000 000 random pairwise similarities
              */
-            int totalComparison = 1000000;
-            List<V> concepts = new ArrayList<V>(meshGraph.getV());
+            int totalComparison = 10000000;
+            List<URI> concepts = new ArrayList<URI>(meshGraph.getV());
             int id1,id2;
             String idC1,idC2;
             Random r = new Random();
@@ -203,8 +196,8 @@ public class MeSHExample_XML {
                 sim = engine.computePairwiseSim(measureConf, c1, c2);
 
                 if ((i + 1) % 50000 == 0) {
-                    idC1 = ((URI) c1.getValue()).getLocalName();
-                    idC2 = ((URI) c2.getValue()).getLocalName();
+                    idC1 = c1.getLocalName();
+                    idC2 = c2.getLocalName();
 
                     System.out.println("Sim " + (i + 1) + "/" + totalComparison + "\t" + idC1 + "/" + idC2 + ": " + sim);
                 }

@@ -8,12 +8,9 @@ import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
@@ -43,7 +40,7 @@ public class SMComputationGO_pairwise {
         // The Gene Ontology (OBO format)
         String goOBO = "/data/go/gene_ontology_ext.obo";
 
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
         URI graph_uri = factory.createURI("http://go/");
 
         // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
@@ -68,24 +65,23 @@ public class SMComputationGO_pairwise {
         
         // We create a vertex corresponding to the virtual root
         // and we add it to the graph
-        URI uriVR = factory.createURI("http://go/virtualRoot");
-        V virtualRoot = new Vertex(uriVR, VType.CLASS);
+        URI virtualRoot = factory.createURI("http://go/virtualRoot");
         graph.addV(virtualRoot);
         
         // We root the graphs using the virtual root as root
         GAction rooting = new GAction(GActionType.REROOTING);
-        rooting.addParameter("root_uri", uriVR.stringValue());
+        rooting.addParameter("root_uri", virtualRoot.stringValue());
         GraphActionExecutor.applyAction(factory, rooting, graph);
         
         System.out.println(graph.toString());
 
-        int nbVertices = graph.getV(VType.CLASS).size();
+        int nbVertices = graph.getV().size();
 
         System.out.println("Nb vertices : " + nbVertices);
 
 
         // We compute the similarity between http://go/0071869 and the collection of vertices
-        V concept = graph.getV(factory.createURI("http://go/0071869"));
+        URI concept = factory.createURI("http://go/0071869");
 
         ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011_a);
 
@@ -96,7 +92,7 @@ public class SMComputationGO_pairwise {
         SM_Engine engine = new SM_Engine(graph);
 
         double sim;
-        for (V v : graph.getV(VType.CLASS)) {
+        for (URI v : graph.getV()) {
 
             sim = engine.computePairwiseSim(smConf, concept, v);
             System.out.println(concept+"\t"+v+"\t"+sim);

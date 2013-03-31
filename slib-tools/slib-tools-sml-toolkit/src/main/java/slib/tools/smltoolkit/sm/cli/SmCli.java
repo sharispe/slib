@@ -48,10 +48,10 @@ import slib.sglib.algo.graph.extraction.rvf.instances.impl.InstanceAccessor_RDF_
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.GraphRepositoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.GraphRepository;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
@@ -98,7 +98,7 @@ public class SmCli implements SmlModuleCLI {
      *
      */
     public double EMPTY_ANNOTATION_SCORE = 0;
-    DataFactory factory = DataFactoryMemory.getSingleton();
+    URIFactory factory = URIFactoryMemory.getSingleton();
     G g;
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
@@ -131,11 +131,14 @@ public class SmCli implements SmlModuleCLI {
         logger.info("Retrieving the graph " + conf.graphURI);
 
         URI graphURI = factory.createURI(conf.graphURI);
-        g = factory.getGraph(graphURI);
+        
+        GraphRepository graphRepo = GraphRepositoryMemory.getSingleton();
 
-        if (g == null) {
+        if (!graphRepo.isGraphRegistred(graphURI)) {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");
         }
+        
+        g = graphRepo.getGraph(graphURI);
 
         logger.info("Graph information:\n" + g.toString());
 
@@ -171,7 +174,7 @@ public class SmCli implements SmlModuleCLI {
         logger.info("Skip entities with empty annotations : " + SKIP_EMPTY_ANNOTATION);
 
         if (!SKIP_EMPTY_ANNOTATION) {
-            logger.info("score affected to entities with empty annotations : " + EMPTY_ANNOTATION_SCORE);
+            logger.info("score associated to entities with empty annotations : " + EMPTY_ANNOTATION_SCORE);
         }
 
 
@@ -189,7 +192,7 @@ public class SmCli implements SmlModuleCLI {
         iAccessor = new InstanceAccessor_RDF_TYPE(g);
 
         computeQueries();
-        
+
         logger.info("process done");
     }
 
@@ -223,9 +226,9 @@ public class SmCli implements SmlModuleCLI {
                         perform_oTOo(qloader, output);
                     }
                 } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL)) {
-                    
-                    QueryIterator qloader = new QueryConceptsIterator(g);
-                    
+
+                    QueryIterator qloader = new QueryConceptsIterator(simManager.getClasses());
+
                     perform_cTOc(qloader, output);
 
                 } else {
@@ -256,8 +259,6 @@ public class SmCli implements SmlModuleCLI {
             long queries_number = qloader.getNumberQueries();
             logger.info("Number of query " + queries_number);
 
-
-
             FileWriter fstream = new FileWriter(output);
             BufferedWriter file = new BufferedWriter(fstream);
 
@@ -286,8 +287,8 @@ public class SmCli implements SmlModuleCLI {
 
             while (qloader.hasNext()) {
 
-                Thread.sleep(100);// To create thread wave
-//				logger.debug("Await Free Resource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//                Thread.sleep(100);// To create thread wave
+//                logger.debug("Await Free Resource, load " + poolWorker.getLoad() + "/" + poolWorker.getCapacity());
                 poolWorker.awaitFreeResource();
 
                 List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
@@ -295,7 +296,7 @@ public class SmCli implements SmlModuleCLI {
                 EntityToEntity_Thread callable = new EntityToEntity_Thread(poolWorker, queriesBench, this, nbMeasures);
 
                 poolWorker.addTask();
-//				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
+//                logger.debug("- Adding Thread task " + poolWorker.getLoad() + "/" + poolWorker.getCapacity());
                 Future<ThreadResultsQueryLoader> future = poolWorker.getPool().submit(callable);
 
                 results.add(future);
@@ -312,7 +313,7 @@ public class SmCli implements SmlModuleCLI {
 
                         file.write(rez.buffer.toString());
 
-                        skipped += rez.getSkipped();
+                        skipped  += rez.getSkipped();
                         setValue += rez.getSetValue();
 
                         count += rez.getJobSize();
@@ -365,8 +366,6 @@ public class SmCli implements SmlModuleCLI {
         }
     }
 
-  
-
     private void perform_cTOc(QueryIterator qloader, String output) throws SLIB_Exception {
 
 
@@ -410,7 +409,7 @@ public class SmCli implements SmlModuleCLI {
 
             while (qloader.hasNext()) {
 
-                Thread.sleep(100);// To create thread wave
+//                Thread.sleep(100);// To create thread wave
 //				logger.debug("Await Free Ressource, load "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
                 poolWorker.awaitFreeResource();
 

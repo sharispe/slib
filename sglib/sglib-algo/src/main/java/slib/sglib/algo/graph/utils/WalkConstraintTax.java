@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 
@@ -23,9 +21,6 @@ public class WalkConstraintTax implements WalkConstraints {
     Map<URI, Direction> acceptedWalksIN = new HashMap<URI, Direction>();
     Map<URI, Direction> acceptedWalksOUT = new HashMap<URI, Direction>();
     Set<URI> validPredicates = new HashSet<URI>();
-    Set<VType> validVTypes = new HashSet<VType>();
-
-    public WalkConstraintTax() {validVTypes.add(VType.CLASS);};
 
     /**
      * Build an instance of walk constraint considering the walk rule.
@@ -48,8 +43,6 @@ public class WalkConstraintTax implements WalkConstraints {
 
         validPredicates.addAll(acceptedWalksIN.keySet());
         validPredicates.addAll(acceptedWalksOUT.keySet());
-
-        validVTypes.add(VType.CLASS);
     }
 
     /**
@@ -67,7 +60,6 @@ public class WalkConstraintTax implements WalkConstraints {
         }
 
         validPredicates.add(acceptedPredicate);
-        validVTypes.add(VType.CLASS);
     }
 
     @Override
@@ -83,16 +75,6 @@ public class WalkConstraintTax implements WalkConstraints {
         }
 
         return valid;
-    }
-
-    @Override
-    public boolean respectConstaints(V v) {
-        return validVTypes.contains(v.getType());
-    }
-
-    @Override
-    public Set<VType> getAcceptedVTypes() {
-        return validVTypes;
     }
 
     @Override
@@ -159,12 +141,7 @@ public class WalkConstraintTax implements WalkConstraints {
         return dir;
     }
 
-    @Override
-    public void addAcceptedVType(VType type) {
-        // TODO Auto-generated method stub Aug 29, 2012
-        throw new UnsupportedOperationException("Not supported yet.");
-
-    }
+    
 
     @Override
     public void addAcceptedTraversal(URI pred, Direction dir) {
@@ -187,12 +164,11 @@ public class WalkConstraintTax implements WalkConstraints {
             out += "\t\t" + e.getKey() + "\t" + e.getValue() + "\n";
         }
 
-        out += "\tValidatedTypes\n";
-
-        for (VType type : validVTypes) {
-            out += "\t\t" + type;
-        }
-
         return out;
+    }
+
+    @Override
+    public boolean respectConstaints(URI v) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

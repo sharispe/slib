@@ -34,14 +34,16 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  * ﻿1. Seco N, Veale T, Hayes J: An Intrinsic Information Content Metric for
@@ -52,34 +54,35 @@ import slib.utils.impl.ResultStack;
  *
  * @author Sebastien Harispe
  */
-public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
+public class ICi_seco_2004 extends LogBasedMetric implements ICtopo {
 
     /**
      * Compute the Information contents of the vertices specified in the given
      * stack.
      *
      * @param allNbOfDescendants a result stack containing the number of
-     * inclusive descendants for all the vertices contained in the graph.
-     * The information content will be computed for each vertices composing the stack considering the number
-     * of vertices in the graph equaling the number of vertices in the stack. 
-     * Note that the number of descendant is considered to be
-     * inclusive i.e. the count of descendants of a concepts x must also count x.
+     * inclusive descendants for all the vertices contained in the graph. The
+     * information content will be computed for each vertices composing the
+     * stack considering the number of vertices in the graph equaling the number
+     * of vertices in the stack. Note that the number of descendant is
+     * considered to be inclusive i.e. the count of descendants of a concepts x
+     * must also count x.
      * @return a result stack storing the information for each concepts
      * specified in the result stack specified in parameter.
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> allNbOfDescendants) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Set<URI>> allDescendantsInc) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
 
         double x, cur_ic, nbDesc;
 
-        double setSize = allNbOfDescendants.size(); // i.e. number of concepts in the processed graph
+        double setSize = allDescendantsInc.size(); // i.e. number of concepts in the processed graph
 
-        for (V v : allNbOfDescendants.keySet()) {
+        for (URI v : allDescendantsInc.keySet()) {
 
-            nbDesc = allNbOfDescendants.get(v).doubleValue();
+            nbDesc = allDescendantsInc.get(v).size();
 
             try {
                 cur_ic = computeIC(nbDesc, setSize);
@@ -87,27 +90,29 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
                 throw new SLIB_Ex_Critic("Error computing IC of concept " + v + "\n" + e.getMessage());
             }
 
-            results.add(v, cur_ic);
+            results.put(v, cur_ic);
         }
 
         return results;
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine engine) throws SLIB_Ex_Critic {
 
         setLogBase(conf);
 
         // The formulation of Seco do not consider inclusive descendants but add + 1 to correct
-        return compute(engine.getAllNbDescendantsInc());
+        return compute(engine.getAllDescendantsInc());
     }
 
     /**
      * Compute the IC considering the given parameters.
-     * @param nbInclusiveDescendants the number of inclusive descendants to consider.
+     *
+     * @param nbInclusiveDescendants the number of inclusive descendants to
+     * consider.
      * @param nbConceptsOnto the number of concepts composing the ontology.
      * @return the IC.
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public double computeIC(double nbInclusiveDescendants, double nbConceptsOnto) throws SLIB_Ex_Critic {
 
@@ -135,5 +140,4 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo{
         }
         return ic;
     }
-
 }

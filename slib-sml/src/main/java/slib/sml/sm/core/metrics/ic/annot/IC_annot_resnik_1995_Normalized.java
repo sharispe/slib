@@ -34,14 +34,16 @@
  */
 package slib.sml.sm.core.metrics.ic.annot;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.HashMap;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Corpus;
 import slib.sml.sm.core.metrics.ic.utils.ProbOccurence;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
 /**
  * ICi_resnik_1995
@@ -70,25 +72,25 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
      * @return
      * @throws SLIB_Exception
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Long> nbOccurences) throws SLIB_Exception {
+    public Map<URI, Double> compute(Map<URI, Integer> nbOccurences) throws SLIB_Exception {
 
-        ResultStack<V, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
+        Map<URI, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
 
-        double pcMin = rtemp.getMinSupNil();
+        double pcMin = SMutils.getMinStrictPositiveDouble(rtemp);
 
         double curIc, curIc_norm;
         double logPcMin = MathSML.log(pcMin, getLogBase());
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        for (V v : nbOccurences.getValues().keySet()) {
+        for (URI v : nbOccurences.keySet()) {
 
             double pc = rtemp.get(v);
 
             curIc = MathSML.log(pc, getLogBase());
             curIc_norm = curIc / logPcMin;
 
-            results.add(v, curIc_norm);
+            results.put(v, curIc_norm);
         }
 
         return results;
@@ -102,7 +104,7 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
      * @throws SLIB_Exception
      */
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
+    public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);
         return compute(manager.getNbInstancesInferredPropFromCorpus());
     }

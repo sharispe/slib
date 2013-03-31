@@ -3,12 +3,11 @@ package slib.sglib.algo.graph.extraction.rvf.instances.impl;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.graph.utils.Direction;
 
 /**
@@ -29,53 +28,53 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
     }
 
     @Override
-    public Set<V> getDirectInstances(V v) {
+    public Set<URI> getDirectInstances(URI v) {
         return graph.getV(v, RDF.TYPE, Direction.IN);
     }
 
     @Override
-    public long getInstancesNumber(V v) {
+    public long getInstancesNumber(URI v) {
         // TODO Auto-generated method stub Aug 30, 2012
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Map<V, Long> getInferredInstancesNumberMapping() {
+    public Map<URI, Long> getInferredInstancesNumberMapping() {
         // TODO Auto-generated method stub Aug 30, 2012
         throw new UnsupportedOperationException("Not supported yet.");
 
     }
 
     @Override
-    public long getDirectInstancesNumber(V v) {
+    public long getDirectInstancesNumber(URI v) {
         return graph.getV(v, RDF.TYPE, Direction.IN).size();
     }
 
     @Override
-    public Map<V, Long> getDirectInstancesNumberMapping() {
+    public Map<URI, Long> getDirectInstancesNumberMapping() {
         // TODO Auto-generated method stub Aug 30, 2012
         throw new UnsupportedOperationException("Not supported yet.");
 
     }
 
     @Override
-    public Set<V> getInstances() {
-        return graph.getV(VType.INSTANCE);
+    public Set<URI> getInstances() {
+        throw new UnsupportedOperationException("To implement");
     }
 
     @Override
-    public Set<V> getDirectClass(V v) {
+    public Set<URI> getDirectClass(URI v) {
         return graph.getV(v, RDF.TYPE, Direction.OUT);
     }
 
     @Override
-    public Set<V> getInstances(V v) {
+    public Set<URI> getInstances(URI v) {
         
         
-        Set<V> instances = new HashSet<V>();
+        Set<URI> instances = new HashSet<URI>();
         
         instances.addAll(getDirectInstances(v));
-        for(V d : descendantsEngine.getDescendantsExc(v)){
+        for(URI d : descendantsEngine.getDescendantsExc(v)){
             instances.addAll(getDirectInstances(d));
         }
         return instances;

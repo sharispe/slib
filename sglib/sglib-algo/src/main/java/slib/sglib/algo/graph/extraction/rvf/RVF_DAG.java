@@ -40,13 +40,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
@@ -93,25 +92,25 @@ public class RVF_DAG extends RVF {
      * @return an Map key V value the set of vertices reachable from the key
      * @throws SLIB_Ex_Critic
      */
-    public Map<V, Set<V>> getAllRV() throws SLIB_Ex_Critic {
+    public Map<URI, Set<URI>> getAllRV() throws SLIB_Ex_Critic {
 
         logger.debug("Get all reachable vertices : start");
         logger.debug("Walk constraint\n" + wc);
 
-        Map<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
 
-        Map<V, Integer> inDegree = new HashMap<V, Integer>();
-        Map<V, Integer> inDegreeDone = new HashMap<V, Integer>();
+        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
 
         // Initialize DataStructure + queue considering walk constraint
-        List<V> queue = new ArrayList<V>();
+        List<URI> queue = new ArrayList<URI>();
 
         WalkConstraints oppositeWC = wc.getInverse(false);
         logger.debug("Opposite Walk constraint " + oppositeWC);
 
-        for (V v : g.getV(wc.getAcceptedVTypes())) {
+        for (URI v : g.getV()) {
 
-            allVertices.put(v, new HashSet<V>());
+            allVertices.put(v, new HashSet<URI>());
             int sizeOpposite = g.getE(v, wc).size();
 
             inDegree.put(v, sizeOpposite);
@@ -127,13 +126,17 @@ public class RVF_DAG extends RVF {
                     + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n" + wc + "\nNumber of vertices tested " + allVertices.size());
         }
 
-        logger.debug("queue : " + queue);
+        
 
         logger.debug("Propagation started from " + queue.size() + " vertices");
-
+        if(queue.size() <= 10){
+            logger.debug(queue.toString());
+        }
+        
+        
         while (!queue.isEmpty()) {
 
-            V current = queue.get(0);
+            URI current = queue.get(0);
 
 //            logger.debug("Processing " + current);
 
@@ -146,39 +149,29 @@ public class RVF_DAG extends RVF {
 
                 Direction dir = oppositeWC.getAssociatedDirection(e.getURI());
 
-                V dest = e.getTarget();
+                URI dest = e.getTarget();
                 if (dir == Direction.IN) {
                     dest = e.getSource();
                 }
-
-
-
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
 
-//                logger.debug("\tprop to " + dest+"\t"+done+"/"+inDegree.get(dest));
-
                 // union
-                Set<V> union = SetUtils.union(allVertices.get(current), allVertices.get(dest));
+                Set<URI> union = SetUtils.union(allVertices.get(current), allVertices.get(dest));
                 union.add(current);
                 allVertices.put(dest, union);
 
-
-
                 if (done == inDegree.get(dest)) {
                     queue.add(dest);
-//                    logger.debug("*** Adding "+dest);
                 }
             }
-
-            //logger.debug("*** Done "+current+"\t"+allVertices.get(current));
         }
 
         //TOREMOVE 
 
         logger.info("Checking Treatment coherency");
         long incoherencies = 0;
-        for (V c : inDegree.keySet()) {
+        for (URI c : inDegree.keySet()) {
 
             if (!inDegree.get(c).equals(inDegreeDone.get(c))) {
 
@@ -186,7 +179,7 @@ public class RVF_DAG extends RVF {
                     logger.debug("\tURI\tIndegree\tInDegreeDone");
                 }
 
-                logger.debug("\t" + c.getValue() + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
+                logger.debug("\t" + c + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
                 incoherencies++;
             }
         }
@@ -213,22 +206,22 @@ public class RVF_DAG extends RVF {
      * @return an HashMap key V, value the set of terminal vertices reachable
      * from the key Set<V>
      */
-    public HashMap<V, Set<V>> getTerminalVertices() {
+    public Map<URI, Set<URI>> getTerminalVertices() {
 
         logger.info("Retrieving all reachable leaves");
 
-        HashMap<V, Set<V>> allReachableLeaves = new HashMap<V, Set<V>>();
-        HashMap<V, Integer> inDegrees = new HashMap<V, Integer>();
-        HashMap<V, Integer> inDegreesDone = new HashMap<V, Integer>();
+        Map<URI, Set<URI>> allReachableLeaves = new HashMap<URI, Set<URI>>();
+        Map<URI, Integer> inDegrees = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreesDone = new HashMap<URI, Integer>();
 
         // Retrieve all leaves
-        ArrayList<V> queue = new ArrayList<V>();
+        List<URI> queue = new ArrayList<URI>();
 
-        for (V v : g.getV(wc.getAcceptedVTypes())) {
+        for (URI v : g.getV()) {
 
-            allReachableLeaves.put(v, new HashSet<V>());
+            allReachableLeaves.put(v, new HashSet<URI>());
 
-            int inDegree = g.getE(wc.getAcceptedPredicates(), v, wc.getAcceptedVTypes(), Direction.IN).size();
+            int inDegree = g.getE(wc.getAcceptedPredicates(), v, Direction.IN).size();
 
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
@@ -241,20 +234,20 @@ public class RVF_DAG extends RVF {
 
         logger.info("Propagation of leave counts start from " + queue.size() + " leaves on " + g.getV().size() + " concepts");
 
-        long c = 0;
+//        long c = 0;
 
         while (!queue.isEmpty()) {
 
-            V v = queue.get(0);
+            URI v = queue.get(0);
             queue.remove(0);
             Set<E> edges = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT);
 
             //logger.info(c+"/"+g.getV().size()+" "+v.getValue().stringValue());
-            c++;
+//            c++;
 
             for (E e : edges) {
 
-                V target = e.getTarget();
+                URI target = e.getTarget();
                 int degreeDone = inDegreesDone.get(target).intValue();
 
                 allReachableLeaves.put(target, SetUtils.union(allReachableLeaves.get(target), allReachableLeaves.get(v)));
@@ -273,12 +266,12 @@ public class RVF_DAG extends RVF {
      *
      * @return @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Long> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
-        ResultStack<V, Long> allVertices = new ResultStack<V, Long>();
+        Map<URI, Integer> allVertices = new HashMap<URI, Integer>();
 
-        for (V v : g.getV(wc.getAcceptedVTypes())) {
-            allVertices.add(v, (long) 1);
+        for (URI v : g.getV()) {
+            allVertices.put(v,1);
         }
         return propagateNbOccurences(allVertices);
     }
@@ -297,22 +290,22 @@ public class RVF_DAG extends RVF {
      * propagated of each vertices
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Long> propagateNbOccurences(ResultStack<V, Long> nbOccurrence) throws SLIB_Ex_Critic {
+    public Map<URI, Integer> propagateNbOccurences(Map<URI, Integer> nbOccurrence) throws SLIB_Ex_Critic {
 
-        HashMap<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
-        HashMap<V, Integer> inDegree = new HashMap<V, Integer>();
-        HashMap<V, Integer> inDegreeDone = new HashMap<V, Integer>();
-        ResultStack<V, Long> nbOcc_prop = new ResultStack<V, Long>();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
+        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
+        Map<URI, Integer> nbOcc_prop = new HashMap<URI, Integer>();
 
-        for (V v : nbOccurrence.getValues().keySet()) {
-            nbOcc_prop.add(v, nbOccurrence.get(v));
+        for (URI v : nbOccurrence.keySet()) {
+            nbOcc_prop.put(v, nbOccurrence.get(v));
         }
         // Initialize DataStructure + queue considering setEdgeTypes
-        List<V> queue = new ArrayList<V>();
+        List<URI> queue = new ArrayList<URI>();
 
-        for (V v : g.getV(wc.getAcceptedVTypes())) {
+        for (URI v : g.getV()) {
 
-            allVertices.put(v, new HashSet<V>());
+            allVertices.put(v, new HashSet<URI>());
             int sizeOpposite = g.getE(wc.getAcceptedPredicates(), v, Direction.OUT).size();
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
@@ -324,24 +317,24 @@ public class RVF_DAG extends RVF {
 
         while (!queue.isEmpty()) {
 
-            V current = queue.get(0);
+            URI current = queue.get(0);
             queue.remove(0);
             allVertices.get(current).add(current);
 
 
-            Set<E> edges = g.getE(wc.getAcceptedPredicates(), current, wc.getAcceptedVTypes(), Direction.IN);
+            Set<E> edges = g.getE(wc.getAcceptedPredicates(), current, Direction.IN);
 
 
             for (E e : edges) {
-                V dest = e.getTarget();
+                URI dest = e.getTarget();
 
-                nbOcc_prop.add(dest, nbOcc_prop.get(dest) + nbOcc_prop.get(current));
+                nbOcc_prop.put(dest, nbOcc_prop.get(dest) + nbOcc_prop.get(current));
 
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
 
                 // union
-                Set<V> union = SetUtils.union(allVertices.get(current), allVertices.get(dest));
+                Set<URI> union = SetUtils.union(allVertices.get(current), allVertices.get(dest));
                 allVertices.put(dest, union);
 
                 if (done == inDegree.get(dest)) {

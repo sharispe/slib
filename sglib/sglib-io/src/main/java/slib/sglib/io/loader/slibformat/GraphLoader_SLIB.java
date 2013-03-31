@@ -50,11 +50,8 @@ import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.repo.DataFactory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -67,7 +64,7 @@ import slib.utils.ex.SLIB_Exception;
 public class GraphLoader_SLIB implements GraphLoader {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataFactory factory;
+    URIFactory factory;
     String filepath;
     G g;
 
@@ -90,7 +87,7 @@ public class GraphLoader_SLIB implements GraphLoader {
     public void process(GDataConf conf, G graph) throws SLIB_Exception {
 
         this.g = graph;
-        factory = DataFactoryMemory.getSingleton();
+        factory = URIFactoryMemory.getSingleton();
 
 
         this.filepath = conf.getLoc();
@@ -117,22 +114,15 @@ public class GraphLoader_SLIB implements GraphLoader {
                 dataTMP = line.split("\t");
                 if (dataTMP.length == 1) { // vertex
                     URI vURI = factory.createURI(dataTMP[0]);
-                    g.addV(new Vertex(vURI, VType.CLASS));
+                    g.addV(vURI);
                 } else if (dataTMP.length == 3) {
                     URI sURI = factory.createURI(dataTMP[0]);
                     URI pURI = factory.createURI(dataTMP[1]);
                     URI oURI = factory.createURI(dataTMP[2]);
 
-                    V s = g.getV(sURI);
-                    V o = g.getV(oURI);
-
-                    if (s == null) {
-                        s = g.addV(new Vertex(sURI, VType.CLASS));
-                    }
-                    if (o == null) {
-                        o = g.addV(new Vertex(oURI, VType.CLASS));
-                    }
-                    g.addE(s, o, pURI);
+                    g.addV(sURI);
+                    g.addV(oURI);
+                    g.addE(sURI, pURI, oURI);
                 } else {
                     throw new SLIB_Ex_Critic("Cannot process the following line " + line);
                 }
@@ -158,12 +148,12 @@ public class GraphLoader_SLIB implements GraphLoader {
             out.write("# vertices " + g.getV().size() + "\n");
             out.write("# edges " + g.getE().size() + "\n");
 
-            for (V v : g.getV()) {
-                out.write(v.getValue().stringValue() + "\n");
+            for (URI v : g.getV()) {
+                out.write(v.stringValue() + "\n");
             }
 
             for (E e : g.getE()) {
-                out.write(e.getSource().getValue().stringValue() + "\t" + e.getURI().stringValue() + "\t" + e.getTarget().getValue().stringValue() + "\n");
+                out.write(e.getSource().stringValue() + "\t" + e.getURI().stringValue() + "\t" + e.getTarget().stringValue() + "\n");
             }
             out.close();
         } catch (Exception e) {

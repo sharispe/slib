@@ -18,10 +18,7 @@ import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
@@ -33,7 +30,7 @@ import slib.utils.impl.Util;
 public class GraphLoader_CSV implements GraphLoader {
 
     boolean skipHeader = false;
-    DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
+    URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
     HashMap<Integer, CSV_Mapping> mappings = new HashMap<Integer, CSV_Mapping>();
     HashMap<Integer, CSV_StatementTemplate> statementTemplates = new HashMap<Integer, CSV_StatementTemplate>();
     Pattern pattern = null; // the one used
@@ -43,16 +40,15 @@ public class GraphLoader_CSV implements GraphLoader {
     /**
      *
      * @param id
-     * @param type
      * @param prefix
      */
-    public void addMapping(int id, VType type, String prefix) {
+    public void addMapping(int id, String prefix) {
 
         if (prefix == null) {
             prefix = "";
         }
 
-        mappings.put(id, new CSV_Mapping(id, type, prefix));
+        mappings.put(id, new CSV_Mapping(id, prefix));
     }
 
     /**
@@ -68,10 +64,12 @@ public class GraphLoader_CSV implements GraphLoader {
         statementTemplates.put(src_id, new CSV_StatementTemplate(src_id, target_id, predicate_URI));
     }
 
+    @Override
     public G load(GraphConf conf) throws SLIB_Exception {
         return GraphLoaderGeneric.load(conf);
     }
 
+    @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
         logger.debug("Loading CSV.");
@@ -102,24 +100,24 @@ public class GraphLoader_CSV implements GraphLoader {
             pattern = Pattern.compile(separator);
         }
 
-        HashMap<Integer, CSV_Mapping> mappings = (HashMap<Integer, CSV_Mapping>) conf.getParameter("mappings");
-        HashMap<Integer, CSV_StatementTemplate> statementTemplates = (HashMap<Integer, CSV_StatementTemplate>) conf.getParameter("statementTemplates");
+        HashMap<Integer, CSV_Mapping> mappingsLocal = (HashMap<Integer, CSV_Mapping>) conf.getParameter("mappings");
+        HashMap<Integer, CSV_StatementTemplate> statementTemplatesLocal = (HashMap<Integer, CSV_StatementTemplate>) conf.getParameter("statementTemplates");
 
 
 
-        if (mappings != null) {
-            this.mappings.putAll(mappings);
+        if (mappingsLocal != null) {
+            this.mappings.putAll(mappingsLocal);
         }
 
-        if (statementTemplates != null) {
-            this.statementTemplates.putAll(statementTemplates);
+        if (statementTemplatesLocal != null) {
+            this.statementTemplates.putAll(statementTemplatesLocal);
         }
 
         if (this.mappings.isEmpty()) {
             throw new SLIB_Ex_Critic("Please specify a mapping for CSV loader");
         }
 
-        if (this.statementTemplates.size() == 0) {
+        if (this.statementTemplates.isEmpty()) {
             throw new SLIB_Ex_Critic("Please specify a statement template for CSV loader");
         }
 
@@ -183,8 +181,8 @@ public class GraphLoader_CSV implements GraphLoader {
 
 
 
-        V subject = buildVertex(t.src_id, data);
-        V object = buildVertex(t.target_id, data);
+        URI subject = buildURI(t.src_id, data);
+        URI object = buildURI(t.target_id, data);
 
         boolean valid = true;
 
@@ -207,13 +205,13 @@ public class GraphLoader_CSV implements GraphLoader {
             }
         }
         if (valid) {
-            g.addE(subject, object, t.predicate);
+            g.addE(subject, t.predicate, object);
             return true;
         }
         return false;
     }
 
-    private V buildVertex(int id, String[] data) throws SLIB_Ex_Critic {
+    private URI buildURI(int id, String[] data) throws SLIB_Ex_Critic {
 
         CSV_Mapping vmap = mappings.get(id);
 
@@ -227,8 +225,6 @@ public class GraphLoader_CSV implements GraphLoader {
             uriAsString = vmap.prefix + uriAsString;
         }
 
-        V v = new Vertex(dataRepo.createURI(uriAsString), vmap.type);
-
-        return v;
+        return dataRepo.createURI(uriAsString);
     }
 }

@@ -32,28 +32,30 @@
 package slib.sml.sm.core.utils;
 
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * 
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public interface LCAFinder {
-    
-        /**
-     * Compute the set of Disjoint Common Ancestors of a pair of concepts
-     * The processed graph do not required to be transitively reduced
-     * @param graph the graph in which the search requires to be performed
-     * An exception is thrown if the queried vertices are not expressed in the graph
-     * @param a the first query vertex 
+
+    /**
+     * Compute the set of Disjoint Common Ancestors of a pair of concepts The
+     * processed graph do not require to be transitively reduced.
+     *
+     * @param graph the graph in which the search requires to be performed An
+     * exception is thrown if the queried vertices are not expressed in the
+     * graph
+     * @param a the first query vertex
      * @param b the second query vertex
      * @return the set of vertices corresponding to the DCA of vertices a and b.
-     * An empty set is returned if no DCA are found (Which can theoretically never happen).
-     * 
-     * @throws SLIB_Exception 
+     * An empty set is returned if no DCA are found (Which can theoretically
+     * never happen).
+     *
+     * @throws SLIB_Exception
      */
-    Set<V> getLCA(G graph, V a, V b) throws SLIB_Exception;
-    
+    Set<URI> getLCAs(G graph, URI a, URI b) throws SLIB_Exception;
 }

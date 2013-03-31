@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sglib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.0.5-beta-SNAPSHOT</version>
+        <version>0.0.5-beta-2-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>sglib-test</artifactId>
@@ -22,24 +22,24 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-algo</artifactId>
-            <version>0.0.5-beta-SNAPSHOT</version>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-io</artifactId>
-            <version>0.0.5-beta-SNAPSHOT</version>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model-impl</artifactId>
-            <version>0.0.5-beta-SNAPSHOT</version>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.0.5-beta-SNAPSHOT</version>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

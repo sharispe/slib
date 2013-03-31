@@ -44,9 +44,8 @@ import org.slf4j.LoggerFactory;
 
 import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.SmCli;
@@ -96,14 +95,13 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             results = new ThreadResultsQueryLoader(queriesBench.size());
 
 
-            DataFactory df = DataFactoryMemory.getSingleton();
+            URIFactory df = URIFactoryMemory.getSingleton();
 
             String uriE1s, uriE2s;
             StringBuilder tmp_buffer = new StringBuilder();
 
-            URI uriE1, uriE2;
-            V e1, e2;
-            Set<V> setE1, setE2;
+            URI e1, e2;
+            Set<URI> setE1, setE2;
             double sim;
 
             for (QueryEntry q : queriesBench) {
@@ -112,34 +110,29 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 uriE2s = q.getValue();
 
                 try {
-
-
-                    uriE1 = df.createURI(uriE1s);
-                    uriE2 = df.createURI(uriE2s);
+                    e1 = df.createURI(uriE1s);
+                    e2 = df.createURI(uriE2s);
 
                 } catch (IllegalArgumentException e) {
-
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
 
-                e1 = g.getV(uriE1);
-                e2 = g.getV(uriE2);
 
-                if (e1 == null || e2 == null) {
-                    if (e1 == null) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + uriE1 + " in " + g.getURI());
+                if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
+                    if (!g.containsVertex(e1)) {
+                        throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
                     }
-                    if (e2 == null) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + uriE2 + " in " + g.getURI());
+                    if (!g.containsVertex(e2)) {
+                        throw new SLIB_Ex_Critic("Cannot locate " + e2 + " in " + g.getURI());
                     }
                 }
 
                 // clear tmp_buffer
                 tmp_buffer.delete(0, tmp_buffer.length());
 
-                tmp_buffer.append(uriE1);
+                tmp_buffer.append(uriE1s);
                 tmp_buffer.append("\t");
-                tmp_buffer.append(uriE2);
+                tmp_buffer.append(uriE2s);
 
 
                 setE1 = iAccessor.getDirectClass(e1);
@@ -152,7 +145,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                         setValue++;
 
                         for (int i = 0; i < nbMeasures; i++) {
-                            tmp_buffer.append("\t" + sspM.EMPTY_ANNOTATION_SCORE);
+                            tmp_buffer.append("\t").append(sspM.EMPTY_ANNOTATION_SCORE);
                         }
 
                         tmp_buffer.append("\n");
@@ -178,21 +171,17 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                                 break;
                             }
                         }
-
                         if (pm_conf == null) {
                             throw new SLIB_Ex_Critic("Cannot locate configuration associated to pairwise measure " + pm_id);
                         }
 
                         sim = sspM.simManager.computeGroupwiseAddOnSim(m, pm_conf, setE1, setE2);
 
-                        tmp_buffer.append("\t" + sim);
+                        tmp_buffer.append("\t").append(sim);
 
                         if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                             SMutils.throwArithmeticCriticalException(m, pm_conf, e1, e2, sim);
                         }
-
-                    } else if (SMConstants.SIM_FRAMEWORK.containsKey(m.flag)) {
-                        throw new UnsupportedOperationException("Sim Framework are currently not supported as groupwise measures... sorry");
                     } else {
 
                         sim = sspM.simManager.computeGroupwiseStandaloneSim(m, setE1, setE2);

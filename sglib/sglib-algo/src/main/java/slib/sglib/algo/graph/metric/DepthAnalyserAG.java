@@ -36,22 +36,22 @@ package slib.sglib.algo.graph.metric;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.openrdf.model.URI;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 
-import slib.sglib.model.repo.DataFactory;
 
 /**
  * Class used to analyze depth of vertices composing an acyclic graph
@@ -62,7 +62,6 @@ import slib.sglib.model.repo.DataFactory;
 public class DepthAnalyserAG {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataFactory factory;
     G g;
     WalkConstraints wc;
 
@@ -70,13 +69,12 @@ public class DepthAnalyserAG {
      * Create a DepthAnalyserAG object considering a particular acyclic graph
      * and set of edge types Note that graph acyclicity is not evaluated.
      *
-     * @param factory 
+     * @param factory
      * @param g The graph to consider
-     * @param wc 
+     * @param wc
      */
-    public DepthAnalyserAG(DataFactory factory, G g, WalkConstraints wc) {
+    public DepthAnalyserAG(G g, WalkConstraints wc) {
 
-        this.factory = factory;
         this.wc = wc;
 
         this.g = g;
@@ -90,23 +88,26 @@ public class DepthAnalyserAG {
      * @return a ResultStack containing the depth of each vertex.
      * @throws SGL_Ex_Critic
      */
-    private ResultStack<V, Integer> getVDepths(boolean max) throws SLIB_Ex_Critic {
+    private Map<URI, Integer> getVDepths(boolean max) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Integer> computedDepths = new ResultStack<V, Integer>();
+        Map<URI, Integer> computedDepths = new HashMap<URI, Integer>();
 
-        HashMap<V, Integer> inDegree = new HashMap<V, Integer>();
-        HashMap<V, Integer> inDegreeDone = new HashMap<V, Integer>();
+        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
 
         // Initialize DataStructure + queue considering setEdgeTypes
-        ArrayList<V> queue = new ArrayList<V>();
+        List<URI> queue = new ArrayList<URI>();
+
+        logger.debug("Walk constraint loaded " + wc);
 
         WalkConstraints wcOpp = wc.getInverse(false);
+        logger.debug("Building initial queue considering inverse constraint " + wcOpp);
 
-        for (V v : g.getVClass()) {
+        for (URI v : g.getV()) {
 
             int sizeOpposite = g.getE(v, wcOpp).size();
 
-            computedDepths.add(v, 0);
+            computedDepths.put(v, 0);
 
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
@@ -117,10 +118,12 @@ public class DepthAnalyserAG {
 
         }
 
+        logger.debug("Queue size " + queue.size());
+
 
         while (!queue.isEmpty()) {
 
-            V current = queue.get(0);
+            URI current = queue.get(0);
             queue.remove(0);
 
 
@@ -131,7 +134,7 @@ public class DepthAnalyserAG {
             for (E e : edges) {
 
                 Direction dir = wc.getAssociatedDirection(e.getURI());
-                V dest = e.getTarget();
+                URI dest = e.getTarget();
                 if (dir == Direction.IN) {
                     dest = e.getSource();
                 }
@@ -141,17 +144,17 @@ public class DepthAnalyserAG {
                 inDegreeDone.put(dest, done);
 
                 if (computedDepths.get(dest) == 0) {
-                    computedDepths.add(dest, currentDepth);
+                    computedDepths.put(dest, currentDepth);
                 } else {
                     int computedDepth = computedDepths.get(dest).intValue();
 
                     if (max) {
                         if (computedDepth < currentDepth) {
-                            computedDepths.add(dest, currentDepth);
+                            computedDepths.put(dest, currentDepth);
                         }
                     } else {
                         if (computedDepth > currentDepth) {
-                            computedDepths.add(dest, currentDepth);
+                            computedDepths.put(dest, currentDepth);
                         }
                     }
                 }
@@ -165,21 +168,21 @@ public class DepthAnalyserAG {
 
     /**
      * @return a ResultStack containing the maximal depth of each vertex.
-     * @throws SLIB_Ex_Critic  
+     * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Integer> getVMaxDepths() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getVMaxDepths() throws SLIB_Ex_Critic {
 
-        logger.debug("Compute max depths");
+        logger.debug("Computing max depths...");
         return getVDepths(true);
     }
 
     /**
      * @return a ResultStack containing the minimal depth of each vertex.
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Integer> getVMinDepths() throws SLIB_Ex_Critic {
+    public Map<URI, Integer> getVMinDepths() throws SLIB_Ex_Critic {
 
-        logger.debug("Compute min depths");
+        logger.debug("Computing min depths...");
         return getVDepths(false);
     }
 
@@ -187,12 +190,12 @@ public class DepthAnalyserAG {
      * @return a HashMap representing the distribution of each represented
      * minimal depths. key Integer the depth, value the number of vertices with
      * the corresponding depth
-     * @throws SLIB_Exception  
+     * @throws SLIB_Exception
      */
-    public HashMap<Integer, Integer> getMinDepthsDistribution() throws SLIB_Exception {
+    public Map<Integer, Integer> getMinDepthsDistribution() throws SLIB_Exception {
 
-        ResultStack<V, Integer> allDepths = getVMinDepths();
-        HashMap<Integer, Integer> distribution = getDistribution(allDepths);
+        Map<URI, Integer> allDepths = getVMinDepths();
+        Map<Integer, Integer> distribution = getDistribution(allDepths);
 
         return distribution;
 
@@ -202,12 +205,12 @@ public class DepthAnalyserAG {
      * @return a HashMap representing the distribution of each represented
      * maximal depths. key Integer the depth, value the number of vertices with
      * the corresponding depth
-     * @throws SLIB_Exception 
+     * @throws SLIB_Exception
      */
-    public HashMap<Integer, Integer> getMaxDepthsDistribution() throws SLIB_Exception {
+    public Map<Integer, Integer> getMaxDepthsDistribution() throws SLIB_Exception {
 
-        ResultStack<V, Integer> allDepths = getVMaxDepths();
-        HashMap<Integer, Integer> distribution = getDistribution(allDepths);
+        Map<URI, Integer> allDepths = getVMaxDepths();
+        Map<Integer, Integer> distribution = getDistribution(allDepths);
 
         return distribution;
     }
@@ -218,11 +221,11 @@ public class DepthAnalyserAG {
      * depths. key Integer the depth, value the number of vertices with the
      * corresponding depth
      */
-    private <N extends Number> HashMap<N, Integer> getDistribution(ResultStack<V, N> depths) {
+    private <N extends Number> Map<N, Integer> getDistribution(Map<URI, N> depths) {
 
-        HashMap<N, Integer> distribution = new HashMap<N, Integer>();
+        Map<N, Integer> distribution = new HashMap<N, Integer>();
 
-        for (Entry<V, N> entry : depths.entrySet()) {
+        for (Entry<URI, N> entry : depths.entrySet()) {
 
             N cDepth = entry.getValue();
 

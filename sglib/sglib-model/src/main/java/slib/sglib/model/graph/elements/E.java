@@ -52,12 +52,12 @@ public interface E{
         /**
          * @return the vertex corresponding to the source of the edge. 
          */
-	public V getSource();
+	public URI getSource();
 	
         /**
          * @return the vertex corresponding to the target of the edge. 
          */
-        public V getTarget();
+        public URI getTarget();
 	
         /**
          * @return the predicate URI of the edge.

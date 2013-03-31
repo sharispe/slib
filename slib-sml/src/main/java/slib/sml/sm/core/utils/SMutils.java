@@ -34,7 +34,8 @@
  */
 package slib.sml.sm.core.utils;
 
-import slib.sglib.model.graph.elements.V;
+import java.util.Map;
+import org.openrdf.model.URI;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -54,7 +55,7 @@ public class SMutils {
      * @param value
      * @throws SLIB_Ex_Critic
      */
-    public static void throwArithmeticCriticalException(SMconf pairwiseConf, V a, V b, Object value) throws SLIB_Ex_Critic {
+    public static void throwArithmeticCriticalException(SMconf pairwiseConf, URI a, URI b, Object value) throws SLIB_Ex_Critic {
 
         throw new SLIB_Ex_Critic("Critical error. \n"
                 + "A result produced by the pairwise measure " + pairwiseConf.flag + " was not a number " + value + " (NaN/Infinity). \n"
@@ -75,8 +76,8 @@ public class SMutils {
      * @param value the value obtained during the comparison
      * @throws SLIB_Ex_Critic
      */
-    public static void throwArithmeticCriticalException(SMconf m, SMconf p, V e1,
-            V e2, Object value) throws SLIB_Ex_Critic {
+    public static void throwArithmeticCriticalException(SMconf m, SMconf p, URI e1,
+            URI e2, Object value) throws SLIB_Ex_Critic {
         throw new SLIB_Ex_Critic("Critical error. \n"
                 + "A result produced by the measure " + m.flag + " was not a number " + value + " (NaN/infinity). \n"
                 + "Pairwise measure in use " + p.flag + " id=" + p.id + ". \n"
@@ -84,4 +85,21 @@ public class SMutils {
                 + "This issue can be encountred if an infinite value have been detected.\n"
                 + "Please report the bug to the developpers\n");
     }
+
+    public static <X> Double getMinStrictPositiveDouble(Map<X, Double> m) {
+        double max = 0;
+
+        for (Map.Entry<X, Double> e : m.entrySet()) {
+            if (e.getValue() > max) {
+                max = e.getValue();
+            }
+        }
+        if (max != 0) {
+            return max;
+        } else {
+            return null;
+        }
+    }
+    
+    
 }

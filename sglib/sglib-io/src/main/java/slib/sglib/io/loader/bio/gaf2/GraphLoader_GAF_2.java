@@ -54,11 +54,9 @@ import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
 import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
@@ -91,9 +89,9 @@ public class GraphLoader_GAF_2 implements GraphLoader {
     public final static int ASSIGNED_BY = 14;
     public final static int ANNOTATION_XP = 15;
     public final static int GENE_PRODUCT_ISOFORM = 16;
-    private G g;
+    private G graph;
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    DataFactoryMemory factory = DataFactoryMemory.getSingleton();
+    URIFactoryMemory factory = URIFactoryMemory.getSingleton();
     String prefixUriInstance;
     String defaultURIprefix;
     Pattern colon = Pattern.compile(":");
@@ -129,7 +127,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         }
 
         logger.info("GAF 2 loader populates graph " + graph.getURI());
-        this.g = graph;
+        this.graph = graph;
 
         process(conf);
     }
@@ -138,7 +136,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
         prefixUriInstance = (String) conf.getParameter("prefix");
         if (prefixUriInstance == null) {
-            prefixUriInstance = g.getURI().getNamespace();
+            prefixUriInstance = graph.getURI().getNamespace();
         }
 
         logger.info("Instance URIs will be prefixed by: " + prefixUriInstance);
@@ -171,7 +169,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         HashSet<String> taxons = null;
         HashSet<String> excludedEC = null;
 
-        if (filters != null) {
+        if (!filters.isEmpty()) {
 
             for (Filter f : filters) {
 
@@ -203,9 +201,8 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         }
 
 
-        HashMap<URI, HashSet< V>> entitiesAnnots;
-        entitiesAnnots = new HashMap<URI, HashSet< V>>();
-
+        int countEntities = 0;
+        int countAnnotsLoaded = 0;
 
         logger.info("file location : " + fileLocation);
 
@@ -223,17 +220,17 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
 
 
-        DataFactoryMemory uriManager = DataFactoryMemory.getSingleton();
+        URIFactory uriManager = graph.getURIFactory();
 
         boolean validHeader = false;
-        String line, qualifier, gotermURI, evidenceCode, taxon_ids;
+        String line, qualifier, gotermURIstring, evidenceCode, taxon_ids;
         int c = 0;
 
         try {
 
             BigFileReader file = new BigFileReader(fileLocation);
             String[] data;
-            URI uriNode, entityID;
+            URI uriGOterm, entityID;
 
             while (file.hasNext()) {
 
@@ -258,14 +255,14 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
 
                     entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
-                    gotermURI = buildURI(data[GOID]);
+                    gotermURIstring = buildURI(data[GOID]);
                     qualifier = data[QUALIFIER];
                     evidenceCode = data[EVIDENCE_CODE];
                     taxon_ids = data[TAXON];
 
 
                     // check if Evidence Code is valid
-                    if (excludedEC == null || (excludedEC != null && EvidenceCodeRules.areValid(excludedEC, evidenceCode))) {
+                    if (excludedEC == null || EvidenceCodeRules.areValid(excludedEC, evidenceCode)) {
 
 
                         // We do not consider go term associated with a qualifier 
@@ -273,27 +270,11 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                         // TODO take into consideration this information !
                         if (qualifier.isEmpty()) {
 
-                            V term = null;
+                            uriGOterm = uriManager.createURI(gotermURIstring);
 
-                            uriNode = uriManager.createURI(gotermURI);
+                            if (graph.containsVertex(uriGOterm)) { // if the annotation is in the graph
 
-                            if (g.containsVertex(uriNode)) {
-                                term = g.getV(uriNode);
-                            }
-
-                            if (term != null) {
-                                // Check if annotation was already loaded 
-                                // only considering the object pointed by 
-                                // the annotation.
-
-                                boolean exists = false;
-
-                                if (entitiesAnnots.containsKey(entityID)
-                                        && entitiesAnnots.get(entityID).contains(term)) {
-
-                                    exists = true;
-                                }
-
+                               
                                 boolean valid = true;
 
                                 if (p_taxid != null) {
@@ -309,18 +290,20 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                                         }
                                     }
                                 }
-                                if (!exists && valid) {
+                                if (valid) {
 
-                                    if (!entitiesAnnots.containsKey(entityID)) {
-                                        entitiesAnnots.put(entityID, new HashSet< V>());
+                                    if (!graph.containsVertex(entityID)) {
+                                        graph.addV(entityID);
+                                        countEntities++;
                                     }
-                                    entitiesAnnots.get(entityID).add(term);
-                                } else if (valid == false) {
+                                    graph.addE(entityID, RDF.TYPE, uriGOterm);
+                                    countAnnotsLoaded++;
+                                } else{
                                     taxonsRestriction++;
                                 }
                             } else {
                                 not_found++;
-                                logger.debug("Cannot found Vertex " + uriNode);
+                                logger.debug("Cannot found GO term " + uriGOterm);
                             }
                         } else {
                             existsQualifier++;
@@ -332,7 +315,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                 c++;
 
                 if (c % 1000000 == 0) {
-                    logger.info(c + " lines processed");
+                    logger.info(c + " GAF entries processed");
                 }
             }
             file.close();
@@ -350,39 +333,8 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         logger.info("\tExcluded  - Contains qualifier 	      : " + existsQualifier);
         logger.info("\tNot found unexisting term in the graph :	" + not_found);
 
-        logger.info("\tAdding instances to the graph, number of instances " + entitiesAnnots.size());
-
-        // Build Instance
-        long vnumber = 0;
-        long vedges = 0;
-
-        c = 0;
-        Iterator<Entry<URI, HashSet<V>>> it = entitiesAnnots.entrySet().iterator();
-        while(it.hasNext()){
-            Entry<URI, HashSet<V>> entry = it.next();
-            it.remove();
-
-            URI instanceURI = entry.getKey();
-
-            V i = new Vertex(instanceURI, VType.INSTANCE);
-            g.addV(i);
-
-            Set<V> annotations = entry.getValue();
-
-            for (V v : annotations) {
-                g.addE(new Edge(i, v, RDF.TYPE));
-            }
-
-            vnumber++;
-            vedges += annotations.size();
-            c++;
-            if (c % 10000 == 0) {
-                logger.info(c + " instances loaded ");
-            }
-        }
-
-        logger.info("Number of Instance loaded 	  	: " + vnumber);
-        logger.info("Number of Annotation loaded 	: " + vedges);
+        logger.info("Number of Instance loaded 	  	: " + countEntities);
+        logger.info("Number of Annotation loaded 	: " + countAnnotsLoaded);
         logger.info("GAF2 Loader done.");
     }
 

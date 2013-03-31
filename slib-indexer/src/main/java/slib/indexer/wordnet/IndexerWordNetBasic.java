@@ -17,8 +17,7 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.UtilDebug;
 
@@ -28,7 +27,7 @@ import slib.utils.impl.UtilDebug;
  */
 public class IndexerWordNetBasic{
     
-    Map<String, Set<V>> stringToSynsetIndex = new HashMap<String, Set<V>>();
+    Map<String, Set<URI>> stringToSynsetIndex = new HashMap<String, Set<URI>>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     
     G graph;
@@ -40,13 +39,13 @@ public class IndexerWordNetBasic{
      * @param file
      * @throws SLIB_Ex_Critic
      */
-    public IndexerWordNetBasic(DataFactory factory, G g, String file) throws SLIB_Ex_Critic{
+    public IndexerWordNetBasic(URIFactory factory, G g, String file) throws SLIB_Ex_Critic{
         
         graph = g;
         populateIndex(factory,file);
     } 
 
-    private void populateIndex(DataFactory factory,String filepath) throws SLIB_Ex_Critic {
+    private void populateIndex(URIFactory factory,String filepath) throws SLIB_Ex_Critic {
         
         logger.info("Populating index from "+filepath);
         
@@ -85,19 +84,17 @@ public class IndexerWordNetBasic{
                 int sense_cnt = Integer.parseInt(data[c]);
                 c+= 2; // sense_cnt + tagsense_cnt
                 
-                Set<V> synsets = new HashSet<V>();
+                Set<URI> synsets = new HashSet<URI>();
                 
                 for (int i = 0; i < sense_cnt; i++) {
                     URI u = factory.createURI(graph.getURI().getNamespace()+""+data[c+i]);
 //                    System.out.println(u);
                     
-                    V synset= graph.getV(u);
-                    
-                    if(synset == null){
+                    if(!graph.containsVertex(u)){
                         System.out.println("Error cannot locate synset "+u);
                         UtilDebug.exit(this);
                     }
-                    synsets.add(synset);
+                    synsets.add(u);
                 }
                 stringToSynsetIndex.put(valString, synsets);
             }
@@ -114,7 +111,7 @@ public class IndexerWordNetBasic{
      * @param query
      * @return
      */
-    public Set<V> get(String query) {
+    public Set<URI> get(String query) {
         return stringToSynsetIndex.get(query);
     }
     
@@ -122,7 +119,7 @@ public class IndexerWordNetBasic{
      *
      * @return
      */
-    public Map<String, Set<V>> getIndex() {
+    public Map<String, Set<URI>> getIndex() {
         return stringToSynsetIndex;
     }
     

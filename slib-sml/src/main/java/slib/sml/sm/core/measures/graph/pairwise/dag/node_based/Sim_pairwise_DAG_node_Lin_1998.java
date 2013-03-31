@@ -34,7 +34,7 @@
  */
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -50,11 +50,11 @@ import slib.utils.ex.SLIB_Exception;
  *
  */
 public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
-    
+
     static boolean preventIncoherency = true;
 
     @Override
-    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
@@ -77,12 +77,9 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
 
         double den = ic_a + ic_b;
 
-        if ( preventIncoherency && 
-                ( 
-                    (ic_mica > ic_a && ic_mica -ic_a > 0.00001) || 
-                    (ic_mica > ic_b && ic_mica -ic_b > 0.00001)
-                )
-           ) {
+        if (preventIncoherency
+                && ((ic_mica > ic_a && ic_mica - ic_a > 0.00001)
+                || (ic_mica > ic_b && ic_mica - ic_b > 0.00001))) {
             throw new SLIB_Ex_Critic("Cannot compute Lin considering ic MICA > ic C1 or ic c2, ic MICA set to " + ic_mica + " ic c1 " + ic_a + " ic c2 " + ic_b);
         }
 
@@ -95,14 +92,12 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
 //        System.out.println("\t\tsim = "+lin);
         return lin;
     }
-    
-    
+
     /**
      *
      * @param preventIncoherency
      */
-    public void setPreventIncoherency(boolean preventIncoherency){
-        this.preventIncoherency = preventIncoherency;
+    public void setPreventIncoherency(boolean preventIncoherency) {
+        Sim_pairwise_DAG_node_Lin_1998.preventIncoherency = preventIncoherency;
     }
-    
 }

@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,6 @@ import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.traversal.classical.DFS;
 import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -53,14 +53,16 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * Dummy implementation of the LCAFinder interface (high algorithmic complexity).
+ * Dummy implementation of the LCAFinder interface (high algorithmic
+ * complexity).
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class LCAFinderImpl implements LCAFinder {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private V getNextUnvisited(List<V> ancestorsOrdered, Map<V, Boolean> visited) {
+    private URI getNextUnvisited(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
         for (int i = ancestorsOrdered.size() - 1; i >= 0; i--) {
 
             if (visited.get(ancestorsOrdered.get(i)).equals(Boolean.FALSE)) {
@@ -71,8 +73,8 @@ public class LCAFinderImpl implements LCAFinder {
         return null;
     }
 
-    private boolean containsUnvisitedVertices(Map<V, Boolean> visited) {
-        for (V v : visited.keySet()) {
+    private boolean containsUnvisitedVertices(Map<URI, Boolean> visited) {
+        for (URI v : visited.keySet()) {
             if (visited.get(v).equals(Boolean.FALSE)) {
                 return true;
             }
@@ -80,98 +82,94 @@ public class LCAFinderImpl implements LCAFinder {
         return false;
     }
 
-    private void printStackStatus(List<V> ancestorsOrdered, Map<V, Boolean> visited) {
+    private void printStackStatus(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
         for (int i = ancestorsOrdered.size() - 1; i >= 0; i--) {
 
-            System.out.println(ancestorsOrdered.get(i) +"\t" +visited.get(ancestorsOrdered.get(i)));
+            System.out.println(ancestorsOrdered.get(i) + "\t" + visited.get(ancestorsOrdered.get(i)));
 
         }
     }
 
-
     @Override
-    public Set<V> getLCA(G graph, V a, V b) throws SLIB_Exception {
-        
-        if(!graph.containsVertex(a)){
-            throw new SLIB_Ex_Critic("Graph "+graph.getURI()+" doesn't contain vertice "+a.getValue());
+    public Set<URI> getLCAs(G graph, URI a, URI b) throws SLIB_Exception {
+
+        if (!graph.containsVertex(a)) {
+            throw new SLIB_Ex_Critic("Graph " + graph.getURI() + " doesn't contain vertice " + a);
+        } else if (!graph.containsVertex(b)) {
+            throw new SLIB_Ex_Critic("Graph " + graph.getURI() + " doesn't contain vertice " + b);
         }
-        else if(!graph.containsVertex(b)){
-            throw new SLIB_Ex_Critic("Graph "+graph.getURI()+" doesn't contain vertice "+b.getValue());
-        }
-        
-        
-        Set<V> lca = new HashSet<V>();
+
+
+        Set<URI> lca = new HashSet<URI>();
 
         SM_Engine engine = new SM_Engine(graph);
 
-        Set<V> ancA = engine.getAncestorsInc(a);
-        Set<V> ancB = engine.getAncestorsInc(b);
-        
-        // Test if a (resp. b) subsumes b (resp. a)
-        
-        if(ancA.contains(b)){
-            lca = SetUtils.buildSet(b);
-        }
-        else if(ancB.contains(a)){
-            lca = SetUtils.buildSet(a);
-        }
-        else{ // search the intersetion of the ancestors of the compared concepts
+        Set<URI> ancA = engine.getAncestorsInc(a);
+        Set<URI> ancB = engine.getAncestorsInc(b);
 
-        
-        Set<V> intersection = SetUtils.intersection(engine.getAncestorsInc(a), engine.getAncestorsInc(b));
+        // Test if a (resp. b) subsumes b (resp. a)
+
+        if (ancA.contains(b)) {
+            lca = SetUtils.buildSet(b);
+        } else if (ancB.contains(a)) {
+            lca = SetUtils.buildSet(a);
+        } else { // search the intersetion of the ancestors of the compared concepts
+
+
+            Set<URI> intersection = SetUtils.intersection(engine.getAncestorsInc(a), engine.getAncestorsInc(b));
 //        logger.info(union.toString());
 
-        // topological sort of the union
-        Set<V> queries = SetUtils.buildSet(a);
+            // topological sort of the union
+            Set<URI> queries = SetUtils.buildSet(a);
 
-        queries.add(b);
-        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
-        DFS dfs = new DFS(graph, queries, wc);
-        List<V> to = dfs.getTraversalOrder();
-        
-        // We remove the queried vertices from the topological order
-        to.remove(a);
-        to.remove(b);
+            queries.add(b);
+            WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+            DFS dfs = new DFS(graph, queries, wc);
+            List<URI> to = dfs.getTraversalOrder();
+
+            // We remove the queried vertices from the topological order
+            to.remove(a);
+            to.remove(b);
 
 //        logger.debug("Traversal Order : " + to);
 
-        List<V> ancestorsOrdered = new ArrayList<V>(to.size());
+            List<URI> ancestorsOrdered = new ArrayList<URI>(to.size());
 
-        for (V v : to) {
-            if (intersection.contains(v)) {
-                ancestorsOrdered.add(v);
+            for (URI v : to) {
+                if (intersection.contains(v)) {
+                    ancestorsOrdered.add(v);
+                }
             }
-        }
 
 //        logger.debug("Union size : " + union.size());
 //        logger.debug("Ancestors ordered : " + ancestorsOrdered.size());
 
-        // Create dataStructure which will help us to manage 
-        // the visited vertices
+            // Create dataStructure which will help us to manage 
+            // the visited vertices
 
-        Map<V, Boolean> isVisited = new HashMap<V, Boolean>(ancestorsOrdered.size());
-        for (V v : ancestorsOrdered) {
-            isVisited.put(v, Boolean.FALSE);
-        }
-
-        RVF rvf = new RVF_TAX(graph, Direction.OUT);
-
-        // Bottom Up with removing
-        while (containsUnvisitedVertices(isVisited)) {
-            V v = getNextUnvisited(ancestorsOrdered, isVisited);
-
-//            logger.debug("Processing " + v);
-            lca.add(v);
-            isVisited.put(v, Boolean.TRUE);
-            
-            Set<V> ancestorsV = rvf.getRV(v);
-            
-            for(V anc : ancestorsV){
-                isVisited.put(anc, Boolean.TRUE);
+            Map<URI, Boolean> isVisited = new HashMap<URI, Boolean>(ancestorsOrdered.size());
+            for (URI v : ancestorsOrdered) {
+                isVisited.put(v, Boolean.FALSE);
             }
 
+            RVF rvf = new RVF_TAX(graph, Direction.OUT);
+
+            // Bottom Up with removing
+            while (containsUnvisitedVertices(isVisited)) {
+                URI v = getNextUnvisited(ancestorsOrdered, isVisited);
+
+//            logger.debug("Processing " + v);
+                lca.add(v);
+                isVisited.put(v, Boolean.TRUE);
+
+                Set<URI> ancestorsV = rvf.getRV(v);
+
+                for (URI anc : ancestorsV) {
+                    isVisited.put(anc, Boolean.TRUE);
+                }
+
 //            printStackStatus(ancestorsOrdered, isVisited);
-        }
+            }
 
         }
 //        logger.info("Searching DCA: end");

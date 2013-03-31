@@ -58,10 +58,7 @@ import slib.sglib.io.loader.bio.obo.utils.OboRelationship;
 import slib.sglib.io.loader.bio.obo.utils.OboTerm;
 import slib.sglib.io.loader.bio.obo.utils.OboType;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.ex.SLIB_Ex_Warning;
@@ -134,7 +131,7 @@ import slib.utils.impl.OBOconstants;
  */
 public class GraphLoader_OBO_1_2 implements GraphLoader {
 
-    DataFactoryMemory data = DataFactoryMemory.getSingleton();
+    URIFactoryMemory data = URIFactoryMemory.getSingleton();
     GraphConf conf;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     boolean onTermSpec = false;
@@ -473,9 +470,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
             if (!e.getValue().isObsolete()) {
 
                 URI termURI = data.createURI(e.getKey());
-
-                Vertex v = new Vertex(termURI, VType.CLASS);
-                g.addV(v);
+                g.addV(termURI);
             } else {
                 nbObsolete++;
             }
@@ -498,6 +493,8 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
                 continue;
             }
         }
+        
+        
 
         // create  Edge Type and inverse only for non obsolete relationships
         for (Entry<String, OboTerm> entry : oboTerms.entrySet()) {
@@ -514,20 +511,10 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
                         URI srcURI = data.createURI(t.getURIstring());
                         URI targetURI = data.createURI(r.getTargetUriString());
+                        URI type = data.createURI(typeString);
 
-                        V src = g.getV(srcURI);
-                        V target = g.getV(targetURI);
-
-                        // In some case links are defined
-                        // between elements not defined in the graph
-                        if (target == null) {
-                            Vertex v = new Vertex(targetURI, VType.CLASS);
-                            target = g.addV(v);
-                        }
-
-                        URI type = data.getPredicateFactory().createPURI(typeString);
-
-                        g.addE(src, target, type);
+                        g.addV(targetURI); // we ensure the target exists
+                        g.addE(srcURI, type, targetURI);
                     }
                 }
             }

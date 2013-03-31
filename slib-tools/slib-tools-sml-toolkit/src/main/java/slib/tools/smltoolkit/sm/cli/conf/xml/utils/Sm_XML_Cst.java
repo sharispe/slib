@@ -61,17 +61,6 @@ public class Sm_XML_Cst {
      *
      */
     public static final String ICS_TAG = "ics";
-    /**
-     *
-     */
-    public static final String OPERATORS_TAG = "operators";
-    /**
-     *
-     */
-    public static final String OPERATOR_TAG = "operator";
-    /**
-     *
-     */
     public static final String QUERIES_TAG = "queries";
     /**
      *
@@ -125,21 +114,8 @@ public class Sm_XML_Cst {
      *
      */
     public static final String FLAG_ATTR = "flag";
-    /**
-     *
-     */
-    public static final String REPRESENTATION_ATTR = "rep";
-    /**
-     *
-     */
-    public static final String OPERATOR_ID = "operator";
-    /**
-     *
-     */
-    public static final String OPERATOR_FLAG_ATTR = "operator_flag";
-    /**
-     *
-     */
+
+    
     public static final String FORCE_EXEC_ATTR = "force_exec";
     /**
      *
@@ -149,7 +125,6 @@ public class Sm_XML_Cst {
      *
      */
     public static final String TYPE_VALUE_GROUPWISE = "groupwise";
-    //public static final String CONF_XSD = "modules/ssp_eval/conf/conf.xsd";
     /**
      *
      */
@@ -186,7 +161,6 @@ public class Sm_XML_Cst {
      *
      */
     public static final String OPT_EMPTY_ANNOTS_SCORE_ATTR = "emptyAnnotsScore";
-    // Errors
     /**
      *
      */

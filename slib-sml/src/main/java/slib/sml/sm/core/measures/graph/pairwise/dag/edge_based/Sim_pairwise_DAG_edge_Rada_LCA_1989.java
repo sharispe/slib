@@ -36,14 +36,13 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.ResultStack;
 import slib.utils.impl.SetUtils;
 
 /**
@@ -60,15 +59,15 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
 
     
     @Override
-    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
         
-        Map<V, Double> minDists_cA = c.getAllShortestPath(a,weightingScheme);
-        Map<V, Double> minDists_cB = c.getAllShortestPath(b,weightingScheme);
-        Set<V> ancestors_A = c.getAncestorsInc(a);
-        Set<V> ancestors_B = c.getAncestorsInc(b);
-        ResultStack<V, Integer> maxDepths = c.getMaxDepths();
+        Map<URI, Double> minDists_cA = c.getAllShortestPath(a,weightingScheme);
+        Map<URI, Double> minDists_cB = c.getAllShortestPath(b,weightingScheme);
+        Set<URI> ancestors_A = c.getAncestorsInc(a);
+        Set<URI> ancestors_B = c.getAncestorsInc(b);
+        Map<URI, Integer> maxDepths = c.getMaxDepths();
 
         return sim(minDists_cA, minDists_cB, ancestors_A, ancestors_B, maxDepths);
     }
@@ -83,20 +82,20 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
      * @return
      * @throws SLIB_Exception
      */
-    public double sim(Map<V, Double> minDists_cA,
-            Map<V, Double> minDists_cB,
-            Set<V> ancestors_A,
-            Set<V> ancestors_B,
-            ResultStack<V, Integer> maxDepths) throws SLIB_Exception {
+    public double sim(Map<URI, Double> minDists_cA,
+            Map<URI, Double> minDists_cB,
+            Set<URI> ancestors_A,
+            Set<URI> ancestors_B,
+            Map<URI, Integer> maxDepths) throws SLIB_Exception {
 
         double sim = 0;
 
 
-        Set<V> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
+        Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
         if (interSecAncestors.isEmpty()) {
 
-            V msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
+            URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
             sim = 1 / (minDists_cA.get(msa) + minDists_cB.get(msa) + 1);
         }
 

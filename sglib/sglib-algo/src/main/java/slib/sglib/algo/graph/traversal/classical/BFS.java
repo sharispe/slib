@@ -38,9 +38,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.openrdf.model.URI;
 import slib.sglib.algo.graph.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.utils.impl.SetUtils;
 
@@ -58,9 +58,9 @@ public class BFS implements GraphTraversal {
 
     G g;
     private WalkConstraints wc;
-    V current;
-    List<V> queue;
-    Set<V> visited;
+    URI current;
+    List<URI> queue;
+    Set<URI> visited;
 
     /**
      * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
@@ -69,14 +69,14 @@ public class BFS implements GraphTraversal {
      * @param sources the set of vertices considered as sources of the traversal i.e. from which the traversal start
      * @param wc the constraint applied to the walk
      */
-    public BFS(G g, Set<V> sources, WalkConstraints wc) {
+    public BFS(G g, Set<URI> sources, WalkConstraints wc) {
 
         this.g = g;
         this.wc = wc;
         
-        this.queue = new ArrayList<V>(sources);
+        this.queue = new ArrayList<URI>(sources);
 
-        visited = new HashSet<V>();
+        visited = new HashSet<URI>();
 
     }
 
@@ -87,7 +87,7 @@ public class BFS implements GraphTraversal {
      * @param source the source of the traversal i.e. from which the traversal start
      * @param wc the constraint applied to the walk
      */
-    public BFS(G g, V source, WalkConstraints wc) {
+    public BFS(G g, URI source, WalkConstraints wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
 
@@ -105,15 +105,15 @@ public class BFS implements GraphTraversal {
      * @return
      */
     @Override
-    public V next() {
+    public URI next() {
 
-        V src = queue.get(0);
+        URI src = queue.get(0);
         queue.remove(0);
 
-        Set<V> vertices = g.getV(src, wc);
+        Set<URI> vertices = g.getV(src, wc);
 
 
-        for (V v : vertices) {
+        for (URI v : vertices) {
 
             if (!visited.contains(v)) {
                 queue.add(v);

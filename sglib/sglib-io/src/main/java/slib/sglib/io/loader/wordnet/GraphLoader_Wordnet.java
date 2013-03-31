@@ -22,12 +22,9 @@ import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.elements.Vertex;
-import slib.sglib.model.graph.elements.type.VType;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -42,7 +39,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
     Map<String, PointerToEdge> pointerSymbolToURIsMap;
     
     
-    DataFactoryMemory dataRepo = DataFactoryMemory.getSingleton();
+    URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
 
     @Override
     public G load(GraphConf conf) throws SLIB_Exception {
@@ -121,10 +118,10 @@ public class GraphLoader_Wordnet implements GraphLoader {
                         URI s = dataRepo.createURI(uriPrefix + synset_offset);
                         URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
                         
-                        V vs = graph.addV(new Vertex(s, VType.CLASS));
-                        V vo = graph.addV(new Vertex(o, VType.CLASS));
+                        graph.addV(s);
+                        graph.addV(o);
                         
-                        E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(vs, vo);
+                        E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(s, o);
                         
                         g.addE(e);
                         
@@ -245,13 +242,13 @@ public class GraphLoader_Wordnet implements GraphLoader {
             this.fromSourceToTarget = fromSourceToTarget;
         }
 
-        public E createEdge(V srcPointer, V targetPointer) {
+        public E createEdge(URI srcPointer, URI targetPointer) {
 
             E e = null;
             if (fromSourceToTarget) {
-                e = new Edge(srcPointer, targetPointer, rel);
+                e = new Edge(srcPointer, rel, targetPointer);
             } else {
-                e = new Edge(targetPointer, srcPointer, rel);
+                e = new Edge(targetPointer, rel, srcPointer);
             }
             return e;
         }
@@ -265,7 +262,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
     public static void main(String[] args) throws Exception {
 
 
-        URI guri = DataFactoryMemory.getSingleton().createURI("http://graph/wordnet/");
+        URI guri = URIFactoryMemory.getSingleton().createURI("http://graph/wordnet/");
         G g = new GraphMemory(guri);
 
         GraphLoader_Wordnet loader = new GraphLoader_Wordnet();

@@ -11,18 +11,16 @@ import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
-import slib.sglib.model.graph.elements.type.VType;
-import slib.sglib.model.impl.graph.elements.Vertex;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.Timer;
 
 /**
  *
@@ -43,6 +41,9 @@ import slib.utils.ex.SLIB_Exception;
 public class SMComputationGO_groupwise {
 
     public static void main(String[] params) throws SLIB_Exception {
+        
+        Timer t = new Timer();
+        t.start();
 
         // Configuration files, set the file path according to your configuration.
         // The Gene Ontology (OBO format)
@@ -50,7 +51,7 @@ public class SMComputationGO_groupwise {
         String annot = "/data/go/gene_association.goa_human";
 
 
-        DataFactory factory = DataFactoryMemory.getSingleton();
+        URIFactory factory = URIFactoryMemory.getSingleton();
         URI graph_uri = factory.createURI("http://go/");
 
         // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
@@ -76,24 +77,23 @@ public class SMComputationGO_groupwise {
 
         // We create a vertex corresponding to the virtual root
         // and we add it to the graph
-        URI uriVR = factory.createURI("http://go/virtualRoot");
-        V virtualRoot = new Vertex(uriVR, VType.CLASS);
+        URI virtualRoot = factory.createURI("http://go/virtualRoot");
         graph.addV(virtualRoot);
 
         // We root the graphs using the virtual root as root
         GAction rooting = new GAction(GActionType.REROOTING);
-        rooting.addParameter("root_uri", uriVR.stringValue());
+        rooting.addParameter("root_uri", virtualRoot.stringValue());
         GraphActionExecutor.applyAction(factory, rooting, graph);
 
         System.out.println(graph.toString());
 
-        int nbVertices = graph.getV(VType.CLASS).size();
+        int nbVertices = graph.getV().size();
 
         System.out.println("Nb vertices : " + nbVertices);
 
 
         // We compute the similarity between http://go/0071869 and the collection of vertices
-        V concept = graph.getV(factory.createURI("http://go/0071869"));
+        URI concept = factory.createURI("http://go/0071869");
 
         ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011_a);
 
@@ -106,24 +106,29 @@ public class SMComputationGO_groupwise {
 
         SM_Engine engine = new SM_Engine(graph);
 
-        V i = graph.getV(factory.createURI("http://go/I3L2H2"));
+        URI i = factory.createURI("http://go/I3L2H2");
 
         // An object used to retrieve the annotation of an instance according 
         // to a particular semantic projection 
         InstancesAccessor iAccessor = new InstanceAccessor_RDF_TYPE(graph);
 
-        Set<V> annotations_i = iAccessor.getDirectClass(i);
+        Set<URI> annotations_i = iAccessor.getDirectClass(i);
         System.out.println("http://go/I3L2H2 is annotated by " + annotations_i.size() + " concepts");
 
 
         double sim;
+        int c = 0;
+        
+        for (URI v : engine.getInstances()) {
 
-        for (V v : graph.getV(VType.INSTANCE)) {
-
-            Set<V> annotations_v = iAccessor.getDirectClass(v);
+            Set<URI> annotations_v = iAccessor.getDirectClass(v);
 
             sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
-            System.out.println(i + "\t" + v + "\t" + sim);
+//            System.out.println(i + "\t" + v + "\t" + sim);
+            c++;
         }
+        System.out.println(c+" gene products semantic simlarity computed");
+        t.stop();
+        t.elapsedTime();
     }
 }

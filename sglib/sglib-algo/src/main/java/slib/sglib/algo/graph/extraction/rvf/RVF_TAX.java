@@ -36,10 +36,10 @@ package slib.sglib.algo.graph.extraction.rvf;
 
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -65,7 +65,7 @@ public class RVF_TAX extends RVF_DAG {
      * @param v the vertex of interest
      * @return the set of classes which can be reached from the selected vertex
      */
-    public Set<V> getRVClass(V v) {
+    public Set<URI> getRVClass(URI v) {
         return getRV(v);
     }
 
@@ -75,7 +75,7 @@ public class RVF_TAX extends RVF_DAG {
      * @return the map storing, for each vertex, the set of reachable vertices respecting the above constraint.
      * @throws SLIB_Ex_Critic  
      */
-    public Map<V, Set<V>> getAllRVClass() throws SLIB_Ex_Critic {
+    public Map<URI, Set<URI>> getAllRVClass() throws SLIB_Ex_Critic {
         return getAllRV();
     }
 }

@@ -38,11 +38,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.graph.weight.GWS;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -115,15 +115,15 @@ public class Dijkstra {
      * @param t
      * @return the shortest path weight as double
      */
-    public Double shortestPath(V source, V t) {
+    public Double shortestPath(URI source, URI t) {
 
         logger.debug("\tComputing Shortest path... from " + source + " to " + t + " " + ws);
 
-        HashMap<V, Double> dists = new HashMap<V, Double>();
-        HashMap<V, Boolean> visited = new HashMap<V, Boolean>();
+        HashMap<URI, Double> dists = new HashMap<URI, Double>();
+        HashMap<URI, Boolean> visited = new HashMap<URI, Boolean>();
 
         // initialize data structures
-        for (V v : g.getV()) {
+        for (URI v : g.getV()) {
             dists.put(v, null);
             visited.put(v, false);
         }
@@ -137,7 +137,7 @@ public class Dijkstra {
                 logger.info("\tComputing Shortest path... Step " + i + "/" + dists.size());
             }
 
-            V next = minVertex(dists, visited);
+            URI next = minVertex(dists, visited);
 
             if (next == null) {
                 break;
@@ -154,14 +154,14 @@ public class Dijkstra {
 
                 Double d = dists.get(next) + (ws == null ? 1 : ws.getWeight(e));
 
-                V target = e.getTarget();
+                URI target = e.getTarget();
 
                 if (!target.equals(next)) { // outEdge
                     if (dists.get(target) == null || dists.get(target) > d) {
                         dists.put(target, d);
                     }
                 } else { // in Edges
-                    V src = (V) e.getSource();
+                    URI src = e.getSource();
                     if (dists.get(src) == null || dists.get(src) > d) {
                         dists.put(src, d);
                     }
@@ -177,15 +177,15 @@ public class Dijkstra {
      * @param source
      * @return
      */
-    public ConcurrentHashMap<V, Double> shortestPath(V source) {
+    public ConcurrentHashMap<URI, Double> shortestPath(URI source) {
 
         logger.debug("\tComputing Shortest path... from " + source + "  " + ws);
 
-        ConcurrentHashMap<V, Double> dists = new ConcurrentHashMap<V, Double>();
-        ConcurrentHashMap<V, Boolean> visited = new ConcurrentHashMap<V, Boolean>();
+        ConcurrentHashMap<URI, Double> dists = new ConcurrentHashMap<URI, Double>();
+        ConcurrentHashMap<URI, Boolean> visited = new ConcurrentHashMap<URI, Boolean>();
 
         // initialize data structures
-        for (V v : g.getV()) {
+        for (URI v : g.getV()) {
             dists.put(v, null);
             visited.put(v, false);
         }
@@ -199,7 +199,7 @@ public class Dijkstra {
                 logger.debug("\tComputing Shortest from " + source + " paths... Step " + i + "/" + dists.size());
             }
 
-            V next = minVertex(dists, visited);
+            URI next = minVertex(dists, visited);
 
             if (next == null) {
                 break;
@@ -213,14 +213,14 @@ public class Dijkstra {
 
                 Double d = dists.get(next) + (ws == null ? 1 : ws.getWeight(e));
 
-                V target = e.getTarget();
+                URI target = e.getTarget();
 
                 if (!target.equals(next)) { // outEdge
                     if (dists.get(target) == null || dists.get(target) > d) {
                         dists.put(target, d);
                     }
                 } else { // in Edges
-                    V src = (V) e.getSource();
+                    URI src = e.getSource();
                     if (dists.get(src) == null || dists.get(src) > d) {
                         dists.put(src, d);
                     }
@@ -235,13 +235,13 @@ public class Dijkstra {
         return dists;
     }
 
-    private V minVertex(Map<V, Double> dist, Map<V, Boolean> visited) {
+    private URI minVertex(Map<URI, Double> dist, Map<URI, Boolean> visited) {
 
         Double x = Double.MAX_VALUE;
 
-        V next = null;   // graph not connected, or no unvisited vertices
+        URI next = null;   // graph not connected, or no unvisited vertices
         
-        for (V v : dist.keySet()) {
+        for (URI v : dist.keySet()) {
 
             
             if (!visited.get(v) && dist.get(v) != null && dist.get(v) < x) {

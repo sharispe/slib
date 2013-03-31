@@ -34,7 +34,7 @@
  */
 package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
@@ -60,7 +60,7 @@ public class Sim_pairwise_DAG_node_Resnik_1995 implements Sim_DAG_node_abstract 
      * @throws SLIB_Exception
      */
     @Override
-    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
         return c.getIC_MICA(conf.getICconf(), a, b);
     }
 

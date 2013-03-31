@@ -1,5 +1,5 @@
 /*
-
+ s
  Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
 
  This software is a computer program whose purpose is to 
@@ -34,22 +34,24 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.model.graph.elements.V;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
+import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
- * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content computation.
- * Knowledge-Based Systems 2011, 24:297-303.
+ * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content
+ * computation. Knowledge-Based Systems 2011, 24:297-303.
  *
  * formula equation 10 p 300
  *
@@ -69,23 +71,23 @@ public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public ResultStack<V, Double> compute(ResultStack<V, Double> allNbOfReachableLeaves,
-            ResultStack<V, Double> allNbAncestors) throws SLIB_Ex_Critic {
+    public Map<URI, Double> compute(Map<URI, Integer> allNbOfReachableLeaves,
+            Map<URI, Integer> allNbAncestors) throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> results = new ResultStack<V, Double>(this.getClass().getSimpleName());
+        Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_leaves = allNbOfReachableLeaves.getMax();
+        double max_leaves = Collections.max(allNbOfReachableLeaves.values());
 
         double nbLeavesExclusif, nbAncestorsInc, cur_ic;
 
-        for (V v : allNbAncestors.keySet()) {
+        for (URI v : allNbAncestors.keySet()) {
 
             nbAncestorsInc = allNbAncestors.get(v).doubleValue();
             nbLeavesExclusif = allNbOfReachableLeaves.get(v).doubleValue();
 
             cur_ic = compute(nbLeavesExclusif, nbAncestorsInc, max_leaves);
 
-            results.add(v, cur_ic);
+            results.put(v, cur_ic);
         }
 
         return results;
@@ -108,28 +110,28 @@ public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
     }
 
     @Override
-    public ResultStack<V, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
+    public Map<URI, Double> compute(IC_Conf_Topo conf, SM_Engine manager)
             throws SLIB_Ex_Critic {
 
 
         setLogBase(conf);
 
 
-        ResultStack<V, Double> allNbAncestors = manager.getAllNbAncestorsInc();
-        ResultStack<V, Double> allNbReachableLeaves = manager.getAllNbReachableLeaves();
+        Map<URI, Integer> allNbAncestors = manager.getAllNbAncestorsInc();
+        Map<URI, Integer> allNbReachableLeaves = manager.getAllNbReachableLeaves();
 
         // getAllNbReachableLeaves() is inclusive and Sanchez measure require excluvive i.e.
         // if a concept is a leaf it must not be contained in the set of reachable leaves
 
-        Set<V> leaves = manager.getLeaves();
+        Set<URI> leaves = manager.getTaxonomicLeaves();
 
-        ResultStack<V, Double> correctedNbReachableLeaves = new ResultStack<V, Double>();
-        for (Map.Entry<V, Double> e : allNbReachableLeaves.entrySet()) {
-            correctedNbReachableLeaves.add(e.getKey(), e.getValue());
+        Map<URI, Integer> correctedNbReachableLeaves = new HashMap<URI, Integer>();
+        for (Map.Entry<URI, Integer> e : allNbReachableLeaves.entrySet()) {
+            correctedNbReachableLeaves.put(e.getKey(), e.getValue());
         }
-        for (V v : leaves) {
-            double corrected = correctedNbReachableLeaves.get(v) - 1;
-            correctedNbReachableLeaves.add(v, corrected);
+        for (URI v : leaves) {
+            int corrected = correctedNbReachableLeaves.get(v) - 1;
+            correctedNbReachableLeaves.put(v, corrected);
         }
 
         return compute(correctedNbReachableLeaves, allNbAncestors);

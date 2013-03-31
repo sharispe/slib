@@ -35,8 +35,7 @@
 package slib.indexer;
 
 import java.util.HashMap;
-import org.openrdf.model.Value;
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 
 /**
  *
@@ -44,13 +43,13 @@ import slib.sglib.model.graph.elements.V;
  */
 public class IndexHash {
 
-    HashMap<Value, IndexedElement> mapping = new HashMap<Value, IndexedElement>();
+    HashMap<URI, IndexedElement> mapping = new HashMap<URI, IndexedElement>();
 
     /**
      *
      * @return
      */
-    public HashMap<Value, IndexedElement> getMapping() {
+    public HashMap<URI, IndexedElement> getMapping() {
         return mapping;
     }
 
@@ -59,54 +58,28 @@ public class IndexHash {
      * @param v
      * @return
      */
-    public IndexedElement valuesOf(Value v) {
+    public IndexedElement valuesOf(URI v) {
         return mapping.get(v);
     }
     
-    /**
-     *
-     * @param v
-     * @return
-     */
-    public IndexedElement valuesOf(V v) {
-        return mapping.get(v.getValue());
-    }
     
     /**
      *
      * @param x
      * @param o
      */
-    public void addValue(Value x, IndexedElement o) {
+    public void addValue(URI x, IndexedElement o) {
         mapping.put(x, o);
     }
 
-    /**
-     *
-     * @param x
-     * @param o
-     */
-    public void addValue(V x, IndexedElement o) {
-        mapping.put(x.getValue(), o);
-    }
-
-        
-    /**
-     *
-     * @param x
-     * @return
-     */
-    public boolean containsIndexFor(Value x) {
-        return mapping.containsKey(x);
-    }
     
     /**
      *
      * @param x
      * @return
      */
-    public boolean containsIndexFor(V x) {
-        return mapping.containsKey(x.getValue());
+    public boolean containsIndexFor(URI x) {
+        return mapping.containsKey(x);
     }
-
+    
 }

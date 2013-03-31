@@ -34,7 +34,7 @@
  */
 package slib.sml.sm.core.measures;
 
-import slib.sglib.model.graph.elements.V;
+import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
@@ -56,5 +56,5 @@ public interface Sim_Pairwise {
      * @return the similarity between the pair of concepts.
      * @throws SLIB_Exception
      */
-    public double sim(V a, V b, SM_Engine c, SMconf conf) throws SLIB_Exception;
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception;
 }

@@ -39,7 +39,6 @@ package slib.sglib.model.impl.graph.elements;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.Direction;
 
 /**
@@ -48,29 +47,29 @@ import slib.sglib.model.graph.utils.Direction;
  */
 public class Edge implements E{
 
-    protected final V source;
-    protected final V target;
+    protected final URI source;
+    protected final URI target;
     protected final URI predicate;
 
     
     /**
      * @param source
-     * @param target
      * @param predicate
+     * @param target
      */
-    public Edge(V source, V target, URI predicate) {
+    public Edge(URI source, URI predicate, URI target) {
         this.source = source;
-        this.target = target;
         this.predicate = predicate;
+        this.target = target;
     }
 
     @Override
-    public V getSource() {
+    public URI getSource() {
         return source;
     }
 
     @Override
-    public V getTarget() {
+    public URI getTarget() {
         return target;
     }
 
@@ -81,53 +80,40 @@ public class Edge implements E{
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((source == null) ? 0 : source.hashCode());
-        result = prime * result + ((target == null) ? 0 : target.hashCode());
-        result = prime * result + ((predicate == null) ? 0 : predicate.hashCode());
-        return result;
+        int hash = 3;
+        hash = 79 * hash + (this.source != null ? this.source.hashCode() : 0);
+        hash = 79 * hash + (this.target != null ? this.target.hashCode() : 0);
+        hash = 79 * hash + (this.predicate != null ? this.predicate.hashCode() : 0);
+        return hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
         if (obj == null) {
             return false;
         }
         if (getClass() != obj.getClass()) {
             return false;
         }
-        Edge other = (Edge) obj;
-        if (source == null) {
-            if (other.source != null) {
-                return false;
-            }
-        } else if (!source.equals(other.source)) {
+        final Edge other = (Edge) obj;
+        if (this.source != other.source && (this.source == null || !this.source.equals(other.source))) {
             return false;
         }
-        if (target == null) {
-            if (other.target != null) {
-                return false;
-            }
-        } else if (!target.equals(other.target)) {
+        if (this.target != other.target && (this.target == null || !this.target.equals(other.target))) {
             return false;
         }
-        if (predicate == null) {
-            if (other.predicate != null) {
-                return false;
-            }
-        } else if (!predicate.equals(other.predicate)) {
+        if (this.predicate != other.predicate && (this.predicate == null || !this.predicate.equals(other.predicate))) {
             return false;
         }
         return true;
     }
 
+    
+    
+
     @Override
     public String toString() {
-        return source.getValue().stringValue() + "\t" + predicate.stringValue() + "\t" + target.getValue().stringValue();
+        return source.stringValue() + "\t" + predicate.stringValue() + "\t" + target.stringValue();
     }
 
     /**
@@ -135,7 +121,7 @@ public class Edge implements E{
      * @param direction IN (source) or OUT (target)
      * @return
      */
-    public V getVertex(Direction direction) {
+    public URI getVertex(Direction direction) {
         if(direction == Direction.BOTH){
             throw new IllegalArgumentException(Direction.BOTH+" cannot be used to retrieve a source or target vertex of an edge, valid parameters are "+Direction.IN+" or "+Direction.OUT);
         }

@@ -41,11 +41,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.classical.BFS;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.graph.utils.WalkConstraints;
 
 /**
@@ -90,21 +90,21 @@ public class RVF {
      * @param v the focus vertex
      * @return the set of vertices encountered during the traversal.
      */
-    public Set<V> getRV(V v) {
+    public Set<URI> getRV(URI v) {
 
-        List<V> rv = new ArrayList<V>();
+        List<URI> rv = new ArrayList<URI>();
 
         BFS it = new BFS(g, v, wc);
 
         while (it.hasNext()) {
 
-            V next = it.next();
+            URI next = it.next();
             rv.add(next);
         }
 
-        rv.remove(v);// The BFS is inclusive
+        rv.remove(v);// The BFS is exclusive
 
-        return new HashSet<V>(rv);
+        return new HashSet<URI>(rv);
     }
 
     /**
@@ -118,15 +118,14 @@ public class RVF {
      * @param queryVertices 
      * @TODO optimize
      * @return an Map key V value the set of vertices reachable from the key
-     * Set<V>
      */
-    public Map<V, Set<V>> getRV(Set<V> queryVertices) {
+    public Map<URI, Set<URI>> getRV(Set<URI> queryVertices) {
 
         logger.debug("Get All reachable vertices : start");
 
-        Map<V, Set<V>> allVertices = new HashMap<V, Set<V>>();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
 
-        for (V v : queryVertices) {
+        for (URI v : queryVertices) {
             allVertices.put(v, getRV(v));
         }
 
@@ -146,12 +145,12 @@ public class RVF {
      * @return an Map key V value the size of the set of vertices reachable
      * from the key as Integer
      */
-    public Map<V, Integer> getRVnb(Set<V> queryVertices) {
+    public Map<URI, Integer> getRVnb(Set<URI> queryVertices) {
 
-        Map<V, Set<V>> r = getRV(queryVertices);
-        Map<V, Integer> results = new HashMap<V, Integer>(r.size());
+        Map<URI, Set<URI>> r = getRV(queryVertices);
+        Map<URI, Integer> results = new HashMap<URI, Integer>(r.size());
 
-        for (Entry<V, Set<V>> entry : r.entrySet()) {
+        for (Entry<URI, Set<URI>> entry : r.entrySet()) {
             results.put(entry.getKey(), entry.getValue().size());
         }
 

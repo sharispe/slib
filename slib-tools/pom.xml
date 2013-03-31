@@ -3,22 +3,20 @@
   <parent>
     <artifactId>slib</artifactId>
     <groupId>fr.lgi2p.kid</groupId>
-    <version>0.0.5-beta-SNAPSHOT</version>
+    <version>0.0.5-beta-2-SNAPSHOT</version>
     <relativePath>..</relativePath>
   </parent>
   <artifactId>slib-tools</artifactId>
   <packaging>pom</packaging>
   <modules>
-  	<module>slib-tools-ontofocus</module>
   	<module>slib-tools-module</module>
   	<module>slib-tools-sml-toolkit</module>
-        <module>slib-tools-sml-toolkit-gui</module>
   </modules>
   <dependencies>
   	<dependency>
   		<groupId>fr.lgi2p.kid</groupId>
   		<artifactId>slib-utils</artifactId>
-  		<version>0.0.5-beta-SNAPSHOT</version>
+  		<version>0.0.5-beta-2-SNAPSHOT</version>
   	</dependency>
   </dependencies>
 </project>

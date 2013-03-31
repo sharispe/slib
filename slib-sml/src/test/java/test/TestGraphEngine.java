@@ -51,15 +51,13 @@ import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.slibformat.GraphLoader_SLIB;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.V;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.DataFactoryMemory;
-import slib.sglib.model.repo.DataFactory;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.ResultStack;
 
 /**
  *
@@ -75,8 +73,8 @@ public class TestGraphEngine {
     Map<URI, Set<URI>> ancestors = new HashMap<URI, Set<URI>>();
     Map<URI, Set<URI>> descendants = new HashMap<URI, Set<URI>>();
     Map<URI, Set<URI>> leaves = new HashMap<URI, Set<URI>>();
-    Map<String, ResultStack<V, Double>> informationContents = new HashMap<String, ResultStack<V, Double>>();
-    DataFactory factory;
+    Map<String, Map<URI, Double>> informationContents = new HashMap<String, Map<URI, Double>>();
+    URIFactory factory;
     SM_Engine engine;
     G graph;
     String SANCHEZ_IC = "SANCHEZ_IC";
@@ -85,16 +83,16 @@ public class TestGraphEngine {
 
         logger.info("Loading required Data");
 
-        factory = DataFactoryMemory.getSingleton();
+        factory = URIFactoryMemory.getSingleton();
         try {
-           
+
 
             GraphLoader_SLIB loader = new GraphLoader_SLIB();
             graph = new GraphMemory(factory.createURI(uriGraphTest));
             loader.populate(new GDataConf(GFormat.SLIB, graphFile), graph);
             engine = new SM_Engine(graph);
-            
-             loadExpectedValues();
+
+            loadExpectedValues();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -104,8 +102,8 @@ public class TestGraphEngine {
 
     private void loadExpectedValues() throws Exception {
 
-        
-        informationContents.put(SANCHEZ_IC, new ResultStack<V, Double>());
+
+        informationContents.put(SANCHEZ_IC, new HashMap<URI, Double>());
 
         FileInputStream fstream = new FileInputStream(expectedValueFile);
         DataInputStream in = new DataInputStream(fstream);
@@ -132,12 +130,11 @@ public class TestGraphEngine {
             if (l.startsWith("#")) {
                 continue;
             }
-            
+
             String[] data = l.split("\t");
             String nsConcept = data[COL_CONCEPT_NS];
 
             URI cURI = factory.createURI(uriGraphTest + nsConcept);
-            V v = graph.getV(cURI);
 
             int ancCount = Integer.parseInt(data[COL_ANCESTORS_COUNT]);
             String[] ancNSStrings = data[COL_ANCESTORS].split(";");
@@ -179,7 +176,7 @@ public class TestGraphEngine {
             }
 
             double icSanchez = Double.parseDouble(data[COL_SANCHEZ_IC]);
-            informationContents.get(SANCHEZ_IC).add(v, icSanchez);
+            informationContents.get(SANCHEZ_IC).put(cURI, icSanchez);
         }
         in.close();
 
@@ -190,20 +187,16 @@ public class TestGraphEngine {
     public void test_ancestors() throws SLIB_Ex_Critic {
 
 
-        for (V v : graph.getV()) {
-            Set<URI> ancsExpected = ancestors.get((URI) v.getValue());
-            Set<V> ancs = engine.getAncestorsInc(v);
+        for (URI v : graph.getV()) {
+            Set<URI> ancsExpected = ancestors.get(v);
+            Set<URI> ancs = engine.getAncestorsInc(v);
             assertTrue(ancsExpected.size() == ancs.size());
 
-            // Convert to URIs 
-            Set<URI> ancsURIs = new HashSet<URI>();
-            for (V a : ancs) {
-                ancsURIs.add((URI) a.getValue());
-            }
+
 
             logger.info("Expected :" + ancsExpected);
-            logger.info("Found    :" + ancsURIs);
-            ancsExpected.removeAll(ancsURIs);
+            logger.info("Found    :" + ancs);
+            ancsExpected.removeAll(ancs);
             logger.info("Size ANC " + ancsExpected.size() + " expected 0");
             assertTrue(ancsExpected.isEmpty());
         }
@@ -213,20 +206,16 @@ public class TestGraphEngine {
     public void test_descendants() throws SLIB_Ex_Critic {
 
 
-        for (V v : graph.getV()) {
-            Set<URI> descsExpected = descendants.get((URI) v.getValue());
-            Set<V> descs = engine.getDescendantsInc(v);
+        for (URI v : graph.getV()) {
+            Set<URI> descsExpected = descendants.get(v);
+            Set<URI> descs = engine.getDescendantsInc(v);
             assertTrue(descsExpected.size() == descs.size());
 
-            // Convert to URIs 
-            Set<URI> descsURIs = new HashSet<URI>();
-            for (V a : descs) {
-                descsURIs.add((URI) a.getValue());
-            }
+
 
             logger.info("Expected :" + descsExpected);
-            logger.info("Found    :" + descsURIs);
-            descsExpected.removeAll(descsURIs);
+            logger.info("Found    :" + descs);
+            descsExpected.removeAll(descs);
             logger.info("Size DESC " + descsExpected.size() + " expected 0");
             assertTrue(descsExpected.isEmpty());
         }
@@ -235,19 +224,17 @@ public class TestGraphEngine {
     @Test
     public void test_leaves() throws SLIB_Ex_Critic {
 
-        Map<V, Set<V>> leavesFound = engine.getReachableLeaves();
+        Map<URI, Set<URI>> leavesFound = engine.getReachableLeaves();
 
-        for (V v : graph.getV()) {
+        for (URI v : graph.getV()) {
 
 
-            Set<URI> leavesURIsExpected = leaves.get((URI) v.getValue());
+            Set<URI> leavesURIsExpected = leaves.get(v);
             assertTrue(leavesURIsExpected.size() == leavesFound.get(v).size());
 
-            // Convert to URIs 
-            Set<URI> leavesURIsFound = new HashSet<URI>();
-            for (V a : leavesFound.get(v)) {
-                leavesURIsFound.add((URI) a.getValue());
-            }
+
+            Set<URI> leavesURIsFound = leavesFound.get(v);
+
 
             logger.info("Expected :" + leavesURIsExpected);
             logger.info("Found    :" + leavesURIsFound);
@@ -260,10 +247,10 @@ public class TestGraphEngine {
     @Test
     public void test_leaves_count() throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> reachableLeaves = engine.getAllNbReachableLeaves();
+        Map<URI, Integer> reachableLeaves = engine.getAllNbReachableLeaves();
 
-        for (V v : graph.getV()) {
-            Set<URI> leavesURIsExpected = leaves.get((URI) v.getValue());
+        for (URI v : graph.getV()) {
+            Set<URI> leavesURIsExpected = leaves.get(v);
             assertTrue(leavesURIsExpected.size() == reachableLeaves.get(v));
         }
     }
@@ -271,12 +258,12 @@ public class TestGraphEngine {
     @Test
     public void test_ancestor_count() throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> nbAncestors = engine.getAllNbAncestorsInc();
+        Map<URI, Integer> nbAncestors = engine.getAllNbAncestorsInc();
 
-        for (V v : graph.getV()) {
-            Set<URI> ancestorsURIsExpected = ancestors.get((URI) v.getValue());
+        for (URI v : graph.getV()) {
+            Set<URI> ancestorsURIsExpected = ancestors.get(v);
             System.out.println(v);
-            System.out.println(ancestorsURIsExpected.size()+" == "+nbAncestors.get(v));
+            System.out.println("Exp "+ancestorsURIsExpected.size() + " == " + nbAncestors.get(v));
             assertTrue(ancestorsURIsExpected.size() == nbAncestors.get(v));
         }
     }
@@ -284,37 +271,38 @@ public class TestGraphEngine {
     @Test
     public void test_retrieveLeaves() throws SLIB_Ex_Critic {
 
-        Set<V> leavesGraph = engine.getLeaves();
+        Set<URI> leavesGraph = engine.getTaxonomicLeaves();
 
         //logger.info("" + leavesGraph.size() + "\t" + leavesGraph);
         //TODO check equality
         assertTrue(leavesGraph.size() == 7);
     }
-    
+
     /**
      * TODO Change log base in expected results ... modified from e to 2
-     * @throws SLIB_Ex_Critic 
+     *
+     * @throws SLIB_Ex_Critic
      */
     //@Test
     public void test_IC_Sanchez() throws SLIB_Ex_Critic {
 
-        ResultStack<V, Double> icSanchez = engine.computeIC(new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a));
+        Map<URI, Double> icSanchez = engine.computeIC(new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a));
 
-        for (Entry<V,Double> e : informationContents.get(SANCHEZ_IC).entrySet()) {
-            
-            V v = e.getKey();
-            
+        for (Entry<URI, Double> e : informationContents.get(SANCHEZ_IC).entrySet()) {
+
+            URI v = e.getKey();
+
             Double icExpected = e.getValue();
             Double icComputed = icSanchez.get(v);
-            
-            if(icComputed == null){
-                throw new SLIB_Ex_Critic("Cannot found IC value for concept "+v.getValue());
+
+            if (icComputed == null) {
+                throw new SLIB_Ex_Critic("Cannot found IC value for concept " + v);
             }
-            
-            logger.info(v.getValue()+"\tExpected: "+icExpected.doubleValue()+"\tComputed: "+icComputed.doubleValue());
-            
+
+            logger.info(v + "\tExpected: " + icExpected.doubleValue() + "\tComputed: " + icComputed.doubleValue());
+
             assertEquals("IC", icExpected.doubleValue(), icComputed.doubleValue(), 0.0000001);
-            
+
         }
     }
 }
