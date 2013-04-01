@@ -18,10 +18,10 @@ public enum GActionType {
      */
     REROOTING,
     
-    /**
-     * Action flag corresponding to the RDFS Inference.
-     */
-    RDFS_INFERENCE,
+//    /**
+//     * Action flag corresponding to the RDFS Inference.
+//     */
+//    RDFS_INFERENCE,
     
     /**
      * Action flag corresponding to a reduction of vertices.

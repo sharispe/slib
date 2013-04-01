@@ -13,15 +13,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import org.openrdf.model.Resource;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.repository.Repository;
-import org.openrdf.repository.RepositoryConnection;
-import org.openrdf.repository.RepositoryException;
-import org.openrdf.repository.sail.SailRepository;
-import org.openrdf.sail.Sail;
-import org.openrdf.sail.inferencer.fc.ForwardChainingRDFSInferencer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
@@ -62,10 +55,12 @@ public class GraphActionExecutor {
             transitive_reduction(action, g);
         } else if (actionType == GActionType.REROOTING) {
             rerooting(factory, action, g);
-        } else if (actionType == GActionType.RDFS_INFERENCE) {
-            //rdfsInference(factory, action, g);
-            throw new SLIB_Ex_Critic("Method not supported in this version");
-        } else if (actionType == GActionType.VERTICES_REDUCTION) {
+        } 
+//else if (actionType == GActionType.RDFS_INFERENCE) {
+//            //rdfsInference(factory, action, g);
+//            throw new SLIB_Ex_Critic("Method not supported in this version");
+//        } 
+        else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
         } else {
             throw new SLIB_Ex_Critic("Unknow action " + action.type);

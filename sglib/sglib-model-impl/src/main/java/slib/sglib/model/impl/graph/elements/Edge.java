@@ -1,66 +1,69 @@
 /*
 
-Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
 
-This software is a computer program whose purpose is to 
-process semantic graphs.
+ This software is a computer program whose purpose is to 
+ process semantic graphs.
 
-This software is governed by the CeCILL  license under French law and
-abiding by the rules of distribution of free software.  You can  use, 
-modify and/ or redistribute the software under the terms of the CeCILL
-license as circulated by CEA, CNRS and INRIA at the following URL
-"http://www.cecill.info". 
+ This software is governed by the CeCILL  license under French law and
+ abiding by the rules of distribution of free software.  You can  use, 
+ modify and/ or redistribute the software under the terms of the CeCILL
+ license as circulated by CEA, CNRS and INRIA at the following URL
+ "http://www.cecill.info". 
 
-As a counterpart to the access to the source code and  rights to copy,
-modify and redistribute granted by the license, users are provided only
-with a limited warranty  and the software's author,  the holder of the
-economic rights,  and the successive licensors  have only  limited
-liability. 
+ As a counterpart to the access to the source code and  rights to copy,
+ modify and redistribute granted by the license, users are provided only
+ with a limited warranty  and the software's author,  the holder of the
+ economic rights,  and the successive licensors  have only  limited
+ liability. 
 
-In this respect, the user's attention is drawn to the risks associated
-with loading,  using,  modifying and/or developing or reproducing the
-software by the user in light of its specific status of free software,
-that may mean  that it is complicated to manipulate,  and  that  also
-therefore means  that it is reserved for developers  and  experienced
-professionals having in-depth computer knowledge. Users are therefore
-encouraged to load and test the software's suitability as regards their
-requirements in conditions enabling the security of their systems and/or 
-data to be ensured and,  more generally, to use and operate it in the 
-same conditions as regards security. 
+ In this respect, the user's attention is drawn to the risks associated
+ with loading,  using,  modifying and/or developing or reproducing the
+ software by the user in light of its specific status of free software,
+ that may mean  that it is complicated to manipulate,  and  that  also
+ therefore means  that it is reserved for developers  and  experienced
+ professionals having in-depth computer knowledge. Users are therefore
+ encouraged to load and test the software's suitability as regards their
+ requirements in conditions enabling the security of their systems and/or 
+ data to be ensured and,  more generally, to use and operate it in the 
+ same conditions as regards security. 
 
-The fact that you are presently reading this means that you have had
-knowledge of the CeCILL license and that you accept its terms.
+ The fact that you are presently reading this means that you have had
+ knowledge of the CeCILL license and that you accept its terms.
 
  */
- 
- 
 package slib.sglib.model.impl.graph.elements;
-
 
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 
 /**
- *
+ * Implementation of the edge interface.
+ * @see E
  * @author Harispe Sébastien
  */
-public class Edge implements E{
+public class Edge implements E {
 
-    protected final URI source;
-    protected final URI target;
-    protected final URI predicate;
+    private final URI source;
+    private final URI target;
+    private final URI predicate;
 
-    
     /**
-     * @param source
-     * @param predicate
-     * @param target
+     * Create an edge considering the given arguments.
+     *
+     * @param source the source of the edge, must not be null
+     * @param predicate the predicate (type) of the edge, must not be null
+     * @param target the target of the edge, must not be null
      */
     public Edge(URI source, URI predicate, URI target) {
         this.source = source;
         this.predicate = predicate;
         this.target = target;
+
+        if (source == null || predicate == null || target == null) {
+            throw new IllegalArgumentException("Error creating edge, subject predicate and object must not be null, specified values " + toString());
+        }
     }
 
     @Override
@@ -108,9 +111,6 @@ public class Edge implements E{
         return true;
     }
 
-    
-    
-
     @Override
     public String toString() {
         return source.stringValue() + "\t" + predicate.stringValue() + "\t" + target.stringValue();
@@ -122,13 +122,13 @@ public class Edge implements E{
      * @return
      */
     public URI getVertex(Direction direction) {
-        if(direction == Direction.BOTH){
-            throw new IllegalArgumentException(Direction.BOTH+" cannot be used to retrieve a source or target vertex of an edge, valid parameters are "+Direction.IN+" or "+Direction.OUT);
-        }
-        else if (direction == Direction.IN) {
+
+        if (direction == Direction.IN) {
             return source;
-        } else {
+        } else if (direction == Direction.OUT) {
             return target;
+        } else { // BOTH || null
+            throw new IllegalArgumentException(direction + " cannot be used to retrieve a source or target vertex of an edge, valid parameters are " + Direction.IN + " or " + Direction.OUT);
         }
     }
 }

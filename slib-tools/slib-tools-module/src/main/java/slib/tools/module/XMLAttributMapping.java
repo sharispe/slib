@@ -46,7 +46,7 @@ public class XMLAttributMapping {
         aMap.put("REROOTING", GActionType.REROOTING );
         aMap.put("TRANSITIVE_REDUCTION", GActionType.TRANSITIVE_REDUCTION );
 //        aMap.put("TYPE_VERTICES", GActionType.TYPE_VERTICES );
-        aMap.put("RDFS_INFERENCE", GActionType.RDFS_INFERENCE );
+//        aMap.put("RDFS_INFERENCE", GActionType.RDFS_INFERENCE );
         aMap.put("VERTICES_REDUCTION", GActionType.VERTICES_REDUCTION );
         
         

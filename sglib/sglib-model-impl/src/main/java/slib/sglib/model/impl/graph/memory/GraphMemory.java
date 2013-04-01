@@ -34,6 +34,7 @@
  */
 package slib.sglib.model.impl.graph.memory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -49,21 +50,21 @@ import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
 
 /**
+ * In memory implementation of {@link G}
  *
  * @author Harispe Sébastien
  */
 public class GraphMemory implements G {
 
     private URIFactory factory;
-    private Set<URI> uris;	// value Mapping
+    private Set<URI> uris;
     private Set<E> edges;
-    private Map<URI, HashSet<E>> vertexOutEdges;
-    private Map<URI, HashSet<E>> vertexInEdges;
+    private Map<URI, Set<E>> vertexOutEdges;
+    private Map<URI, Set<E>> vertexInEdges;
     private URI uri;
 
     /**
-     * Create a graph loaded in memory with an in memory DataFactory associated
-     * to it.
+     * Create a graph loaded in memory.
      *
      * @param uri
      */
@@ -72,7 +73,6 @@ public class GraphMemory implements G {
     }
 
     /**
-     *
      * @param factory
      * @param uri
      */
@@ -80,7 +80,10 @@ public class GraphMemory implements G {
 
         this.uri = uri;
         this.factory = factory;
-        init();
+        uris = new HashSet<URI>();
+        edges = new HashSet<E>();
+        vertexOutEdges = new HashMap<URI, Set<E>>();
+        vertexInEdges = new HashMap<URI, Set<E>>();
     }
 
     @Override
@@ -88,17 +91,9 @@ public class GraphMemory implements G {
         return factory;
     }
 
-    private void init() {
-
-        uris = new HashSet<URI>();
-        edges = new HashSet<E>();
-        vertexOutEdges = new HashMap<URI, HashSet<E>>();
-        vertexInEdges = new HashMap<URI, HashSet<E>>();
-    }
-
     @Override
     public Set<E> getE() {
-        return edges;
+        return Collections.unmodifiableSet(edges);
     }
 
     @Override
@@ -202,25 +197,28 @@ public class GraphMemory implements G {
     public void addE(E e) {
 
         if (!edges.contains(e)) {
-            addV(e.getSource());
-            addV(e.getTarget());
+            URI s = e.getSource();
+            URI o = e.getTarget();
+
+            addV(s);
+            addV(o);
             edges.add(e);
 
-            if (!vertexOutEdges.containsKey(e.getSource())) {
-                vertexOutEdges.put(e.getSource(), new HashSet<E>());
+            if (!vertexOutEdges.containsKey(s)) {
+                vertexOutEdges.put(s, new HashSet<E>());
             }
-            if (!vertexInEdges.containsKey(e.getTarget())) {
-                vertexInEdges.put(e.getTarget(), new HashSet<E>());
+            if (!vertexInEdges.containsKey(o)) {
+                vertexInEdges.put(s, new HashSet<E>());
             }
 
-            vertexOutEdges.get(e.getSource()).add(e);
-            vertexInEdges.get(e.getTarget()).add(e);
+            vertexOutEdges.get(s).add(e);
+            vertexInEdges.get(o).add(e);
         }
     }
 
     @Override
     public Set<URI> getV() {
-        return new HashSet<URI>(uris);
+        return Collections.unmodifiableSet(uris);
     }
 
     @Override
@@ -278,9 +276,7 @@ public class GraphMemory implements G {
 
     @Override
     public void addV(Set<URI> vertices) {
-        for (URI v : vertices) {
-            addV(v);
-        }
+        uris.addAll(vertices);
     }
 
     @Override
@@ -312,9 +308,14 @@ public class GraphMemory implements G {
     }
 
     @Override
+    public boolean containsEdge(URI source, URI predicate, URI target) {
+        return containsEdge(source, target, Direction.OUT, predicate);
+    }
+
+    @Override
     public boolean containsEdge(URI v1, URI v2, Direction dir) {
 
-        if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v1)) {
+        if ((dir == Direction.OUT || dir == Direction.BOTH || dir == null) && vertexOutEdges.containsKey(v1)) {
             for (E e : vertexOutEdges.get(v1)) {
 
                 if (e.getTarget().equals(v2)) {
@@ -322,7 +323,7 @@ public class GraphMemory implements G {
                 }
             }
         }
-        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v1)) {
+        if ((dir == Direction.IN || dir == Direction.BOTH || dir == null) && vertexInEdges.containsKey(v1)) {
             for (E e : vertexInEdges.get(v1)) {
 
                 if (e.getSource().equals(v2)) {
@@ -377,23 +378,20 @@ public class GraphMemory implements G {
         return uris.contains(v);
     }
 
-   
     @Override
-    public long getNumberVertices() {
+    public int getNumberVertices() {
         return uris.size();
     }
 
     @Override
-    public long getNumberEdges() {
+    public int getNumberEdges() {
         return edges.size();
     }
-
-   
 
     @Override
     public Set<E> getE(Set<URI> c) {
 
-        if (c == null) {
+        if (c == null || c.isEmpty()) {
             return getE();
         }
 
@@ -408,7 +406,10 @@ public class GraphMemory implements G {
     }
 
     public void clear() {
-        init();
+        edges.clear();
+        uris.clear();
+        vertexInEdges.clear();
+        vertexOutEdges.clear();
     }
 
     @Override
@@ -429,7 +430,7 @@ public class GraphMemory implements G {
                 }
             }
         }
-        if ((dir == Direction.IN || dir == Direction.BOTH)  && vertexInEdges.containsKey(v)) {
+        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v)) {
 
             for (E e : vertexInEdges.get(v)) {
                 if (buildUris == null || buildUris.contains(e.getURI())) {
@@ -454,7 +455,7 @@ public class GraphMemory implements G {
                 }
             }
         }
-        if ((dir == Direction.IN || dir == Direction.BOTH) &&  vertexInEdges.containsKey(v)) {
+        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v)) {
 
             for (E e : vertexInEdges.get(v)) {
                 if (buildUri == null || buildUri.equals(e.getURI())) {
@@ -465,7 +466,6 @@ public class GraphMemory implements G {
         return vert;
     }
 
-    
     @Override
     public String toString() {
 
@@ -493,13 +493,13 @@ public class GraphMemory implements G {
     @Override
     public Set<E> getE(URI v, WalkConstraints wc) {
         Set<E> valid = new HashSet<E>();
-        for(E e : getE(v, Direction.OUT)){
-            if(wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())){
+        for (E e : getE(v, Direction.OUT)) {
+            if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {
                 valid.add(e);
             }
         }
-        for(E e : getE(v, Direction.IN)){
-            if(wc.getAcceptedWalks_DIR_IN().contains(e.getURI())){
+        for (E e : getE(v, Direction.IN)) {
+            if (wc.getAcceptedWalks_DIR_IN().contains(e.getURI())) {
                 valid.add(e);
             }
         }
@@ -509,13 +509,13 @@ public class GraphMemory implements G {
     @Override
     public Set<URI> getV(URI v, WalkConstraints wc) {
         Set<URI> valid = new HashSet<URI>();
-        for(E e : getE(v, Direction.OUT)){
-            if(wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())){
+        for (E e : getE(v, Direction.OUT)) {
+            if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {
                 valid.add(e.getTarget());
             }
         }
-        for(E e : getE(v, Direction.IN)){
-            if(wc.getAcceptedWalks_DIR_IN().contains(e.getURI())){
+        for (E e : getE(v, Direction.IN)) {
+            if (wc.getAcceptedWalks_DIR_IN().contains(e.getURI())) {
                 valid.add(e.getSource());
             }
         }

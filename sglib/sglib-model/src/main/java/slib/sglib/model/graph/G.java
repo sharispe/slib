@@ -42,123 +42,164 @@ import slib.sglib.model.graph.utils.WalkConstraints;
 import slib.sglib.model.repo.URIFactory;
 
 /**
- * Generic interface of a multi directed Graph defined as a set of vertices and a set of oriented edges.
- * 
+ * Interface of a multi directed Graph defined as a set of vertices and a set of
+ * oriented edges. Vertices are identified by {@link URI}, edge by a triplet
+ * subject predicate object (s,p,o) of URIs. The model doesn't support multiple
+ * edges s,p,o of the same predicate (p), see {@link E} interface.
+ *
+ * The main aim is to provide an easy to use graph model to manipulate semantic
+ * graphs composed of classes (concept) and instances identified by URIs. The
+ * classes and instances can established semantic relationships through
+ * triplets. All the vertices of the graph are uniquely identified by URIs, we
+ * therefore sometimes refer to an URIs corresponding to a vertex through the
+ * term vertex.
+ *
+ * This graph is not RDF compliant as it doesn't support values such as Literals
+ * or blank nodes.
+ *
+ * In the documentation of the class we refer to a triplet or URIs through the
+ * term edge. The subject of the edge is called the source, the predicate is
+ * sometimes called the type of the edge, and the object is called the target.
+ *
+ * @see URI
+ * @see E
+ * @see Direction
+ * @see WalkConstraints
+ *
  * @author Sebastien Harispe
  */
 public interface G {
 
     /**
-     * Access to the DataFactory used to create the basic element of the graph e.g. URIs
+     * Access to the {@link URIFactory} used to create the URIs of the graph.
      *
      * @return the factory used to create the URIs
      */
     public URIFactory getURIFactory();
 
     /**
-     * @return a copy of the set of edges contained in the graph
+     * Access to a view of the set of edges contained in the graph.
+     *
+     * @return an unmodifiable view of the set of edges contained in the graph.
      */
     public Set<E> getE();
 
     /**
-     * Retrieve all edges involving a specific vertex considering a particular direction.
+     * Access to the edges involving a specific vertex considering a particular
+     * direction.
      * <ul>
-     *  <li> Direction.OUT: all edges for which the specified vertex is the source. </li>
-     *  <li> Direction.IN: all edges for which the specified vertex is the target.  </li>
-     *  <li> Direction.BOTH: all edges involving the specified vertex, i.e. union IN and OUT. </li>
+     * <li> Direction.OUT: all edges for which the specified vertex is the
+     * source. </li>
+     * <li> Direction.IN: all edges for which the specified vertex is the
+     * target. </li>
+     * <li> Direction.BOTH: all edges involving the specified vertex, i.e. union
+     * IN and OUT. </li>
      * </ul>
+     *
      * @param v the vertex of interest
-     * @param dir 
-     * @return the set of edges corresponding to the query.
-     * The method return an empty set if no results are associated to the query. 
+     * @param dir the direction to consider i.e. IN, OUT or BOTH, see
+     * {@link Direction}
+     * @return the set of edges corresponding to the query. The method return an
+     * empty set if no results are associated to the query.
      */
     public Set<E> getE(URI v, Direction dir);
 
     /**
-     * Retrieve all edges characterized by the specified URI predicate.
-     * No restriction is applied if the  given URI is equals to null.
+     * Retrieve all edges characterized by the specified URI predicate. No
+     * restriction is applied if the given URI is equals to null.
      *
      * @param predicate the predicate URI of interest
-     * @return a set of edges respecting the given constraints (empty set if no results)
+     * @return a set of edges respecting the given constraints (empty set if no
+     * results)
      */
     public Set<E> getE(URI predicate);
 
     /**
-     * Retrieve all edges characterized by one of specified predicate URIs.
-     * If the given set of is equals to null no restriction is applied
+     * Retrieve all edges characterized by one of specified predicate URIs. If
+     * the given set of is empty or equal to null no restriction is applied and
+     * all edges will be returned.
      *
      * @param c the set of predicate URIs of interest
-     * @return a set of edges respecting the given constraints (empty set if no results)
+     * @return the set of edges of the graph respecting the given constraints
+     * (empty set if no results)
      */
     public Set<E> getE(Set<URI> c);
 
     /**
-     * Retrieve all edges of the graph characterized by the constraint.
-     * The constraint can be tuned based on the following parameters:
+     * Retrieve all edges of the graph characterized by the constraint
+     * specified. The constraint can be tuned based on the following parameters:
      * <ul>
-     *  <li>the predicate URI</li>
-     *  <li>the related vertex</li>
-     *  <li>the direction to consider</li>
+     * <li>the predicate URI</li>
+     * <li>the vertex of interest</li>
+     * <li>the direction to consider</li>
      * </ul>
-     * If a parameter is set to null, the constraint is relaxed considering this parameter.
-     * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
-     * 
-     * @param t the predicate URI of the edges of interest
-     * @param v the vertex of interest
-     * @param dir the direction to consider
-     * @return a set of edges respecting the given constraint (empty Set if no results)
-     */
-    public Set<E> getE(URI t, URI v, Direction dir);
-
-
-    /**
-     * Retrieve all edges of the graph characterized by the constraint.
-     * The constraint can be tuned based on the following parameters:
-     * <ul>
-     *  <li>the set of predicate URIs</li>
-     *  <li>the related vertex</li>
-     *  <li>the direction to consider</li>
-     * </ul>
-     * If a parameter is set to null, the constraint is relaxed considering this parameter.
-     * As an example if the predicate URI is set to null, all edges respecting the other conditions will be returned
-     * 
-     * @param t the set of predicate URIs to consider.
+     * If a parameter is set to null, the constraint is relaxed considering this
+     * parameter. As an example if the predicate URI is set to null, all edges
+     * respecting the other constraints will be returned.
+     *
+     * @param predicate the predicate URI of the edges of interest
      * @param source the vertex of interest
      * @param dir the direction to consider
-     * @return a set of edges respecting the given constraint (empty Set if no results)
+     * @return a set of edges respecting the given constraint (empty Set if no
+     * results)
      */
-    public Set<E> getE(Set<URI> t, URI source, Direction dir);
+    public Set<E> getE(URI predicate, URI source, Direction dir);
 
-    
     /**
+     * Retrieve all edges of the graph characterized by the constraint. The
+     * constraint can be tuned based on the following parameters:
+     * <ul>
+     * <li>the set of predicate URIs</li>
+     * <li>the related vertex</li>
+     * <li>the direction to consider</li>
+     * </ul>
+     * If a parameter is set to null, the constraint is relaxed considering this
+     * parameter. As an example if the predicate URI is set to null, all edges
+     * respecting the other conditions will be returned
      *
-     * @param v
-     * @param wc
-     * @return
+     * @param predicates the set of predicate URIs to consider.
+     * @param source the vertex of interest
+     * @param dir the direction to consider
+     * @return a set of edges respecting the given constraint (empty Set if no
+     * results)
+     */
+    public Set<E> getE(Set<URI> predicates, URI source, Direction dir);
+
+    /**
+     * Retrieve all edges of the graph which can be reached from a given vertex
+     * respecting the given constraint.
+     *
+     * @param v the vertex of interest
+     * @param wc the object defining the constraint
+     * @return the set of edges which can be reached considering the constraint.
      */
     public Set<E> getE(URI v, WalkConstraints wc);
 
     /**
+     * Retrieve all vertices of the graph which can be reached from a given
+     * vertex respecting the given constraint.
      *
-     * @param v
-     * @param wc
-     * @return
+     * @param v the vertex of interest
+     * @param wc the object defining the constraint
+     * @return the set of vertices which can be reached considering the
+     * constraint.
      */
     public Set<URI> getV(URI v, WalkConstraints wc);
 
     /**
-     * Add an edge of the given type (URI) between the specified source and target.
-     * If the given edge already exits nothing is done. 
+     * Add an edge of the given type (URI) between the specified source and
+     * target. If the given edge already exits nothing is done. If the
+     * source/target of the edge is not part of the graph it will be added.
      *
      * @param src the source of the edge
      * @param type the predicate URI of the edge to create
      * @param target the target of the edge
      */
     public void addE(URI src, URI type, URI target);
-    
-    
+
     /**
      * Add the given edge to the graph
+     *
      * @param e an edge
      */
     public void addE(E e);
@@ -178,9 +219,9 @@ public interface G {
     public void removeE(E e);
 
     /**
-     * Used to remove all Edge of a specific predicate.
+     * Used to remove all edges of a specific type (predicate).
      *
-     * @param t the EdgeType of the edges to remove
+     * @param t the type (predicate) of the edges to remove
      */
     public void removeE(URI t);
 
@@ -192,15 +233,15 @@ public interface G {
     public void removeE(Set<E> e);
 
     /**
-     * Add the given vertex to the Graph
+     * Add the given vertex to the graph.
+     * Nothing is done if the graph already exists.
      *
-     * @param v the Vertex to add
-     * @return the vertex corresponding to the added/corresponding vertex
+     * @param v the vertex to add
      */
     public void addV(URI v);
 
     /**
-     * Add the given set of vertices to the Graph
+     * Add the given set of vertices to the graph.
      *
      * @param v the set of vertices
      */
@@ -208,16 +249,17 @@ public interface G {
 
     /**
      * Remove the given vertex to the graph. 
-     * All related edges (in / out) are also removed
+     * All related edges (in / out) will also be removed.
      *
-     * @param v The Vertex to remove
+     * @param v The vertex to remove
      */
     public void removeV(URI v);
 
     /**
-     * Remove all specified Vertices and related edges (in / out)
+     * Remove all specified vertices. 
+     * All related edges (in / out) will also be removed.
      *
-     * @param setV The Set of vertices to remove
+     * @param setV The set of vertices to remove
      */
     public void removeV(Set<URI> setV);
 
@@ -228,13 +270,23 @@ public interface G {
      * @param v1 the first vertex
      * @param v2 the second vertex
      * @param dir the direction to consider
-     * @return a boolean : true if edge exists else return false
+     * @return a boolean : true if the edge exists else return false
      */
     public boolean containsEdge(URI v1, URI v2, Direction dir);
+    
+     /**
+     * Check if the graph contains an edge respecting the given source predicate and target.
+     * 
+     * @param source the source vertex
+     * @param predicate the URI of the edge
+     * @param target the target vertex
+     * @return a boolean : true if the edge exists else return false
+     */
+    public boolean containsEdge(URI source, URI predicate, URI target);
 
     /**
      * Check if the graph contains an edge respecting the given constraint.
-     
+     *
      * @param v1 the first vertex
      * @param v2 the second vertex
      * @param dir the direction to consider
@@ -244,8 +296,8 @@ public interface G {
     public boolean containsEdge(URI v1, URI v2, Direction dir, URI predicate);
 
     /**
-     * Check if the graph contains at least one edge characterized by the given predicate URI. 
-     * If the given URI is null no restriction is applied.
+     * Check if the graph contains at least one edge characterized by the given
+     * predicate URI. If the given URI is null no restriction is applied.
      *
      * @param t the URI of the edge
      * @return a boolean : true if an edge exists else return false
@@ -261,29 +313,28 @@ public interface G {
      */
     public boolean containsVertex(URI v);
 
-    
     /**
-     * @return A copy of the set of vertices contained in the graph.
+     * @return an unmodifiable view of the set of vertices contained in the
+     * graph.
      */
     public Set<URI> getV();
-
 
     /**
      * Return the number of vertices
      *
      * @return #vertices
      */
-    public long getNumberVertices();
+    public int getNumberVertices();
 
-  
     /**
      * @return the number of edges
      */
-    public long getNumberEdges();
+    public int getNumberEdges();
 
     /**
-     * Return all neighbors vertices of a given vertex considering particular predicate URIs and direction.
-     * If the given set of URI is null no restriction on edge type is applied.
+     * Return all neighbors vertices of a given vertex considering particular
+     * predicate URIs and direction. If the given set of URI is null no
+     * restriction on edge type is applied.
      *
      * @param v the focusing vertex
      * @param eTypes the type of edges to consider
@@ -294,8 +345,8 @@ public interface G {
 
     /**
      * Return all neighbors vertices of a given vertex considering a particular
-     * direction and URI predicate.
-     * If the given URI is null no restriction on predicate URI is applied.
+     * direction and URI predicate. If the given URI is null no restriction on
+     * predicate URI is applied.
      *
      * @param v the focusing vertex
      * @param predicate the URI of the edges to consider
@@ -308,5 +359,4 @@ public interface G {
      * @return the URI associated to the graph
      */
     public URI getURI();
-
 }
