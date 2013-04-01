@@ -110,7 +110,7 @@ public class GraphMemory implements G {
                 edgesCol.add(e);
             }
         }
-        return edgesCol;
+        return Collections.unmodifiableSet(edgesCol);
     }
 
     @Override
@@ -147,10 +147,14 @@ public class GraphMemory implements G {
 
     @Override
     public Set<E> getE(URI t, URI v, Direction dir) {
+        
+        if(v == null){
+            return getE(t);
+        }
 
         Set<E> edgesCol = new HashSet<E>();
 
-        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v)) {
+        if ((dir == Direction.IN || dir == Direction.BOTH || dir == null) && vertexInEdges.containsKey(v)) {
 
             if (t == null) {
                 edgesCol.addAll(vertexInEdges.get(v));
@@ -162,7 +166,7 @@ public class GraphMemory implements G {
                 }
             }
         }
-        if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v)) {
+        if ((dir == Direction.OUT || dir == Direction.BOTH || dir == null) && vertexOutEdges.containsKey(v)) {
 
             if (t == null) {
                 edgesCol.addAll(vertexOutEdges.get(v));
@@ -174,23 +178,27 @@ public class GraphMemory implements G {
                 }
             }
         }
-        return edgesCol;
+        return Collections.unmodifiableSet(edgesCol);
     }
 
     @Override
     public Set<E> getE(URI v, Direction dir) {
 
+        if (v == null) {
+            return getE();
+        }
+
         Set<E> edgesCol = new HashSet<E>();
 
-        if ((dir == Direction.BOTH || dir == Direction.IN) && vertexInEdges.containsKey(v)) {
+        if ((dir == Direction.IN || dir == Direction.BOTH || dir == null) && vertexInEdges.containsKey(v)) {
             edgesCol.addAll(vertexInEdges.get(v));
         }
 
-        if ((dir == Direction.BOTH || dir == Direction.OUT) && vertexOutEdges.containsKey(v)) {
+        if ((dir == Direction.OUT || dir == Direction.BOTH || dir == null) && vertexOutEdges.containsKey(v)) {
             edgesCol.addAll(vertexOutEdges.get(v));
         }
 
-        return edgesCol;
+        return Collections.unmodifiableSet(edgesCol);
     }
 
     @Override
@@ -223,11 +231,14 @@ public class GraphMemory implements G {
 
     @Override
     public void addE(URI src, URI predicate, URI target) {
+        // null parameters will throw an IllegalArgumentException at egde creation
         addE(new Edge(src, predicate, target));
     }
 
     @Override
     public void addEdges(Set<E> edges) {
+        if(edges == null)
+            return;
         for (E e : edges) {
             addE(e);
         }
@@ -271,16 +282,26 @@ public class GraphMemory implements G {
 
     @Override
     public void addV(URI v) {
+        if(v == null){
+            throw new IllegalArgumentException("The URI must not be null");
+        }
         uris.add(v);
     }
 
     @Override
     public void addV(Set<URI> vertices) {
+        if(vertices == null){
+            return;
+        }
         uris.addAll(vertices);
     }
 
     @Override
     public void removeV(URI v) {
+        
+        if(v == null){
+            return;
+        }
 
         Set<E> toRemove = new HashSet<E>();
 
@@ -302,75 +323,12 @@ public class GraphMemory implements G {
 
     @Override
     public void removeV(Set<URI> setV) {
+        if(setV == null){
+            return;
+        }
         for (URI v : setV) {
             removeV(v);
         }
-    }
-
-    @Override
-    public boolean containsEdge(URI source, URI predicate, URI target) {
-        return containsEdge(source, target, Direction.OUT, predicate);
-    }
-
-    @Override
-    public boolean containsEdge(URI v1, URI v2, Direction dir) {
-
-        if ((dir == Direction.OUT || dir == Direction.BOTH || dir == null) && vertexOutEdges.containsKey(v1)) {
-            for (E e : vertexOutEdges.get(v1)) {
-
-                if (e.getTarget().equals(v2)) {
-                    return true;
-                }
-            }
-        }
-        if ((dir == Direction.IN || dir == Direction.BOTH || dir == null) && vertexInEdges.containsKey(v1)) {
-            for (E e : vertexInEdges.get(v1)) {
-
-                if (e.getSource().equals(v2)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean containsEdge(URI v1, URI v2, Direction dir, URI type) {
-
-        if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v1)) {
-            for (E e : vertexOutEdges.get(v1)) {
-
-                if (e.getTarget().equals(v2)
-                        && (type == null || e.getURI().equals(type))) {
-                    return true;
-                }
-            }
-        }
-        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v1)) {
-            for (E e : vertexInEdges.get(v1)) {
-
-                if (e.getSource().equals(v2)
-                        && (type == null || e.getURI().equals(type))) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean containsEdgeOfType(URI t) {
-
-        if (t == null) {
-            return edges.isEmpty() == false;
-        }
-
-        for (E e : edges) {
-            if (e.getURI().equals(t)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
@@ -415,30 +373,6 @@ public class GraphMemory implements G {
     @Override
     public URI getURI() {
         return uri;
-    }
-
-    @Override
-    public Set<URI> getV(URI v, Set<URI> buildUris, Direction dir) {
-
-        Set<URI> vSelected = new HashSet<URI>();
-
-        if ((dir == Direction.OUT || dir == Direction.BOTH) && vertexOutEdges.containsKey(v)) {
-
-            for (E e : vertexOutEdges.get(v)) {
-                if (buildUris == null || buildUris.contains(e.getURI())) {
-                    vSelected.add(e.getTarget());
-                }
-            }
-        }
-        if ((dir == Direction.IN || dir == Direction.BOTH) && vertexInEdges.containsKey(v)) {
-
-            for (E e : vertexInEdges.get(v)) {
-                if (buildUris == null || buildUris.contains(e.getURI())) {
-                    vSelected.add(e.getSource());
-                }
-            }
-        }
-        return vSelected;
     }
 
     @Override

@@ -85,8 +85,8 @@ public interface G {
     public Set<E> getE();
 
     /**
-     * Access to the edges involving a specific vertex considering a particular
-     * direction.
+     * Access to a view of all edges involving a specific vertex considering a
+     * particular direction.
      * <ul>
      * <li> Direction.OUT: all edges for which the specified vertex is the
      * source. </li>
@@ -95,6 +95,9 @@ public interface G {
      * <li> Direction.BOTH: all edges involving the specified vertex, i.e. union
      * IN and OUT. </li>
      * </ul>
+     *
+     * If the vertex is set to null all edges are retrieved. Setting the
+     * direction to null is the same as Direction.BOTH.
      *
      * @param v the vertex of interest
      * @param dir the direction to consider i.e. IN, OUT or BOTH, see
@@ -105,8 +108,8 @@ public interface G {
     public Set<E> getE(URI v, Direction dir);
 
     /**
-     * Retrieve all edges characterized by the specified URI predicate. No
-     * restriction is applied if the given URI is equals to null.
+     * Retrieve a view of all edges characterized by the specified URI
+     * predicate. No restriction is applied if the given URI is equals to null.
      *
      * @param predicate the predicate URI of interest
      * @return a set of edges respecting the given constraints (empty set if no
@@ -115,19 +118,20 @@ public interface G {
     public Set<E> getE(URI predicate);
 
     /**
-     * Retrieve all edges characterized by one of specified predicate URIs. If
-     * the given set of is empty or equal to null no restriction is applied and
-     * all edges will be returned.
+     * Retrieve a view of all edges characterized by one of specified predicate
+     * URIs. If the given set of types (predicated )is empty or equal to null no
+     * restriction is applied and all edges will be returned.
      *
-     * @param c the set of predicate URIs of interest
+     * @param types the set of predicate URIs of interest
      * @return the set of edges of the graph respecting the given constraints
      * (empty set if no results)
      */
-    public Set<E> getE(Set<URI> c);
+    public Set<E> getE(Set<URI> types);
 
     /**
-     * Retrieve all edges of the graph characterized by the constraint
-     * specified. The constraint can be tuned based on the following parameters:
+     * Retrieve a view of all edges of the graph characterized by the specified
+     * constraint. The constraint can be tuned based on the following
+     * parameters:
      * <ul>
      * <li>the predicate URI</li>
      * <li>the vertex of interest</li>
@@ -138,16 +142,17 @@ public interface G {
      * respecting the other constraints will be returned.
      *
      * @param predicate the predicate URI of the edges of interest
-     * @param source the vertex of interest
+     * @param v the vertex of interest
      * @param dir the direction to consider
      * @return a set of edges respecting the given constraint (empty Set if no
      * results)
      */
-    public Set<E> getE(URI predicate, URI source, Direction dir);
+    public Set<E> getE(URI predicate, URI v, Direction dir);
 
     /**
-     * Retrieve all edges of the graph characterized by the constraint. The
-     * constraint can be tuned based on the following parameters:
+     * Retrieve a view of all edges of the graph characterized by the
+     * constraint. The constraint can be tuned based on the following
+     * parameters:
      * <ul>
      * <li>the set of predicate URIs</li>
      * <li>the related vertex</li>
@@ -166,8 +171,8 @@ public interface G {
     public Set<E> getE(Set<URI> predicates, URI source, Direction dir);
 
     /**
-     * Retrieve all edges of the graph which can be reached from a given vertex
-     * respecting the given constraint.
+     * Retrieve a view of all edges of the graph which can be reached from a
+     * given vertex respecting the given constraint.
      *
      * @param v the vertex of interest
      * @param wc the object defining the constraint
@@ -176,8 +181,8 @@ public interface G {
     public Set<E> getE(URI v, WalkConstraints wc);
 
     /**
-     * Retrieve all vertices of the graph which can be reached from a given
-     * vertex respecting the given constraint.
+     * Retrieve view of all vertices of the graph which can be reached from a
+     * given vertex respecting the given constraint.
      *
      * @param v the vertex of interest
      * @param wc the object defining the constraint
@@ -190,10 +195,10 @@ public interface G {
      * Add an edge of the given type (URI) between the specified source and
      * target. If the given edge already exits nothing is done. If the
      * source/target of the edge is not part of the graph it will be added.
-     *
-     * @param src the source of the edge
-     * @param type the predicate URI of the edge to create
-     * @param target the target of the edge
+     * 
+     * @param src the source of the edge (not null)
+     * @param type the predicate URI of the edge to create (not null)
+     * @param target the target of the edge (not null)
      */
     public void addE(URI src, URI type, URI target);
 
@@ -233,8 +238,8 @@ public interface G {
     public void removeE(Set<E> e);
 
     /**
-     * Add the given vertex to the graph.
-     * Nothing is done if the graph already exists.
+     * Add the given vertex to the graph. Nothing is done if the graph already
+     * exists.
      *
      * @param v the vertex to add
      */
@@ -248,61 +253,20 @@ public interface G {
     public void addV(Set<URI> v);
 
     /**
-     * Remove the given vertex to the graph. 
-     * All related edges (in / out) will also be removed.
+     * Remove the given vertex to the graph. All related edges (in / out) will
+     * also be removed.
      *
      * @param v The vertex to remove
      */
     public void removeV(URI v);
 
     /**
-     * Remove all specified vertices. 
-     * All related edges (in / out) will also be removed.
+     * Remove all specified vertices. All related edges (in / out) will also be
+     * removed.
      *
      * @param setV The set of vertices to remove
      */
     public void removeV(Set<URI> setV);
-
-    /**
-     * Check if the graph contains at least one edge linking vertices v1 and v2
-     * (respecting the given direction).
-     *
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param dir the direction to consider
-     * @return a boolean : true if the edge exists else return false
-     */
-    public boolean containsEdge(URI v1, URI v2, Direction dir);
-    
-     /**
-     * Check if the graph contains an edge respecting the given source predicate and target.
-     * 
-     * @param source the source vertex
-     * @param predicate the URI of the edge
-     * @param target the target vertex
-     * @return a boolean : true if the edge exists else return false
-     */
-    public boolean containsEdge(URI source, URI predicate, URI target);
-
-    /**
-     * Check if the graph contains an edge respecting the given constraint.
-     *
-     * @param v1 the first vertex
-     * @param v2 the second vertex
-     * @param dir the direction to consider
-     * @param predicate the URI of the edges to consider
-     * @return a boolean : true if edge exists else return false
-     */
-    public boolean containsEdge(URI v1, URI v2, Direction dir, URI predicate);
-
-    /**
-     * Check if the graph contains at least one edge characterized by the given
-     * predicate URI. If the given URI is null no restriction is applied.
-     *
-     * @param t the URI of the edge
-     * @return a boolean : true if an edge exists else return false
-     */
-    public boolean containsEdgeOfType(URI t);
 
     /**
      * Check if the graph contains a Vertex associated to the given Value.
@@ -331,17 +295,6 @@ public interface G {
      */
     public int getNumberEdges();
 
-    /**
-     * Return all neighbors vertices of a given vertex considering particular
-     * predicate URIs and direction. If the given set of URI is null no
-     * restriction on edge type is applied.
-     *
-     * @param v the focusing vertex
-     * @param eTypes the type of edges to consider
-     * @param dir the direction to consider
-     * @return the set of vertices associated to the given conditions
-     */
-    public Set<URI> getV(URI v, Set<URI> eTypes, Direction dir);
 
     /**
      * Return all neighbors vertices of a given vertex considering a particular
