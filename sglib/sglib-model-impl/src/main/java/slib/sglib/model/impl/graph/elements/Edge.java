@@ -36,10 +36,9 @@ package slib.sglib.model.impl.graph.elements;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.utils.Direction;
 
 /**
- * Implementation of the edge interface.
+ * Implementation of the {@link E} interface.
  * @see E
  * @author Harispe Sébastien
  */
@@ -114,21 +113,5 @@ public class Edge implements E {
     @Override
     public String toString() {
         return source.stringValue() + "\t" + predicate.stringValue() + "\t" + target.stringValue();
-    }
-
-    /**
-     *
-     * @param direction IN (source) or OUT (target)
-     * @return
-     */
-    public URI getVertex(Direction direction) {
-
-        if (direction == Direction.IN) {
-            return source;
-        } else if (direction == Direction.OUT) {
-            return target;
-        } else { // BOTH || null
-            throw new IllegalArgumentException(direction + " cannot be used to retrieve a source or target vertex of an edge, valid parameters are " + Direction.IN + " or " + Direction.OUT);
-        }
     }
 }
