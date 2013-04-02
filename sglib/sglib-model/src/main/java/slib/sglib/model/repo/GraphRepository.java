@@ -35,15 +35,38 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
 
 /**
+ * Interface defining a repository for the graphs.
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public interface GraphRepository {
-    
+
+    /**
+     * Register the graph into the repository.
+     *
+     * @param graph the graph to register.
+     */
     void registerGraph(G graph);
-    void registerGraph(URI uri, G graph);
+
+    /**
+     * Retrieve a graph according to its URI.
+     *
+     * @param uri the URI of the graph.
+     * @return the graph associated to the given URI, none if no graph can be
+     * found.
+     */
     G getGraph(URI uri);
+
+    /**
+     * Check if a graph is registred to the given URI.
+     * @param uri the URI
+     * @return true if a graph is associated to the given URI.
+     */
     boolean isGraphRegistred(URI uri);
+
+    /**
+     * Unregister the graph associated to the given URI 
+     * @param uri the URI of the graph.
+     */     
     void unregisterGraph(URI uri);
-    
 }

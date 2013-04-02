@@ -41,10 +41,10 @@ import slib.utils.impl.Timer;
  *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class SMComputationGO_groupwise_billion {
+public class SMComputationGO_groupwise_million {
 
     public static void main(String[] params) throws SLIB_Exception {
-        
+
         Timer t = new Timer();
         t.start();
 
@@ -95,7 +95,7 @@ public class SMComputationGO_groupwise_billion {
         System.out.println("Nb vertices : " + nbVertices);
 
 
-        
+
 
         ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011_a);
 
@@ -108,7 +108,7 @@ public class SMComputationGO_groupwise_billion {
 
         SM_Engine engine = new SM_Engine(graph);
 
-        
+
 
         // An object used to retrieve the annotation of an instance according 
         // to a particular semantic projection 
@@ -120,23 +120,25 @@ public class SMComputationGO_groupwise_billion {
         int count = 1000000;
         int size = instances.size();
         Random r = new Random();
-        URI iA,iB;
+        URI iA, iB;
         Set<URI> annots_A, annots_B;
-        
+
+        System.out.println("Start computing");
+
         for (int i = 1; i <= count; i++) {
-            
+
             iA = instances.get(r.nextInt(size));
             iB = instances.get(r.nextInt(size));
-            
+
             annots_A = iAccessor.getDirectClass(iA);
             annots_B = iAccessor.getDirectClass(iB);
 
             sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annots_A, annots_B);
-            if(i % 100000 == 0){
-                System.out.println(i+"/"+count+"\t"+iA+"\t"+iB+"\t"+sim);
+            if (i % 100000 == 0) {
+                System.out.println(i + "/" + count + "\t" + iA + "\t" + iB + "\t" + sim);
             }
         }
-        System.out.println(count+" gene products semantic simlarity computed");
+        System.out.println(count + " gene products semantic simlarity computed");
         t.stop();
         t.elapsedTime();
     }

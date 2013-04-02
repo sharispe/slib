@@ -106,7 +106,7 @@ public class GraphLoaderGeneric {
         logger.debug("Create graph " + uri);
 
         G g = new GraphMemory(uri);
-        GraphRepositoryMemory.getSingleton().registerGraph(uri, g);
+        GraphRepositoryMemory.getSingleton().registerGraph(g);
         return g;
     }
 
@@ -120,14 +120,14 @@ public class GraphLoaderGeneric {
      */
     public static G load(GraphConf graphConf) throws SLIB_Exception {
 
-        logger.info("Loading Graph "+graphConf.getUri());
+        logger.info("Loading Graph " + graphConf.getUri());
 
         G g = createGraph(graphConf.getUri());
-        
-        
-        return load(graphConf,g);
+
+
+        return load(graphConf, g);
     }
-    
+
     public static G load(GraphConf graphConf, G g) throws SLIB_Exception {
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
@@ -183,7 +183,7 @@ public class GraphLoaderGeneric {
      */
     public static boolean supportFormat(String format) {
         for (GFormat f : supportedFormat) {
-            if (f.toString().equals(format))  {
+            if (f.toString().equals(format)) {
                 return true;
             }
         }

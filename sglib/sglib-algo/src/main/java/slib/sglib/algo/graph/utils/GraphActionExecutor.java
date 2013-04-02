@@ -24,7 +24,6 @@ import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.SGLIBcst;
 import slib.sglib.model.repo.URIFactory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -55,11 +54,10 @@ public class GraphActionExecutor {
             transitive_reduction(action, g);
         } else if (actionType == GActionType.REROOTING) {
             rerooting(factory, action, g);
-        } 
-//else if (actionType == GActionType.RDFS_INFERENCE) {
-//            //rdfsInference(factory, action, g);
-//            throw new SLIB_Ex_Critic("Method not supported in this version");
-//        } 
+        } //else if (actionType == GActionType.RDFS_INFERENCE) {
+        //            //rdfsInference(factory, action, g);
+        //            throw new SLIB_Ex_Critic("Method not supported in this version");
+        //        } 
         else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
         } else {
@@ -102,8 +100,8 @@ public class GraphActionExecutor {
         String vocVal = (String) action.getParameter("vocabulary");
         String file_uris = (String) action.getParameter("file_uris");
         String rootURIs = (String) action.getParameter("root_uri");
-        
-        Set<URI> classes   = GraphAccessor.getClasses(g);
+
+        Set<URI> classes = GraphAccessor.getClasses(g);
         Set<URI> instances = GraphAccessor.getInstances(g);
 
 
@@ -256,7 +254,6 @@ public class GraphActionExecutor {
 //        }
 //
 //    }
-
     /**
      * Vocabulary associated to RDF
      *
@@ -297,8 +294,6 @@ public class GraphActionExecutor {
         }
     }
 
-    
-
     private static void rerooting(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 
@@ -315,10 +310,6 @@ public class GraphActionExecutor {
             rootURI = SLIBVOC.THING_OWL;
             g.addV(rootURI);
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
-
-        } else if (rootURIstring.equals(SGLIBcst.FICTIVE_ROOT_FLAG)) {
-            rootURI = SLIBVOC.THING_OWL;
-            g.addV(rootURI);
         } else {
             rootURI = factory.createURI(rootURIstring);
         }
@@ -358,7 +349,7 @@ public class GraphActionExecutor {
         int invalidInstanceNb = 0;
         int annotNbBase = 0;
         int annotDeleted = 0;
-        
+
         Set<URI> instances = GraphAccessor.getInstances(g);
 
         logger.info("Cleaning RDF.TYPE of " + g.getURI());

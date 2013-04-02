@@ -38,20 +38,14 @@ import org.openrdf.model.URI;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- * Interface defining a Data Factory which must be used to interact with elements
- * such as Graphs, URIs or Mapping.
+ * Interface defining a Factory which must be used to create the URIs or namespace.
  *
  * @author Sebastien Harispe
  *
  */
 public interface URIFactory{
 
-    /**
-     *
-     * @param nm_s
-     */
-    public void createNamespace(String nm_s);
-
+   
     /**
      *
      * @param prefix

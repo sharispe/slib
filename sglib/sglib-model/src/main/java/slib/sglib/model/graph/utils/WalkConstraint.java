@@ -1,12 +1,11 @@
 package slib.sglib.model.graph.utils;
 
-import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 
 /**
- * WalkConstraints interface is used to define methods commonly required to
+ * WalkConstraint interface is used to define methods commonly required to
  * orient a walk according to some conditions. The aim is to provide a way to
  * distinguish edges which can be traversed from a vertex. The conditions can be
  * based on:
@@ -52,11 +51,13 @@ public interface WalkConstraint {
     public Direction getAssociatedDirection(URI uri);
 
     /**
-     * Add to the current constraints the ones defines in the walk constraint passed in parameter. 
+     * Add to the current constraints the ones defines in the walk constraint
+     * passed in parameter.
+     *
      * @param wc the walk constraint
      */
     public void addWalkconstraints(WalkConstraint wc);
-    
+
     /**
      * Add the current Traversal in the mapping of admitted traversal.
      *
@@ -65,8 +66,8 @@ public interface WalkConstraint {
      * (not null).
      */
     public void addAcceptedTraversal(URI pred, Direction dir);
-    
-     /**
+
+    /**
      * Add the current Traversal in the mapping of admitted traversal.
      *
      * @param pred the predicate URI (not null).
@@ -100,5 +101,4 @@ public interface WalkConstraint {
      * @return
      */
     public Set<URI> getAcceptedWalks_DIR_BOTH();
-
 }

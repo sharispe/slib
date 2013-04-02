@@ -37,7 +37,7 @@ package slib.sglib.model.graph.elements;
 import org.openrdf.model.URI;
 
 /**
- * Interface defining an edge defined by a source, a target and an type.
+ * Interface of an edge defined by a source, a target and an type.
  * Otherwise stated, an edge can be viewed as a statement subject, predicate,
  * object considering that all elements are URIs.
  *

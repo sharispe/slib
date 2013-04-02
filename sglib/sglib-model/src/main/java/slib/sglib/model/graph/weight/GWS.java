@@ -38,20 +38,20 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 
 /**
- * Object representing a Graph Weighting Scheme containing : <br/>
+ * Object representing a Graph Weighting Scheme containing :
  *
- * - a default weight which is return each time a non specified weight is
- * queried (e.g. set to 1). <br/><br/>
- *
- * - weights associated to each EdgeType founded in the edges it contains. If no
- * weight is explicitly specified for the edge type default weight will be
- * returned. Note the possibility to check if a weigh is explicitly associated
- * to an edge type.<br/><br/>
- *
- * - weights associated to each edges. if no weight is explicitly specified to
+ * <ul>
+ * <li> a default weight which is return each time a non specified weight is
+ * queried (e.g. set to 1). </li>
+ * <li>weights associated to each type (predicate). If no weight is explicitly
+ * specified for the edge type default weight will be returned. </li>
+ * <li>weights associated to each edges. if no weight is explicitly specified to
  * an edge, edge type weight or default weight is returned depending if
- * corresponding edge type weight is specified. Note the possibility to check if
- * a weigh is explicitly associated to an edge.
+ * corresponding edge type weight is specified.
+ * </li>
+ * </ul>
+ *
+ *
  *
  * @author Sebastien Harispe
  *
@@ -59,73 +59,72 @@ import slib.sglib.model.graph.elements.E;
 public interface GWS {
 
     /**
+     * The default weight associated to an edge
      *
-     * @return
+     * @return the default weight
      */
     double getDefaultWeight();
 
     /**
+     * Set the weight defined by default
      *
-     * @param w
+     * @param w the new default weight
      */
     void setDefaultWeight(double w);
 
     /**
+     * Check if a specific weight is specified for this edge. This method will
+     * return false no specific weight is specified, even if a weight is
+     * specified for the edges with the same URIs as the specified edge.
      *
-     * @param e
-     * @return
+     * @param e the edge we want to check if a weight is specified for.
+     * @return true if a weight is explicitly defined for the edge.
      */
     boolean existsWeight(E e);
 
     /**
+     * Access to the weight of the edge. The value return is the first from
+     * below:
+     * <ul>
+     *  <li>The specific weight associated to the edge</li>
+     *  <li>The specific weight associated to predicate (type) of the edge</li>
+     *  <li>The default weight</li>
+     * </ul>
      *
-     * @param e
-     * @return
+     * @param e the edge
+     * @return the weight associated to the edge
      */
     double getWeight(E e);
 
     /**
+     * Set the weight for an edge
      *
-     * @param e
-     * @param w
-     */
-    void addWeight(E e, double w);
-
-    /**
-     *
-     * @param e
-     * @param w
+     * @param e the edge
+     * @param w the weight
      */
     void setWeight(E e, double w);
 
     /**
+     * Check if a weight is defined for a specific predicate.
      *
-     * @param e
-     * @return
+     * @param predicate
+     * @return true if a default weight exists for this predicate
      */
-    boolean existsWeight(URI e);
+    boolean existsWeight(URI predicate);
 
     /**
+     * Access to the weight defined for a specific predicate.
      *
-     * @param e
-     * @return
+     * @param predicate the predicate
+     * @return the default weight associated to the predicate. Null if no weight
+     * is associated to the predicate.
      */
-    double getWeight(URI e);
+    Double getWeight(URI e);
 
     /**
-     *
-     * @param e
-     * @param w
-     */
-    void addWeight(URI e, double w);
-
-    /**
-     *
-     * Must propagate the modification are propagated to each edge of the
-     * specified predicate.
-     *
-     * @param e
-     * @param w
+     * Set the default weight for the specified URI. 
+     * @param e the default URI
+     * @param w the weight
      */
     void setWeight(URI e, double w);
 }

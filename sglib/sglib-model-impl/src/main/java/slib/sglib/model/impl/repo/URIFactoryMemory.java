@@ -60,11 +60,11 @@ public class URIFactoryMemory implements URIFactory {
 
     MemValueFactory internalUriFactory;
     private static URIFactoryMemory repository;
-    private Set<String> namespaces;
     private Map<String, String> namespacesPrefix;
 
     /**
-     * @return the {@link DataRepository} singleton
+     * Access to the in-memory URI Factory.
+     * @return the singleton
      */
     public static URIFactoryMemory getSingleton() {
         
@@ -74,24 +74,18 @@ public class URIFactoryMemory implements URIFactory {
         return repository;
     }
 
+    /**
+     * Create a {@link URIFactory} which relies on in-memory data structures.
+     */
     private URIFactoryMemory() {
         
         internalUriFactory = new MemValueFactory();
-        namespaces       = new HashSet<String>();
         namespacesPrefix = new HashMap<String, String>();
-    }
-
-    @Override
-    public void createNamespace(String nm_s) {
-        namespaces.add(nm_s);
     }
 
     @Override
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic {
 
-        if (!namespaces.contains(reference)) {
-            createNamespace(reference);
-        }
 
         if (!namespacesPrefix.containsKey(prefix)) {
             namespacesPrefix.put(prefix, reference);
@@ -103,12 +97,7 @@ public class URIFactoryMemory implements URIFactory {
         return false;
     }
 
-    /**
-     * Return the name space associated to the given prefix
-     *
-     * @param ns_prefix
-     * @return the associated name space or null
-     */
+    
     @Override
     public String getNamespace(String ns_prefix) {
         if (ns_prefix == null) {
@@ -121,7 +110,6 @@ public class URIFactoryMemory implements URIFactory {
     @Override
     public void clear() {
         namespacesPrefix.clear();
-        namespaces.clear();
     }
 
     @Override

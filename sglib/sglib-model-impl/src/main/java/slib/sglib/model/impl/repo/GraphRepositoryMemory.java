@@ -42,44 +42,41 @@ import slib.sglib.model.repo.GraphRepository;
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class GraphRepositoryMemory implements GraphRepository {
-    
+
     private static GraphRepositoryMemory repository;
     Map<URI, G> graphs;
-    
+
     public static GraphRepositoryMemory getSingleton() {
-        
+
         if (repository == null) {
             repository = new GraphRepositoryMemory();
         }
         return repository;
     }
-    
+
     private GraphRepositoryMemory() {
         graphs = new HashMap<URI, G>();
     }
-    
+
     @Override
-    public void registerGraph(URI uri, G graph) {
-        graphs.put(uri, graph);
+    public void registerGraph(G graph) {
+        graphs.put(graph.getURI(), graph);
     }
-    
+
     @Override
     public G getGraph(URI uri) {
         return graphs.get(uri);
     }
-    
+
     @Override
     public boolean isGraphRegistred(URI uri) {
         return graphs.containsKey(uri);
     }
-    
+
     @Override
     public void unregisterGraph(URI uri) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
-    @Override
-    public void registerGraph(G graph) {
-        registerGraph(graph.getURI(), graph);
+        if (graphs.containsKey(uri)) {
+            graphs.remove(uri);
+        }
     }
 }
