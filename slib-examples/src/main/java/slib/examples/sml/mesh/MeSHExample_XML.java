@@ -57,6 +57,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -174,6 +175,12 @@ public class MeSHExample_XML {
             // We compute the similarity
             double sim = engine.computePairwiseSim(measureConf, c1, c2);
             System.out.println("Sim " + c1 + "\t" + c2 + "\t" + sim);
+            
+            System.out.println(meshGraph.toString());
+            
+            System.out.println(" "+meshGraph.containsVertex(factory.createURI("http://www.nlm.nih.gov/mesh/D063545")));
+            
+            UtilDebug.exit();
 
             /* 
              * The computation of the first similarity is not very fast because   
