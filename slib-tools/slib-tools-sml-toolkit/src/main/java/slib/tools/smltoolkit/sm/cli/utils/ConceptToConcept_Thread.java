@@ -73,7 +73,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
         this.poolWorker = poolWorker;
         this.queriesBench = queriesBench;
         this.sspM = sspM;
-        this.g = sspM.getG();
+        this.g = sspM.getGraph();
     }
 
     @Override

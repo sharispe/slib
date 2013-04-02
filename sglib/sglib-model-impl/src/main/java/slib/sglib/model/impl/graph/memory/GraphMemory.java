@@ -62,17 +62,17 @@ public class GraphMemory implements G {
 
     /**
      * Create a graph loaded in memory.
+     *
      * @param uri the URI of the graph
      */
     public GraphMemory(URI uri) {
-    
+
         this.uri = uri;
         uris = new HashSet<URI>();
         edges = new HashSet<E>();
         vertexOutEdges = new HashMap<URI, Set<E>>();
         vertexInEdges = new HashMap<URI, Set<E>>();
     }
-
 
     @Override
     public Set<E> getE() {
@@ -130,8 +130,8 @@ public class GraphMemory implements G {
 
     @Override
     public Set<E> getE(URI t, URI v, Direction dir) {
-        
-        if(v == null){
+
+        if (v == null) {
             return getE(t);
         }
 
@@ -220,8 +220,9 @@ public class GraphMemory implements G {
 
     @Override
     public void addEdges(Set<E> edges) {
-        if(edges == null)
+        if (edges == null) {
             return;
+        }
         for (E e : edges) {
             addE(e);
         }
@@ -265,7 +266,7 @@ public class GraphMemory implements G {
 
     @Override
     public void addV(URI v) {
-        if(v == null){
+        if (v == null) {
             throw new IllegalArgumentException("The URI must not be null");
         }
         uris.add(v);
@@ -273,7 +274,7 @@ public class GraphMemory implements G {
 
     @Override
     public void addV(Set<URI> vertices) {
-        if(vertices == null){
+        if (vertices == null) {
             return;
         }
         uris.addAll(vertices);
@@ -281,8 +282,8 @@ public class GraphMemory implements G {
 
     @Override
     public void removeV(URI v) {
-        
-        if(v == null){
+
+        if (v == null) {
             return;
         }
 
@@ -306,7 +307,7 @@ public class GraphMemory implements G {
 
     @Override
     public void removeV(Set<URI> setV) {
-        if(setV == null){
+        if (setV == null) {
             return;
         }
         for (URI v : setV) {
@@ -410,14 +411,20 @@ public class GraphMemory implements G {
     @Override
     public Set<E> getE(URI v, WalkConstraint wc) {
         Set<E> valid = new HashSet<E>();
-        for (E e : getE(v, Direction.OUT)) {
-            if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {
-                valid.add(e);
+        if (wc.acceptOutWalks() && vertexOutEdges.containsKey(v)) {
+            Set<URI> ok = wc.getAcceptedWalks_DIR_OUT();
+            for (E e : vertexOutEdges.get(v)) {
+                if (ok.contains(e.getURI())) {
+                    valid.add(e);
+                }
             }
         }
-        for (E e : getE(v, Direction.IN)) {
-            if (wc.getAcceptedWalks_DIR_IN().contains(e.getURI())) {
-                valid.add(e);
+        if (wc.acceptInWalks() && vertexInEdges.containsKey(v)) {
+            Set<URI> ok = wc.getAcceptedWalks_DIR_IN();
+            for (E e : getE(v, Direction.IN)) {
+                if (ok.contains(e.getURI())) {
+                    valid.add(e);
+                }
             }
         }
         return valid;
@@ -425,15 +432,23 @@ public class GraphMemory implements G {
 
     @Override
     public Set<URI> getV(URI v, WalkConstraint wc) {
+
         Set<URI> valid = new HashSet<URI>();
-        for (E e : getE(v, Direction.OUT)) {
-            if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {
-                valid.add(e.getTarget());
+        if (wc.acceptOutWalks() && vertexOutEdges.containsKey(v)) {
+
+            Set<URI> ok = wc.getAcceptedWalks_DIR_OUT();
+            for (E e : getE(v, Direction.OUT)) {
+                if (ok.contains(e.getURI())) {
+                    valid.add(e.getTarget());
+                }
             }
         }
-        for (E e : getE(v, Direction.IN)) {
-            if (wc.getAcceptedWalks_DIR_IN().contains(e.getURI())) {
-                valid.add(e.getSource());
+        if (wc.acceptInWalks() && vertexInEdges.containsKey(v)) {
+            for (E e : getE(v, Direction.IN)) {
+                Set<URI> ok = wc.getAcceptedWalks_DIR_IN();
+                if (ok.contains(e.getURI())) {
+                    valid.add(e.getSource());
+                }
             }
         }
         return valid;

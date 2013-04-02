@@ -57,4 +57,6 @@ public interface Sim_Pairwise {
      * @throws SLIB_Exception
      */
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception;
+
+    public boolean isSymmetric();
 }

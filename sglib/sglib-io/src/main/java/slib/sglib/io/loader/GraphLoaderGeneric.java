@@ -62,28 +62,31 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * Graph Loader is a class used to facilitate graph loading.
+ *
+ * @author Harispe Sébastien
  */
 public class GraphLoaderGeneric {
 
+    public static Logger logger = LoggerFactory.getLogger(GraphLoaderGeneric.class);
     /**
-     *
+     * The formats currently supported by the generic loader.
      */
     public static GFormat[] supportedFormat = {
         GFormat.OBO, GFormat.GAF2, GFormat.NTRIPLES, GFormat.RDF_XML,
         GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV
     };
-    /**
-     *
-     */
-    public static Logger logger = LoggerFactory.getLogger(GraphLoaderGeneric.class);
 
     /**
+     * Populate a given graph considering a configuration.
      *
-     * @param dataConf
-     * @param g
-     * @return
-     * @throws SLIB_Exception
+     * @param dataConf the object defining the configuration of the data to load
+     * @param g the graph to populate with the data
+     * @return the graph which have been populated. The treatment is performed
+     * in place, i.e. no extra graph is created and the reference to the graph
+     * returned will be the same as the one passed in parameter.
+     *
+     * @throws SLIB_Exception if an error is encountered during loading.
      */
     public static G populate(GDataConf dataConf, G g) throws SLIB_Exception {
 
@@ -97,9 +100,10 @@ public class GraphLoaderGeneric {
     }
 
     /**
+     * Create a graph and register it.
      *
-     * @param uri
-     * @return
+     * @param uri the URI of the graph
+     * @return the created graph.
      */
     public static G createGraph(URI uri) {
 
@@ -111,11 +115,13 @@ public class GraphLoaderGeneric {
     }
 
     /**
-     * Build the graph considering the given consideration. Add the loaded graph
-     * to the {@link DataRepository}
+     * Build the graph considering the given configuration.
      *
-     * @param graphConf
-     * @return
+     * Add the loaded graph to the {@link DataRepository}.
+     *
+     * @param graphConf the graph configuration
+     * @return the graph which as been build form the configuration
+     *
      * @throws SLIB_Exception
      */
     public static G load(GraphConf graphConf) throws SLIB_Exception {
@@ -124,10 +130,20 @@ public class GraphLoaderGeneric {
 
         G g = createGraph(graphConf.getUri());
 
-
         return load(graphConf, g);
     }
 
+    /**
+     * Impact the given graph considering the given configuration. The graph
+     * will be populated by the data and actions will be performed on it if any
+     * exist.
+     *
+     *
+     * @param graphConf the graph configuration
+     * @return the graph which as been build form the configuration
+     *
+     * @throws SLIB_Exception
+     */
     public static G load(GraphConf graphConf, G g) throws SLIB_Exception {
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
@@ -140,8 +156,10 @@ public class GraphLoaderGeneric {
     }
 
     /**
+     * Load the collection of configurations.
      *
-     * @param graphConfs
+     * @param graphConfs the collection of configurations
+     *
      * @throws SLIB_Exception
      */
     public static void load(Collection<GraphConf> graphConfs) throws SLIB_Exception {
@@ -151,6 +169,14 @@ public class GraphLoaderGeneric {
         }
     }
 
+    /**
+     * Retrieve the loader associated to a specific data configuration.
+     *
+     * @param data the data configuration
+     * @return the corresponding Graph loader if any
+     *
+     * @throws SLIB_Ex_Critic
+     */
     private static GraphLoader getLoader(GDataConf data) throws SLIB_Ex_Critic {
 
         if (data.getFormat() == GFormat.OBO) {
@@ -177,9 +203,10 @@ public class GraphLoaderGeneric {
     }
 
     /**
+     * Check if the generic loader support the given format.
      *
-     * @param format
-     * @return
+     * @param format the format
+     * @return true if the format is supported.
      */
     public static boolean supportFormat(String format) {
         for (GFormat f : supportedFormat) {
@@ -191,7 +218,7 @@ public class GraphLoaderGeneric {
     }
 
     /**
-     *
+     * Access to the set of supported format.
      * @return
      */
     public static GFormat[] getSupportedFormat() {

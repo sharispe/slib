@@ -81,25 +81,16 @@ import slib.utils.threads.ThreadManager;
 public class SmCli implements SmlModuleCLI {
 
     Logger logger = LoggerFactory.getLogger(SmCli.class);
-    /**
-     *
-     */
     public Sm_XMLConfLoader conf;
-    /**
-     *
-     */
     public SM_Engine simManager;
     InstancesAccessor iAccessor;
-    /**
-     *
-     */
+
     public boolean SKIP_EMPTY_ANNOTATION = true;
-    /**
-     *
-     */
     public double EMPTY_ANNOTATION_SCORE = 0;
+
     URIFactory factory = URIFactoryMemory.getSingleton();
-    G g;
+    G graph;
+    
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
 
@@ -138,11 +129,11 @@ public class SmCli implements SmlModuleCLI {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");
         }
         
-        g = graphRepo.getGraph(graphURI);
+        graph = graphRepo.getGraph(graphURI);
 
-        logger.info("Graph information:\n" + g.toString());
+        logger.info("Graph information:\n" + graph.toString());
 
-        simManager = new SM_Engine(g);
+        simManager = new SM_Engine(graph);
 
 
         for (ICconf icConf : conf.gConfICs) {
@@ -182,14 +173,14 @@ public class SmCli implements SmlModuleCLI {
         if (requireDAG()) {
             logger.info("checking DAG property");
             ValidatorDAG dagVal = new ValidatorDAG();
-            boolean rootedGraph = dagVal.containsRootedTaxonomicDag(g);
+            boolean rootedGraph = dagVal.containsRootedTaxonomicDag(graph);
 
             if (!rootedGraph) {
                 logger.error("Multiple root detected please specify a root or use root=\"FICTIVE\"");
             }
         }
 
-        iAccessor = new InstanceAccessor_RDF_TYPE(g);
+        iAccessor = new InstanceAccessor_RDF_TYPE(graph);
 
         computeQueries();
 
@@ -522,8 +513,8 @@ public class SmCli implements SmlModuleCLI {
      *
      * @return
      */
-    public G getG() {
-        return g;
+    public G getGraph() {
+        return graph;
     }
 
     /**
@@ -532,11 +523,5 @@ public class SmCli implements SmlModuleCLI {
      */
     public InstancesAccessor getiAccessor() {
         return iAccessor;
-    }
-
-    public static void main(String[] args) throws SLIB_Exception {
-
-        SmCli cli = new SmCli();
-        cli.execute("/home/seb/dev/experiments/conf.xml");
     }
 }

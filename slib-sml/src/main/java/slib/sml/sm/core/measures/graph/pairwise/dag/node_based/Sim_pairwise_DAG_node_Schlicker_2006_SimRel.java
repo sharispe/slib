@@ -42,20 +42,13 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Schlicker, Andreas, et al. "A new measure for functional similarity of gene
+ * products based on Gene Ontology." BMC bioinformatics 7.1 (2006): 302.
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -75,12 +68,14 @@ public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node
     }
 
     /**
+     * Compute the semantic similarity considering the given parameters
      *
-     * @param ic_a
-     * @param ic_b
-     * @param ic_mica
-     * @param p_mica
-     * @return
+     * @param ic_a the IC of the concept A
+     * @param ic_b the IC of the concept B
+     * @param ic_mica the IC of the Most Informative Common Ancestor (MCIA) of A
+     * and B
+     * @param p_mica the probability of occurrence of the MICA
+     * @return the semantic similarity
      * @throws SLIB_Ex_Critic
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) throws SLIB_Ex_Critic {
@@ -90,5 +85,10 @@ public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node
         double simLinVal = simLin.sim(ic_a, ic_b, ic_mica);
 
         return simLinVal * (1. - p_mica);
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

@@ -40,7 +40,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * ﻿1. Jiang J, Conrath D: Semantic Similarity Based on Corpus Statistics and
+ * Jiang J, Conrath D: Semantic Similarity Based on Corpus Statistics and
  * Lexical Taxonomy. In In International Conference Research on Computational
  * Linguistics (ROCLING X). 1997, cmp-lg/970:15.
  *
@@ -49,15 +49,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -68,13 +60,18 @@ public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 implements Sim_DAG_node_ab
     }
 
     /**
-     *
-     * @param ic_a
-     * @param ic_b
-     * @param ic_MICA
-     * @return
+     * Compute the semantic similarity considering the given parameters.
+     * @param ic_a the IC of the vertex A
+     * @param ic_b the IC of the vertex B
+     * @param ic_MICA the IC of the Most Informative Ancestor of the concept A and B
+     * @return the semantic similarity
      */
     public double sim(double ic_a, double ic_b, double ic_MICA) {
         return ic_a + ic_b - 2 * ic_MICA;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

@@ -63,15 +63,6 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -83,14 +74,22 @@ public class Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm implements Sim_DAG_no
     }
 
     /**
-     * @param ic_a
-     * @param ic_b
-     * @param ic_MICA
-     * @return
+     * Compute the semantic similarity considering the given parameters.
+     *
+     * @param ic_a the IC of the vertex A
+     * @param ic_b the IC of the vertex B
+     * @param ic_MICA the IC of the Most Informative Ancestor of the concept A
+     * and B
+     * @return the semantic similarity
      */
     public double sim(double ic_a, double ic_b, double ic_MICA) {
 
         double jc = 1. - (ic_a + ic_b - 2. * ic_MICA) / 2.;
         return jc;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

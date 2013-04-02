@@ -43,23 +43,21 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Random measure for tests
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class Sim_pairwise_Random implements Sim_Pairwise {
 
     Random r = new Random();
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+    @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
         return r.nextDouble();
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return false;
     }
 }

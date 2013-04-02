@@ -32,11 +32,14 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Constants;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_3W_IC;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -45,13 +48,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author seb
  */
-public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_abstract {
-
-    /**
-     *
-     */
-    public static final String beta_param_name = "beta";
-    private double beta = 0.;
+public class Sim_pairwise_DAG_node_Schlicker_3WJaccard_SimRel implements Sim_DAG_node_abstract {
 
     /**
      *
@@ -69,11 +66,6 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
         double ic_b = c.getIC(conf.getICconf(), b);
         double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
 
-
-        if (conf.containsParam(beta_param_name)) {
-            beta = conf.getParamAsDouble(beta_param_name);
-        }
-
         ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
 
         if (confic == null) {
@@ -82,11 +74,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
 
         double p_MICA = c.getP_MICA(confic, a, b);
 
-        if (p_MICA < 0 || p_MICA > 1) {
-            throw new SLIB_Ex_Critic("Probability measure is expected... Given IC " + confic.getId() + " is not suited as it apparently doesn't provide values restricted in [0,1] ");
-        }
-
-        return sim(ic_a, ic_b, ic_MICA, p_MICA, beta);
+        return sim(ic_a, ic_b, ic_MICA, p_MICA);
     }
 
     /**
@@ -95,19 +83,14 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
      * @param ic_b
      * @param ic_mica
      * @param p_mica
-     * @param beta
      * @return
-     * @throws SLIB_Ex_Critic
      */
-    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
+    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) {
 
-        double den = ((ic_a - ic_mica) + (ic_b - ic_mica) + (2. - beta) * ic_mica);
-        double j = 0;
+        Sim_pairwise_DAG_node_Jaccard_3W_IC simJaccard = new Sim_pairwise_DAG_node_Jaccard_3W_IC();
 
-        if (den != 0) {
-            j = (beta * ic_mica) / den;
-        }
+        double sim = simJaccard.sim(ic_a, ic_b, ic_mica);
 
-        return j * (1. - p_mica);
+        return sim * (1. - p_mica);
     }
 }

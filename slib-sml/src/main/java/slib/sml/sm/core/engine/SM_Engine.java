@@ -35,6 +35,7 @@
 package slib.sml.sm.core.engine;
 
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -196,17 +197,29 @@ public class SM_Engine {
 
         lcaFinder = new LCAFinderImpl();
 
-        logger.info("Infering ancestors");
+        logger.info("Inferring ancestors");
         computeAllclassesAncestors();
-        logger.info("Infering descendants");
+        logger.info("Inferring descendants");
         computeAllclassesDescendants();
+        logger.info("Inferring Conceptual Leaves");
         computeLeaves();
+        logger.info("Semantic measures Engine initialized");
     }
 
+    /**
+     * Compute the inclusive ancestors for all classes.
+     *
+     * @throws SLIB_Ex_Critic
+     */
     private void computeAllclassesAncestors() throws SLIB_Ex_Critic {
         cache.ancestorsInc = ancGetter.getAllAncestorsInc();
     }
 
+    /**
+     * Compute the inclusive descendants for all classes.
+     *
+     * @throws SLIB_Ex_Critic
+     */
     private void computeAllclassesDescendants() throws SLIB_Ex_Critic {
         cache.descendantsInc = descGetter.getAllDescendantsInc();
     }
@@ -236,7 +249,7 @@ public class SM_Engine {
     }
 
     /**
-     * Compute the inclusive ancestors of a class.
+     * Give access to a view of the inclusive ancestors of a class.
      *
      * The given class will therefore be include in the results. The result is
      * cached by the engine for fast access.
@@ -249,11 +262,11 @@ public class SM_Engine {
     public Set<URI> getAncestorsInc(URI v) {
 
         throwErrorIfNotClass(v);
-        return cache.ancestorsInc.get(v);
+        return Collections.unmodifiableSet(cache.ancestorsInc.get(v));
     }
 
     /**
-     * Compute the inclusive descendants of a class.
+     * Give access to a view of the inclusive descendants of a class.
      *
      * The given class will therefore be include in the results. The result is
      * cached by the engine for fast access.
@@ -265,7 +278,7 @@ public class SM_Engine {
      */
     public synchronized Set<URI> getDescendantsInc(URI v) {
         throwErrorIfNotClass(v);
-        return cache.descendantsInc.get(v);
+        return Collections.unmodifiableSet(cache.descendantsInc.get(v));
     }
 
     /**
@@ -292,8 +305,8 @@ public class SM_Engine {
     }
 
     /**
-     * Compute the maximal depth of all classes. The result is stored by the
-     * engine.
+     * Give access to a view of the maximal depth of all classes. The result is
+     * stored by the engine.
      *
      * @return a resultStack containing the maximal depths for all classes
      * @throws SLIB_Ex_Critic
@@ -305,12 +318,12 @@ public class SM_Engine {
             cache.maxDepths = dephtAnalyser.getVMaxDepths();
         }
 
-        return cache.maxDepths;
+        return Collections.unmodifiableMap(cache.maxDepths);
     }
 
     /**
-     * Compute the minimal depth of all classes. The result is stored by the
-     * engine.
+     * Give access to a view of the minimal depth of all classes. The result is
+     * stored by the engine.
      *
      * @return a resultStack containing the maximal depths for all classes
      * @throws SLIB_Ex_Critic
@@ -321,7 +334,7 @@ public class SM_Engine {
             DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, descGetter.getWalkConstraint());
             cache.minDepths = dephtAnalyser.getVMinDepths();
         }
-        return cache.minDepths;
+        return Collections.unmodifiableMap(cache.minDepths);
     }
 
     /**
@@ -441,11 +454,8 @@ public class SM_Engine {
      */
     public Map<URI, Integer> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-
         Map<URI, Integer> allNbDescendants = new HashMap<URI, Integer>();
-
         for (URI c : classes) {
-
             allNbDescendants.put(c, getAllDescendantsInc().get(c).size());
         }
         return allNbDescendants;
@@ -453,27 +463,27 @@ public class SM_Engine {
 
     /**
      *
-     * Access to the inclusive descendants for all classes. This is not a copy.
+     * Access to a view of the inclusive descendants for all classes.
      *
      * @return the inclusive descendants for all classes
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Set<URI>> getAllDescendantsInc() throws SLIB_Ex_Critic {
-        return cache.descendantsInc;
+        return Collections.unmodifiableMap(cache.descendantsInc);
     }
 
     /**
-     * Access to the inclusive ancestors for all classes. This is not a copy.
+     * Access to the inclusive ancestors for all classes.
      *
      * @return the inclusive ancestors for all classes
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Set<URI>> getAllAncestorsInc() throws SLIB_Ex_Critic {
-        return cache.ancestorsInc;
+        return Collections.unmodifiableMap(cache.ancestorsInc);
     }
 
     /**
-     * Access to the information content of all classes
+     * Access to a view of the information content of all classes.
      *
      * @param icConf the information content considered.
      * @return the information content of all classes
@@ -485,7 +495,7 @@ public class SM_Engine {
         if (!cache.metrics_results.containsKey(icConf)) {
             cache.metrics_results.put(icConf, computeIC(icConf));
         }
-        return cache.metrics_results.get(icConf);
+        return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
     }
 
     /**
@@ -501,7 +511,7 @@ public class SM_Engine {
         if (icConf == null) {
             throw new SLIB_Ex_Critic("IC configuration cannot be set to null... " + icConf);
         } else if (cache.metrics_results.get(icConf) != null) {
-            return cache.metrics_results.get(icConf);
+            return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
         }
 
         logger.info("computing IC " + icConf.getId());
@@ -550,7 +560,7 @@ public class SM_Engine {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         logger.info("ic " + icConf.id + " computed");
-        return cache.metrics_results.get(icConf);
+        return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
     }
 
     /**
@@ -566,16 +576,16 @@ public class SM_Engine {
         if (cache.reachableLeaves.isEmpty()) {
             cache.reachableLeaves = descGetter.getTerminalVertices();
         }
-        return cache.reachableLeaves;
+        return Collections.unmodifiableMap(cache.reachableLeaves);
     }
 
     /**
-     * Access to the set of leaves of the underlying taxonomic graph
+     * Access to a view of the set of leaves of the underlying taxonomic graph.
      *
      * @return the set of classes which are leaves
      */
     public Set<URI> getTaxonomicLeaves() {
-        return classesLeaves;
+        return Collections.unmodifiableSet(classesLeaves);
     }
 
     /**
@@ -603,7 +613,7 @@ public class SM_Engine {
 
         logger.info("Computing Nb Reachable Leaves : end");
 
-        return cache.allNbReachableLeaves;
+        return Collections.unmodifiableMap(cache.allNbReachableLeaves);
     }
 
     /**
@@ -624,17 +634,23 @@ public class SM_Engine {
     }
 
     /**
-     * NOT_CACHED by default
+     * Compute the pairwise semantic measures score considering the two vertices
+     * and the semantic measure configuration.
      *
-     * @param pairwiseConf
-     * @param a
-     * @param b
-     * @return
+     * @param pairwiseConf the pairwise semantic measure configuration
+     * @param a the first vertex/class/concept
+     * @param b the second vertex/class/concept
+     * @return the pairwise semantic measure score
+     *
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
+     *
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * classes defined in the graph
      */
     public double computePairwiseSim(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
+
+        throwErrorIfNotClass(a);
+        throwErrorIfNotClass(b);
 
         double sim = -Double.MAX_VALUE;
 
@@ -704,21 +720,26 @@ public class SM_Engine {
     }
 
     /**
-     * NOT_CACHED
+     * Compute the direct group wise semantic measure score considering the two
+     * set of vertices and the semantic measure configuration.
      *
-     * @param confGroupwise
-     * @param setA
-     * @param setB
+     * @param confGroupwise the direct groupwise semantic measure configuration
+     * @param setA the first set of vertices/classes/concepts
+     * @param setB the first set of vertices/classes/concepts
+     * @return the group wise semantic measure score
      *
-     * @return
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
+     *
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * classes defined in the graph
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
+
+        throwErrorIfNotClass(setA);
+        throwErrorIfNotClass(setB);
 
         double sim = -Double.MAX_VALUE;
 
@@ -751,22 +772,28 @@ public class SM_Engine {
     }
 
     /**
-     * NOT_CACHED TODO add measure caching
+     * Compute the indirect group wise semantic measure score considering the
+     * two set of vertices and the semantic measure configuration.
      *
-     * @param confGroupwise
-     * @param confPairwise
-     * @param setB
-     * @param setA
-     * @return
+     * @param confGroupwise the pairwise semantic measure configuration
+     * @param confPairwise the indirect aggregation strategy configuration
+     * @param setA the first set of vertices/classes/concepts
+     * @param setB the first set of vertices/classes/concepts
+     * @return the group wise semantic measure score
+     *
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
+     *
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * classes defined in the graph
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,
             SMconf confPairwise,
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
+
+        throwErrorIfNotClass(setA);
+        throwErrorIfNotClass(setB);
 
         double sim = -Double.MAX_VALUE;
 
@@ -812,7 +839,7 @@ public class SM_Engine {
             cache.nbPathLeadingToAllVertices = descGetter.computeNbPathLeadingToAllVertices();
         }
 
-        return cache.nbPathLeadingToAllVertices;
+        return Collections.unmodifiableMap(cache.nbPathLeadingToAllVertices);
     }
 
     /**
@@ -869,7 +896,7 @@ public class SM_Engine {
         }
         cache.nbOccurrencePropagatted = rStack;
 
-        return cache.nbOccurrencePropagatted;
+        return Collections.unmodifiableMap(cache.nbOccurrencePropagatted);
     }
 
     /**
@@ -893,16 +920,19 @@ public class SM_Engine {
             cache.nbOccurrencePropagatted = nbOccurrencesPropagated;
         }
 
-        return cache.nbOccurrencePropagatted;
+        return Collections.unmodifiableMap(cache.nbOccurrencePropagatted);
     }
 
     /**
-     * Manage Symmetry
+     * Compute the matrix of similarity for two sets of vertex/concepts/classes.
+     * In other words, the matrix will contain all the semantic scores which can
+     * be computed for every
      *
-     * @param setA
-     * @param setB
-     * @param pairwiseConf
-     * @return
+     * @param setA the first set of vertices/classes/concepts
+     * @param setB the second set of vertices/classes/concepts
+     * @param pairwiseConf the pairwise semantic measure configuration which
+     * must be used to compute the score of a pair of vertex
+     * @return the matrix filled with the scores.
      * @throws SLIB_Ex_Critic
      * @throws IllegalAccessException if the given URI cannot be associated to a
      * class
@@ -912,28 +942,76 @@ public class SM_Engine {
             Set<URI> setB,
             SMconf pairwiseConf) throws SLIB_Ex_Critic {
 
+        throwErrorIfNotClass(setA);
+        throwErrorIfNotClass(setB);
 
         MatrixDouble<URI, URI> m = new MatrixDouble<URI, URI>(setA, setB);
 
-        for (URI a : setA) {
-            for (URI b : setB) {
-                m.setValue(a, b, computePairwiseSim(pairwiseConf, a, b));
+        Sim_Pairwise pMeasure;
+
+
+
+        if (pairwiseMeasures.containsKey(pairwiseConf)) {
+            pMeasure = pairwiseMeasures.get(pairwiseConf);
+        } else {
+
+            try {
+
+                Class<?> cl;
+                cl = Class.forName(pairwiseConf.className);
+                Constructor<?> co = cl.getConstructor();
+
+
+                pMeasure = (Sim_Pairwise) co.newInstance();
+                pairwiseMeasures.put(pairwiseConf, pMeasure);
+            } catch (Exception e) {
+                throw new SLIB_Ex_Critic(e.getMessage());
+            }
+        }
+
+        if (pMeasure.isSymmetric()) {
+            for (URI a : setA) {
+                for (URI b : setB) {
+                    double sim = computePairwiseSim(pairwiseConf, a, b);
+                    m.setValue(a, b, sim);
+                    m.setValue(b, a, sim);
+                }
+            }
+        } else {
+            List<URI> listA = new ArrayList<URI>(setA);
+            List<URI> listB = new ArrayList<URI>(setB);
+
+            for (int i = 0; i < listA.size(); i++) {
+                for (int j = 0; j < listB.size(); j++) {
+
+                    double sim = computePairwiseSim(pairwiseConf, listA.get(i), listB.get(j));
+                    m.setValue(listA.get(i), listB.get(i), sim);
+                }
             }
         }
         return m;
     }
 
     /**
+     * Check if the engine is configured to store the results of the pairwise
+     * semantic measure computation.
      *
-     * @return
+     * @return true if the engine store the results.
      */
     public boolean isCachePairwiseResults() {
         return cachePairwiseResults;
     }
 
     /**
+     * Set the configuration of the engine regarding pairwise semantic measure
+     * score caching.
+     * <b>Important</b>:<br/>
+     * Storing the results can be very useful in specific cases. However,
+     * storing the results can also lead to high memory consumption and
+     * therefore slow the process or crash the process.
      *
-     * @param cachePairwiseResults
+     * @param cachePairwiseResults set to true if the engine must stores the
+     * results.
      */
     public void setCachePairwiseResults(boolean cachePairwiseResults) {
         logger.info("Pairwise results caching set to " + cachePairwiseResults);

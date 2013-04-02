@@ -32,28 +32,28 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
 import java.util.Set;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * ﻿1. Lin D: An Information-Theoretic Definition of Similarity. In 15th
- * International Conference of Machine Learning. Madison,WI: 1998:296-304.
- *
- * @author Sebastien Harispe
- *
- * TODO reprendre le papier ... Lin a été définit en terme de probabilité et non
- * en terme d'IC Si l'on considère les IC il est possible d'avoir des valeurs
- * supérieures à 1.
- *
+ * @author seb
  */
-public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
+
+    /**
+     *
+     */
+    public static final String beta_param_name = "beta";
+    private double beta = 0.;
 
     /**
      *
@@ -64,13 +64,14 @@ public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstra
      * @return
      * @throws SLIB_Exception
      */
+    @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
 
         Set<URI> disjointAncs = c.getLCAs(a, b);
-        double sumIC = 0;
+        double sumIC = 0.;
 
         for (URI v : disjointAncs) {
             sumIC += c.getIC(conf.getICconf(), v);
@@ -78,7 +79,13 @@ public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstra
 
         double sim_grasm = sumIC / disjointAncs.size();
 
-        return sim(ic_a, ic_b, sim_grasm);
+
+        if (conf.containsParam(beta_param_name)) {
+            beta = conf.getParamAsDouble(beta_param_name);
+        }
+
+
+        return sim(ic_a, ic_b, sim_grasm, beta);
     }
 
     /**
@@ -86,17 +93,19 @@ public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstra
      * @param ic_a
      * @param ic_b
      * @param ic_mica
+     * @param beta
      * @return
+     * @throws SLIB_Ex_Critic
      */
-    public double sim(double ic_a, double ic_b, double ic_mica) {
+    public double sim(double ic_a, double ic_b, double ic_mica, double beta) throws SLIB_Ex_Critic {
 
+        double den = ((ic_a) + (ic_b) + (beta - 2.) * ic_mica);
+        double j = 0.;
 
-        double lin = 0;
-
-        if (ic_mica != 0) {
-
-            lin = (2 * ic_mica) / (ic_a + ic_b);
+        if (den != 0) {
+            j = ((beta * ic_mica) / den);
         }
-        return lin;
+
+        return j;
     }
 }

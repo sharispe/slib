@@ -1,4 +1,5 @@
 package slib.sglib.io.loader.bio.mesh;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -10,42 +11,40 @@ import org.xml.sax.helpers.DefaultHandler;
 public class MeshXMLHandler extends DefaultHandler {
 
     GraphLoader_MESH_XML loader;
-    /**
-     *
-     */
-    public  MeshConcept    concept;
+    public MeshConcept concept;
     boolean descriptorName = false;
-    boolean descriptorUI   = false;
-    boolean treeNumber     = false;
-    
+    boolean descriptorUI = false;
+    boolean treeNumber = false;
+    final String DESCRIPTOR_RECORD = "DescriptorRecord";
+    final String DESCRIPTOR_URI = "DescriptorUI";
+    final String DESCRIPTOR_NAME = "DescriptorName";
+    final String TREE_NUMBER = "TreeNumber";
+
     /**
+     * Create a XML handler for MeSH.
      *
-     * @param loader
+     * @param loader the loader associated to the handler
      */
-    public MeshXMLHandler(GraphLoader_MESH_XML loader){
+    public MeshXMLHandler(GraphLoader_MESH_XML loader) {
         this.loader = loader;
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-        if (qName.equalsIgnoreCase("DescriptorRecord")) {// start creation of a concept
-            
-            if(concept != null){
-                loader.addConcept(concept);
-            }
+        if (qName.equals(DESCRIPTOR_RECORD)) {// start creation of a concept
             concept = new MeshConcept();
         }
 
-        if (qName.equalsIgnoreCase("DescriptorUI") && concept.descriptorUI == null) { 
+        if (qName.equals(DESCRIPTOR_URI) && concept.descriptorUI == null) {
             descriptorUI = true;
         }
 
-        if (qName.equalsIgnoreCase("descriptorName") && concept.descriptorName == null) { // define descriptor name
+        if (qName.equals(DESCRIPTOR_NAME) && concept.descriptorName == null) { // define descriptor name
             descriptorName = true;
         }
 
-        if (qName.equalsIgnoreCase("TreeNumber")) {// define tree number
+        if (qName.equals(TREE_NUMBER)) {// define tree number
             treeNumber = true;
         }
     }
@@ -61,6 +60,10 @@ public class MeshXMLHandler extends DefaultHandler {
         } else if (treeNumber) {
             treeNumber = false;
         }
+
+        if (qName.equals(DESCRIPTOR_RECORD)) {
+            loader.addConcept(concept);
+        }
     }
 
     @Override
@@ -68,11 +71,9 @@ public class MeshXMLHandler extends DefaultHandler {
 
         if (descriptorUI) {
             concept.descriptorUI = new String(ch, start, length);
-        }
-        else if (descriptorName) {
+        } else if (descriptorName) {
             concept.descriptorName = new String(ch, start, length);
-        }
-        else if (treeNumber) {
+        } else if (treeNumber) {
             concept.addTreeNumber(new String(ch, start, length));
         }
     }

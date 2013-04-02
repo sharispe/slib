@@ -82,7 +82,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
         this.queriesBench = queriesBench;
         this.sspM = sspM;
         this.nbMeasures = nbMeasures;
-        this.g = sspM.getG();
+        this.g = sspM.getGraph();
         this.iAccessor = sspM.getiAccessor();
     }
 

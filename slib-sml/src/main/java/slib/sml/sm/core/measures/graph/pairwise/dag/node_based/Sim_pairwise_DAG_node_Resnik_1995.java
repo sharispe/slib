@@ -50,27 +50,14 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Resnik_1995 implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
         return c.getIC_MICA(conf.getICconf(), a, b);
     }
 
-    /**
-     *
-     * @param ic_mica
-     * @return
-     */
-    public double sim(double ic_mica) {
-
-        return ic_mica;
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

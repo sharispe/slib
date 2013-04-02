@@ -159,6 +159,16 @@ public class WalkConstraintGeneric implements WalkConstraint {
     }
 
     @Override
+    public boolean acceptOutWalks() {
+        return !acceptedWalksOUT.isEmpty();
+    }
+
+    @Override
+    public boolean acceptInWalks() {
+        return !acceptedWalksIN.isEmpty();
+    }
+
+    @Override
     public String toString() {
 
         String out = "Walconstraint\n"

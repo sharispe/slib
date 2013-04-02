@@ -43,6 +43,7 @@ import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMutils;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -76,7 +77,12 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
 
         Map<URI, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
 
-        double pcMin = SMutils.getMinStrictPositiveDouble(rtemp);
+        Double pcMin = SMutils.getMinStrictPositiveDouble(rtemp);
+        if(pcMin == null){
+            throw new SLIB_Ex_Critic("Minimal probability is equal to 0 "+this.getClass().getName()+"\t cannot be computed");
+        }
+        
+        
 
         double curIc, curIc_norm;
         double logPcMin = MathSML.log(pcMin, getLogBase());
@@ -86,6 +92,8 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
         for (URI v : nbOccurences.keySet()) {
 
             double pc = rtemp.get(v);
+            
+            
 
             curIc = MathSML.log(pc, getLogBase());
             curIc_norm = curIc / logPcMin;

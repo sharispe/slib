@@ -81,7 +81,7 @@ public interface WalkConstraint {
      * target to source, i.e. in the opposite direction. Return the set of URI
      * corresponding to the valid predicates
      *
-     * @return
+     * @return the set of URIs which are accepted considering the direction IN
      */
     public Set<URI> getAcceptedWalks_DIR_IN();
 
@@ -89,7 +89,7 @@ public interface WalkConstraint {
      * Access to a view of the set of predicates which can be traversed from
      * source to target i.e. in the original direction.
      *
-     * @return
+     * @return the set of URIs which are accepted considering the direction OUT
      */
     public Set<URI> getAcceptedWalks_DIR_OUT();
 
@@ -98,7 +98,19 @@ public interface WalkConstraint {
      * {@link #getAcceptedWalks_DIR_OUT()}. Return the set of URIs corresponding
      * to the valid predicates
      *
-     * @return
+     * @return the set of URIs which are accepted considering the directions IN and OUT
      */
     public Set<URI> getAcceptedWalks_DIR_BOTH();
+    
+    /**
+     * Check if the walk give access to OUT edges
+     * @return true if the constraints accept walks to OUT edges
+     */
+    public boolean acceptOutWalks();
+    
+    /**
+     * Check if the walk give access to IN edges
+     * @return true if the constraints accept walks to IN edges
+     */
+    public boolean acceptInWalks();
 }

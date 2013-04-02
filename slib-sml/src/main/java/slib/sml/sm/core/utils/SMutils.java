@@ -86,20 +86,26 @@ public class SMutils {
                 + "Please report the bug to the developpers\n");
     }
 
+    /**
+     * Return the minimal positive value amon the values of the map (0 excluded)
+     *
+     * @param <X> the type of key
+     * @param m the map
+     * @return the minimal positive value among the key, null if no positive
+     * values.
+     */
     public static <X> Double getMinStrictPositiveDouble(Map<X, Double> m) {
-        double max = 0;
+        Double min = null;
 
         for (Map.Entry<X, Double> e : m.entrySet()) {
-            if (e.getValue() > max) {
-                max = e.getValue();
+            if (e.getValue() != 0 && (min == null || e.getValue() < min)) {
+                min = e.getValue();
             }
         }
-        if (max != 0) {
-            return max;
+        if (min != 0) {
+            return min;
         } else {
             return null;
         }
     }
-    
-    
 }

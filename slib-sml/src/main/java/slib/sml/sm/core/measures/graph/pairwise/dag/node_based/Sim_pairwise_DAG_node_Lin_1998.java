@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * ﻿1. Lin D: An Information-Theoretic Definition of Similarity. In 15th
+ * Lin D: An Information-Theoretic Definition of Similarity. In 15th
  * International Conference of Machine Learning. Madison,WI: 1998:296-304.
  *
  * @author Sebastien Harispe
@@ -64,11 +64,13 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     }
 
     /**
+     * Compute the similarity considering the given Information Content.
      *
-     * @param ic_a
-     * @param ic_b
-     * @param ic_mica
-     * @return
+     * @param ic_a the IC of the concept A
+     * @param ic_b the IC of the concept B
+     * @param ic_mica the IC of the Most Informative Common Ancestors of A and B
+     * @return the semantic similarity
+     *
      * @throws SLIB_Ex_Critic
      */
     public static double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
@@ -86,10 +88,6 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
         if (den != 0) {
             lin = (2. * ic_mica) / den;
         }
-//        System.out.println("\t\ta = "+ic_a);
-//        System.out.println("\t\tb = "+ic_b);
-//        System.out.println("\t\tmica = "+ic_mica);
-//        System.out.println("\t\tsim = "+lin);
         return lin;
     }
 
@@ -99,5 +97,10 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
      */
     public void setPreventIncoherency(boolean preventIncoherency) {
         Sim_pairwise_DAG_node_Lin_1998.preventIncoherency = preventIncoherency;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

@@ -32,14 +32,16 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
 import java.util.Set;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Warning;
 
 /**
  * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a
@@ -50,7 +52,7 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_node_abstract {
 
     /**
      *
@@ -64,23 +66,27 @@ public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abs
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        Set<URI> disjointAncs = c.getLCAs(a, b);
-        double sumIC = 0;
+        double sim = 0;
+        Set<URI> dcas = c.getLCAs(a, b);
 
-        for (URI v : disjointAncs) {
-            sumIC += c.getIC(conf.getICconf(), v);
+        if (dcas.isEmpty()) {
+            throw new SLIB_Ex_Warning("No disjoint ancestors detected for " + a + " " + b + ", similarity set to 0");
         }
 
-        return sumIC / disjointAncs.size();
-    }
+        URI mica = null;
+        double mica_ic = -Double.MAX_VALUE;
 
-    /**
-     *
-     * @param ic_mica
-     * @return
-     */
-    public double sim(double ic_mica) {
+        for (URI dca : dcas) {
 
-        return ic_mica;
+            if (c.getIC(conf.getICconf(), dca) > mica_ic) {
+                mica_ic = c.getIC(conf.getICconf(), dca);
+                mica = dca;
+            }
+        }
+
+        for (URI desc : c.getDescendantsInc(mica)) {
+            sim += c.getIC(conf.getICconf(), desc);
+        }
+        return sim;
     }
 }

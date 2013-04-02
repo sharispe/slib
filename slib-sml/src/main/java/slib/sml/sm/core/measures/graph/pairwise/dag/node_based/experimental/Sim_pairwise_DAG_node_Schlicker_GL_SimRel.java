@@ -32,26 +32,28 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
-import java.util.Set;
 import org.openrdf.model.URI;
-
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Constants;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.ex.SLIB_Ex_Warning;
 
 /**
- * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a
- * Taxonomy. In Proceedings of the 14th International Joint Conference on
- * Artificial Intelligence IJCAI. 1995, 1:448-453.
  *
- *
- * @author Sebastien Harispe
- *
+ * @author seb
  */
-public class Sim_pairwise_DAG_node_Resnik_1995_Ancestors implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_abstract {
+
+    /**
+     *
+     */
+    public static final String beta_param_name = "beta";
+    private double beta = 0.;
 
     /**
      *
@@ -65,27 +67,49 @@ public class Sim_pairwise_DAG_node_Resnik_1995_Ancestors implements Sim_DAG_node
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        double sim = 0;
-        Set<URI> dcas = c.getLCAs(a, b);
+        double ic_a = c.getIC(conf.getICconf(), a);
+        double ic_b = c.getIC(conf.getICconf(), b);
+        double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
 
-        if (dcas.isEmpty()) {
-            throw new SLIB_Ex_Warning("No disjoint ancestors detected for " + a + " " + b + ", similarity set to 0");
+
+        if (conf.containsParam(beta_param_name)) {
+            beta = conf.getParamAsDouble(beta_param_name);
         }
 
-        URI mica = null;
-        double mica_ic = -Double.MAX_VALUE;
+        ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
 
-        for (URI dca : dcas) {
-
-            if (c.getIC(conf.getICconf(), dca) > mica_ic) {
-                mica_ic = c.getIC(conf.getICconf(), dca);
-                mica = dca;
-            }
+        if (confic == null) {
+            throw new SLIB_Ex_Critic("Measure " + this.getClass().getSimpleName() + " requires a parameter: " + Sim_pairwise_DAG_node_Constants.IC_PROB);
         }
 
-        for (URI anc : c.getAncestorsInc(mica)) {
-            sim += c.getIC(conf.getICconf(), anc);
+        double p_MICA = c.getP_MICA(confic, a, b);
+
+        if (p_MICA < 0 || p_MICA > 1) {
+            throw new SLIB_Ex_Critic("Probability measure is expected... Given IC " + confic.getId() + " is not suited as it apparently doesn't provide values restricted in [0,1] ");
         }
-        return sim;
+
+        return sim(ic_a, ic_b, ic_MICA, p_MICA, beta);
+    }
+
+    /**
+     *
+     * @param ic_a
+     * @param ic_b
+     * @param ic_mica
+     * @param p_mica
+     * @param beta
+     * @return
+     * @throws SLIB_Ex_Critic
+     */
+    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
+
+        double den = ((ic_a - ic_mica) + (ic_b - ic_mica) + (2. - beta) * ic_mica);
+        double j = 0;
+
+        if (den != 0) {
+            j = (beta * ic_mica) / den;
+        }
+
+        return j * (1. - p_mica);
     }
 }

@@ -32,12 +32,14 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
-import java.util.Set;
 import org.openrdf.model.URI;
-
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Constants;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -46,13 +48,18 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author seb
  */
-public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_node_abstract {
 
     /**
      *
      */
+    public static final String alpha_param_name = "alpha";
+    /**
+     *
+     */
     public static final String beta_param_name = "beta";
-    private double beta = 0.;
+    private double alpha = 0.5;
+    private double beta = 0.5;
 
     /**
      *
@@ -68,23 +75,30 @@ public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
 
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
+        double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
 
-        Set<URI> disjointAncs = c.getLCAs(a, b);
-        double sumIC = 0.;
-
-        for (URI v : disjointAncs) {
-            sumIC += c.getIC(conf.getICconf(), v);
+        if (conf.containsParam(alpha_param_name)) {
+            alpha = conf.getParamAsDouble(alpha_param_name);
         }
-
-        double sim_grasm = sumIC / disjointAncs.size();
-
 
         if (conf.containsParam(beta_param_name)) {
             beta = conf.getParamAsDouble(beta_param_name);
         }
 
 
-        return sim(ic_a, ic_b, sim_grasm, beta);
+        ICconf confic = (ICconf) conf.getParam(Sim_pairwise_DAG_node_Constants.IC_PROB);
+
+        if (confic == null) {
+            throw new SLIB_Ex_Critic("Measure " + this.getClass().getSimpleName() + " requires a parameter: " + Sim_pairwise_DAG_node_Constants.IC_PROB);
+        }
+
+        double p_MICA = c.getP_MICA(confic, a, b);
+
+        if (p_MICA < 0 || p_MICA > 1) {
+            throw new SLIB_Ex_Critic("Probability measure is expected... Given IC " + confic.getId() + " is not suited as it apparently doesn't provide values restricted in [0,1] ");
+        }
+
+        return sim(ic_a, ic_b, ic_MICA, p_MICA, alpha, beta);
     }
 
     /**
@@ -92,19 +106,18 @@ public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
      * @param ic_a
      * @param ic_b
      * @param ic_mica
+     * @param p_mica
+     * @param alpha
      * @param beta
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public double sim(double ic_a, double ic_b, double ic_mica, double beta) throws SLIB_Ex_Critic {
+    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {
 
-        double den = ((ic_a) + (ic_b) + (beta - 2.) * ic_mica);
-        double j = 0.;
+        Sim_pairwise_DAG_node_Tversky_IC m = new Sim_pairwise_DAG_node_Tversky_IC(alpha, beta);
 
-        if (den != 0) {
-            j = ((beta * ic_mica) / den);
-        }
+        double sim = m.sim(ic_a, ic_b, ic_mica);
 
-        return j;
+        return sim * (1. - p_mica);
     }
 }

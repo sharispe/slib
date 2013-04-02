@@ -32,12 +32,13 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
 import java.util.Set;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.ex.SLIB_Ex_Warning;
@@ -51,7 +52,7 @@ import slib.utils.ex.SLIB_Ex_Warning;
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Resnik_1995_Ancestors implements Sim_DAG_node_abstract {
 
     /**
      *
@@ -83,8 +84,8 @@ public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_no
             }
         }
 
-        for (URI desc : c.getDescendantsInc(mica)) {
-            sim += c.getIC(conf.getICconf(), desc);
+        for (URI anc : c.getAncestorsInc(mica)) {
+            sim += c.getIC(conf.getICconf(), anc);
         }
         return sim;
     }

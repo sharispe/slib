@@ -32,26 +32,26 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental;
 
+import java.util.Set;
 import org.openrdf.model.URI;
+
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Implementation of the Universal similarity measure i.e. Braun-Blanquet
- * expression
- *
- * Gaston K. Mazandu and Nicola J. Mulder, “A Topology-Based Metric for
- * Measuring Term Similarity in the Gene Ontology,” Advances in Bioinformatics,
- * vol. 2012, Article ID 975783, 17 pages, 2012. doi:10.1155/2012/975783
+ * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a
+ * Taxonomy. In Proceedings of the 14th International Joint Conference on
+ * Artificial Intelligence IJCAI. 1995, 1:448-453.
  *
  *
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abstract {
 
     /**
      *
@@ -65,11 +65,23 @@ public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
+        Set<URI> disjointAncs = c.getLCAs(a, b);
+        double sumIC = 0;
 
-        double ic_mica = c.getIC_MICA(conf.getICconf(), a, b);
-        double ic_a = c.getIC(conf.getICconf(), a);
-        double ic_b = c.getIC(conf.getICconf(), b);
+        for (URI v : disjointAncs) {
+            sumIC += c.getIC(conf.getICconf(), v);
+        }
 
-        return ic_mica / Math.max(ic_a, ic_b);
+        return sumIC / disjointAncs.size();
+    }
+
+    /**
+     *
+     * @param ic_mica
+     * @return
+     */
+    public double sim(double ic_mica) {
+
+        return ic_mica;
     }
 }
