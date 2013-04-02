@@ -41,15 +41,20 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.algo.graph.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.utils.impl.SetUtils;
 
 /**
- * Class used to perform traversal on a graph using Breadth First Search.
- * Algorithm start from a set of vertices and can be tuned to only consider particular type of both
- * vertices and relationships. 
+ * Class used to perform traversal on a graph using Breadth First Search (BFS).
+ * Algorithm start from a set of vertices and can be tuned to only consider
+ * particular types of relationships.
  *
- * <a href="http://en.wikipedia.org/wiki/Breadth-first_search">more about</a>
+ * <b>Important: </b>The graph is not expected to be modified during the
+ * traversal. Traversal is made on the fly i.e. iteratively next calls to the
+ * next methods.
+ *
+ * <a href="http://en.wikipedia.org/wiki/Breadth-first_search">more about
+ * BFS</a>
  *
  * @author Sebastien Harispe
  *
@@ -57,23 +62,26 @@ import slib.utils.impl.SetUtils;
 public class BFS implements GraphTraversal {
 
     G g;
-    private WalkConstraints wc;
+    private WalkConstraint wc;
     URI current;
     List<URI> queue;
     Set<URI> visited;
 
     /**
-     * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
-     * The first elements of the iteration will be the sources
+     * Creates an instance of BFS used to perform a Bread First Search Traversal
+     * over the graph. The first elements of the iteration will be the sources.
+     * The graph is not expected to be modified during the traversal.
+     *
      * @param g the graph to consider
-     * @param sources the set of vertices considered as sources of the traversal i.e. from which the traversal start
+     * @param sources the set of vertices considered as sources of the traversal
+     * i.e. from which the traversal start
      * @param wc the constraint applied to the walk
      */
-    public BFS(G g, Set<URI> sources, WalkConstraints wc) {
+    public BFS(G g, Set<URI> sources, WalkConstraint wc) {
 
         this.g = g;
         this.wc = wc;
-        
+
         this.queue = new ArrayList<URI>(sources);
 
         visited = new HashSet<URI>();
@@ -81,19 +89,23 @@ public class BFS implements GraphTraversal {
     }
 
     /**
-     * Creates an instance of BFS used to perform a Bread First Search Traversal in the graph.
-     * The first element of the iteration will be the source of the BFS
+     * Creates an instance of BFS used to perform a Bread First Search Traversal
+     * over the graph. The first element of the iteration will be the source of
+     * the BFS The graph is not expected to be modified during the traversal.
+     *
      * @param g the graph to consider
-     * @param source the source of the traversal i.e. from which the traversal start
+     * @param source the source of the traversal i.e. from which the traversal
+     * start
      * @param wc the constraint applied to the walk
      */
-    public BFS(G g, URI source, WalkConstraints wc) {
+    public BFS(G g, URI source, WalkConstraint wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
 
     /**
+     * Check if the traversal is finished.
      *
-     * @return
+     * @return is the BFS finished
      */
     @Override
     public boolean hasNext() {
@@ -101,8 +113,9 @@ public class BFS implements GraphTraversal {
     }
 
     /**
+     * Access to the next vertex reached by the BFS.
      *
-     * @return
+     * @return the next vertex.
      */
     @Override
     public URI next() {
@@ -111,7 +124,6 @@ public class BFS implements GraphTraversal {
         queue.remove(0);
 
         Set<URI> vertices = g.getV(src, wc);
-
 
         for (URI v : vertices) {
 

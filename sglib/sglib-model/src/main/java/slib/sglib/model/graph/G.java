@@ -38,7 +38,7 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.repo.URIFactory;
 
 /**
@@ -57,25 +57,21 @@ import slib.sglib.model.repo.URIFactory;
  * This graph is not RDF compliant as it doesn't support values such as Literals
  * or blank nodes.
  *
- * In the documentation of the class we refer to a triplet or URIs through the
- * term edge. The subject of the edge is called the source, the predicate is
- * sometimes called the type of the edge, and the object is called the target.
+ * In the documentation of this class we refer to a triplet or URIs through the
+ * term edge. An edge is therefore a statement in which the subject, the
+ * predicate and the object are URIs. The subject of the edge is called the
+ * source, the predicate is sometimes called the type of the edge, and the
+ * object is called the target.
  *
  * @see URI
  * @see E
  * @see Direction
- * @see WalkConstraints
+ * @see WalkConstraint
  *
  * @author Sebastien Harispe
  */
 public interface G {
 
-    /**
-     * Access to the {@link URIFactory} used to create the URIs of the graph.
-     *
-     * @return the factory used to create the URIs
-     */
-    public URIFactory getURIFactory();
 
     /**
      * Access to a view of the set of edges contained in the graph.
@@ -178,7 +174,7 @@ public interface G {
      * @param wc the object defining the constraint
      * @return the set of edges which can be reached considering the constraint.
      */
-    public Set<E> getE(URI v, WalkConstraints wc);
+    public Set<E> getE(URI v, WalkConstraint wc);
 
     /**
      * Retrieve view of all vertices of the graph which can be reached from a
@@ -189,13 +185,13 @@ public interface G {
      * @return the set of vertices which can be reached considering the
      * constraint.
      */
-    public Set<URI> getV(URI v, WalkConstraints wc);
+    public Set<URI> getV(URI v, WalkConstraint wc);
 
     /**
      * Add an edge of the given type (URI) between the specified source and
      * target. If the given edge already exits nothing is done. If the
      * source/target of the edge is not part of the graph it will be added.
-     * 
+     *
      * @param src the source of the edge (not null)
      * @param type the predicate URI of the edge to create (not null)
      * @param target the target of the edge (not null)
@@ -294,7 +290,6 @@ public interface G {
      * @return the number of edges
      */
     public int getNumberEdges();
-
 
     /**
      * Return all neighbors vertices of a given vertex considering a particular

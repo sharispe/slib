@@ -49,6 +49,7 @@ public class RDFLoader implements GraphLoader {
 
     }
 
+    @Override
     public G load(GraphConf conf) throws SLIB_Exception {
         return GraphLoaderGeneric.load(conf);
     }
@@ -114,6 +115,7 @@ public class RDFLoader implements GraphLoader {
             logger.info("Parsing RDF file...");
             parser.parse(reader, "");
         } catch (Exception e) {
+            e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }

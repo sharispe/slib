@@ -39,9 +39,11 @@ package slib.sglib.algo.graph.utils;
 
 /**
  * Enumeration used to represent colors.
+ * Used for graph algorithms.
+ * 
  * @author Harispe Sébastien
  */
-public enum VColor {
+public enum Color {
 
     WHITE, ORANGE , RED;
 	

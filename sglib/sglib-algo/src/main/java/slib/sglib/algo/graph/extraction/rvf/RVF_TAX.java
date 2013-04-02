@@ -38,9 +38,9 @@ import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -55,7 +55,7 @@ public class RVF_TAX extends RVF_DAG {
     
     
     public RVF_TAX(G g, Direction dir) {
-        super(g, new WalkConstraintTax(RDFS.SUBCLASSOF, dir));
+        super(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, dir));
     }
 
     /**

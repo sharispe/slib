@@ -60,8 +60,9 @@ import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.graph.weight.GWS;
+import slib.sglib.utils.WalkConstraintUtils;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.measures.Sim_Pairwise;
@@ -152,7 +153,6 @@ public class SM_Engine {
     Map<SMconf, Sim_Pairwise> pairwiseMeasures;
     Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
     Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
-    
 
     /**
      * Constructor of an engine associated to the given graph.
@@ -453,18 +453,18 @@ public class SM_Engine {
 
     /**
      *
-     * Access to the inclusive descendants for all classes.
-     * This is not a copy.
+     * Access to the inclusive descendants for all classes. This is not a copy.
+     *
      * @return the inclusive descendants for all classes
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Set<URI>> getAllDescendantsInc() throws SLIB_Ex_Critic {
         return cache.descendantsInc;
     }
-    
-     /**
-     * Access to the inclusive ancestors for all classes.
-     * This is not a copy. 
+
+    /**
+     * Access to the inclusive ancestors for all classes. This is not a copy.
+     *
      * @return the inclusive ancestors for all classes
      * @throws SLIB_Ex_Critic
      */
@@ -549,7 +549,7 @@ public class SM_Engine {
             e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
-        logger.info("ic "+icConf.id+" computed");
+        logger.info("ic " + icConf.id + " computed");
         return cache.metrics_results.get(icConf);
     }
 
@@ -571,6 +571,7 @@ public class SM_Engine {
 
     /**
      * Access to the set of leaves of the underlying taxonomic graph
+     *
      * @return the set of classes which are leaves
      */
     public Set<URI> getTaxonomicLeaves() {
@@ -578,9 +579,9 @@ public class SM_Engine {
     }
 
     /**
-     * Compute for each class x the number classes which are leaves which are subsumed
-     * by x. Inclusive i.e. a leaf will contain itself in it set of reachable
-     * leaves. The result is cached for fast access.
+     * Compute for each class x the number classes which are leaves which are
+     * subsumed by x. Inclusive i.e. a leaf will contain itself in it set of
+     * reachable leaves. The result is cached for fast access.
      *
      *
      * @return the number subsumed leaves for each classes
@@ -617,11 +618,10 @@ public class SM_Engine {
         Map<URI, Integer> allNbancestors = new HashMap<URI, Integer>();
 
         for (URI c : classes) {
-            allNbancestors.put(c, allAncestors.get(c).size()); 
+            allNbancestors.put(c, allAncestors.get(c).size());
         }
         return allNbancestors;
     }
-
 
     /**
      * NOT_CACHED by default
@@ -840,7 +840,7 @@ public class SM_Engine {
         // - get roots
         Set<URI> roots = new ValidatorDAG().getDAGRoots(graph, ancGetter.getWalkConstraint());
 
-        DFS dfs = new DFS(graph, roots, ancGetter.getWalkConstraint().getInverse(false));
+        DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(ancGetter.getWalkConstraint(), (false)));
         List<URI> topoOrdering = dfs.getTraversalOrder();
 
 
@@ -886,7 +886,7 @@ public class SM_Engine {
             Map<URI, Integer> nbOccurrences = new HashMap<URI, Integer>();
 
             for (URI o : classes) {
-                nbOccurrences.put(o,1);
+                nbOccurrences.put(o, 1);
             }
 
             Map<URI, Integer> nbOccurrencesPropagated = RVF.propagateNbOccurences(nbOccurrences);
@@ -1019,7 +1019,7 @@ public class SM_Engine {
     private void computeLeaves() {
         classesLeaves = new HashSet<URI>();
 
-        WalkConstraints wc = descGetter.getWalkConstraint();
+        WalkConstraint wc = descGetter.getWalkConstraint();
         for (URI v : classes) {
             if (graph.getV(v, wc).isEmpty()) {
                 classesLeaves.add(v);
@@ -1068,11 +1068,9 @@ public class SM_Engine {
     public double getShortestPath(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
         if (cache.shortestPath.get(a) == null) {
-            WalkConstraints wc = ancGetter.getWalkConstraint();
 
-            for (Entry<URI, Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()) {
-                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
-            }
+            WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
+            wc.addWalkconstraints(descGetter.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
@@ -1113,11 +1111,8 @@ public class SM_Engine {
 
         if (cache.shortestPath.get(a) == null) {
 
-            WalkConstraints wc = ancGetter.getWalkConstraint();
-
-            for (Entry<URI, Direction> entry : descGetter.getWalkConstraint().getAcceptedTraversals().entrySet()) {
-                wc.addAcceptedTraversal(entry.getKey(), entry.getValue());
-            }
+            WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
+            wc.addWalkconstraints(descGetter.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);

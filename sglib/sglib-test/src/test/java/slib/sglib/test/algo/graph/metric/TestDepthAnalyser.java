@@ -42,13 +42,14 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.metric.DepthAnalyserAG;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -71,7 +72,7 @@ public class TestDepthAnalyser {
     int max_depth_women = 7;
     int max_depth_thing = 0;
     SLIB_UnitTestValues testvalues;
-    WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+    WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
 
     /**
      *

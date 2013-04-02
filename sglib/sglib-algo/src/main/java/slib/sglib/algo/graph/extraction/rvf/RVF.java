@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.classical.BFS;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 
 /**
  * Reachable Vertex Finder (RVF) objects can be used to retrieve the vertices
@@ -62,7 +62,7 @@ public class RVF {
     /**
      *
      */
-    protected WalkConstraints wc;
+    protected WalkConstraint wc;
     /**
      *
      */
@@ -74,7 +74,7 @@ public class RVF {
      * @param g
      * @param wc 
      */
-    public RVF(G g, WalkConstraints wc) {
+    public RVF(G g, WalkConstraint wc) {
         this.g = g;
         this.wc = wc;
     }
@@ -157,11 +157,11 @@ public class RVF {
         return results;
     }
     
-    public WalkConstraints getWalkConstraint(){
+    public WalkConstraint getWalkConstraint(){
         return wc;
     }
     
-    public void setWalkConstraint(WalkConstraints nwc){
+    public void setWalkConstraint(WalkConstraint nwc){
         this.wc = nwc;
     }
 }

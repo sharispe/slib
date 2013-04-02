@@ -42,12 +42,13 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
-import slib.sglib.algo.graph.utils.VColor;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
+import slib.sglib.algo.graph.utils.Color;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintGeneric;
+import slib.sglib.utils.WalkConstraintUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
@@ -62,8 +63,8 @@ public class ValidatorDAG {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
-    WalkConstraints wc;
-    HashMap<URI, VColor> verticesColors;
+    WalkConstraint wc;
+    HashMap<URI, Color> verticesColors;
     boolean valid;
     E lastEdge;
     Path currentPath;
@@ -80,12 +81,12 @@ public class ValidatorDAG {
      * @return true if the graph is a DAG
      * @throws SLIB_Ex_Critic
      */
-    public boolean isDag(G graph, Set<URI> startingURIs, WalkConstraints wc) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, Set<URI> startingURIs, WalkConstraint wc) throws SLIB_Ex_Critic {
 
         this.wc = wc;
 
         this.graph = graph;
-        this.verticesColors = new HashMap<URI, VColor>();
+        this.verticesColors = new HashMap<URI, Color>();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
@@ -135,7 +136,7 @@ public class ValidatorDAG {
 
         if (!verticesColors.containsKey(v)) {
 
-            verticesColors.put(v, VColor.ORANGE);
+            verticesColors.put(v, Color.ORANGE);
 
 
             Set<E> edges = graph.getE(v, wc);
@@ -155,7 +156,7 @@ public class ValidatorDAG {
                     target = e.getSource();
                 }
 
-                if (verticesColors.get(target) != VColor.RED) {
+                if (verticesColors.get(target) != Color.RED) {
                     currentPath.addEdge(e);
                     lastEdge = e;
                     performDFS(target);
@@ -166,9 +167,9 @@ public class ValidatorDAG {
                 return;
             }
             currentPath.removeLastEdge();
-            verticesColors.put(v, VColor.RED);
+            verticesColors.put(v, Color.RED);
 
-        } else if (verticesColors.get(v) == VColor.ORANGE) {
+        } else if (verticesColors.get(v) == Color.ORANGE) {
             valid = false;
         }
     }
@@ -190,7 +191,7 @@ public class ValidatorDAG {
      * @throws SLIB_Ex_Critic
      *
      */
-    public boolean isDag(G graph, URI rootURI, WalkConstraints wc) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, URI rootURI, WalkConstraint wc) throws SLIB_Ex_Critic {
         return isDag(graph, SetUtils.buildSet(rootURI), wc);
     }
 
@@ -201,7 +202,7 @@ public class ValidatorDAG {
      * @throws SLIB_Ex_Critic
      */
     public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic {
-        WalkConstraints wct = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wct = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         return isDag(graph, wct);
     }
 
@@ -220,10 +221,10 @@ public class ValidatorDAG {
      *
      * @throws SLIB_Ex_Critic
      */
-    public boolean isDag(G graph, WalkConstraints wc) throws SLIB_Ex_Critic {
+    public boolean isDag(G graph, WalkConstraint wc) throws SLIB_Ex_Critic {
 
         logger.debug("Check DAG property of the graph "+graph.getURI()+" considering the walkconstraint "+wc);
-        Set<URI> startingNodes = getDAGRoots(graph, wc.getInverse(false));
+        Set<URI> startingNodes = getDAGRoots(graph, WalkConstraintUtils.getInverse(wc, false));
 
         logger.info("Starting process from " + startingNodes.size() + " vertices");
 
@@ -247,7 +248,7 @@ public class ValidatorDAG {
      * @param dir
      * @return The set of vertices matching the predefined conditions
      */
-    public Set<URI> getDAGRoots(G g, WalkConstraints wc) {
+    public Set<URI> getDAGRoots(G g, WalkConstraint wc) {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
 
@@ -275,14 +276,14 @@ public class ValidatorDAG {
      */
     public boolean containsRootedTaxonomicDag(G g) throws SLIB_Ex_Critic {
 
-        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        WalkConstraintGeneric wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
 
         Set<URI> roots = getDAGRoots(g, wc);
 
         logger.info("Number of roots " + roots.size());
 
         if (roots.size() == 1) {
-            isDag(g, roots.iterator().next(), new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+            isDag(g, roots.iterator().next(), new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
         } else {
             valid = false;
         }
@@ -313,7 +314,7 @@ public class ValidatorDAG {
      */
     public URI getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
 
-        WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        WalkConstraintGeneric wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
         Set<URI> roots = getDAGRoots(g, wc);
 
         if (roots.size() != 1) {
@@ -330,7 +331,7 @@ public class ValidatorDAG {
      * @return
      */
     public Set<URI> getTaxonomicDAGRoots(G g) {
-        return getDAGRoots(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
+        return getDAGRoots(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
     }
 
     /**
@@ -344,7 +345,7 @@ public class ValidatorDAG {
      * @return true if the graph defined by the specified constraint is rooted
      * by the given URI
      */
-    public boolean containsRootedDagRoot(G g, URI rootURI, WalkConstraints wc) {
+    public boolean containsRootedDagRoot(G g, URI rootURI, WalkConstraint wc) {
 
         for (URI v : getDAGRoots(g, wc)) {
             if (v.equals(rootURI)) {
@@ -363,7 +364,7 @@ public class ValidatorDAG {
      */
     public boolean isUniqueRootedTaxonomicDag(G g, URI root) throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         return isUniqueRootedDagRoot(g, root, wc);
     }
 
@@ -377,11 +378,11 @@ public class ValidatorDAG {
      * @return
      * @throws SLIB_Ex_Critic
      */
-    public boolean isUniqueRootedDagRoot(G g, URI root, WalkConstraints wc) throws SLIB_Ex_Critic {
+    public boolean isUniqueRootedDagRoot(G g, URI root, WalkConstraint wc) throws SLIB_Ex_Critic {
 
         if (isDag(g, wc)) {
 
-            Set<URI> roots = getDAGRoots(g, wc.getInverse(false));
+            Set<URI> roots = getDAGRoots(g, WalkConstraintUtils.getInverse(wc, false));
 
             if (roots.size() == 1 && roots.iterator().next().equals(root)) {
                 return true;

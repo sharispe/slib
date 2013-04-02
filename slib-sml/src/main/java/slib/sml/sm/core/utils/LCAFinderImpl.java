@@ -44,9 +44,10 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.extraction.rvf.RVF;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
 import slib.sglib.algo.graph.traversal.classical.DFS;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -123,7 +124,7 @@ public class LCAFinderImpl implements LCAFinder {
             Set<URI> queries = SetUtils.buildSet(a);
 
             queries.add(b);
-            WalkConstraintTax wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+            WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
             DFS dfs = new DFS(graph, queries, wc);
             List<URI> to = dfs.getTraversalOrder();
 
@@ -167,7 +168,6 @@ public class LCAFinderImpl implements LCAFinder {
                 for (URI anc : ancestorsV) {
                     isVisited.put(anc, Boolean.TRUE);
                 }
-
 //            printStackStatus(ancestorsOrdered, isVisited);
             }
 

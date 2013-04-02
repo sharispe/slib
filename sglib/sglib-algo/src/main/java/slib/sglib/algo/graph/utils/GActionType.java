@@ -8,13 +8,12 @@ package slib.sglib.algo.graph.utils;
 public enum GActionType {
 
     /**
-     * Classical Transitive Reduction,
-     * We only consider taxonomic reduction.
+     * Transitive Reduction.
      */
     TRANSITIVE_REDUCTION,
     
     /**
-     * Action flag corresponding to a re rooting treatment.
+     * Rooting treatment.
      */
     REROOTING,
     
@@ -24,7 +23,7 @@ public enum GActionType {
 //    RDFS_INFERENCE,
     
     /**
-     * Action flag corresponding to a reduction of vertices.
+     * Reduction of vertices.
      */
     VERTICES_REDUCTION
 }

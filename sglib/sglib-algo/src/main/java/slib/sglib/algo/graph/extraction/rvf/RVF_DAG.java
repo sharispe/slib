@@ -44,7 +44,8 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.SetUtils;
 
@@ -77,7 +78,7 @@ public class RVF_DAG extends RVF {
      * special cares must be taken. DO NOT set this parameter to true if you
      * don't understand the implications.
      */
-    public RVF_DAG(G g, WalkConstraints wc) {
+    public RVF_DAG(G g, WalkConstraint wc) {
         super(g, wc);
     }
 
@@ -105,7 +106,7 @@ public class RVF_DAG extends RVF {
         // Initialize DataStructure + queue considering walk constraint
         List<URI> queue = new ArrayList<URI>();
 
-        WalkConstraints oppositeWC = wc.getInverse(false);
+        WalkConstraint oppositeWC = WalkConstraintUtils.getInverse(wc, false);
         logger.debug("Opposite Walk constraint " + oppositeWC);
 
         for (URI v : g.getV()) {

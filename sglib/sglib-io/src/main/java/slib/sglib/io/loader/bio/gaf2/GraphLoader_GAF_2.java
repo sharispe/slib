@@ -220,7 +220,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
 
 
-        URIFactory uriManager = graph.getURIFactory();
+        URIFactory uriManager = URIFactoryMemory.getSingleton();
 
         boolean validHeader = false;
         String line, qualifier, gotermURIstring, evidenceCode, taxon_ids;

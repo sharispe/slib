@@ -44,11 +44,11 @@ import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
 import slib.sglib.algo.graph.extraction.rvf.RVF_DAG;
 import slib.sglib.algo.graph.extraction.rvf.RVF_TAX;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
@@ -88,7 +88,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_descendant_1() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
 
 
@@ -107,7 +107,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_descendant_2() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
 
 
@@ -124,7 +124,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_descendant_3() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
         
 
@@ -139,7 +139,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_descendant_4() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
 
         Set<URI> desc = rvf.getRV(testValues.G_BASIC_SPIDERMAN);
@@ -153,7 +153,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_ancestors_1() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
         rvf = new RVF_DAG(g, wc);
 
         Set<URI> anc = rvf.getRV(testValues.G_BASIC_OBJECT);
@@ -183,7 +183,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_ancestors_2() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
         rvf = new RVF_DAG(g, wc);
 
         Set<URI> anc = rvf.getRV(testValues.G_BASIC_MEN);
@@ -198,7 +198,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_ancestors_3() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
         rvf = new RVF_DAG(g, wc);
 
         Set<URI> anc = rvf.getRV(testValues.G_BASIC_THING);
@@ -212,7 +212,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_all_1() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.BOTH);
         rvf = new RVF_DAG(g, wc);
 
         Set<URI> all = rvf.getRV(testValues.G_BASIC_ANIMAL);
@@ -227,7 +227,7 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_all_2() throws SLIB_Ex_Critic {
 
-        WalkConstraints wc = new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH);
+        WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.BOTH);
         rvf = new RVF_DAG(g, wc);
         
         Set<URI> all = rvf.getRV(testValues.G_BASIC_TABLE);

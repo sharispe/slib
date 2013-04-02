@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.graph.weight.GWS;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -59,7 +59,7 @@ public class Dijkstra {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     G g;
-    WalkConstraints walkConstraints;
+    WalkConstraint walkConstraints;
     GWS ws = null;
 
     /**
@@ -84,7 +84,7 @@ public class Dijkstra {
      * @param walconstraints
      * @throws SLIB_Ex_Critic 
      */
-    public Dijkstra(G g, WalkConstraints walconstraints) throws SLIB_Ex_Critic {
+    public Dijkstra(G g, WalkConstraint walconstraints) throws SLIB_Ex_Critic {
         this.g = g;
         this.walkConstraints = walconstraints;
         this.ws = null;
@@ -99,7 +99,7 @@ public class Dijkstra {
      * @param weightingScheme a
      * @throws SLIB_Ex_Critic
      */
-    public Dijkstra(G g, WalkConstraints walconstraints, GWS weightingScheme) throws SLIB_Ex_Critic {
+    public Dijkstra(G g, WalkConstraint walconstraints, GWS weightingScheme) throws SLIB_Ex_Critic {
         this.g = g;
         this.walkConstraints = walconstraints;
         this.ws = weightingScheme;

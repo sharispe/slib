@@ -44,10 +44,8 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.repo.URIFactory;
 
 /**
  * In memory implementation of {@link G}
@@ -56,7 +54,6 @@ import slib.sglib.model.repo.URIFactory;
  */
 public class GraphMemory implements G {
 
-    private URIFactory factory;
     private Set<URI> uris;
     private Set<E> edges;
     private Map<URI, Set<E>> vertexOutEdges;
@@ -65,31 +62,17 @@ public class GraphMemory implements G {
 
     /**
      * Create a graph loaded in memory.
-     *
-     * @param uri
+     * @param uri the URI of the graph
      */
     public GraphMemory(URI uri) {
-        this(URIFactoryMemory.getSingleton(), uri);
-    }
-
-    /**
-     * @param factory
-     * @param uri
-     */
-    public GraphMemory(URIFactory factory, URI uri) {
-
+    
         this.uri = uri;
-        this.factory = factory;
         uris = new HashSet<URI>();
         edges = new HashSet<E>();
         vertexOutEdges = new HashMap<URI, Set<E>>();
         vertexInEdges = new HashMap<URI, Set<E>>();
     }
 
-    @Override
-    public URIFactory getURIFactory() {
-        return factory;
-    }
 
     @Override
     public Set<E> getE() {
@@ -216,7 +199,7 @@ public class GraphMemory implements G {
                 vertexOutEdges.put(s, new HashSet<E>());
             }
             if (!vertexInEdges.containsKey(o)) {
-                vertexInEdges.put(s, new HashSet<E>());
+                vertexInEdges.put(o, new HashSet<E>());
             }
 
             vertexOutEdges.get(s).add(e);
@@ -425,7 +408,7 @@ public class GraphMemory implements G {
     }
 
     @Override
-    public Set<E> getE(URI v, WalkConstraints wc) {
+    public Set<E> getE(URI v, WalkConstraint wc) {
         Set<E> valid = new HashSet<E>();
         for (E e : getE(v, Direction.OUT)) {
             if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {
@@ -441,7 +424,7 @@ public class GraphMemory implements G {
     }
 
     @Override
-    public Set<URI> getV(URI v, WalkConstraints wc) {
+    public Set<URI> getV(URI v, WalkConstraint wc) {
         Set<URI> valid = new HashSet<URI>();
         for (E e : getE(v, Direction.OUT)) {
             if (wc.getAcceptedWalks_DIR_OUT().contains(e.getURI())) {

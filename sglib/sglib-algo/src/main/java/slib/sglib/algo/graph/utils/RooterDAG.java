@@ -42,7 +42,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -93,7 +94,7 @@ public class RooterDAG {
      * @throws SLIB_Ex_Critic  
      *
      */
-    public static URI rootUnderlyingDAG(G g, URI rootUri, WalkConstraints wc, boolean checkUnderlyingDAG) throws SLIB_Ex_Critic {
+    public static URI rootUnderlyingDAG(G g, URI rootUri, WalkConstraint wc, boolean checkUnderlyingDAG) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(RooterDAG.class);
 
@@ -160,7 +161,7 @@ public class RooterDAG {
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsRootedTaxonomicDag(g)) {
-            return rootUnderlyingDAG(g, rootUri, new WalkConstraintTax(RDFS.SUBCLASSOF,Direction.OUT),true);
+            return rootUnderlyingDAG(g, rootUri, new WalkConstraintGeneric(RDFS.SUBCLASSOF,Direction.OUT),true);
         } else {
             return validator.getRootedTaxonomicDAGRoot(g);
         }

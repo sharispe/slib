@@ -41,6 +41,12 @@
             <artifactId>slib-utils</artifactId>
             <version>0.0.5-beta-2-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-utils</artifactId>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

@@ -39,5 +39,11 @@
             <artifactId>slib-tools-module</artifactId>
             <version>0.0.5-beta-2-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-utils</artifactId>
+            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 </project>

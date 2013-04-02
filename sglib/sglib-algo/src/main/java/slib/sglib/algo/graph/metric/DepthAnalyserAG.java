@@ -48,7 +48,8 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
+import slib.sglib.utils.WalkConstraintUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -63,7 +64,7 @@ public class DepthAnalyserAG {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     G g;
-    WalkConstraints wc;
+    WalkConstraint wc;
 
     /**
      * Create a DepthAnalyserAG object considering a particular acyclic graph
@@ -73,7 +74,7 @@ public class DepthAnalyserAG {
      * @param g The graph to consider
      * @param wc
      */
-    public DepthAnalyserAG(G g, WalkConstraints wc) {
+    public DepthAnalyserAG(G g, WalkConstraint wc) {
 
         this.wc = wc;
 
@@ -100,7 +101,7 @@ public class DepthAnalyserAG {
 
         logger.debug("Walk constraint loaded " + wc);
 
-        WalkConstraints wcOpp = wc.getInverse(false);
+        WalkConstraint wcOpp = WalkConstraintUtils.getInverse(wc, false);
         logger.debug("Building initial queue considering inverse constraint " + wcOpp);
 
         for (URI v : g.getV()) {

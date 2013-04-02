@@ -15,6 +15,7 @@
 		<module>sglib-algo</module>
 		<module>sglib-io</module>
 		<module>sglib-test</module>
+	 <module>sglib-utils</module>
 	</modules>
 	<dependencies>
 		<dependency>

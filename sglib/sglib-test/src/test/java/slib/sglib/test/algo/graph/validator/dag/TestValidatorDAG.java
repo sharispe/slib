@@ -41,7 +41,6 @@ import java.util.Set;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
@@ -52,6 +51,7 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -93,7 +93,7 @@ public class TestValidatorDAG {
         assertTrue(roots.iterator().next().equals(testValues.G_BASIC_THING));
 
 
-        URI newRoot = g.getURIFactory().createURI("http://newRoot");
+        URI newRoot = URIFactoryMemory.getSingleton().createURI("http://newRoot");
         g.addE(testValues.G_BASIC_ANIMAL,RDFS.SUBCLASSOF,newRoot);
 
         roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
@@ -110,7 +110,7 @@ public class TestValidatorDAG {
 
         System.out.println(g.toString());
 
-        Set<URI> roots = new ValidatorDAG().getDAGRoots(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
+        Set<URI> roots = new ValidatorDAG().getDAGRoots(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
 
         assertTrue(roots.size() == 1);
         assertTrue(roots.iterator().next().equals(testValues.G_BASIC_THING));
@@ -122,7 +122,7 @@ public class TestValidatorDAG {
      */
     @Test
     public void test_true_dag() throws SLIB_Ex_Critic {
-        boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+        boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
         assertTrue(isDag);
     }
 
@@ -156,7 +156,7 @@ public class TestValidatorDAG {
         assertTrue(isDag == true);
 
         // We create another root
-        g.addE(testValues.G_BASIC_HUMAN,RDFS.SUBCLASSOF,g.getURIFactory().createURI("http://newURI"));
+        g.addE(testValues.G_BASIC_HUMAN,RDFS.SUBCLASSOF,URIFactoryMemory.getSingleton().createURI("http://newURI"));
 
         isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
         assertTrue(isDag == false);
@@ -180,7 +180,7 @@ public class TestValidatorDAG {
         g.addE(testValues.G_BASIC_FICTIV_ORGANISM, RDFS.SUBCLASSOF, newRootURI);
         g.addE(newRootURI, RDFS.SUBCLASSOF, testValues.G_BASIC_FICTIV_ORGANISM);
 
-        isDag = new ValidatorDAG().isDag(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+        isDag = new ValidatorDAG().isDag(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
         assertTrue(isDag == false);
 
         isDag = new ValidatorDAG().containsTaxonomicDag(g);
@@ -229,10 +229,10 @@ public class TestValidatorDAG {
 
         System.out.println(g.toString());
 
-        assertTrue(new ValidatorDAG().isDag(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN)) == false);
+        assertTrue(new ValidatorDAG().isDag(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN)) == false);
 
 
-        boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
+        boolean isDag = new ValidatorDAG().isUniqueRootedDagRoot(g, rootURI, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
 
         assertTrue(isDag == false);
     }

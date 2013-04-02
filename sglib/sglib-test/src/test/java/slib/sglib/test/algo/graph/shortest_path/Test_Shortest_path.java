@@ -36,12 +36,12 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.shortest_path.Dijkstra;
-import slib.sglib.algo.graph.utils.WalkConstraintTax;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -68,7 +68,7 @@ public class Test_Shortest_path {
     @Test
     public void testSP_0() throws SLIB_Exception {
 
-        Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.OUT));
+        Dijkstra d = new Dijkstra(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
         URI thing = testValues.G_BASIC_THING;
@@ -104,7 +104,7 @@ public class Test_Shortest_path {
     @Test
     public void testSP_1() throws SLIB_Exception {
 
-        Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.IN));
+        Dijkstra d = new Dijkstra(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
         URI thing = testValues.G_BASIC_THING;
@@ -139,7 +139,7 @@ public class Test_Shortest_path {
     @Test
     public void testSP_2() throws SLIB_Exception {
 
-        Dijkstra d = new Dijkstra(g, new WalkConstraintTax(RDFS.SUBCLASSOF, Direction.BOTH));
+        Dijkstra d = new Dijkstra(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.BOTH));
         SLIB_UnitTestValues testValues = new SLIB_UnitTestValues();
 
         URI thing = testValues.G_BASIC_THING;

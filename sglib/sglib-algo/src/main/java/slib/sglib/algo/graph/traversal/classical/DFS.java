@@ -45,12 +45,12 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.traversal.GraphTraversal;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.utils.WalkConstraints;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.utils.impl.SetUtils;
 
 /**
  * Class used to perform traversal on a graph using Depth First Search Algorithm
- * from a set of vertices and considering particular type of relationships. <a
+ * from a set of vertices and considering particular types of relationships. <a
  * href="http://en.wikipedia.org/wiki/Depth-first_search">more about</a>
  *
  * Note that contrary to {@link BFS} the traversal is performed at instance
@@ -66,7 +66,7 @@ public class DFS implements GraphTraversal {
     G g;
     Set<URI> sources;
     HashMap<URI, Boolean> coloredVertex;
-    private WalkConstraints wc;
+    private WalkConstraint wc;
     List<URI> topoSort;
     int current_id = 0;
     boolean removePerformed = false;
@@ -75,7 +75,7 @@ public class DFS implements GraphTraversal {
      * Create a DFS iterator, note that DFS is performed at instance creation.
      * The resulting topological sort can be accessed through
      */
-    public DFS(G g, Set<URI> sources, WalkConstraints wc) {
+    public DFS(G g, Set<URI> sources, WalkConstraint wc) {
         this.g = g;
         this.sources = sources;
         this.wc = wc;
@@ -86,37 +86,19 @@ public class DFS implements GraphTraversal {
      * Shortcut of {@link DFS#DFS(G, Set, Set)}
      *
      */
-    public DFS(G g, URI source, WalkConstraints wc) {
+    public DFS(G g, URI source, WalkConstraint wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
 
-    
     private void init() {
 
         this.coloredVertex = new HashMap<URI, Boolean>();
         this.topoSort = new ArrayList<URI>();
 
-
-        if (logger.isDebugEnabled()) { // avoid large debug information
-            String sources_s = "";
-            if (sources.size() > 10) {
-                int l = 0;
-                for (URI v : sources) {
-                    sources_s += "\t" + v;
-                    l++;
-                    if (l == 10) {
-                        break;
-                    }
-                }
-            } else {
-                sources_s = sources.toString();
-            }
-
-            logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources_s);
-            logger.debug("Considering Walconstraint " + wc);
-        }
-
+        logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources);
+        logger.debug("Considering Walconstraint " + wc);
         logger.debug("Start DFS");
+        
         for (URI r : sources) {
             performDFS(r);
         }
@@ -132,15 +114,14 @@ public class DFS implements GraphTraversal {
 
             coloredVertex.put(v, true);
 
-            
+
             Iterator<E> it = g.getE(v, wc).iterator();
 
             while (it.hasNext()) {
                 E e = it.next();
                 if (!e.getTarget().equals(v)) {
                     performDFS(e.getTarget());
-                }
-                else{
+                } else {
                     performDFS(e.getSource());
                 }
             }
