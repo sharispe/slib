@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Harispe Sébastien
  */
 public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract {
 
@@ -145,5 +145,10 @@ public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract
             throw new SLIB_Ex_Critic("Aggregation Strategy " + aggregation_lca_strategy + " is not a valid argument for the parameter '" + aggregation_lca + "', accepted parameters are " + Arrays.toString(acceptedAggregations));
         }
         return ic_lca;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

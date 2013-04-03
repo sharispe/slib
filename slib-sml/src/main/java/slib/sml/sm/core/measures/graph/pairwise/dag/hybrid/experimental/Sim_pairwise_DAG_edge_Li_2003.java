@@ -32,121 +32,89 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.experimental;
 
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 
+import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
  *
- * @author seb
+ * Li Y, Bandar ZA, McLean D: An approach for measuring semantic similarity
+ * between words using multiple information sources. IEEE Transactions on
+ * Knowledge and Data Engineering 2003, 15:871-882.
+ *
+ * TODO check LCA restriction
  */
-public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
+public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+    // refer to publication
+    double alpha = 0.2;
+    double beta = 0.6;
+
+    
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
+        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        double sp_AtoB = c.getShortestPath(a, b, weightingScheme);
         Set<URI> ancestors_A = c.getAncestorsInc(a);
         Set<URI> ancestors_B = c.getAncestorsInc(b);
         Map<URI, Integer> maxDepths = c.getMaxDepths();
 
-        return sim(a, b, ancestors_A, ancestors_B, maxDepths);
+        return sim(sp_AtoB, ancestors_A, ancestors_B, maxDepths);
     }
 
     /**
+     * Revenir sur la recherche du msa de Li Pour Li le msa est le concept de
+     * plus faible profondeur qui appartient au chemin le plus court entre les
+     * deux concepts passant par un ancetre commun des deux concepts
      *
-     * @param cA
-     * @param cB
+     * Alpha in [0,1] (best : 0.2) Beta in ]0,1]	(best : 0.6)
+     *
+     * @param sp_AtoB
      * @param ancestors_A
      * @param ancestors_B
      * @param maxDepths
      * @return
      * @throws SLIB_Exception
      */
-    public double sim(
-            URI cA,
-            URI cB,
+    public double sim(double sp_AtoB,
             Set<URI> ancestors_A,
             Set<URI> ancestors_B,
             Map<URI, Integer> maxDepths) throws SLIB_Exception {
 
         double sim = 0;
 
-        boolean sameHierarchy = false;
-
-        if (ancestors_A.contains(cB) || ancestors_B.contains(cA)) {
-            sameHierarchy = true;
-        }
-
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
         if (!interSecAncestors.isEmpty()) {
 
-
             URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
 
-            double d_mrca = maxDepths.get(msa);
-            double d_a = maxDepths.get(cA);
-            double d_b = maxDepths.get(cB);
+            int h = maxDepths.get(msa);
 
+            double f1 = Math.exp(-alpha * sp_AtoB);
+            double f2 = (Math.exp(beta * h) - Math.exp(-beta * h)) / (Math.exp(beta * h) + Math.exp(-beta * h));
 
-            double pf = computePF(d_a, d_b, d_mrca, sameHierarchy);
+            sim = f1 * f2;
 
-            sim = (double) ((2 * d_mrca) / (d_a + d_b + 1)) * pf;
         }
 
         return sim;
     }
 
-    /**
-     * Penalization factor
-     *
-     * @param d_a
-     * @param d_b
-     * @param d_mrca
-     * @param sameHierarchy
-     * @return
-     */
-    private double computePF(double d_a, double d_b, double d_mrca, boolean sameHierarchy) {
-
-        double pf = 0;
-
-        double lambda = 0;
-
-        if (!sameHierarchy) {
-            lambda = 1;
-        }
-
-
-        /*
-         * <!> Modification of the original formula
-         * Addition of +1 to the denominateur to obtain pf(a,b) == 1
-         * if a,b are part of the same hierarchy.
-         * the formula proposed in the paper to not respect the specification proposed
-         */
-        double gamma = (1 - lambda) * (Math.min(d_a, d_b) - d_mrca + 1);
-        double alpha = lambda * (1 / (Math.abs(d_a - d_b) + 1));
-
-
-        pf = gamma + alpha;
-
-        return pf;
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

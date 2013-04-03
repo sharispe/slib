@@ -43,7 +43,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * ﻿1. Resnik P: Using Information Content to Evaluate Semantic Similarity in a
+ * Resnik P: Using Information Content to Evaluate Semantic Similarity in a
  * Taxonomy. In Proceedings of the 14th International Joint Conference on
  * Artificial Intelligence IJCAI. 1995, 1:448-453.
  *
@@ -83,5 +83,10 @@ public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abs
     public double sim(double ic_mica) {
 
         return ic_mica;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

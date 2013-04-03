@@ -53,18 +53,16 @@ import slib.utils.impl.SetUtils;
  *
  * sim(c1 , c2 ) = minedge (c1 , msa(c1,c2) ) + minedge (c2 , msa(c1,c2) )
  *
- * TODO check LCA restriction
  */
 public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
 
-    
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-        
-        Map<URI, Double> minDists_cA = c.getAllShortestPath(a,weightingScheme);
-        Map<URI, Double> minDists_cB = c.getAllShortestPath(b,weightingScheme);
+
+        Map<URI, Double> minDists_cA = c.getAllShortestPath(a, weightingScheme);
+        Map<URI, Double> minDists_cB = c.getAllShortestPath(b, weightingScheme);
         Set<URI> ancestors_A = c.getAncestorsInc(a);
         Set<URI> ancestors_B = c.getAncestorsInc(b);
         Map<URI, Integer> maxDepths = c.getMaxDepths();
@@ -73,13 +71,14 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
     }
 
     /**
+     * Compute RADA based semantic similarity.
      *
-     * @param minDists_cA
-     * @param minDists_cB
-     * @param ancestors_A
-     * @param ancestors_B
-     * @param maxDepths
-     * @return
+     * @param minDists_cA shortest path from A
+     * @param minDists_cB shortest path from A
+     * @param ancestors_A ancestors of A
+     * @param ancestors_B ancestors of B
+     * @param maxDepths the maximal depths of all concepts
+     * @return the semantic similarity considering the parameters.
      * @throws SLIB_Exception
      */
     public double sim(Map<URI, Double> minDists_cA,
@@ -100,5 +99,11 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
         }
 
         return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        // Depends on the symmetry of the weighting scheme
+        return false;
     }
 }

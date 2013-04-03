@@ -32,36 +32,57 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.experimental;
+
+import java.util.Set;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_DAG_hybrid_abstract;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.impl.SetUtils;
 
 /**
- * ﻿Al-Mubaid H, Nguyen HA: A cluster-based approach for semantic similarity in
- * the biomedical domain. Conference proceedings : Annual International
- * Conference of the IEEE Engineering in Medicine and Biology Society. IEEE
- * Engineering in Medicine and Biology Society. Conference 2006, 1:2713-7.
+ *
+ * Ranwez S, Ranwez V, Villerd J, Crampes M: Ontological Distance Measures
+ * for Information Visualisation on Conceptual Maps. Lecture notes in computer
+ * science 2006, 4278/2006:1050-1061.
+ *
+ * distance converted as similarity using sim = - dist range ]-inf,0]
  *
  * @author Sebastien Harispe
  *
  *
- *
  */
-public abstract class Sim_pairwise_DAG_edge_Al_Mubaid_2006 extends Sim_DAG_edge_abstract {
+public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
-        throw new UnsupportedOperationException();
 
+        Set<URI> hypoAncEx = c.getHypoAncEx(a, b);
+        Set<URI> hypoA = c.getDescendantsInc(a);
+        Set<URI> hypoB = c.getDescendantsInc(b);
+
+        return sim(hypoAncEx, hypoA, hypoB);
+    }
+
+    public double sim(Set<URI> hypoAncEx,
+            Set<URI> hypoA,
+            Set<URI> hypoB) {
+
+        Set<URI> unionSet = SetUtils.union(SetUtils.union(hypoAncEx, hypoA), hypoB);
+
+        int union = unionSet.size();
+        int inter = SetUtils.intersection(hypoA, hypoB).size();
+
+        double sim = -(union - inter);
+
+        return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

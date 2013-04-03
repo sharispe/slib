@@ -42,22 +42,15 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿Gentleman R: Visualizing and distances using GO. Retrieved Jan. 10th 2007.
+ * Gentleman R: Visualizing and distances using GO. Retrieved Jan. 10th 2007.
  * http://www.bioconductor.org/packages/release/bioc/vignettes/GOstats/inst/doc/GOvis.pdf
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe
  *
  */
 public class Sim_groupwise_DAG_UI extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     */
+    
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) {
 

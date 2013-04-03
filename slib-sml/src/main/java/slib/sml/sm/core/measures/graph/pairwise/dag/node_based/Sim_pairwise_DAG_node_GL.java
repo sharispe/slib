@@ -36,37 +36,30 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * Gower and Legendre IC-based abstract expression.
+ *
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     */
     public static final String beta_param_name = "beta";
     private double beta = 0.;
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        double ic_a = c.getIC(conf.getICconf(), a);
-        double ic_b = c.getIC(conf.getICconf(), b);
-        double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
+        ICconf icConf = conf.getICconf();
+
+        double ic_a = c.getIC(icConf, a);
+        double ic_b = c.getIC(icConf, b);
+        double ic_MICA = c.getIC_MICA(icConf, a, b);
 
 
         if (conf.containsParam(beta_param_name)) {
@@ -77,15 +70,6 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
         return sim(ic_a, ic_b, ic_MICA, beta);
     }
 
-    /**
-     *
-     * @param ic_a
-     * @param ic_b
-     * @param ic_mica
-     * @param beta
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
     public double sim(double ic_a, double ic_b, double ic_mica, double beta) throws SLIB_Ex_Critic {
 
         double den = ((ic_a) + (ic_b) + (beta - 2.) * ic_mica);
@@ -98,13 +82,8 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
         return j;
     }
 
-    /**
-     *
-     * @param args
-     * @throws SLIB_Ex_Critic
-     */
-    public static void main(String[] args) throws SLIB_Ex_Critic {
-        Sim_pairwise_DAG_node_GL p = new Sim_pairwise_DAG_node_GL();
-        System.out.println(p.sim(0.25, 0.25, 0.20, 0));
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

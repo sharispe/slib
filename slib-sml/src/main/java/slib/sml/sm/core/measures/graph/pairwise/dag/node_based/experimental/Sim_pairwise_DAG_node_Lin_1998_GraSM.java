@@ -44,14 +44,10 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * ﻿1. Lin D: An Information-Theoretic Definition of Similarity. In 15th
+ * Lin D: An Information-Theoretic Definition of Similarity. In 15th
  * International Conference of Machine Learning. Madison,WI: 1998:296-304.
  *
  * @author Sebastien Harispe
- *
- * TODO reprendre le papier ... Lin a été définit en terme de probabilité et non
- * en terme d'IC Si l'on considère les IC il est possible d'avoir des valeurs
- * supérieures à 1.
  *
  */
 public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstract {
@@ -99,5 +95,10 @@ public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstra
             lin = (2 * ic_mica) / (ic_a + ic_b);
         }
         return lin;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

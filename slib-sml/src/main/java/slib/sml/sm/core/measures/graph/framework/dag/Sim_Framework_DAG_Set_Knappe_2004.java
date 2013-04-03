@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿﻿1. Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
+ * Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
  * querying. International Journal of Intelligent Systems 2004, 22:739-761.
  *
  * @author Sebastien Harispe
@@ -50,17 +50,14 @@ public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abs
 
     private double k = 0.5;
 
-    /**
-     *
-     */
     public Sim_Framework_DAG_Set_Knappe_2004() {
     }
 
-    /**
-     *
-     * @param k
-     */
+    
     public Sim_Framework_DAG_Set_Knappe_2004(double k) {
+        if(k < 0 || k > 1){
+            throw new IllegalArgumentException("k parameter must be in [0;1]");
+        }
         this.k = k;
     }
 
@@ -91,5 +88,10 @@ public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abs
      */
     public void setK(double k) {
         this.k = k;
+    }
+    
+    @Override
+    public boolean isSymmetric() {
+        return k == 0.5;
     }
 }

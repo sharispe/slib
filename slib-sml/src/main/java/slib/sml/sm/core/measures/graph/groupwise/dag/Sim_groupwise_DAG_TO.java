@@ -44,18 +44,14 @@ import slib.utils.impl.SetUtils;
  * Mistry M, Pavlidis P: Gene Ontology term overlap as a measure of gene
  * functional similarity. BMC bioinformatics 2008, 9:327.
  *
- * @author seb
+ * Implementation of the Term Overlap measure (TO) which is the cardinality of
+ * the set of vertices composing the graph build from the intersection of the
+ * graphs induced by the ancestors of the two given sets of concepts.
+ *
+ * @author Harispe Sébastien
  */
 public class Sim_groupwise_DAG_TO extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param c
-     * @param conf
-     * @return
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) {
 

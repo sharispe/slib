@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
 
@@ -107,5 +107,10 @@ public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
         }
 
         return j;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

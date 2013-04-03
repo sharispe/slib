@@ -46,22 +46,16 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * Create util classO
  *
- * @author seb
+ * Stojanovic N, Alexander M, Staab S, Rudi S, York S: SEAL - A Framework for
+ * Developing SEmantic PortALs. In Proceedings of the International Conference
+ * on Knowl- edge Capture. , 2097/2001,.
+ *
+ * @author Sébastien Harispe
  *
  */
 public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -73,13 +67,14 @@ public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract
     }
 
     /**
+     * Compute the semantic similarity considering the specified parameters.
      *
-     * @param cA
-     * @param cB
-     * @param ancestors_A
-     * @param ancestors_B
-     * @param maxDepths
-     * @return
+     * @param cA the concept A
+     * @param cB the concept B
+     * @param ancestors_A the inclusive ancestors of A
+     * @param ancestors_B the inclusive ancestors of B
+     * @param maxDepths the maximal depth of the concepts
+     * @return the semantic similarity according to the given parameters
      * @throws SLIB_Exception
      */
     public double sim(
@@ -110,5 +105,10 @@ public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract
         }
 
         return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

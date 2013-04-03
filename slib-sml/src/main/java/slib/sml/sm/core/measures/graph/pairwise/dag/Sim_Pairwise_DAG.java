@@ -36,5 +36,12 @@ package slib.sml.sm.core.measures.graph.pairwise.dag;
 
 import slib.sml.sm.core.measures.Sim_Pairwise;
 
+/**
+ * Interface of a semantic similarity measure which can be used to compute the
+ * semantic similarity of two classes/concepts structured in a Directed Acyclic
+ * Graph (DAG).
+ *
+ * @author Sébastien Harispe
+ */
 public interface Sim_Pairwise_DAG extends Sim_Pairwise {
 }

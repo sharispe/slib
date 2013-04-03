@@ -40,20 +40,21 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Interface used to represent a pairwise measure. Those measures are used to
- * compute the likeness of a pair of concepts.
+ * Interface used to represent a pairwise measure which can be used to compute
+ * the semantic similarity of a pair of concepts/classes.
  *
  * @author Harispe Sébastien
  */
 public interface Sim_Pairwise {
 
     /**
-     * Compute the similarity of the pair of concepts
-     * @param a the first concept
-     * @param b the second concept
+     * Compute the semantic similarity of the pair of concepts/classes.
+     *
+     * @param a the first concept/class
+     * @param b the second concept/class
      * @param c the engine used to access information required by the measures
-     * @param conf the configuration to consider 
-     * @return the similarity between the pair of concepts.
+     * @param conf the configuration to consider
+     * @return the similarity between the pair of concept/class.
      * @throws SLIB_Exception
      */
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception;

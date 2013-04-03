@@ -51,15 +51,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Sim_IC_2010 implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -70,20 +62,17 @@ public class Sim_pairwise_DAG_node_Sim_IC_2010 implements Sim_DAG_node_abstract 
         return sim(ic_a, ic_b, ic_MICA);
     }
 
-    /**
-     *
-     * @param ic_a
-     * @param ic_b
-     * @param ic_mica
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
     public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
 
-        Sim_pairwise_DAG_node_Lin_1998 simLin = new Sim_pairwise_DAG_node_Lin_1998();
 
-        double simLinVal = simLin.sim(ic_a, ic_b, ic_mica);
+        double simLinVal = Sim_pairwise_DAG_node_Lin_1998.sim(ic_a, ic_b, ic_mica);
 
         return simLinVal * (1. - (1. / (1 + ic_mica)));
     }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
+    }
+    
 }

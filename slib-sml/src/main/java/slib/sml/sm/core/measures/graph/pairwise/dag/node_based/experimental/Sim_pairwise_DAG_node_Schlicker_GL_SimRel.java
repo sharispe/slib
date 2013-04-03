@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_abstract {
 
@@ -111,5 +111,10 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
         }
 
         return j * (1. - p_mica);
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

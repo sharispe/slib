@@ -67,4 +67,9 @@ public class Sim_Framework_DAG_Set_Korbel_2002 extends Sim_Framework_DAG_Set_abs
 
         return mb;
     }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
+    }
 }

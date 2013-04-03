@@ -45,19 +45,11 @@ import slib.utils.impl.SetUtils;
  * ﻿Mistry M, Pavlidis P: Gene Ontology term overlap as a measure of gene
  * functional similarity. BMC bioinformatics 2008, 9:327.
  *
- * @author seb
+ * @author Sébastien Harispe
  *
  */
 public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) {
 
@@ -69,7 +61,7 @@ public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract {
         double min = Math.min(ancA.size(), ancB.size());
 
         if (min == 0) {
-            return 0;
+            return 0.;
         }
 
         return (double) intersection.size() / min;

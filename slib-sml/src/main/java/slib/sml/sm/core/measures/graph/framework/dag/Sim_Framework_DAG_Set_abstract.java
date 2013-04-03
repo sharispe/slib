@@ -44,20 +44,12 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Abstract class used to facilitate implementation of set based measures.
  *
  * @author Sébastien Harispe
  */
 public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG, Sim_Groupwise_Direct {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -67,14 +59,6 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
         return sim(ancA, ancB, conf);
     }
 
-    /**
-     * @param setA
-     * @param setB
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) throws SLIB_Exception {
         Set<URI> ancA = c.getAncestorsInc(setA);
@@ -84,12 +68,15 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
     }
 
     /**
-     * Without inference
+     * This provide a way to compare the two sets of concepts which have been
+     * extended considering inference based on the taxonomic hierarchy. In other
+     * words, each vertex of the set already contains all its ancestors in the
+     * set.
      *
-     * @param ancA
-     * @param ancB
-     * @param conf
-     * @return
+     * @param ancA the first set
+     * @param ancB the second set
+     * @param conf the configuration to apply to compute the semantic similarity
+     * @return the similarity of the two sets.
      * @throws SLIB_Exception
      */
     public abstract double sim(Set<URI> ancA, Set<URI> ancB, SMconf conf) throws SLIB_Exception;

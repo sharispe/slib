@@ -32,32 +32,24 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.experimental;
 
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
-
-import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
+ * TODO Check approximation using depth of concepts
  *
- * ﻿﻿Li Y, Bandar ZA, McLean D: An approach for measuring semantic similarity
- * between words using multiple information sources. IEEE Transactions on
- * Knowledge and Data Engineering 2003, 15:871-882.
- *
- * TODO check LCA restriction
+ * @author Sebastien Harispe
  */
-public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract {
-
-    // @see publication
-    double alpha = 0.2;
-    double beta = 0.6;
+public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
 
     /**
      *
@@ -66,37 +58,32 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract {
      * @param c
      * @param conf
      * @return
-     * @throws SLIB_Exception
      */
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
 
-        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-        double sp_AtoB = c.getShortestPath(a, b, weightingScheme);
-        Set<URI> ancestors_A = c.getAncestorsInc(a);
-        Set<URI> ancestors_B = c.getAncestorsInc(b);
-        Map<URI, Integer> maxDepths = c.getMaxDepths();
-
-        return sim(sp_AtoB, ancestors_A, ancestors_B, maxDepths);
+        throw new UnsupportedOperationException(Sim_pairwise_DAG_edge_G_SESAME_2007.class + " is not available yet ");
     }
 
     /**
-     * Revenir sur la recherche du msa de Li Pour Li le msa est le concept de
-     * plus faible profondeur qui appartient au chemin le plus court entre les
-     * deux concepts passant par un ancetre commun des deux concepts
      *
-     * Alpha in [0,1] (best : 0.2) Beta in ]0,1]	(best : 0.6)
-     *
-     * @param sp_AtoB
+     * @param cA
+     * @param cB
      * @param ancestors_A
      * @param ancestors_B
+     * @param distMin_a
+     * @param distMin_b
      * @param maxDepths
      * @return
      * @throws SLIB_Exception
      */
-    public double sim(double sp_AtoB,
+    public double sim(
+            URI cA,
+            URI cB,
             Set<URI> ancestors_A,
             Set<URI> ancestors_B,
+            Map<URI, Double> distMin_a,
+            Map<URI, Double> distMin_b,
             Map<URI, Integer> maxDepths) throws SLIB_Exception {
 
         double sim = 0;
@@ -104,19 +91,24 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract {
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
-        if (!interSecAncestors.isEmpty()) {
+        if (interSecAncestors.isEmpty()) {
+
 
             URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
 
-            int h = maxDepths.get(msa);
 
-            double f1 = Math.exp(-alpha * sp_AtoB);
-            double f2 = (Math.exp(beta * h) - Math.exp(-beta * h)) / (Math.exp(beta * h) + Math.exp(-beta * h));
+            int d_mrca = maxDepths.get(msa) + 1;
+            double sp_a_mrca = distMin_a.get(msa);
+            double sp_b_mrca = distMin_b.get(msa);
 
-            sim = f1 * f2;
-
+            sim = (double) (2 * d_mrca) / (sp_a_mrca + sp_b_mrca + 2 * d_mrca);
         }
 
         return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

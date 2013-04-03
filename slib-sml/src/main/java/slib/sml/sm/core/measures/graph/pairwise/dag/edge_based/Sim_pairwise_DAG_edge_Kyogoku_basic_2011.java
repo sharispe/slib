@@ -52,15 +52,6 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -75,16 +66,24 @@ public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstr
 
     /**
      *
-     * @param maxDepth Max depth
+     * Compute the semantic similarity considering the given parameters.
+     *
+     * @param maxDepth Max depth the maximal depth of a class/concept in the
+     * graph.
      * @param sp_AtoB Shortest path from A to B
      * @param sp_BtoA Shortest path from B to A
      *
-     * @return
+     * @return the similarity considering the given parameters.
      */
     public double sim(double maxDepth, double sp_AtoB, double sp_BtoA) {
 
         double sim = maxDepth * 2 - (sp_AtoB + sp_BtoA);
 
         return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

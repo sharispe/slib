@@ -46,7 +46,9 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * TODO Check approximation using depth of concepts
+ *
+ * Wu Z, Palmer M: Verb semantics and lexical selection. In 32nd. Annual Meeting
+ * of the Association for Computational Linguistics. 1994:133–138.
  *
  * @author Sebastien Harispe
  *
@@ -69,15 +71,16 @@ public class Sim_pairwise_DAG_edge_Wu_Palmer_1994 extends Sim_DAG_edge_abstract 
     }
 
     /**
+     * compute the semantic similarity considering the given parameters.
      *
-     * @param cA
-     * @param cB
-     * @param ancestors_A
-     * @param ancestors_B
-     * @param distMin_a
-     * @param distMin_b
-     * @param maxDepths
-     * @return
+     * @param cA concept A
+     * @param cB concept B
+     * @param ancestors_A inclusive ancestors of A
+     * @param ancestors_B inclusive ancestors of B
+     * @param distMin_a shortest path from A
+     * @param distMin_b shortest path from B
+     * @param maxDepths maximal depth of all concepts
+     * @return the semantic similarity
      * @throws SLIB_Exception
      */
     public double sim(
@@ -108,5 +111,10 @@ public class Sim_pairwise_DAG_edge_Wu_Palmer_1994 extends Sim_DAG_edge_abstract 
         }
 
         return sim;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

@@ -40,22 +40,19 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * (log base 10)
+ * Implementation of Leacock and Chodorow semantic similarity measure.
  *
- * @author seb
+ * Leacock C, Chodorow M: Combining Local Context and WordNet Similarity for
+ * Word Sense Identification. In WordNet: An electronic lexical database. edited
+ * by Fellbaum C MIT Press; 1998:265 – 283.
+ *
+ * The Log base used in this implementation is 10.
+ *
+ * @author Sébastien Harispe
  *
  */
 public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -70,10 +67,11 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
     }
 
     /**
+     * Compute the semantic similarity considering the given parameters.
      *
-     * @param shortestPath
-     * @param depth_max
-     * @return
+     * @param shortestPath the shortest path between the two concepts.
+     * @param depth_max the maximal depth
+     * @return the semantic similarity
      */
     public double sim(Double shortestPath, double depth_max) {
 
@@ -81,5 +79,10 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
         // add +1 to the path to avoid infinity value if sim(a,a)
         double lc = -Math.log((shortestPath + 1) / (2 * depth_max));
         return lc;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿﻿1. Mirkin B, Koonin E: A top-down method for building genome classification
+ * Mirkin B, Koonin E: A top-down method for building genome classification
  * trees with linear binary hierarchies. In Bioconsensus: DIMACS Working Group
  * Meetings on Bioconsensus: October 25-26, 2000 and October 2-5, 2001, DIMACS
  * Center. Amer Mathematical Society; 2003, 61:97.
@@ -61,7 +61,12 @@ public class Sim_Framework_DAG_Set_Maryland_Bridge_2003 extends Sim_Framework_DA
 
 
 
-        double mb = (double) interSecAncestors.size() / (2 * nbAncest_a) + (double) interSecAncestors.size() / (2 * nbAncest_b);
+        double mb = (double) interSecAncestors.size() / (2. * nbAncest_a) + (double) interSecAncestors.size() / (2. * nbAncest_b);
         return mb;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

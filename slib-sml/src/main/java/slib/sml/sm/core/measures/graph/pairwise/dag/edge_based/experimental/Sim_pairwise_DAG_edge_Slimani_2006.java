@@ -32,36 +32,36 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.experimental;
 
 import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
+
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * TODO Check approximation using depth of concepts
+ * Slimani T, Boutheina BY, Mellouli K: A New Similarity Measure based on
+ * Edge Counting. In World academy of science, engineering and technology,.
+ * 2006:34–38.
  *
- * @author Sebastien Harispe
+ * @author Harispe Sébastien
  */
-public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
+public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     */
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
+    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        throw new UnsupportedOperationException(Sim_pairwise_DAG_edge_G_SESAME_2007.class + " is not available yet ");
+        Set<URI> ancestors_A = c.getAncestorsInc(a);
+        Set<URI> ancestors_B = c.getAncestorsInc(b);
+        Map<URI, Integer> maxDepths = c.getMaxDepths();
+
+        return sim(a, b, ancestors_A, ancestors_B, maxDepths);
     }
 
     /**
@@ -70,8 +70,6 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
      * @param cB
      * @param ancestors_A
      * @param ancestors_B
-     * @param distMin_a
-     * @param distMin_b
      * @param maxDepths
      * @return
      * @throws SLIB_Exception
@@ -81,28 +79,74 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
             URI cB,
             Set<URI> ancestors_A,
             Set<URI> ancestors_B,
-            Map<URI, Double> distMin_a,
-            Map<URI, Double> distMin_b,
             Map<URI, Integer> maxDepths) throws SLIB_Exception {
 
         double sim = 0;
 
+        boolean sameHierarchy = false;
+
+        if (ancestors_A.contains(cB) || ancestors_B.contains(cA)) {
+            sameHierarchy = true;
+        }
+
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
-        if (interSecAncestors.isEmpty()) {
+        if (!interSecAncestors.isEmpty()) {
 
 
             URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
 
+            double d_mrca = maxDepths.get(msa);
+            double d_a = maxDepths.get(cA);
+            double d_b = maxDepths.get(cB);
 
-            int d_mrca = maxDepths.get(msa) + 1;
-            double sp_a_mrca = distMin_a.get(msa);
-            double sp_b_mrca = distMin_b.get(msa);
 
-            sim = (double) (2 * d_mrca) / (sp_a_mrca + sp_b_mrca + 2 * d_mrca);
+            double pf = computePF(d_a, d_b, d_mrca, sameHierarchy);
+
+            sim = (double) ((2 * d_mrca) / (d_a + d_b + 1)) * pf;
         }
 
         return sim;
+    }
+
+    /**
+     * Penalization factor
+     *
+     * @param d_a
+     * @param d_b
+     * @param d_mrca
+     * @param sameHierarchy
+     * @return
+     */
+    private double computePF(double d_a, double d_b, double d_mrca, boolean sameHierarchy) {
+
+        double pf = 0;
+
+        double lambda = 0;
+
+        if (!sameHierarchy) {
+            lambda = 1;
+        }
+
+
+        /*
+         * <!> Modification of the original formula
+         * Addition of +1 to the denominateur to obtain pf(a,b) == 1
+         * if a,b are part of the same hierarchy.
+         * the formula proposed in the paper to not respect the specification proposed
+         */
+        double gamma = (1 - lambda) * (Math.min(d_a, d_b) - d_mrca + 1);
+        double alpha = lambda * (1 / (Math.abs(d_a - d_b) + 1));
+
+
+        pf = gamma + alpha;
+
+        return pf;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

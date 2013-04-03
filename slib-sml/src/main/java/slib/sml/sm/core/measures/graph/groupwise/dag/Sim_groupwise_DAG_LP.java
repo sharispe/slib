@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * 1. Gentleman R: Visualizing and distances using GO. Retrieved Jan. 10th 2007.
+ * Gentleman R: Visualizing and distances using GO. Retrieved Jan. 10th 2007.
  * http://www.bioconductor.org/packages/release/bioc/vignettes/GOstats/inst/doc/GOvis.pdf
  *
  * Extract : For simLP the similarity measure is the depth of the longest shared
@@ -53,21 +53,12 @@ import slib.utils.impl.SetUtils;
  * should have long shared paths, while those that have less in common should
  * have relatively short shared paths.
  *
- * We understand the depth of the most profound lca of each entity couples
+ * We understand the depth of the deepest lca of each entity couples.
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_DAG_LP extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 

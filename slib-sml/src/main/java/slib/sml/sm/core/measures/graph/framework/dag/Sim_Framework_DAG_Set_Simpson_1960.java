@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿﻿1. Simpson GG: Notes on the measurement of faunal resemblance. American
+ * Simpson GG: Notes on the measurement of faunal resemblance. American
  * Journal of Science 1960, 258A:300-311.
  *
  * @author Sebastien Harispe
@@ -60,5 +60,10 @@ public class Sim_Framework_DAG_Set_Simpson_1960 extends Sim_Framework_DAG_Set_ab
         double simpson = (double) interSecAncestors.size() / Math.min(nbAncest_a, nbAncest_b);
 
         return simpson;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

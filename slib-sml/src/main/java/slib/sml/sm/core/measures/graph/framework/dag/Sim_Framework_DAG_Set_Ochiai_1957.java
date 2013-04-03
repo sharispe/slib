@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿1. Ochiai A: Zoogeographic studies on the soleoid fishes found in Japan and
+ * Ochiai A: Zoogeographic studies on the soleoid fishes found in Japan and
  * its neighbouring regions. Bulletin of the Japanese Society of Scientific
  * Fischeries 1957, 22:526-530.
  *
@@ -60,5 +60,10 @@ public class Sim_Framework_DAG_Set_Ochiai_1957 extends Sim_Framework_DAG_Set_abs
         double ochiai = (double) interSecAncestors.size() / Math.sqrt(nbAncest_a * nbAncest_b);
 
         return ochiai;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

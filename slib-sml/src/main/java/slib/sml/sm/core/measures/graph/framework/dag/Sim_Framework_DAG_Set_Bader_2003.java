@@ -66,4 +66,9 @@ public class Sim_Framework_DAG_Set_Bader_2003 extends Sim_Framework_DAG_Set_abst
 
         return mb;
     }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
+    }
 }

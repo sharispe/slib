@@ -34,10 +34,12 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
+package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.experimental;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Rada_LCA_1989;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
@@ -82,6 +84,11 @@ public class Sim_pairwise_DAG_edge_Resnik_1995 extends Sim_DAG_edge_abstract{
 		
 		return resnik;
 	}
+
+    @Override
+    public boolean isSymmetric() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 
 

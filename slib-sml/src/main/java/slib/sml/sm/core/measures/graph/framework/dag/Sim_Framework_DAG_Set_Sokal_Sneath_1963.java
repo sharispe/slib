@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿﻿1. Sokal RR, Sneath PHA: Principles of numerical taxonomy. San Francisco:
+ * Sokal RR, Sneath PHA: Principles of numerical taxonomy. San Francisco:
  * W. H. Freeman and Company; 1963:359.
  *
  * @author Sebastien Harispe
@@ -57,8 +57,13 @@ public class Sim_Framework_DAG_Set_Sokal_Sneath_1963 extends Sim_Framework_DAG_S
         int nbAncest_b = ancB.size();
 
 
-        double sokal_sneath = (double) interSecAncestors.size() / (2 * (nbAncest_a + nbAncest_b) - 3 * interSecAncestors.size());
+        double sokal_sneath = (double) interSecAncestors.size() / (2. * (nbAncest_a + nbAncest_b) - 3. * interSecAncestors.size());
 
         return sokal_sneath;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

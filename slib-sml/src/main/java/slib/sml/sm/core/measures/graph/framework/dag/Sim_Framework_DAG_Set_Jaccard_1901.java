@@ -41,8 +41,8 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿1. Jaccard P: Distribution de la flore alpine dans le bassin des Dranses et
- * dans quelques regions voisines. Bulletin de la Societe Vaudoise des Sciences
+ * Jaccard P: Distribution de la flore alpine dans le bassin des Dranses et dans
+ * quelques regions voisines. Bulletin de la Societe Vaudoise des Sciences
  * Naturelles 1901, 37:241 - 272.
  *
  * @author Sebastien Harispe
@@ -62,5 +62,10 @@ public class Sim_Framework_DAG_Set_Jaccard_1901 extends Sim_Framework_DAG_Set_ab
         double jaccard = (double) interSecAncestors.size() / (nbAncest_a + nbAncest_b - interSecAncestors.size());
 
         return jaccard;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

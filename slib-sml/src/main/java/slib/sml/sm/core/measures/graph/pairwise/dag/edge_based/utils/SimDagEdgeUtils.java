@@ -45,8 +45,9 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
+ * Utility class for edge-based measures.
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class SimDagEdgeUtils {
 
@@ -60,13 +61,13 @@ public class SimDagEdgeUtils {
      * Proceedings of the 19th international conference on Computational
      * linguistics. Association for Computational Linguistics; 2002, 2:1-7.
      *
-     * @param root
-     * @param allSpA HashMap<V, Double> shortest path from A to all concepts
-     * @param allSpB	HashMap<V, Double> shortest path from B to all concepts
-     * @param ancestors_A	ArrayList<V> all ancestors of A
-     * @param ancestors_B	ArrayList<V> all ancestors of B
+     * @param root the root of the graph
+     * @param allSpA shortest path from A to all concepts
+     * @param allSpB	shortest path from B to all concepts
+     * @param ancestors_A	inclusive ancestors of A
+     * @param ancestors_B	inclusive ancestors of B
      * @param dijkstra
-     * @return V the vertex corresponding to the Most Specific Ancestors
+     * @return the vertex corresponding to the Most Specific Ancestors
      */
     public static URI getMSA_pekar_staab(
             URI root,
@@ -126,10 +127,12 @@ public class SimDagEdgeUtils {
     }
 
     /**
+     * Search the Most specific ancestor considering the depth
      *
-     * @param interSecAncestors
-     * @param maxDepths
-     * @return
+     * @param interSecAncestors the concept to evaluate
+     * @param maxDepths the values which will be used to evaluate the concepts
+     * @return the concept maximizing the depth (the first one is retrieve if
+     * multiple exist). null is returned if the intersection is empty.
      * @throws SLIB_Exception
      */
     public static URI searchMSA(Set<URI> interSecAncestors,
@@ -137,14 +140,15 @@ public class SimDagEdgeUtils {
 
 
         URI msa = null;
+        int dMSA = -1;
 
         for (URI r : interSecAncestors) {
 
-            if (msa == null || maxDepths.get(r) > maxDepths.get(msa)) {
+            if (msa == null || maxDepths.get(r) > dMSA) {
                 msa = r;
+                dMSA = maxDepths.get(r);
             }
         }
-
         return msa;
     }
 }

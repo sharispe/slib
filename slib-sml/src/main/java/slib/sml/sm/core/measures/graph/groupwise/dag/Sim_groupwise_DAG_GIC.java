@@ -51,15 +51,6 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_groupwise_DAG_GIC extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 
@@ -69,13 +60,13 @@ public class Sim_groupwise_DAG_GIC extends Sim_groupwise_DAG_abstract {
         Set<URI> intersection = SetUtils.intersection(anc_setA, anc_setB);
         Set<URI> union = SetUtils.union(anc_setA, anc_setB);
 
-        double ic_inter = 0;
+        double ic_inter = 0.;
 
         for (URI r : intersection) {
             ic_inter += rc.getIC(conf.getICconf(), r);
         }
 
-        double ic_union = 0;
+        double ic_union = 0.;
 
         for (URI r : union) {
             ic_union += rc.getIC(conf.getICconf(), r);

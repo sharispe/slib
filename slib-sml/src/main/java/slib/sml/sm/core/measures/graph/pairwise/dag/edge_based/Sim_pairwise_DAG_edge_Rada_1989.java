@@ -66,4 +66,10 @@ public class Sim_pairwise_DAG_edge_Rada_1989 extends Sim_DAG_edge_abstract {
     public double sim(double distSourceTarget) {
         return 1 / (distSourceTarget + 1);
     }
+
+    @Override
+    public boolean isSymmetric() {
+        // Depends on the symmetry of the weighting scheme
+        return false;
+    }
 }

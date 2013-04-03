@@ -44,22 +44,13 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- *
- * @author seb
+ * Random measure (used for test)
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_Random implements Sim_Groupwise_Direct {
 
     Random r = new Random();
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf)
             throws SLIB_Exception {

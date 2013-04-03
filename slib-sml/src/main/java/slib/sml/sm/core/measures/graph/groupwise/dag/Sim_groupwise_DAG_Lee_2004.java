@@ -44,19 +44,11 @@ import slib.utils.impl.SetUtils;
  * Lee HK, Hsu AK, Sajdak J, Qin J, Pavlidis P: Coexpression analysis of human
  * genes across many microarray data sets. Genome Research 2004, 14:1085.
  *
- * @author seb
+ * @author Sébastien Harispe
  *
  */
 public class Sim_groupwise_DAG_Lee_2004 extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param c
-     * @param conf
-     * @return
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) {
 

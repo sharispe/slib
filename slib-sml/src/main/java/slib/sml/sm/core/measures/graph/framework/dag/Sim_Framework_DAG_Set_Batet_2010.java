@@ -42,8 +42,8 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿1. Batet M, Sanchez D, Valls A: An ontology-based measure to compute
- * semantic similarity in biomedicine. Journal of biomedical informatics 2010,
+ * Batet M, Sanchez D, Valls A: An ontology-based measure to compute semantic
+ * similarity in biomedicine. Journal of biomedical informatics 2010,
  * 44:118-125.
  *
  * IC is normalize considering spirit formulated in given by Faria and al in
@@ -54,14 +54,6 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     */
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
 
@@ -128,5 +120,10 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
             batet = batet / Math.log(nbVertices);
         }
         return batet;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }

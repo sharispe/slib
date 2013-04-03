@@ -47,22 +47,13 @@ import slib.utils.impl.SetUtils;
  * Ali W, Deane CM. Functionally guided alignment of pro- tein interaction
  * networks for module detection. Bioinformatics 2009;25:3166–73.
  *
- * funsim
+ * Measures also know through the name Funsim.
  *
  * @author Sebastien Harispe
  *
  */
 public class Sim_groupwise_DAG_Ali_Deane extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 
@@ -80,14 +71,10 @@ public class Sim_groupwise_DAG_Ali_Deane extends Sim_groupwise_DAG_abstract {
         for (URI v : intersection) {
             funsim_tmp = 1 - (nbOcc.get(v) / maxOcc);
 
-//			System.out.println(v+"  "+funsim_tmp);
-
             if (funsim < funsim_tmp) {
                 funsim = funsim_tmp;
             }
         }
-
-//		UtilDebug.exit(this);
 
         return funsim;
     }

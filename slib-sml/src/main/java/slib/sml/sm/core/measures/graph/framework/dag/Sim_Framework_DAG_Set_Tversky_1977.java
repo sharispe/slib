@@ -43,8 +43,8 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿﻿﻿1. Tversky A: Features of similarity. Psychological Review 1977,
- * 84:327-352.
+ * Tversky A: Features of similarity. Psychological Review 1977, 84:327-352.
+ * Implementation of the contrast model in a set-based manner.
  *
  * @author Sebastien Harispe
  */
@@ -57,14 +57,16 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
     private double k = 0.5;
 
     /**
-     *
+     * Create a Tversky Contrast Model semantic similarity instance with k
+     * parameter equals to 0.5
      */
     public Sim_Framework_DAG_Set_Tversky_1977() {
     }
 
     /**
+     * Create a Tversky Contrast Model semantic similarity instance.
      *
-     * @param k
+     * @param k the value of the k parameter
      */
     public Sim_Framework_DAG_Set_Tversky_1977(double k) {
         this.k = k;
@@ -97,18 +99,23 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
     }
 
     /**
-     *
-     * @return
+     * @return the value of the k parameter
      */
     public double getK() {
         return k;
     }
 
     /**
+     * Setter of the k parameter value
      *
-     * @param k
+     * @param k the new value of k
      */
     public void setK(double k) {
         this.k = k;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return k == 0.5;
     }
 }

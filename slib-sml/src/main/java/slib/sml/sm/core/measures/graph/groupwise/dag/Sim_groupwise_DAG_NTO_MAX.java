@@ -41,24 +41,16 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿Adaptation of Mistry M, Pavlidis P: Gene Ontology term overlap as a measure
+ * Adaptation of Mistry M, Pavlidis P: Gene Ontology term overlap as a measure
  * of gene functional similarity. BMC bioinformatics 2008, 9:327.
  *
- * in order to divide by the max
+ * The maximum of the cardinality of the denominator is used in this version.
  *
- * @author seb
+ * @author Sébastien Harispe
  *
  */
 public class Sim_groupwise_DAG_NTO_MAX extends Sim_groupwise_DAG_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param conf
-     * @return
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) {
 
@@ -70,7 +62,7 @@ public class Sim_groupwise_DAG_NTO_MAX extends Sim_groupwise_DAG_abstract {
         double max = Math.max(ancA.size(), ancB.size());
 
         if (max == 0) {
-            return 0;
+            return 0.;
         }
 
         return (double) intersection.size() / max;

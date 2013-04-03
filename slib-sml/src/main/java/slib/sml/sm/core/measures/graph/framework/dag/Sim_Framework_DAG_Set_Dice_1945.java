@@ -41,7 +41,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿1. Dice LR: Measures of the Amount of Ecologic Association Between Species.
+ * Dice LR: Measures of the Amount of Ecologic Association Between Species.
  * Ecology 1945, 26:297-302.
  *
  * @author Sebastien Harispe
@@ -60,5 +60,10 @@ public class Sim_Framework_DAG_Set_Dice_1945 extends Sim_Framework_DAG_Set_abstr
         double dice = (double) 2 * interSecAncestors.size() / (nbAncest_a + nbAncest_b);
 
         return dice;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return true;
     }
 }
