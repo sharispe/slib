@@ -34,6 +34,7 @@
  */
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
 import org.openrdf.model.URI;
 
@@ -44,42 +45,46 @@ import slib.utils.impl.MatrixDouble;
 
 /**
  *
- * @author seb
+ * Schlicker A, Domingues FS, Rahnenführer J, Lengauer T: A new measure for
+ * functional similarity of gene products based on Gene Ontology. BMC
+ * Bioinformatics 2006, 7:302.
+ *
+ * Also called funSim in the literature.
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_BestMatchMax extends Sim_groupwise_general_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @param conf
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
+    @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
         MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
+        return sim(results_setA);
+    }
 
+    public static double sim(MatrixDouble<URI, URI> matrix) {
         double sumMaxColumn = 0;
         double sumMaxRow = 0;
+        
+        
 
-        for (URI v : setA) {
-            sumMaxColumn += results_setA.getMaxColumn(v);
+        for (URI v : matrix.getColumnElements()) {
+            sumMaxColumn += matrix.getMaxColumn(v);
         }
 
-        for (URI v : setB) {
-            sumMaxRow += results_setA.getMaxRow(v);
+        for (URI v : matrix.getRowElements()) {
+            sumMaxRow += matrix.getMaxRow(v);
+            System.out.println(v+"\t"+matrix.getMaxRow(v));
         }
 
-        double num = 1. / (setA.size() + setB.size());
+        double num = 1. / matrix.getNbColumns();
+        double columnScore = num * sumMaxColumn;
 
-        double bma = num * (sumMaxColumn + sumMaxRow);
+        num = 1. / matrix.getNbRows();
+        double rowScore = num * sumMaxRow;
 
-//		System.out.println(results_setA.toString());		
-//		UtilDebug.exit(this);
-
-        return bma;
+        if (columnScore > rowScore) {
+            return columnScore;
+        }
+        return rowScore;
     }
 }

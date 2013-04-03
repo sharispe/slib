@@ -240,12 +240,12 @@ public class MatrixDouble<C, R> {
 
     /**
      * @return the maximal value stored in the column of the given resource
-     * @throws SLIB_Ex_Critic
+     * @throws IllegalArgumentException if the given value cannot be associated to a column
      */
-    public Double getMaxColumn(C v) throws SLIB_Ex_Critic {
+    public Double getMaxColumn(C v) {
 
         if (!isInColumnIndex(v)) {
-            throw new SLIB_Ex_Critic("Unable to locate " + v + "in column index");
+            throw new IllegalArgumentException("Unable to locate " + v + "in the column index");
         }
 
         Double[] columnScore = getColumn(v);
@@ -260,12 +260,12 @@ public class MatrixDouble<C, R> {
 
     /**
      * @return the maximal value stored in the row of the given resource
-     * @throws SLIB_Ex_Critic
+     * @throws IllegalArgumentException if the given value cannot be associated to a row
      */
-    public Double getMaxRow(R v) throws SLIB_Ex_Critic {
+    public Double getMaxRow(R v) {
 
         if (!isInRowIndex(v)) {
-            throw new SLIB_Ex_Critic("Unable to locate " + v + "in row index");
+            throw new IllegalArgumentException("Unable to locate " + v + "in the row index");
         }
 
         Double[] rowScore = getRow(v);
@@ -346,7 +346,7 @@ public class MatrixDouble<C, R> {
                 try {
                     out += "\t" + getValue(v, vj);
                 } catch (SLIB_Ex_Critic e) {
-                    e.printStackTrace();// no problem
+                    throw new RuntimeException("Ooops an error occur in Matrix class");// no problem
                 }
             }
             out += "\n";
@@ -354,5 +354,38 @@ public class MatrixDouble<C, R> {
         out += "\n";
 
         return out;
+    }
+
+    public Set<C> getColumnElements() {
+        return columnIndex.keySet();
+    }
+
+    public Set<R> getRowElements() {
+        return rowIndex.keySet();
+    }
+
+    /**
+     * Compute the sum of the values contained in the matrix. null cells are
+     * skipped. If the matrix only contains null values, sum is equal to null.
+     *
+     * @return the sum of the values contained in the matrix.
+     */
+    public Double getSum() {
+        double sum = 0;
+        boolean touched = false;
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[i].length; j++) {
+
+                if (matrix[i][j] != null) {
+                    sum += matrix[i][j];
+                    touched = true;
+                }
+            }
+        }
+        if (touched) {
+            return sum;
+        } else {
+            return null;
+        }
     }
 }

@@ -34,6 +34,7 @@
  */
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
@@ -55,34 +56,13 @@ public class Sim_groupwise_Average extends Sim_groupwise_general_abstract {
      * @param mat
      * @return the average of the matrix values
      */
-    public double computeAverage(MatrixDouble<URI, URI> mat) {
-
-        double sum = 0;
-        int c = 0;
-
-        Double[][] matrix = mat.getMatrix();
-
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                sum += matrix[i][j];
-                c++;
-            }
-        }
-        return sum / c;
+    public static double sim(MatrixDouble<URI, URI> mat) {
+        return mat.getAverage();
     }
 
-    /**
-     * Compute the average of the scores obtained comparing the two sets of
-     * concepts. Note that the measure is expected to be symmetric i.e. sim(a,b)
-     * is expected to be equal to sim(b,a)
-     */
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
-        MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
-
-        double score = computeAverage(results_setA);
-
-        return score;
+        return rc.getMatrixScore(setA, setB, conf).getAverage();
     }
 }

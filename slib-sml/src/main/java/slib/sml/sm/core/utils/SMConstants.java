@@ -93,7 +93,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_Average;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchAverage;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchMax;
-import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_MAX_NORMALIZED_GOSIM;
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_MAX_NORMALIZED_GOSIM;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_Max;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_Min;
 import slib.sml.sm.core.measures.others.groupwise.direct.Sim_groupwise_Random;

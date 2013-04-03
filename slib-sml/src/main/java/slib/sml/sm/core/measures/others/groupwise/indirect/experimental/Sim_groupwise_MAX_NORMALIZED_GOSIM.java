@@ -32,10 +32,11 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.others.groupwise.indirect;
+package slib.sml.sm.core.measures.others.groupwise.indirect.experimental;
 
 import java.util.Set;
 import org.openrdf.model.URI;
+
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -51,23 +52,23 @@ import slib.utils.impl.MatrixDouble;
  * @author Sebastien Harispe
  *
  */
-public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
+public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
 
     /**
      * @see Sim_groupwise_Max to compute max values
-     * @param avgScore_sA_vs_sB
-     * @param avgScore_sA_vs_sA
-     * @param avgScore_sB_vs_sB
+     * @param maxScore_sA_vs_sB
+     * @param maxScore_sA_vs_sA
+     * @param maxScore_sB_vs_sB
      * @return
      */
-    public double sim(double avgScore_sA_vs_sB, double avgScore_sA_vs_sA, double avgScore_sB_vs_sB) {
+    public double sim(double maxScore_sA_vs_sB, double maxScore_sA_vs_sA, double maxScore_sB_vs_sB) {
 
-        double den = Math.sqrt(avgScore_sA_vs_sA * avgScore_sB_vs_sB);
+        double den = Math.sqrt(maxScore_sA_vs_sA * maxScore_sB_vs_sB);
         if (den == 0) {
             return 0;
         }
 
-        double sim = avgScore_sA_vs_sB / den;
+        double sim = maxScore_sA_vs_sB / den;
         return sim;
     }
 
@@ -78,11 +79,12 @@ public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_genera
         MatrixDouble<URI, URI> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
         MatrixDouble<URI, URI> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
 
-        double avgScore_sA_vs_sB = results_setA_B.getAverage();
-        double avgScore_sA_vs_sA = results_setA_A.getAverage();
-        double avgScore_sB_vs_sB = results_setB_B.getAverage();
+        double maxScore_sA_vs_sB = results_setA_B.getMax();
+        double maxScore_sA_vs_sA = results_setA_A.getMax();
+        double maxScore_sB_vs_sB = results_setB_B.getMax();
 
-        return sim(avgScore_sA_vs_sB, avgScore_sA_vs_sA, avgScore_sB_vs_sB);
+
+        return sim(maxScore_sA_vs_sB, maxScore_sA_vs_sA, maxScore_sB_vs_sB);
 
     }
 }

@@ -34,29 +34,26 @@
  */
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.impl.MatrixDouble;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_Min extends Sim_groupwise_general_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @param conf
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
+    public static double sim(MatrixDouble<URI, URI> mat) {
+        return mat.getMin();
+    }
+
+    @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
         return rc.getMatrixScore(setA, setB, conf).getMin();

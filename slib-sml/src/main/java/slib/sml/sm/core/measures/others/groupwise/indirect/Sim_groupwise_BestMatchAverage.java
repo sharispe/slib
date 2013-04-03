@@ -34,6 +34,7 @@
  */
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
@@ -43,45 +44,36 @@ import slib.utils.impl.MatrixDouble;
 
 /**
  *
- * @author seb
+ * Schlicker A, Domingues FS, Rahnenführer J, Lengauer T: A new measure for
+ * functional similarity of gene products based on Gene Ontology. BMC
+ * Bioinformatics 2006, 7:302.
+ * 
+ * Also called funSim in the literature.
+ * 
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_BestMatchAverage extends Sim_groupwise_general_abstract {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @param conf
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
+    
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
         MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
+        return sim(results_setA);
+    }
 
-        double sumMaxColumn = 0;
-        double sumMaxRow = 0;
+    public static double sim(MatrixDouble<URI, URI> matrix) {
+        
+        double sumMaxColumns = 0;
+        double sumMaxRows = 0;
 
-        for (URI v : setA) {
-            sumMaxColumn += results_setA.getMaxColumn(v);
+        for (URI v : matrix.getColumnElements()) {
+            sumMaxColumns += matrix.getMaxColumn(v);
         }
 
-        for (URI v : setB) {
-            sumMaxRow += results_setA.getMaxRow(v);
+        for (URI v : matrix.getRowElements()) {
+            sumMaxRows += matrix.getMaxRow(v);
         }
-
-        double num = 1. / setA.size();
-        double columnScore = num * sumMaxColumn;
-
-        num = 1. / setB.size();
-        double rowScore = num * sumMaxRow;
-
-        if (columnScore > rowScore) {
-            return columnScore;
-        }
-        return rowScore;
+        return (1./matrix.getNbColumns() * sumMaxColumns + 1./matrix.getNbRows() * sumMaxRows)/2.0;
     }
 }

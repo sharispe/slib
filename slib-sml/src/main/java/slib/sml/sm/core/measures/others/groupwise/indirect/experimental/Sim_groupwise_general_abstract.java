@@ -34,21 +34,15 @@ knowledge of the CeCILL license and that you accept its terms.
  */
  
  
-package slib.sml.sm.core.measures.others.groupwise.indirect;
-
+package slib.sml.sm.core.measures.others.groupwise.indirect.experimental;
+import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 
 
 /**
- * TODO @see TODO file
- * @author seb
  *
+ * @author seb
  */
-public class Sim_groupwise_Optimal_Assignment{
-	/**
-     *
-     * @return
-     */
-    public double sim() {
-		throw new UnsupportedOperationException();
-	}
+public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_Indirect{
+	
+
 }

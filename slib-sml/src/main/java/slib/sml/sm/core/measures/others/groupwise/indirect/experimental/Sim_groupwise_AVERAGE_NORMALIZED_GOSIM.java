@@ -32,11 +32,9 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.sml.sm.core.measures.others.groupwise.indirect;
+package slib.sml.sm.core.measures.others.groupwise.indirect.experimental;
 
-import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
-
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
@@ -44,18 +42,41 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 /**
+ * ﻿
+ * Frohlich H, Speer N, Poustka A, Beissbarth T: GOSim--an R-package for
+ * computation of information theoretic GO similarities between terms and gene
+ * products. BMC bioinformatics 2007, 8:166. Implementation as defined in
+ * equation 7 page 3/8
  *
- * @author Sébastien Harispe
+ * @author Sebastien Harispe
+ *
  */
-public class Sim_groupwise_Max extends Sim_groupwise_general_abstract {
+public class Sim_groupwise_AVERAGE_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
 
-    public static double sim(MatrixDouble<URI, URI> mat) {
-        return mat.getMax();
+   
+    public double sim(double avgScore_sA_vs_sB, double avgScore_sA_vs_sA, double avgScore_sB_vs_sB) {
+
+        double den = Math.sqrt(avgScore_sA_vs_sA * avgScore_sB_vs_sB);
+        if (den == 0) {
+            return 0;
+        }
+
+        double sim = avgScore_sA_vs_sB / den;
+        return sim;
     }
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SLIB_Ex_Critic {
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
 
-        return rc.getMatrixScore(setA, setB, pairwiseConf).getMax();
+        MatrixDouble<URI, URI> results_setA_B = rc.getMatrixScore(setA, setB, paiwiseconf);
+        MatrixDouble<URI, URI> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
+        MatrixDouble<URI, URI> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
+
+        double avgScore_sA_vs_sB = results_setA_B.getAverage();
+        double avgScore_sA_vs_sA = results_setA_A.getAverage();
+        double avgScore_sB_vs_sB = results_setB_B.getAverage();
+
+        return sim(avgScore_sA_vs_sB, avgScore_sA_vs_sA, avgScore_sB_vs_sB);
+
     }
 }

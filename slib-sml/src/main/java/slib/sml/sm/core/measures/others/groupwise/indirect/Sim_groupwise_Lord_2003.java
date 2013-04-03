@@ -34,6 +34,7 @@
  */
 package slib.sml.sm.core.measures.others.groupwise.indirect;
 
+import slib.sml.sm.core.measures.others.groupwise.indirect.experimental.Sim_groupwise_general_abstract;
 import java.util.Set;
 import org.openrdf.model.URI;
 
@@ -43,58 +44,32 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 /**
- * ﻿
- * Frohlich H, Speer N, Poustka A, Beissbarth T: GOSim--an R-package for
- * computation of information theoretic GO similarities between terms and gene
- * products. BMC bioinformatics 2007, 8:166. Implementation as defined in
- * equation 7 page 3/8
+ * Lord P: Investigating semantic similarity measures across the Gene Ontology:
+ * the relationship between sequence and annotation. Bioinformatics 2003,
+ * 19:1275–1283.
  *
- * @author Sebastien Harispe
+ * As described in:
  *
+ * Schlicker A, Domingues FS, Rahnenführer J, Lengauer T: A new measure for
+ * functional similarity of gene products based on Gene Ontology. BMC
+ * Bioinformatics 2006, 7:302.
+ * 
+ * Corresponds to the Average Strategy
+ *
+ * @author Sébastien Harispe
  */
-public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
+public class Sim_groupwise_Lord_2003 extends Sim_groupwise_general_abstract {
 
-    /**
-     * @see Sim_groupwise_Max to compute max values
-     * @param maxScore_sA_vs_sB
-     * @param maxScore_sA_vs_sA
-     * @param maxScore_sB_vs_sB
-     * @return
-     */
-    public double sim(double maxScore_sA_vs_sB, double maxScore_sA_vs_sA, double maxScore_sB_vs_sB) {
+    @Override
+    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf conf) throws SLIB_Ex_Critic {
 
-        double den = Math.sqrt(maxScore_sA_vs_sA * maxScore_sB_vs_sB);
-        if (den == 0) {
-            return 0;
-        }
-
-        double sim = maxScore_sA_vs_sB / den;
-        return sim;
+        MatrixDouble<URI, URI> results_setA = rc.getMatrixScore(setA, setB, conf);
+        return sim(results_setA);
     }
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @param paiwiseconf
-     * @return
-     * @throws SLIB_Ex_Critic
-     */
-    @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf paiwiseconf) throws SLIB_Ex_Critic {
+    public static double sim(MatrixDouble<URI, URI> matrix) {
+        double sum = matrix.getSum();
 
-        MatrixDouble<URI, URI> results_setA_B = rc.getMatrixScore(setA, setB, paiwiseconf);
-        MatrixDouble<URI, URI> results_setA_A = rc.getMatrixScore(setA, setA, paiwiseconf);
-        MatrixDouble<URI, URI> results_setB_B = rc.getMatrixScore(setB, setB, paiwiseconf);
-
-        double maxScore_sA_vs_sB = results_setA_B.getMax();
-        double maxScore_sA_vs_sA = results_setA_A.getMax();
-        double maxScore_sB_vs_sB = results_setB_B.getMax();
-
-
-        return sim(maxScore_sA_vs_sB, maxScore_sA_vs_sA, maxScore_sB_vs_sB);
-
+        return 1. / (matrix.getNbColumns() * matrix.getNbRows()) * sum;
     }
 }
