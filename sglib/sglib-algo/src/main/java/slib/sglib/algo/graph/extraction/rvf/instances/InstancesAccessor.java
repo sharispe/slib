@@ -5,15 +5,15 @@ import org.openrdf.model.URI;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
-public interface InstancesAccessor extends VirtualInstancesAccessor {
+public interface InstancesAccessor {
 
     /**
      *
      * @return
      */
-    public Set<URI> getInstances();
+    public Iterable<URI> getInstances();
 
     /**
      * Access to the set of vertex considered as instance of a class (using
@@ -22,7 +22,7 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      * @param v the class of interest
      * @return the set of instances of the specified class
      */
-    public Set<URI> getInstances(URI v);
+    public Iterable<URI> getInstances(URI v);
 
     /**
      * Access to the set of vertex considered as direct instance of a class e.g.
@@ -31,7 +31,7 @@ public interface InstancesAccessor extends VirtualInstancesAccessor {
      * @param v the class of interest
      * @return the set of direct instances of the specified class
      */
-    public Set<URI> getDirectInstances(URI v);
+    public Iterable<URI> getDirectInstances(URI v);
 
     /**
      * Method providing access to the class annotating an instance. This method

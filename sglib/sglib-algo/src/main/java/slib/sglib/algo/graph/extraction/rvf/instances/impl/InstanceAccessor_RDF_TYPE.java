@@ -12,12 +12,20 @@ import slib.sglib.model.graph.utils.Direction;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
     G graph;
     DescendantEngine descendantsEngine;
+
+    /**
+     * @param graph
+     */
+    public InstanceAccessor_RDF_TYPE(G graph, DescendantEngine engine) {
+        this.graph = graph;
+        this.descendantsEngine = engine;
+    }
 
     /**
      * @param graph
@@ -32,29 +40,8 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
         return graph.getV(v, RDF.TYPE, Direction.IN);
     }
 
-    @Override
-    public long getInstancesNumber(URI v) {
-        // TODO Auto-generated method stub Aug 30, 2012
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Map<URI, Long> getInferredInstancesNumberMapping() {
-        // TODO Auto-generated method stub Aug 30, 2012
-        throw new UnsupportedOperationException("Not supported yet.");
-
-    }
-
-    @Override
     public long getDirectInstancesNumber(URI v) {
         return graph.getV(v, RDF.TYPE, Direction.IN).size();
-    }
-
-    @Override
-    public Map<URI, Long> getDirectInstancesNumberMapping() {
-        // TODO Auto-generated method stub Aug 30, 2012
-        throw new UnsupportedOperationException("Not supported yet.");
-
     }
 
     @Override
@@ -69,12 +56,12 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
     @Override
     public Set<URI> getInstances(URI v) {
-        
-        
+
+
         Set<URI> instances = new HashSet<URI>();
-        
+
         instances.addAll(getDirectInstances(v));
-        for(URI d : descendantsEngine.getDescendantsExc(v)){
+        for (URI d : descendantsEngine.getDescendantsExc(v)) {
             instances.addAll(getDirectInstances(d));
         }
         return instances;
