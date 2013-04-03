@@ -926,15 +926,17 @@ public class SM_Engine {
     /**
      * Compute the matrix of similarity for two sets of vertex/concepts/classes.
      * In other words, the matrix will contain all the semantic scores which can
-     * be computed for every
+     * be computed for every pair of concepts which can be build from the two
+     * sets.
      *
      * @param setA the first set of vertices/classes/concepts
      * @param setB the second set of vertices/classes/concepts
      * @param pairwiseConf the pairwise semantic measure configuration which
      * must be used to compute the score of a pair of vertex
+     * 
      * @return the matrix filled with the scores.
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
+     * @throws IllegalAccessException if the given URIs cannot be associated to a
      * class
      */
     public MatrixDouble<URI, URI> getMatrixScore(
@@ -947,46 +949,9 @@ public class SM_Engine {
 
         MatrixDouble<URI, URI> m = new MatrixDouble<URI, URI>(setA, setB);
 
-        Sim_Pairwise pMeasure;
-
-
-
-        if (pairwiseMeasures.containsKey(pairwiseConf)) {
-            pMeasure = pairwiseMeasures.get(pairwiseConf);
-        } else {
-
-            try {
-
-                Class<?> cl;
-                cl = Class.forName(pairwiseConf.className);
-                Constructor<?> co = cl.getConstructor();
-
-
-                pMeasure = (Sim_Pairwise) co.newInstance();
-                pairwiseMeasures.put(pairwiseConf, pMeasure);
-            } catch (Exception e) {
-                throw new SLIB_Ex_Critic(e.getMessage());
-            }
-        }
-
-        if (pMeasure.isSymmetric()) {
-            for (URI a : setA) {
-                for (URI b : setB) {
-                    double sim = computePairwiseSim(pairwiseConf, a, b);
-                    m.setValue(a, b, sim);
-                    m.setValue(b, a, sim);
-                }
-            }
-        } else {
-            List<URI> listA = new ArrayList<URI>(setA);
-            List<URI> listB = new ArrayList<URI>(setB);
-
-            for (int i = 0; i < listA.size(); i++) {
-                for (int j = 0; j < listB.size(); j++) {
-
-                    double sim = computePairwiseSim(pairwiseConf, listA.get(i), listB.get(j));
-                    m.setValue(listA.get(i), listB.get(i), sim);
-                }
+        for (URI a : setA) {
+            for (URI b : setB) {
+                m.setValue(a, b, computePairwiseSim(pairwiseConf, a, b));
             }
         }
         return m;

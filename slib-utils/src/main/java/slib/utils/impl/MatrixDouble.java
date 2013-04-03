@@ -40,7 +40,8 @@ import java.util.Set;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- * Matrix of Double object (Non Sparse matrix)
+ * Class used to represent a Matrix which can be used to store values associated
+ * to pairs of elements.
  *
  * @param <C> Object to index Columns
  * @param <R> Object to index Rows
@@ -56,10 +57,10 @@ public class MatrixDouble<C, R> {
     private int rows_number;
 
     /**
-     * Create a matrix filled with null values considering the given indexes
+     * Create a matrix filled with null values considering the given indexes.
      *
-     * @param columResources
-     * @param rowResources
+     * @param columResources the columns
+     * @param rowResources the rows
      */
     public MatrixDouble(Set<C> columResources, Set<R> rowResources) {
         init(columResources, rowResources);
