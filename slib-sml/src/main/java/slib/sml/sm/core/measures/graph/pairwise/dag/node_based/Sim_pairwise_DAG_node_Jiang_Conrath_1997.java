@@ -41,7 +41,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  * Jiang J, Conrath D: Semantic Similarity Based on Corpus Statistics and
- * Lexical Taxonomy. In In International Conference Research on Computational
+ * Lexical Taxonomy. In International Conference Research on Computational
  * Linguistics (ROCLING X). 1997, cmp-lg/970:15.
  *
  * @author Sebastien Harispe

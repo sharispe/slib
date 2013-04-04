@@ -40,17 +40,23 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
+ * Class used to provide an easy way to retrieve the ancestors of a concept
+ * (super classes of a class).
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class AncestorEngine extends RVF_TAX {
 
     /**
+     * Build an ancestor engine associated to the given graph.
+     *
+     * Note that the graph is not expected to be modified during the processing.
+     *
      * @param g the graph on which the engine must work
      */
     public AncestorEngine(G g) {
         super(g, Direction.OUT);
     }
-
 
     /**
      * Compute the set of exclusive ancestors of a class. Exclusive process: the
@@ -64,8 +70,8 @@ public class AncestorEngine extends RVF_TAX {
     }
 
     /**
-     * Compute the set of inclusive ancestors of a class. 
-     * The focused vertex will be included in the set of ancestors.
+     * Compute the set of inclusive ancestors of a class. The focused vertex
+     * will be included in the set of ancestors.
      *
      * @param v the vertex of interest
      * @return the set composed of the ancestors of the concept + the concept.
@@ -92,8 +98,7 @@ public class AncestorEngine extends RVF_TAX {
 
     /**
      * Compute the set of inclusive ancestors of all vertices contained in the
-     * graph. The focused vertex will be included in the
-     * set of ancestors.
+     * graph. The focused vertex will be included in the set of ancestors.
      *
      * @return a map containing the inclusive set of ancestors of each vertex
      * concept.

@@ -43,7 +43,9 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * Gower and Legendre IC-based abstract expression.
+ * Gower and Legendre IC-based abstract expression. See generic framework
+ * proposed by Blanchard E, Harzallah M, Kuntz P: A generic framework for
+ * comparing semantic similarities on a subsumption hierarchy. 2008:20–24.
  *
  * @author Sébastien Harispe
  */

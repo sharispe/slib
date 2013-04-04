@@ -40,7 +40,7 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * ﻿1. Jiang J, Conrath D: Semantic Similarity Based on Corpus Statistics and
+ * Jiang J, Conrath D: Semantic Similarity Based on Corpus Statistics and
  * Lexical Taxonomy. In In International Conference Research on Computational
  * Linguistics (ROCLING X). 1997, cmp-lg/970:15.
  *

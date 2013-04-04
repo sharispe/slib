@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * ﻿Bader G, Hogue C: An automated method for finding molecular complexes in
+ * Bader G, Hogue C: An automated method for finding molecular complexes in
  * large protein interaction networks. BMC bioinformatics 2003, 4:2.
  *
  * Cited by ﻿Lin C, Cho Y-rae, Hwang W-chang, Pei P, Zhang A: Clustering methods
