@@ -113,8 +113,9 @@ public class SmlToolKitCli extends CmdHandler {
         if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
             ending(SmlToolKitCliCst.errorTool, true);
         } else if (tool.equals(SmlToolKitCliCst.ToolName_SM)) {
+            logger.debug("Loading SM module");
             cli = new SmCli();
-        } 
+        }
 //        else if (tool.equals(SmlToolKitCliCst.ToolName_SMBB)) {
 //            cli = new SmbbCli();
 //        } else if (tool.equals(SmlToolKitCliCst.ToolName_SME)) {
@@ -124,15 +125,16 @@ public class SmlToolKitCli extends CmdHandler {
 //        } else if (tool.equals(SmlToolKitCliCst.ToolName_SML_DEPLOY)) {
 //            cli = new SmlDeployCli();
 //        }
-        cli.execute(argsTool);
+        if (cli != null) {
+            cli.execute(argsTool);
+        }
     }
 
     /**
-     * Method used to split arguments framework and module arguments Populate
-     * argsGeneral arguments prefixing and including -module value argsModule
-     * arguments following -module value
+     * Method used to split arguments which are general from those which are
+     * specific for a tool.
      *
-     * @param in
+     * @param in the array containing the all set of parameters.
      */
     private void preProcessArgs(String[] in) {
 
@@ -171,8 +173,27 @@ public class SmlToolKitCli extends CmdHandler {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
+        //DEBUG
+        String a = "-t sm "
+                + " -profile GO "
+                + " -mtype g "
+                + " -ic sanchez "
+//                + " -pm lin "
+                + " -gm gic "
+                + " -go /data/go/eval/gene_ontology.1_2.obo "
+                + " -queries /data/tmp/comparison_valid.tsv"
+                + " -annots /data/go/eval/gene_association.goa_human"
+                + " -output /tmp/testsmltoolkitgo.tsv"
+                + " -filter noEC=IEA:Taxon=9696,5454";
+
+        args = a.split("\\s+");
+
+        logger.debug("Init SMLTOOLKIT");
+        logger.debug("Params " + Arrays.toString(args));
 
         try {
+
+
             SmlToolKitCli c = new SmlToolKitCli(args);
 
         } catch (Exception e) {

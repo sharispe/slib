@@ -42,7 +42,7 @@ import slib.tools.smltoolkit.SmlToolKitCliCst;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class SmCmdHandlerCst extends ToolCmdHandlerCst {
 
@@ -59,15 +59,15 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
      */
     private static boolean _debugMode = false;
     
-
-
+    public static String[] admittedProfiles = {"GO","MESH","SNOMEDCT"};
+    
     /*
      * Error messages  
      */
     /**
      *
      */
-    public static final String errorMissingXMLconf = "[ERROR] Please specify an Xml configuration file";
+    public static final String errorMissingXMLconfOrProfile = "[ERROR] Please specify a profile or an Xml configuration file";
     /*
      * Setting Options 
      */
@@ -81,8 +81,16 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
     @SuppressWarnings("static-access")
     private static final Option _xmlconf = OptionBuilder.withArgName("xmlconf")
             .hasArg()
-            .withDescription("Xml configuration file (required)")
+            .withDescription("Xml configuration file (optional)")
             .create("xmlconf");
+    @SuppressWarnings("static-access")
+    private static final Option _profile = OptionBuilder.withArgName("profile")
+            .hasArg()
+            .withDescription("Select a profile (optional)")
+            .create("profile");
+    
+    
+    
     /*
      * Use this data structure to define order of options in help message
      */
@@ -93,6 +101,7 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
 
     static {
         _optionsOrder.put(_xmlconf, _optionsOrder.size());
+        _optionsOrder.put(_profile, _optionsOrder.size());
         _optionsOrder.put(_help, _optionsOrder.size());
     }
 

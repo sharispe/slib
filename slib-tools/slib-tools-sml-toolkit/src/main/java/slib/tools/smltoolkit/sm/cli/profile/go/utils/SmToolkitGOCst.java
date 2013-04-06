@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit.sm.cli.profile.go.utils;
 
 import slib.tools.module.ModuleCst;
 import slib.tools.smltoolkit.SmlToolKitCst;
@@ -42,15 +42,15 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * @author Sébastien Harispe
  */
-public class SmToolkitCst extends ModuleCst {
+public class SmToolkitGOCst extends ModuleCst {
 
-    public static final String properties_prefix = "sml-toolkit.sm";
+    public static final String properties_prefix = "sml-toolkit.sm.go";
 
     /**
      *
      * @throws SLIB_Ex_Critic
      */
-    public SmToolkitCst() throws SLIB_Ex_Critic {
+    public SmToolkitGOCst() throws SLIB_Ex_Critic {
         super(SmlToolKitCst.properties_file_name, properties_prefix);
     }
 }

@@ -4,7 +4,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public interface SmlModuleCLI {
 

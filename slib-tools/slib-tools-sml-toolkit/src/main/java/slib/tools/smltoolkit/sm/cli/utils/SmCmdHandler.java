@@ -34,6 +34,7 @@
  */
 package slib.tools.smltoolkit.sm.cli.utils;
 
+import java.util.Arrays;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -42,6 +43,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.SmCli;
+import slib.tools.smltoolkit.sm.cli.profile.go.SmProfile_GO;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -54,6 +56,8 @@ public class SmCmdHandler extends CmdHandler {
      *
      */
     public String xmlConfFile;
+    public String xmlConfAsString;
+    public String profile;
     static Logger logger = LoggerFactory.getLogger(SmCmdHandler.class);
 
     /**
@@ -62,45 +66,71 @@ public class SmCmdHandler extends CmdHandler {
      * @throws SLIB_Exception
      */
     public SmCmdHandler(String[] args) throws SLIB_Exception {
+        
         super(new SmToolkitCst(), new SmCmdHandlerCst(), args);
     }
 
     @Override
-    public void processArgs(String[] args) {
+    public void processArgs(String[] args) throws SLIB_Exception {
 
         CommandLineParser parser = new BasicParser();
+        
+        //We only want the first two element of the array
+        // from -profile GO -go /data/go/gene_ontology_ext.obo
+        // we want -profile G0 to be passed to the SM module which will decide which profile to use if any asked
+        // The rest of the parameters must be passed to the profile module
+
+        String[] argSMmodule;
+        String[] argSMProfile = null;
+        if(args.length < 2){
+            argSMmodule = args;
+        }
+        else{
+            argSMmodule = new String[2];
+            argSMmodule[0] = args[0];
+            argSMmodule[1] = args[1];
+        }
+        if(args.length -2 > 0){
+            // other arguments for profiles 
+            argSMProfile = new String[args.length -2];
+            
+            for(int i = 2; i < args.length; i++){
+                argSMProfile[i-2] = args[i];
+            }
+        }
+        
+        logger.debug("Global args  "+Arrays.toString(args));
+        logger.debug("Module SM    "+Arrays.toString(argSMmodule));
+        logger.debug("Profile args "+Arrays.toString(argSMProfile));
 
         try {
-            CommandLine line = parser.parse(options, args);
-
+            CommandLine line = parser.parse(options, argSMmodule);
+            
             if (line.hasOption("help")) {
                 ending("", true);
             } else {
                 if (line.hasOption("xmlconf")) {
                     xmlConfFile = line.getOptionValue("xmlconf");
+                } else if (line.hasOption("profile")) {
+                    profile = line.getOptionValue("profile");
+                    logger.info("Process profile: "+profile);
+                    
+                    if(profile.equals("GO")){
+                        SmProfile_GO goprofile = new SmProfile_GO();
+                        goprofile.execute(argSMProfile);
+                        xmlConfAsString = goprofile.xmlconf;
+                    }
+                    else{
+                        throw new SLIB_Exception("Unsupported profile, admitted "+Arrays.toString(SmCmdHandlerCst.admittedProfiles));
+                    }
+                    
                 } else {
-                    ending(SmCmdHandlerCst.errorMissingXMLconf, true);
+                    ending(SmCmdHandlerCst.errorMissingXMLconfOrProfile, true);
                 }
+                
             }
         } catch (ParseException exp) {
             ending(cst.appName + " Parsing failed.  Reason: " + exp.getMessage(), true);
-        }
-    }
-
-    /**
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-
-        try {
-            SmCmdHandler c = new SmCmdHandler(args);
-            SmCli ssp = new SmCli();
-            ssp.execute(c.xmlConfFile);
-
-        } catch (Exception e) {
-            logger.info("Ooops : " + e.getMessage());
-            logger.info("see log file.");
         }
     }
 }

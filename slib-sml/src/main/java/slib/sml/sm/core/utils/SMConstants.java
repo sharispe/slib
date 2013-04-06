@@ -125,7 +125,6 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
  */
 public final class SMConstants {
 
-    
     //-------------------------------------------------------------------------------
     // Framework Set implementation
     //-------------------------------------------------------------------------------
@@ -296,7 +295,6 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_GROUPWISE_DAG_NTO = "SIM_GROUPWISE_DAG_NTO";
-    
     public static final String FLAG_SIM_GROUPWISE_DAG_NTO_MAX = "SIM_GROUPWISE_DAG_NTO_MAX";
     /**
      *
@@ -330,7 +328,6 @@ public final class SMConstants {
      *
      */
     public static final String SIM_GROUPWISE_DAG_NTO = Sim_groupwise_DAG_NTO.class.getName();
-    
     public static final String SIM_GROUPWISE_DAG_NTO_MAX = Sim_groupwise_DAG_NTO_MAX.class.getName();
     /**
      *
@@ -538,7 +535,6 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_ICI_SECO_2004 = "ICI_SECO_2004";
-    
     public static final String FLAG_ICI_HARISPE_2012 = "ICI_HARISPE_2012";
     /**
      *
@@ -564,8 +560,7 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_ICI_PROB_OCCURENCE_PROPAGATED = "ICI_PROB_OCCURENCE_PROPAGATED";
-    
-        /**
+    /**
      *
      */
     public static final String FLAG_ICI_ANCESTORS_NORM = "ICI_ANCESTORS_NORM";
@@ -609,7 +604,6 @@ public final class SMConstants {
      *
      */
     public static final String ICI_ZHOU_2008 = ICi_zhou_2008.class.getName();
-    
     public static final String ICI_HARISPE_2012 = ICi_harispe_2012.class.getName();
     /**
      *
@@ -619,7 +613,6 @@ public final class SMConstants {
      *
      */
     public static final String ICI_DEPTH_MIN_NONLINEAR = ICi_depth_min_nonlinear.class.getName();
-    
     public static final String ICI_ANCESTORS_NORM = ICi_ancestors_norm.class.getName();
     /**
      *
@@ -736,7 +729,6 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995 = "SIM_PAIRWISE_DAG_NODE_RESNIK_1995";
-   
     /**
      *
      */
@@ -761,7 +753,6 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = "SIM_PAIRWISE_DAG_NODE_SIM_IC_2010";
-    
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_HARISPE_2013 = "SIM_PAIRWISE_DAG_NODE_HARISPE_2O13";
     /**
      *
@@ -843,9 +834,7 @@ public final class SMConstants {
      *
      */
     public static final String SIM_PAIRWISE_DAG_NODE_SIM_IC_2010 = Sim_pairwise_DAG_node_Sim_IC_2010.class.getName();
-   
     public static final String SIM_PAIRWISE_DAG_NODE_HARISPE_2013 = Sim_pairwise_DAG_node_Harispe_2013.class.getName();
-    
     /**
      *
      */
@@ -873,7 +862,7 @@ public final class SMConstants {
             put(FLAG_SIM_PAIRWISE_DAG_NODE_GL, SIM_PAIRWISE_DAG_NODE_GL);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_GL_GRASM, SIM_PAIRWISE_DAG_NODE_GL_GRASM);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_MAZANDU_2012, SIM_PAIRWISE_DAG_NODE_MAZANDU_2012);
-            put(FLAG_SIM_PAIRWISE_DAG_NODE_HARISPE_2013, SIM_PAIRWISE_DAG_NODE_HARISPE_2013 );
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_HARISPE_2013, SIM_PAIRWISE_DAG_NODE_HARISPE_2013);
 
         }
     };
@@ -1034,6 +1023,53 @@ public final class SMConstants {
         {
             add(FLAG_SIM_GROUPWISE_DAG_GIC);
             addAll(SIM_PAIRWISE_DAG_NODE_BASED.keySet());
+        }
+    };
+    public static final Map<String, String> SIM_PAIRWISE_SHORT_FLAG = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            put("lin", FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998);
+            put("jc", FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);
+            put("jc_norm", FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM);
+            put("resnik", FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995);
+            put("schliker", FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006);
+        }
+    };
+    public static final Map<String, String> IC_SHORT_FLAG = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            put("resnik", FLAG_ICI_RESNIK_1995);
+            put("sanchez", FLAG_ICI_SANCHEZ_2011_b);
+            put("seco", FLAG_ICI_SECO_2004);
+            put("zhou", FLAG_ICI_ZHOU_2008);
+            put("depth_max_non_linear", FLAG_ICI_DEPTH_MAX_NONLINEAR);
+            put("depth_min_non_linear", FLAG_ICI_DEPTH_MIN_NONLINEAR);
+            put("ic_prob_occurence", FLAG_ICI_PROB_OCCURENCE);
+            put("ic_prob_occurence_prop", FLAG_ICI_PROB_OCCURENCE_PROPAGATED);
+            put("anc_norm", FLAG_ICI_ANCESTORS_NORM);
+        }
+    };
+    public static final Map<String, String> SIM_GROUPWISE_SHORT_FLAG = new HashMap<String, String>() {
+        private static final long serialVersionUID = 1L;
+
+        {
+            put("gic", FLAG_SIM_GROUPWISE_DAG_GIC);
+            put("lee", FLAG_SIM_GROUPWISE_DAG_LEE_2004);
+            put("lp", FLAG_SIM_GROUPWISE_DAG_LP);
+            put("nto", FLAG_SIM_GROUPWISE_DAG_NTO);
+            put("nto_max", FLAG_SIM_GROUPWISE_DAG_NTO_MAX);
+            put("to", FLAG_SIM_GROUPWISE_DAG_TO);
+            put("ui", FLAG_SIM_GROUPWISE_DAG_UI);
+            put("ali_and_deane", FLAG_SIM_GROUPWISE_DAG_ALI_DEANE);
+            put("max",FLAG_SIM_GROUPWISE_MAX);
+            put("maxnorm",FLAG_SIM_GROUPWISE_MAX_NORMALIZED_GOSIM);
+            put("min",FLAG_SIM_GROUPWISE_MIN);
+            put("avg",FLAG_SIM_GROUPWISE_AVERAGE);
+            put("avgnorm",FLAG_SIM_GROUPWISE_AVERAGE_NORMALIZED_GOSIM);
+            put("bma",FLAG_SIM_GROUPWISE_BMA);
+            put("bmm",FLAG_SIM_GROUPWISE_BMM);
         }
     };
 }

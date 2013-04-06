@@ -86,7 +86,7 @@ import slib.utils.impl.SetUtils;
 /**
  * This class defines a Semantic Measures Engine giving access to numerous
  * methods commonly used to define graph-based semantic measures.
- *
+ *<br/>
  * The engine distinguished two types of vertices in the graph:
  * <ul>
  * <li>
@@ -113,7 +113,7 @@ import slib.utils.impl.SetUtils;
  * an ancestors is any class which is link by a path composed of RDFS.SUBCLASSOF
  * relationships.
  *
- * <b>Important</b>:<br/>
+ * <br/><b>Important</b>:<br/>
  * Note that the graph associated to the engine is expected to be immutable even
  * if this condition will not be checked during the process. Indeed, the engine
  * expects the graph not to be modified and will not work on a copy of the given
@@ -283,7 +283,8 @@ public class SM_Engine {
     /**
      * Get the parents of a class, that is to say its direct ancestors.
      *
-     * <b>Important:<b/><br/>
+     * <br/><b>Important</b>:<br/>
+     * 
      * The direct parent of a class are all classes x linked to the given class
      * c to a an edge x RDFS.SUBLASSOF c. The result is not cached by the
      * engine. To ensure result coherency the underlying requires to be
@@ -969,7 +970,9 @@ public class SM_Engine {
     /**
      * Set the configuration of the engine regarding pairwise semantic measure
      * score caching.
-     * <b>Important</b>:<br/>
+     * 
+     * <br/><b>Important</b>:<br/>
+     * 
      * Storing the results can be very useful in specific cases. However,
      * storing the results can also lead to high memory consumption and
      * therefore slow the process or crash the process.

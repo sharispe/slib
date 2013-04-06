@@ -1,37 +1,66 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<artifactId>sglib</artifactId>
-		<groupId>fr.lgi2p.kid</groupId>
-		<version>0.0.5-beta-2-SNAPSHOT</version>
-		<relativePath>..</relativePath>
-	</parent>
-	<artifactId>sglib-algo</artifactId>
-	<dependencies>
-		<dependency>
-			<groupId>fr.lgi2p.kid</groupId>
-			<artifactId>sglib-model</artifactId>
-			<version>0.0.5-beta-2-SNAPSHOT</version>
-		</dependency>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>sglib</artifactId>
+        <groupId>fr.lgi2p.kid</groupId>
+        <version>0.0.6-SNAPSHOT</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>sglib-algo</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-model</artifactId>
+            <version>0.0.6-SNAPSHOT</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<scope>compile</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
-		<!-- concrete Log4J Implementation for SLF4J API -->
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-	 <dependency>
-	  <groupId>fr.lgi2p.kid</groupId>
-	  <artifactId>sglib-utils</artifactId>
-	  <version>0.0.5-beta-2-SNAPSHOT</version>
-	  <type>jar</type>
-	 </dependency>
-	</dependencies>
+        <!-- concrete Log4J Implementation for SLF4J API -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-utils</artifactId>
+            <version>0.0.6-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+    </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

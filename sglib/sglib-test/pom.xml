@@ -4,7 +4,7 @@
     <parent>
         <artifactId>sglib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.0.5-beta-2-SNAPSHOT</version>
+        <version>0.0.6-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>sglib-test</artifactId>
@@ -22,31 +22,60 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-algo</artifactId>
-            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-io</artifactId>
-            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model-impl</artifactId>
-            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-utils</artifactId>
-            <version>0.0.5-beta-2-SNAPSHOT</version>
+            <version>0.0.6-SNAPSHOT</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

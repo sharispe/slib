@@ -52,25 +52,12 @@ import slib.utils.ex.SLIB_Exception;
  */
 public abstract class CmdHandler {
 
-    /**
-     *
-     */
+
     public ModuleCst cst;
-    /**
-     *
-     */
     public ToolCmdHandlerCst cstCmd;
-    /**
-     *
-     */
     public Options options;
-    /**
-     *
-     */
     public HelpFormatter helpFormatter;
-    /**
-     *
-     */
+
     public Map<Option, Integer> optionsOrder;
     private String USAGE;
     private final String HEADER = "----------------------------------------------------------------------";

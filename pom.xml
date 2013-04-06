@@ -4,12 +4,12 @@
     <groupId>fr.lgi2p.kid</groupId>
     <name>slib</name>
     <artifactId>slib</artifactId>
-    <version>0.0.5-beta-2-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <properties>
-        <slib.version>0.0.5-beta-2</slib.version>
-        <sml-toolkit.version>0.0.5-beta-2</sml-toolkit.version>
+        <slib.version>0.0.5</slib.version>
+        <sml-toolkit.version>0.0.5</sml-toolkit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
@@ -94,7 +94,7 @@
                     <version>2.9</version>
                     <configuration>
                         <use>true</use>
-                        <excludePackageNames>slib.quicktest.*:sglib.gui.*</excludePackageNames>
+                        <excludePackageNames>slib.quicktest.*</excludePackageNames>
                         <stylesheet>maven</stylesheet>
                     </configuration>
                     <executions>

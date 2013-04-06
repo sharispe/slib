@@ -62,6 +62,7 @@ import slib.tools.smltoolkit.sm.cli.conf.xml.loader.Sm_XMLConfLoader;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
 import slib.tools.smltoolkit.sm.cli.utils.ConceptToConcept_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.EntityToEntity_Thread;
+import slib.tools.smltoolkit.sm.cli.utils.FileWriterUtil;
 import slib.tools.smltoolkit.sm.cli.utils.QueryConceptsIterator;
 import slib.tools.smltoolkit.sm.cli.utils.SmCmdHandler;
 import slib.tools.smltoolkit.sm.cli.utils.ThreadResultsQueryLoader;
@@ -76,7 +77,7 @@ import slib.utils.threads.ThreadManager;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class SmCli implements SmlModuleCLI {
 
@@ -91,6 +92,8 @@ public class SmCli implements SmlModuleCLI {
     URIFactory factory = URIFactoryMemory.getSingleton();
     G graph;
     
+    
+    
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
 
@@ -102,7 +105,16 @@ public class SmCli implements SmlModuleCLI {
     @Override
     public void execute(String[] args) throws SLIB_Exception {
         SmCmdHandler c = new SmCmdHandler(args);
-        execute(c.xmlConfFile);
+        if(c.xmlConfFile != null){
+            execute(c.xmlConfFile);
+        }
+        else{
+            String profileconf = "/tmp/sml-xmlconf.xml";
+            logger.debug("Writing profile configuration to "+profileconf);
+            FileWriterUtil.writeToFile(profileconf,c.xmlConfAsString);
+            execute(profileconf);
+            logger.debug("A profile has been executed");
+        }
     }
 
     /**
@@ -524,4 +536,5 @@ public class SmCli implements SmlModuleCLI {
     public InstancesAccessor getiAccessor() {
         return iAccessor;
     }
+
 }
