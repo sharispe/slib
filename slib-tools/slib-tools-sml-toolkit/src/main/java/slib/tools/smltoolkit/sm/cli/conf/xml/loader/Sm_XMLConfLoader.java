@@ -60,10 +60,13 @@ import slib.tools.module.GenericConfBuilder;
 import slib.tools.module.XML_ModuleConfLoader;
 import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
+import slib.tools.smltoolkit.sm.cli.utils.ActionParamsUtils;
+import slib.tools.smltoolkit.sm.cli.utils.ActionsParams;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -95,8 +98,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
     Integer nbThreads;
     Integer benchSize;
     Boolean cachePairwiseResults;
-    Boolean skipEmptyAnnots;
-    Double emptyAnnotsScores;
+    boolean quiet = false;
     /**
      *
      */
@@ -743,8 +745,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         String benchSize_s = (String) gc.getParam(Sm_XML_Cst.OPT_BENCH_SIZE_ATTR);
         String cache_pairwise_s = (String) gc.getParam(Sm_XML_Cst.OPT_CACHE_PAIRWISE_ATTR);
-        String skipEmptyAnnots_s = (String) gc.getParam(Sm_XML_Cst.OPT_SKIP_EMPTY_ANNOTS_ATTR);
-        String emptyAnnotsScore_s = (String) gc.getParam(Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR);
+        String quiet_s = (String) gc.getParam(Sm_XML_Cst.OPT_QUIET_ATTR);
 
 
         if (benchSize_s != null) {
@@ -755,13 +756,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             }
         }
 
-        if (emptyAnnotsScore_s != null) {
-            try {
-                emptyAnnotsScores = Double.parseDouble(emptyAnnotsScore_s);
-            } catch (NumberFormatException e) {
-                throw new SLIB_Ex_Critic("Error converting " + Sm_XML_Cst.OPT_EMPTY_ANNOTS_SCORE_ATTR + " to a numeric value ");
-            }
-        }
+
 
         if (cache_pairwise_s != null) {
 
@@ -772,11 +767,11 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             }
         }
 
-        if (skipEmptyAnnots_s != null) {
-            if (Util.stringToBoolean(skipEmptyAnnots_s)) {
-                skipEmptyAnnots = true;
+        if (quiet_s != null) {
+            if (Util.stringToBoolean(quiet_s)) {
+                quiet = true;
             } else {
-                skipEmptyAnnots = false;
+                quiet = false;
             }
         }
     }
@@ -833,27 +828,15 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         return benchSize;
     }
 
-    /**
-     *
-     * @return
-     */
     public Boolean getCachePairwiseResults() {
         return cachePairwiseResults;
     }
 
-    /**
-     *
-     * @return
-     */
-    public Boolean getSkipEmptyAnnots() {
-        return skipEmptyAnnots;
-    }
+    
 
-    /**
-     *
-     * @return
-     */
-    public Double getEmptyAnnotsScores() {
-        return emptyAnnotsScores;
+    public boolean isQuiet() {
+        return quiet;
     }
+    
+    
 }

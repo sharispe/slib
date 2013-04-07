@@ -90,8 +90,6 @@ public abstract class ModuleCst {
         } catch (ConfigurationException ex) {
             throw new SLIB_Ex_Critic("Unable to load configuration file (properties) "+ex.getMessage());
         }
-
-        
         
         this.appName     = config.getString(prefix+".name");
         this.version     = config.getString(prefix+".version");

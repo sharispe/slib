@@ -60,6 +60,8 @@ import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sm.cli.conf.xml.loader.Sm_XMLConfLoader;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
+import slib.tools.smltoolkit.sm.cli.utils.ActionParamsUtils;
+import slib.tools.smltoolkit.sm.cli.utils.ActionsParams;
 import slib.tools.smltoolkit.sm.cli.utils.ConceptToConcept_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.EntityToEntity_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.FileWriterUtil;
@@ -72,6 +74,7 @@ import slib.utils.impl.QueryEntry;
 import slib.utils.impl.QueryFileIterator;
 import slib.utils.impl.QueryIterator;
 import slib.utils.impl.Util;
+import slib.utils.impl.UtilDebug;
 import slib.utils.threads.PoolWorker;
 import slib.utils.threads.ThreadManager;
 
@@ -85,15 +88,13 @@ public class SmCli implements SmlModuleCLI {
     public Sm_XMLConfLoader conf;
     public SM_Engine simManager;
     InstancesAccessor iAccessor;
-
-    public boolean SKIP_EMPTY_ANNOTATION = true;
-    public double EMPTY_ANNOTATION_SCORE = 0;
-
+    public ActionsParams NO_ANNOTATION_ACTION = ActionsParams.EXCLUDE;
+    public ActionsParams NOT_FOUND_ACTION = ActionsParams.STOP;
+    public double NO_ANNOTATION_SCORE = 0;
+    public double NOT_FOUND_SCORE = 0;
+    public boolean QUIET = false;
     URIFactory factory = URIFactoryMemory.getSingleton();
     G graph;
-    
-    
-    
     int SIZE_BENCH = 2000;
     boolean CACHE_PAIRWISE_RESULTS = false;
 
@@ -105,13 +106,12 @@ public class SmCli implements SmlModuleCLI {
     @Override
     public void execute(String[] args) throws SLIB_Exception {
         SmCmdHandler c = new SmCmdHandler(args);
-        if(c.xmlConfFile != null){
+        if (c.xmlConfFile != null) {
             execute(c.xmlConfFile);
-        }
-        else{
+        } else {
             String profileconf = "/tmp/sml-xmlconf.xml";
-            logger.debug("Writing profile configuration to "+profileconf);
-            FileWriterUtil.writeToFile(profileconf,c.xmlConfAsString);
+            logger.debug("Writing profile configuration to " + profileconf);
+            FileWriterUtil.writeToFile(profileconf, c.xmlConfAsString);
             execute(profileconf);
             logger.debug("A profile has been executed");
         }
@@ -134,13 +134,13 @@ public class SmCli implements SmlModuleCLI {
         logger.info("Retrieving the graph " + conf.graphURI);
 
         URI graphURI = factory.createURI(conf.graphURI);
-        
+
         GraphRepository graphRepo = GraphRepositoryMemory.getSingleton();
 
         if (!graphRepo.isGraphRegistred(graphURI)) {
             Util.error("No graph associated to the uri " + conf.graphURI + " was loaded...");
         }
-        
+
         graph = graphRepo.getGraph(graphURI);
 
         logger.info("Graph information:\n" + graph.toString());
@@ -163,22 +163,19 @@ public class SmCli implements SmlModuleCLI {
             SIZE_BENCH = conf.getBenchSize();
         }
 
-        if (conf.getSkipEmptyAnnots() != null) {
-            SKIP_EMPTY_ANNOTATION = conf.getSkipEmptyAnnots();
+
+
+        if (conf.isQuiet()) {
+            QUIET = true;
+        } else {
+            QUIET = false;
         }
 
-        if (conf.getEmptyAnnotsScores() != null) {
-            EMPTY_ANNOTATION_SCORE = conf.getEmptyAnnotsScores();
-        }
 
-
+        logger.info("quiet      : " + QUIET);
         logger.info("Bench size : " + SIZE_BENCH);
         logger.info("Number of threads allowed: " + ThreadManager.getSingleton().getCapacity());
-        logger.info("Skip entities with empty annotations : " + SKIP_EMPTY_ANNOTATION);
 
-        if (!SKIP_EMPTY_ANNOTATION) {
-            logger.info("score associated to entities with empty annotations : " + EMPTY_ANNOTATION_SCORE);
-        }
 
 
         // check if measure evaluated require DAG structure
@@ -211,12 +208,45 @@ public class SmCli implements SmlModuleCLI {
                 String infile = (String) gconf.getParam(XmlTags.FILE_ATTR);
                 String output = (String) gconf.getParam(XmlTags.OUTPUT_ATTR);
                 String uri_prefix = (String) gconf.getParam(XmlTags.URI_PREFIX_ATTR);
+                String noAnnotsConf_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NO_ANNOTS_ATTR);
+                String notFound_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NOT_FOUND_ATTR);
+
+                if (notFound_s != null) {
+                    NOT_FOUND_ACTION = ActionParamsUtils.getAction(notFound_s);
+                    if (NOT_FOUND_ACTION == ActionsParams.SET) {
+                        NOT_FOUND_SCORE = ActionParamsUtils.getSetValue(notFound_s);
+                    }
+                }
+
+                if (noAnnotsConf_s != null) {
+                    NO_ANNOTATION_ACTION = ActionParamsUtils.getAction(noAnnotsConf_s);
+                    if (NO_ANNOTATION_ACTION == ActionsParams.SET) {
+                        NO_ANNOTATION_SCORE = ActionParamsUtils.getSetValue(noAnnotsConf_s);
+                    }
+                }
+                System.out.println(notFound_s + "\t" + NOT_FOUND_ACTION);
+                System.out.println(noAnnotsConf_s + "\t" + NO_ANNOTATION_ACTION);
+
+               
 
                 if (uri_prefix == null) {
                     uri_prefix = "";
                 }
 
                 logger.info("Query :" + id);
+
+                logger.info("Not Found : " + NOT_FOUND_ACTION);
+
+                if (NOT_FOUND_ACTION == ActionsParams.SET) {
+                    logger.info("score associated to entries for which an element is not found in the knowledge base: " + NOT_FOUND_SCORE);
+                }
+
+                logger.info("No Annotations : " + NO_ANNOTATION_ACTION);
+
+                if (NO_ANNOTATION_ACTION == ActionsParams.SET) {
+                    logger.info("score associated to entities with no annotations : " + NO_ANNOTATION_SCORE);
+                }
+
 
                 // require file
                 if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC) || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
@@ -316,7 +346,7 @@ public class SmCli implements SmlModuleCLI {
 
                         file.write(rez.buffer.toString());
 
-                        skipped  += rez.getSkipped();
+                        skipped += rez.getSkipped();
                         setValue += rez.getSetValue();
 
                         count += rez.getJobSize();
@@ -536,5 +566,4 @@ public class SmCli implements SmlModuleCLI {
     public InstancesAccessor getiAccessor() {
         return iAccessor;
     }
-
 }

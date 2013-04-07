@@ -45,6 +45,9 @@ public class SML_SM_module_XML_block_conf {
     public String mtype;
     public String queries;
     public String output;
+    public String quiet;
+    public String noAnnots;
+    public String notFound;
 
     public SML_SM_module_XML_block_conf setGraphURI(String graphURI) {
         this.graphURI = graphURI;
@@ -83,6 +86,21 @@ public class SML_SM_module_XML_block_conf {
 
     public SML_SM_module_XML_block_conf setOutput(String output) {
         this.output = output;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setNoAnnots(String noannots) {
+        this.noAnnots = noannots;
+        return this;
+    }
+    
+    public SML_SM_module_XML_block_conf setNotFound(String e) {
+        this.notFound = e;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setQuiet(String e) {
+        this.quiet = e;
         return this;
     }
 }

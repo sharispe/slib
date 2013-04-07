@@ -36,12 +36,12 @@ package slib.tools.smltoolkit.sm.cli.profile.go;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sml.sm.core.utils.SMConstants;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sm.cli.utils.SML_SM_module_XML_block_conf;
 import slib.tools.smltoolkit.sm.cli.utils.XMLConfUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -60,124 +60,134 @@ public class SmProfile_GO implements SmlModuleCLI {
     @Override
     public void execute(String[] args) throws SLIB_Exception {
         SmProfileGOHandler c = new SmProfileGOHandler(args);
-
-
-
-        logger.info("Processing GO");
-        logger.info("Ontology     : " + c.ontologyPath);
-        logger.info("Annots       : " + c.annotsPath);
-        logger.info("Annot Format : " + c.annotsFormat);
-        logger.info("Queries      : " + c.queries);
-        logger.info("Output       : " + c.outputFile);
-        logger.info("mType        : " + c.mType);
-        logger.info("Aspect       : " + c.aspect);
-        logger.info("notfound     : " + c.notfound);
-        logger.info("noannots     : " + c.noannots);
-        logger.info("filter       : " + c.filter);
-        logger.info("pm           : " + c.pm);
-        logger.info("gm           : " + c.gm);
-        logger.info("ic           : " + c.ic);
-        logger.info("quiet        : " + c.quiet);
-        logger.info("threads      : " + c.threads);
-        logger.info("notrgo       : " + c.notrgo);
-        logger.info("nonotrannots : " + c.notrannots);
-
-        if (c.ontologyPath == null) {
-            throw new SLIB_Ex_Critic("Please precise the location of the ontology");
-        }
-        if (c.queries == null) {
-            throw new SLIB_Ex_Critic("Please precise the location of the queries");
-        }
-        if (c.outputFile == null) {
-            throw new SLIB_Ex_Critic("Please precise the location of the output file");
-        }
-
         try {
-            if (Integer.parseInt(c.threads) < 1) { //NumberFormatException will be thrown if not valid
-                throw new Exception();
+
+            logger.info("Parameters");
+            logger.info("Ontology     : " + c.ontologyPath);
+            logger.info("Annots       : " + c.annotsPath);
+            logger.info("Annot Format : " + c.annotsFormat);
+            logger.info("Queries      : " + c.queries);
+            logger.info("Output       : " + c.outputFile);
+            logger.info("mType        : " + c.mType);
+            logger.info("Aspect       : " + c.aspect);
+            logger.info("notfound     : " + c.notfound);
+            logger.info("noannots     : " + c.noannots);
+            logger.info("filter       : " + c.filter);
+            logger.info("pm           : " + c.pm);
+            logger.info("gm           : " + c.gm);
+            logger.info("ic           : " + c.ic);
+            logger.info("quiet        : " + c.quiet);
+            logger.info("threads      : " + c.threads);
+            logger.info("notrgo       : " + c.notrgo);
+            logger.info("nonotrannots : " + c.notrannots);
+            
+//            UtilDebug.exit(this);
+
+            if (c.ontologyPath == null) {
+                throw new SLIB_Ex_Critic("Please precise the location of the ontology");
             }
+            if (c.queries == null) {
+                throw new SLIB_Ex_Critic("Please precise the location of the queries");
+            }
+            if (c.outputFile == null) {
+                throw new SLIB_Ex_Critic("Please precise the location of the output file");
+            }
+
+            try {
+                if (Integer.parseInt(c.threads) < 1) { //NumberFormatException will be thrown if not valid
+                    throw new Exception();
+                }
+            } catch (Exception e) {
+                throw new SLIB_Ex_Critic("Please correct the number of threads allocated");
+            }
+
+            String graphURI = "http://g/";
+            //Build XML File
+            // Ontology TAG
+            xmlconf = "<sglib>\n";
+
+            xmlconf += "\t<opt  threads = \"" + c.threads + "\"  />\n\n";
+
+            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + graphURI + "\" />\n\t</namespaces>\n\n";
+            xmlconf += "\t<graphs>    \n";
+            xmlconf += "\t\t<graph uri=\"" + graphURI + "\"  >    \n";
+            xmlconf += "\t\t\t<data>\n";
+            xmlconf += "\t\t\t\t<file format=\"OBO\"   path=\"" + c.ontologyPath + "\"/>    \n";
+            if (c.annotsPath != null) {
+                if (c.annotsFormat == null) {
+                    c.annotsFormat = "GAF_2";
+                }
+                xmlconf += "\t\t\t\t<file format=\"" + c.annotsFormat + "\"   path=\"" + c.annotsPath + "\"/>    \n";
+            }
+            xmlconf += "\t\t\t</data>\n\n";
+
+            String actions = "";
+
+            String goAspectValue;
+            if (c.aspect == null || c.aspect.equals("BP")) {
+                goAspectValue = graphURI + "0008150";
+            } else if (c.aspect.equals("MF")) {
+                goAspectValue = graphURI + "0003674";
+            } else if (c.aspect.equals("CC")) {
+                goAspectValue = graphURI + "0005575";
+            } else if (c.aspect.equals("GLOBAL")) {
+                goAspectValue = "__FICTIVE__";
+            } else { // expect custom=<GO term id>
+                String[] data = c.aspect.split("=");
+                if (data.length != 2) {
+                    throw new SLIB_Ex_Critic("Cannot process the value " + c.aspect + " as a valid aspect for the GO");
+                }
+                goAspectValue = data[1];
+                goAspectValue = goAspectValue.trim();
+            }
+            actions += "\t\t\t\t<action type=\"REROOTING\" root_uri=\"" + goAspectValue + "\" />\n";
+
+            if (!c.notrgo) {
+                actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"CLASSES\" />\n";
+            }
+            if (c.annotsPath != null && !c.notrannots) {
+                actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"INSTANCES\" />\n";
+            }
+
+            if (!actions.isEmpty()) {
+                xmlconf += "\t\t\t<actions>\n" + actions + "\t\t\t</actions>\n";
+            }
+            xmlconf += "\t\t</graph>    \n";
+            xmlconf += "\t</graphs>\n\n";
+
+            if (c.filter != null) {
+                if (!c.annotsFormat.equals("GAF_2")) {
+                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type GAF_2");
+                }
+                xmlconf += "\t<filters>\n" + XMLConfUtils.buildSML_FilterGAF2_XML_block(c.filter) + "\t</filters>\n";
+            }
+
+            SML_SM_module_XML_block_conf smconf = new SML_SM_module_XML_block_conf()
+                    .setGraphURI(graphURI)
+                    .setThreads(c.threads)
+                    .setIcShortFlag(c.ic)
+                    .setPmShortFlag(c.pm)
+                    .setGmShortFlag(c.gm)
+                    .setMtype(c.mType)
+                    .setQueries(c.queries)
+                    .setOutput(c.outputFile)
+                    .setNoAnnots(c.noannots)
+                    .setNotFound(c.notfound)
+                    .setQuiet(String.valueOf(c.quiet));
+
+            xmlconf += XMLConfUtils.buildSML_SM_module_XML_block(smconf);
+
+            xmlconf += "</sglib>\n";
+
+            logger.info("XML configuration file generated");
+            logger.info(xmlconf);
+
         } catch (Exception e) {
-            throw new SLIB_Ex_Critic("Please correct the number of threads allocated");
-        }
-
-        String graphURI = "http://g/";
-        //Build XML File
-        // Ontology TAG
-        xmlconf = "<sglib>\n";
-
-        xmlconf += "\t<opt  threads = \"" + c.threads + "\"  />\n\n";
-
-        xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + graphURI + "\" />\n\t</namespaces>\n\n";
-        xmlconf += "\t<graphs>    \n";
-        xmlconf += "\t\t<graph uri=\"" + graphURI + "\"  >    \n";
-        xmlconf += "\t\t\t<data>\n";
-        xmlconf += "\t\t\t\t<file format=\"OBO\"   path=\"" + c.ontologyPath + "\"/>    \n";
-        if (c.annotsPath != null) {
-            if (c.annotsFormat == null) {
-                c.annotsFormat = "GAF_2";
+            c.ending(e.getMessage(), true, false, true);
+            if (logger.isDebugEnabled()) {
+                e.printStackTrace();
             }
-            xmlconf += "\t\t\t\t<file format=\"" + c.annotsFormat + "\"   path=\"" + c.annotsPath + "\"/>    \n";
         }
-        xmlconf += "\t\t\t</data>\n\n";
-
-        String actions = "";
-
-        String goAspectValue;
-        if (c.aspect == null || c.aspect.equals("BP")) {
-            goAspectValue = graphURI + "0008150";
-        } else if (c.aspect.equals("MF")) {
-            goAspectValue = graphURI + "0003674";
-        } else if (c.aspect.equals("CC")) {
-            goAspectValue = graphURI + "0005575";
-        } else if (c.aspect.equals("GLOBAL")) {
-            goAspectValue = "__FICTIVE__";
-        } else { // expect custom=<GO term id>
-            String[] data = c.aspect.split("=");
-            if (data.length != 2) {
-                throw new SLIB_Ex_Critic("Cannot process the value " + c.aspect + " as a valid aspect for the GO");
-            }
-            goAspectValue = data[1];
-            goAspectValue = goAspectValue.trim();
-        }
-        actions += "\t\t\t\t<action type=\"REROOTING\" root_uri=\"" + goAspectValue + "\" />\n";
-
-        if (!c.notrgo) {
-            actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"CLASSES\" />\n";
-        }
-        if (c.annotsPath != null && !c.notrannots) {
-            actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"INSTANCES\" />\n";
-        }
-
-        if (!actions.isEmpty()) {
-            xmlconf += "\t\t\t<actions>\n" + actions + "\t\t\t</actions>\n";
-        }
-        xmlconf += "\t\t</graph>    \n";
-        xmlconf += "\t</graphs>\n\n";
-        
-        if(c.filter != null){
-            if(!c.annotsFormat.equals("GAF_2")){
-                throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type GAF_2");
-            }
-            xmlconf += "\t<filters>\n"+XMLConfUtils.buildSML_FilterGAF2_XML_block(c.filter)+"\t</filters>\n";
-        }
-
-        SML_SM_module_XML_block_conf smconf = new SML_SM_module_XML_block_conf()
-                .setGraphURI(graphURI)
-                .setThreads(c.threads)
-                .setIcShortFlag(c.ic)
-                .setPmShortFlag(c.pm)
-                .setGmShortFlag(c.gm)
-                .setMtype(c.mType)
-                .setQueries(c.queries)
-                .setOutput(c.outputFile);
-
-        xmlconf += XMLConfUtils.buildSML_SM_module_XML_block(smconf);
-
-        xmlconf += "</sglib>\n";
-
-
-
-        System.out.println(xmlconf);
 
 
 

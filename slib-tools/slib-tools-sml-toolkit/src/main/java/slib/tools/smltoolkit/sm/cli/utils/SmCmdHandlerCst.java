@@ -74,19 +74,19 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
     /**
      *
      */
-    public static final Option _help = new Option("help", "print this message");
+    public static final Option _help = new Option("help", "\nPrint this message");
     /**
      *
      */
     @SuppressWarnings("static-access")
     private static final Option _xmlconf = OptionBuilder.withArgName("xmlconf")
             .hasArg()
-            .withDescription("Xml configuration file (optional)")
+            .withDescription("\nXML configuration file (optional)")
             .create("xmlconf");
     @SuppressWarnings("static-access")
     private static final Option _profile = OptionBuilder.withArgName("profile")
             .hasArg()
-            .withDescription("Select a profile (optional)")
+            .withDescription("\nSelect a profile (optional) use:\n- GO for the Gene Ontology\ne.g. -profile GO")
             .create("profile");
     
     

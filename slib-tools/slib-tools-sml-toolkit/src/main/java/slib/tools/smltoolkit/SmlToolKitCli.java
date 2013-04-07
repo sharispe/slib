@@ -78,7 +78,7 @@ public class SmlToolKitCli extends CmdHandler {
 
         preProcessArgs(args);
 
-        logger.info("Args General " + Arrays.toString(argsGeneral));
+        logger.info("Args " + Arrays.toString(argsGeneral));
         logger.info("Args Tool    " + Arrays.toString(argsTool));
 
         CommandLineParser parser = new BasicParser();
@@ -86,7 +86,7 @@ public class SmlToolKitCli extends CmdHandler {
         try {
             argsGeneralCMD = parser.parse(options, argsGeneral);
 
-            if (argsGeneralCMD.hasOption("help")) {
+            if (argsGeneral.length == 0 || argsGeneralCMD.hasOption("help")) {
                 ending(null, true);
             } else if (argsGeneralCMD.hasOption("version")) {
                 ending("version " + cst.version + " snapshot " + cst.versionSnapshot, false);
@@ -110,7 +110,10 @@ public class SmlToolKitCli extends CmdHandler {
 
         SmlModuleCLI cli = null;
 
-        if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
+        if (tool == null) {
+            ending("", true);
+        }
+        else if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
             ending(SmlToolKitCliCst.errorTool, true);
         } else if (tool.equals(SmlToolKitCliCst.ToolName_SM)) {
             logger.debug("Loading SM module");
@@ -174,8 +177,10 @@ public class SmlToolKitCli extends CmdHandler {
     public static void main(String[] args) {
 
         //DEBUG
-        String a = "-t sm "
+        String a =  ""
+                +"-t sm "
                 + " -profile GO "
+                + " -quiet "
                 + " -mtype g "
                 + " -ic sanchez "
 //                + " -pm lin "
@@ -184,7 +189,10 @@ public class SmlToolKitCli extends CmdHandler {
                 + " -queries /data/tmp/comparison_valid.tsv"
                 + " -annots /data/go/eval/gene_association.goa_human"
                 + " -output /tmp/testsmltoolkitgo.tsv"
-                + " -filter noEC=IEA:Taxon=9696,5454";
+                + " -filter noEC=IEA:Taxon=9696,5454"
+                + " -noannots set=0"
+                + " -notfound stop"
+                ;
 
         args = a.split("\\s+");
 

@@ -45,18 +45,9 @@ import org.apache.commons.cli.Option;
  */
 public abstract class ToolCmdHandlerCst {
 
-    /**
-     *
-     */
-    public String appCmdName;
-    /**
-     *
-     */
-    public boolean debugMode;
-    /**
-     *
-     */
-    public Map<Option, Integer> optionsOrder;
+    String appCmdName;
+    boolean debugMode;
+    Map<Option, Integer> optionsOrder;
 
     /**
      *

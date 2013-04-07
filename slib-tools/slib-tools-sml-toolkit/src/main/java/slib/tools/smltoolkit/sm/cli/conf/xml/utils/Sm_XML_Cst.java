@@ -156,11 +156,10 @@ public class Sm_XML_Cst {
     /**
      *
      */
-    public static final String OPT_SKIP_EMPTY_ANNOTS_ATTR = "skipEmptyAnnots";
-    /**
-     *
-     */
-    public static final String OPT_EMPTY_ANNOTS_SCORE_ATTR = "emptyAnnotsScore";
+    public static final String OPT_NO_ANNOTS_ATTR = "noAnnots";
+    public static final String OPT_NOT_FOUND_ATTR = "notFound";
+    public static final String OPT_QUIET_ATTR     = "quiet";
+    
     /**
      *
      */

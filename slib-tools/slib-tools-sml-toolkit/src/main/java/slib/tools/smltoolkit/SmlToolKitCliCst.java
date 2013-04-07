@@ -103,18 +103,19 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
     /**
      *
      */
-    public static final Option help = new Option("help", "print this message");
+    public static final Option help = new Option("help", "\nPrint this message");
     /**
      *
      */
-    public static final Option version = new Option("version", "print the version in use");
+    public static final Option version = new Option("version", "\nPrint the version of the toolkit");
     /**
      *
      */
     @SuppressWarnings("static-access")
     public static Option tool = OptionBuilder.withArgName("value")
             .hasArg()
-            .withDescription("Tool name " + Arrays.toString(SmlToolKitCliCst.acceptedTools))
+            .withDescription("\nTool name:\n"
+            + "- 'sm' module used to compute semantic measures score\nAccepted tools " + Arrays.toString(SmlToolKitCliCst.acceptedTools))
             .create(toolArg);
     /*
      * Use this data structure to define order of options in help message

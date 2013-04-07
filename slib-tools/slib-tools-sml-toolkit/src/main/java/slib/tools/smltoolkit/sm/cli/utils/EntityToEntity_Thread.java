@@ -106,8 +106,18 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
             for (QueryEntry q : queriesBench) {
 
+                // flush and clear tmp_buffer
+                // this must be done as under some condition their is no guaranty
+                // the iteration will be skipped using a continue statement. 
+                results.buffer.append(tmp_buffer);
+                tmp_buffer.delete(0, tmp_buffer.length());
+
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
+
+                tmp_buffer.append(uriE1s);
+                tmp_buffer.append("\t");
+                tmp_buffer.append(uriE2s);
 
                 try {
                     e1 = df.createURI(uriE1s);
@@ -119,20 +129,38 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
 
                 if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
-                    if (!g.containsVertex(e1)) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
+
+                    if (sspM.NOT_FOUND_ACTION == ActionsParams.SET) {
+
+                        setValue++;
+
+                        for (int i = 0; i < nbMeasures; i++) {
+                            tmp_buffer.append("\t").append(sspM.NOT_FOUND_SCORE);
+                        }
+
+                        tmp_buffer.append("\n");
+
+                        results.buffer.append(tmp_buffer);
+
+                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.EXCLUDE) {
+
+                        skipped++;
+
+                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.STOP) {
+                        if (!g.containsVertex(e1)) {
+                            throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
+                        }
+                        if (!g.containsVertex(e2)) {
+                            throw new SLIB_Ex_Critic("Cannot locate " + e2 + " in " + g.getURI());
+                        }
                     }
-                    if (!g.containsVertex(e2)) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + e2 + " in " + g.getURI());
+                    if (!sspM.QUIET) {
+                        logger.info(sspM.NOT_FOUND_ACTION + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
                     }
+                    continue;
                 }
 
-                // clear tmp_buffer
-                tmp_buffer.delete(0, tmp_buffer.length());
 
-                tmp_buffer.append(uriE1s);
-                tmp_buffer.append("\t");
-                tmp_buffer.append(uriE2s);
 
 
                 setE1 = iAccessor.getDirectClass(e1);
@@ -140,20 +168,28 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
                 if (setE1.isEmpty() || setE2.isEmpty()) {
 
-                    if (!sspM.SKIP_EMPTY_ANNOTATION) {
-
+                    if (sspM.NO_ANNOTATION_ACTION == ActionsParams.SET) {
                         setValue++;
 
                         for (int i = 0; i < nbMeasures; i++) {
-                            tmp_buffer.append("\t").append(sspM.EMPTY_ANNOTATION_SCORE);
+                            tmp_buffer.append("\t").append(sspM.NO_ANNOTATION_SCORE);
                         }
 
                         tmp_buffer.append("\n");
 
                         results.buffer.append(tmp_buffer);
-                    } else {
-                        logger.debug("Skip " + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")");
+                    } else if (sspM.NO_ANNOTATION_ACTION == ActionsParams.EXCLUDE) {
+
                         skipped++;
+
+                    } else if (sspM.NO_ANNOTATION_ACTION == ActionsParams.STOP) {
+                        throw new SLIB_Ex_Critic("Stop the execution because an entry contains an element without annotations "
+                                + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")."
+                                + " You can exclude those entries or set a value, please consult the documentation");
+                    }
+
+                    if (!sspM.QUIET) {
+                        logger.info(sspM.NO_ANNOTATION_ACTION + " " + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")");
                     }
                     continue;
                 }
@@ -194,10 +230,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                         tmp_buffer.append(sim);
                     }
                 }
-//				logger.debug(tmp_buffer.toString());
                 tmp_buffer.append("\n");
-
-                results.buffer.append(tmp_buffer);
             }
             results.setSetValue(setValue);
             results.setSkipped(skipped);

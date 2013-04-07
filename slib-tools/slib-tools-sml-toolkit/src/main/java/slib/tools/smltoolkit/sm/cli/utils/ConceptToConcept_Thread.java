@@ -92,11 +92,24 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
             URI e1, e2;
             double sim;
+            int nbMeasures = sspM.conf.gConfPairwise.size();
 
             for (QueryEntry q : queriesBench) {
 
+                // flush and clear tmp_buffer
+                // this must be done as under some condition their is no guaranty
+                // the iteration will be skipped using a continue statement. 
+                results.buffer.append(tmp_buffer);
+                tmp_buffer.delete(0, tmp_buffer.length());
+
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
+
+                tmp_buffer.append(uriE1s);
+                tmp_buffer.append("\t");
+                tmp_buffer.append(uriE2s);
+
+
 
                 try {
                     e1 = factory.createURI(uriE1s);
@@ -108,21 +121,36 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
 
                 if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
-                    if (!g.containsVertex(e1)) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
+
+                    if (sspM.NOT_FOUND_ACTION == ActionsParams.SET) {
+
+                        setValue++;
+
+                        for (int i = 0; i < nbMeasures; i++) {
+                            tmp_buffer.append("\t").append(sspM.NOT_FOUND_SCORE);
+                        }
+
+                        tmp_buffer.append("\n");
+
+                        results.buffer.append(tmp_buffer);
+
+                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.EXCLUDE) {
+
+                        skipped++;
+
+                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.STOP) {
+                        if (!g.containsVertex(e1)) {
+                            throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
+                        }
+                        if (!g.containsVertex(e2)) {
+                            throw new SLIB_Ex_Critic("Cannot locate " + e2 + " in " + g.getURI());
+                        }
                     }
-                    if (!g.containsVertex(e2)) {
-                        throw new SLIB_Ex_Critic("Cannot locate " + e2 + " in " + g.getURI());
+                    if (!sspM.QUIET) {
+                        logger.info(sspM.NOT_FOUND_ACTION + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
                     }
+                    continue;
                 }
-
-                // clear tmp_buffer
-                tmp_buffer.delete(0, tmp_buffer.length());
-
-                tmp_buffer.append(uriE1s);
-                tmp_buffer.append("\t");
-                tmp_buffer.append(uriE2s);
-
 
                 for (SMconf p : sspM.conf.gConfPairwise) {
 
@@ -137,7 +165,6 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
                 }
                 tmp_buffer.append("\n");
-                results.buffer.append(tmp_buffer);
             }
             results.setSetValue(setValue);
             results.setSkipped(skipped);

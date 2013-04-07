@@ -56,42 +56,44 @@ public class XMLConfUtils {
      * @throws SLIB_Ex_Critic
      */
     public static String buildSML_FilterGAF2_XML_block(String filterConfAsString) throws SLIB_Ex_Critic {
-        
-        if(filterConfAsString == null){return "";}
-        
-        List<String> listParams = new ArrayList<String>(Arrays.asList(filterConfAsString.split(":"))); 
+
+        if (filterConfAsString == null) {
+            return "";
+        }
+
+        List<String> listParams = new ArrayList<String>(Arrays.asList(filterConfAsString.split(":")));
         String conf = "";
         String remove_ecAtt = null, taxonAtt = null;
-        
-        for(String s : listParams){
-            
+
+        for (String s : listParams) {
+
             String[] data = s.split("=");
-            if(data[0].equals("noEC")){
-                if(data.length == 2){
-                    remove_ecAtt = "remove_ec=\""+data[1]+"\"";
+            if (data[0].equals("noEC")) {
+                if (data.length == 2) {
+                    remove_ecAtt = "remove_ec=\"" + data[1] + "\"";
                 }
-            }
-            else if(data[0].equals("Taxon")){
-                if(data.length == 2){
-                    taxonAtt = "tax_ids=\""+data[1]+"\"";
+            } else if (data[0].equals("Taxon")) {
+                if (data.length == 2) {
+                    taxonAtt = "tax_ids=\"" + data[1] + "\"";
                 }
-            }
-            else{
-                throw new SLIB_Ex_Critic("Cannot process the filter parameters in "+s+" please consult the documentation");
+            } else {
+                throw new SLIB_Ex_Critic("Cannot process the filter parameters in " + s + " please consult the documentation");
             }
         }
-        
-        if(remove_ecAtt!= null || taxonAtt != null){
+
+        if (remove_ecAtt != null || taxonAtt != null) {
             conf += "\t\t<filter\n";
             conf += "\t\t\tid = \"filter_gaf_2\"\n";
             conf += "\t\t\ttype = \"GAF2\"\n";
-            if(remove_ecAtt != null)
-            conf += "\t\t\t"+remove_ecAtt+"\n";
-            if(taxonAtt != null)
-            conf += "\t\t\t"+taxonAtt+"\n";
+            if (remove_ecAtt != null) {
+                conf += "\t\t\t" + remove_ecAtt + "\n";
+            }
+            if (taxonAtt != null) {
+                conf += "\t\t\t" + taxonAtt + "\n";
+            }
             conf += "\t\t/>\n";
         }
-        
+
         return conf;
     }
 
@@ -99,8 +101,12 @@ public class XMLConfUtils {
 
         String xmlconf = "\t<sml module=\"sm\" graph=\"" + c.graphURI + "\" >\n\n";
 
-        xmlconf += "\t\t<opt_module threads=\"" + c.threads + "\" />\n\n";
+        xmlconf += "\t\t<opt_module threads=\"" + c.threads + "\" ";
 
+        if (c.quiet != null) {
+            xmlconf += "\tquiet = \"" + c.quiet + "\"\n";
+        }
+        xmlconf += "/>\n\n";
 
 
 
@@ -186,8 +192,18 @@ public class XMLConfUtils {
                 + "\t\t\ttype    = \"" + mType + "\" \n"
                 + "\t\t\tfile    = \"" + c.queries + "\" \n"
                 + "\t\t\toutput  = \"" + c.output + "\" \n"
-                + "\t\t\turi_prefix = \"" + c.graphURI + "\"\n"
-                + "\t\t/>\n";
+                + "\t\t\turi_prefix = \"" + c.graphURI + "\"\n";
+
+
+        if (c.noAnnots != null) {
+            xmlconf += "\t\t\tnoAnnots = \"" + c.noAnnots + "\"\n";
+
+        }
+        if (c.notFound != null) {
+            xmlconf += "\t\t\tnotFound = \"" + c.notFound + "\"\n";
+
+        }
+        xmlconf += "\t\t/>\n";
 
         xmlconf += "\t</sml>\n";
         return xmlconf;

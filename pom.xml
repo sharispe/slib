@@ -8,8 +8,8 @@
     <packaging>pom</packaging>
     
     <properties>
-        <slib.version>0.0.5</slib.version>
-        <sml-toolkit.version>0.0.5</sml-toolkit.version>
+        <slib.version>${project.version}</slib.version>
+        <sml-toolkit.version>${project.version}</sml-toolkit.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>

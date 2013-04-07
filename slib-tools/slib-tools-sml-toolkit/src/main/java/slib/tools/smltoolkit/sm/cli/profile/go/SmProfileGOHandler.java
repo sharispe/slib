@@ -42,8 +42,9 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.utils.SmToolkitCst;
+import slib.tools.smltoolkit.sm.cli.profile.go.utils.SmToolkitGOCst;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -65,9 +66,9 @@ public class SmProfileGOHandler extends CmdHandler {
     public String gm;
     public String ic;
     public String threads;
-    public boolean notrgo = false;
-    public boolean notrannots = false;
-    public boolean quiet = false;
+    public boolean notrgo;
+    public boolean notrannots;
+    public boolean quiet;
     static Logger logger = LoggerFactory.getLogger(SmProfileGOHandler.class);
 
     /**
@@ -76,7 +77,7 @@ public class SmProfileGOHandler extends CmdHandler {
      * @throws SLIB_Exception
      */
     public SmProfileGOHandler(String[] args) throws SLIB_Exception {
-        super(new SmToolkitCst(), new SmProfileGOCst(), args);
+        super(new SmToolkitGOCst(), new SmProfileGOCst(), args);
     }
 
     @Override
@@ -87,16 +88,17 @@ public class SmProfileGOHandler extends CmdHandler {
         try {
             CommandLine line = parser.parse(options, args);
 
-            logger.debug("GO profile args : " + Arrays.toString(args));
-            if (line.hasOption("help")) {
-                ending("", true);
+            
+            if (args == null || args.length == 0 || line.hasOption("help")) {
+                logger.info(this.cst.description);
+                ending(null, true, false, true);
             } else {
                 if (line.hasOption("go")) {
                     ontologyPath = line.getOptionValue("go");
                 }
                 if (line.hasOption("annots")) {
                     annotsPath = line.getOptionValue("annots");
-                } 
+                }
                 if (line.hasOption("annotsformat")) {
                     annotsFormat = line.getOptionValue("annotsformat");
                 }
@@ -132,11 +134,10 @@ public class SmProfileGOHandler extends CmdHandler {
                 }
                 if (line.hasOption("threads")) {
                     threads = line.getOptionValue("threads");
-                }
-                else{
+                } else {
                     threads = "1";
                 }
-                
+
                 if (line.hasOption("notrgo")) {
                     notrgo = true;
                 }
@@ -144,21 +145,12 @@ public class SmProfileGOHandler extends CmdHandler {
                     notrannots = true;
                 }
                 if (line.hasOption("quiet")) {
-                    quiet = true;
+                    this.quiet = true;
                 }
 
             }
         } catch (ParseException exp) {
             ending(cst.appName + " Parsing failed.  Reason: " + exp.getMessage(), true);
         }
-    }
-
-    public static void main(String[] args) throws SLIB_Exception {
-
-        args = "-t sm -profile GO -go /data/go/gene_ontology_ext.obo ".split(" ");
-        System.out.println(Arrays.toString(args));
-        SmProfileGOHandler sm = new SmProfileGOHandler(args);
-
-
     }
 }

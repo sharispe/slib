@@ -35,6 +35,7 @@
 package slib.tools.module;
 
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -52,23 +53,19 @@ import slib.utils.ex.SLIB_Exception;
  */
 public abstract class CmdHandler {
 
-
     public ModuleCst cst;
     public ToolCmdHandlerCst cstCmd;
     public Options options;
     public HelpFormatter helpFormatter;
-
     public Map<Option, Integer> optionsOrder;
     private String USAGE;
     private final String HEADER = "----------------------------------------------------------------------";
     private String FOOTER = HEADER;
     static Logger logger = LoggerFactory.getLogger(CmdHandler.class);
-    
-    
     Comparator<Option> comparator = new Comparator<Option>() {
         @Override
         public int compare(Option o1, Option o2) {
-            if (optionsOrder.get(o1) > optionsOrder.get(o2)) {
+            if (optionsOrder.get(o1).intValue() > optionsOrder.get(o2).intValue()) {
                 return 1;
             } else {
                 return 0;
@@ -87,15 +84,18 @@ public abstract class CmdHandler {
         this.cst = cst;
         this.cstCmd = cstCmd;
 
-        USAGE = "java -jar " + this.cstCmd.getAppCmdName() + " [args see below]";
+        USAGE = "java -jar " + this.cstCmd.getAppCmdName() + " [arguments]";
 
         this.optionsOrder = cstCmd.getOptionOrder();
 
         logger.info(HEADER);
-        logger.info(cst.getAppName() + " " + cst.getVersion());
+        logger.info("\t" + cst.getAppName() + " " + cst.getVersion());
         logger.info(HEADER);
+
         showRef();
-        logger.info(HEADER);
+        if (cst.reference != null) {
+            logger.info(HEADER);
+        }
 
         buildOptions();
 
@@ -134,7 +134,7 @@ public abstract class CmdHandler {
      */
     public void showContact() {
         if (cst.getContact() != null) {
-            logger.info("Contact : " + cst.getContact());
+            logger.info("Contact: " + cst.getContact());
         }
     }
 
@@ -156,11 +156,13 @@ public abstract class CmdHandler {
      */
     public void ending(String message, boolean showHelp, boolean showDesc, boolean showContact) {
 
+        
         if (message != null) {
+            logger.info(HEADER);
             logger.info(message);
         }
 
-        logger.info(HEADER);
+        
 
         if (showDesc) {
             showDescription();
@@ -178,7 +180,7 @@ public abstract class CmdHandler {
 
     /**
      *
-     * @param message
+     * @param message the message to show set to null if not message
      * @param showHelp
      */
     public void ending(String message, boolean showHelp) {

@@ -35,6 +35,8 @@
 package slib.tools.smltoolkit.sm.cli.profile.go;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import slib.tools.module.ToolCmdHandlerCst;
@@ -53,7 +55,7 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
     /**
      *
      */
-    private static final String _appCmdName = SmlToolKitCliCst._appCmdName + " -t " + _moduleName + "-profile GO";
+    private static final String _appCmdName = SmlToolKitCliCst._appCmdName + " -t " + _moduleName + " -profile GO";
     /**
      *
      */
@@ -71,98 +73,109 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
     @SuppressWarnings("static-access")
     private static final Option _go = OptionBuilder.withArgName("file path")
             .hasArg()
-            .withDescription("the path to the GO in OBO 1.2 format (required)")
+            .withDescription("\nThe path to the GO in OBO 1.2 format (required)\n")
             .create("go");
     @SuppressWarnings("static-access")
     private static final Option _annots = OptionBuilder.withArgName("file path")
             .hasArg()
-            .withDescription("the path to the annotation file. Required for groupwise measures (-mtype g see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content)")
+            .withDescription("\nThe path to the annotation file. Required for groupwise measures (-mtype g see above) "
+            + "or any measure relying on a extrinsic metric (e.g. Resnik's Information Content)")
             .create("annots");
     @SuppressWarnings("static-access")
     private static final Option _annotsFormat = OptionBuilder.withArgName("format")
             .hasArg()
-            .withDescription("the format of the annotation file, accepted values [GAF2,TSV], default GAF2")
+            .withDescription("\nThe format of the annotation file, accepted values [GAF2,TSV], default GAF2")
             .create("annotsFormat");
     @SuppressWarnings("static-access")
     private static final Option _queries = OptionBuilder.withArgName("file path")
             .hasArg()
-            .withDescription("the path to the file containing the queries, i.e. the pairs of GO term or gene product ids separated by tabs (required). An example is provided above.")
+            .withDescription("\nThe path to the file containing the queries, i.e. the pairs of GO term or gene product ids separated by tabs (required). An example is provided above.")
             .create("queries");
     @SuppressWarnings("static-access")
     private static final Option _output = OptionBuilder.withArgName("file path")
             .hasArg()
-            .withDescription("output file to store the results (required)")
+            .withDescription("\nOutput file to store the results (required)")
             .create("output");
     @SuppressWarnings("static-access")
     private static final Option _mtype = OptionBuilder.withArgName("type")
             .hasArg()
-            .withDescription("the type of semantic measures you want to use: (i) 'p' (pairwise) to compute semantic measures between GO terms. (ii) 'g' (groupwise) to compute semantic measures between gene products. accepted values [p,g], default p. example -mtype p")
+            .withDescription("\nThe type of semantic measures you want to use:\n"
+            + "- 'p' (pairwise) to compute semantic measures between GO terms.\n"
+            + "- 'g' (groupwise) to compute semantic measures between gene products.\n"
+            + "accepted values [p,g], default p\n"
+            + "example -mtype p")
             .create("mtype");
     @SuppressWarnings("static-access")
     private static final Option _aspect = OptionBuilder.withArgName("type")
             .hasArg()
-            .withDescription("specify the aspect of the GO to use: (i) MF - Molecular Function (ii) BP - Biological Process (iii) CC - Cellular Component (iii) GLOBAL - the three aspects MF-BP-CC will be used using a virtual root between the three (iv) custom=<GO term id> specify a GO term which will be considered as root e.g. custom=GO:XXXXX. accepted values [MF,BP,CC,GLOBAL,custom=<GO term id>], default BP. examples (1) -aspect MF (2) -aspect custom=GO:XXXXX")
+            .withDescription("\nSpecify the aspect of the GO to use:\n"
+            + "- 'MF'  Molecular Function\n"
+            + "- 'BP'  Biological Process\n"
+            + "- 'CC'  Cellular Component\n"
+            + "- 'GLOBAL'  the three aspects MF-BP-CC will be used using a virtual root between the three\n"
+            + "- 'custom=<GO term id>' specify a GO term which will be considered as root e.g. custom=GO:XXXXX.\n"
+            + "accepted values [MF,BP,CC,GLOBAL,custom=<GO term id>], default BP. examples (1) -aspect MF (2) -aspect custom=GO:XXXXX")
             .create("aspect");
     @SuppressWarnings("static-access")
     private static final Option _notfound = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("define the behavior if an entry element of the query file cannot be found: (i) in pairwise measures: one of the two GO terms cannot be found, (ii) in groupwise measures: one of the two gene products cannot be found."
-            + " Accepted values [exclude, stop, set=<value>]: "
-            + "(i) 'exclude' the entry will not be processed (a message will be logged if -quiet is not used)"
-            + "(ii) 'stop'    the program will stop"
-            + "(ii) 'set=<value>' the entry will not be processed (a message will be logged if -quiet is not used)."
+            .withDescription("\nDefine the behavior if an entry element of the query file cannot be found: (i) in pairwise measures: one of the two GO terms cannot be found, (ii) in groupwise measures: one of the two gene products cannot be found."
+            + " Accepted values [exclude, stop, set=<value>]:\n"
+            + "- 'exclude' the entry will not be processed (a message will be logged if -quiet is not used)\n"
+            + "- 'stop'    the program will stop\n"
+            + "- 'set=<value>' the entry will not be processed (a message will be logged if -quiet is not used).\n"
             + "default value = 'exclude'")
             .create("notfound");
     @SuppressWarnings("static-access")
     private static final Option _noannots = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("define the behavior if a gene product of the query file doesn't have annotation (GO terms): Accepted values [exclude,stop, set=<value>]:"
-            + " Accepted values [exclude, stop, set=<value>]: "
-            + "(i) 'exclude' the entry will not be processed (a message will be logged if -quiet is not used)"
-            + "(ii) 'stop'    the program will stop"
-            + "(ii) 'set=<value>' the entry will not be processed (a message will be logged if -quiet is not used)."
+            .withDescription("\nDefine the behavior if a gene product of the query file doesn't have annotation (GO terms): Accepted values [exclude,stop, set=<value>]:"
+            + " Accepted values [exclude, stop, set=<value>]:\n"
+            + "- 'exclude' the entry will not be processed (a message will be logged if -quiet is not used)\n"
+            + "- 'stop'    the program will stop\n"
+            + "- 'set=<value>' the entry will not be processed (a message will be logged if -quiet is not used).\n"
             + "default value 'set=0' the score is set to 0")
             .create("noannots");
     @SuppressWarnings("static-access")
     private static final Option _filter = OptionBuilder.withArgName("params")
             .hasArg()
-            .withDescription("this parameter can be used to filter the GO terms associated to a gene product when the provided annotation file is in GAF2 format."
-            + "(i) EC=<evidence_codes> evidence codes separated by commas e.g. EC=IEA only IEA annotations will be considered."
-            + "(ii) Taxon=<taxon_ids> taxon ids separated by commas e.g. Taxon=9696 to only consider annotations associated to Taxon 9696."
+            .withDescription("\nThis parameter can be used to filter the GO terms associated to a gene product when the provided annotation file is in GAF2 format.\n"
+            + "- EC=<evidence_codes> evidence codes separated by commas e.g. EC=IEA only IEA annotations will be considered.\n"
+            + "- Taxon=<taxon_ids> taxon ids separated by commas e.g. Taxon=9696 to only consider annotations associated to Taxon 9696.\n"
             + "Exemple of value -filter EC=IEA,XXX:Taxon=9696."
             + "Default value no filter")
             .create("filter");
     @SuppressWarnings("static-access")
     private static final Option _pm = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("pairwise measure see the list of available measures below (required for pairwise measures or indirect groupwise measures)")
+            .withDescription("\nPairwise measure see the list of available measures below (required for pairwise measures or indirect groupwise measures)")
             .create("pm");
     @SuppressWarnings("static-access")
     private static final Option _gm = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("direct groupwise measure or aggregation method if an indirect groupwise measure must be used (require a pairwise measure to be set). see the list of available measures below (required for groupwise measures).")
+            .withDescription("\nDirect groupwise measure or aggregation method if an indirect groupwise measure must be used (require a pairwise measure to be set). see the list of available measures below (required for groupwise measures).")
             .create("gm");
     @SuppressWarnings("static-access")
     private static final Option _ic = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("information content method see the list of IC available below")
+            .withDescription("\nInformation content method see the list of IC available below")
             .create("ic");
     @SuppressWarnings("static-access")
     private static final Option _quiet = OptionBuilder.withArgName("quiet")
-            .withDescription("do not show warning messages")
+            .withDescription("\nDo not show warning messages")
             .create("quiet");
     @SuppressWarnings("static-access")
     private static final Option _notrgo = OptionBuilder.withArgName("trgo")
-            .withDescription("Do not perform a transitive reduction of the GO")
+            .withDescription("\nDo not perform a transitive reduction of the GO")
             .create("trgo");
     @SuppressWarnings("static-access")
     private static final Option _notrannots = OptionBuilder.withArgName("trannots")
-            .withDescription("Do not remove annotation redundancy i.e. if a gene product is annoted by two GO terms {X,Y} a X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.")
+            .withDescription("\nDo not remove annotation redundancy i.e. if a gene product is annoted by two GO terms {X,Y} a X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.")
             .create("trannots");
     /*
      * Use this data structure to define order of options in help message
      */
-    private final static HashMap<Option, Integer> _optionsOrder = new HashMap<Option, Integer>();
+    private final static Map<Option, Integer> _optionsOrder = new LinkedHashMap<Option, Integer>();
 
     static {
         _optionsOrder.put(_go, _optionsOrder.size());
@@ -187,6 +200,6 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
      *
      */
     public SmProfileGOCst() {
-        super(_appCmdName, _debugMode, _optionsOrder);
+        super(_appCmdName, _debugMode, SmProfileGOCst._optionsOrder);
     }
 }

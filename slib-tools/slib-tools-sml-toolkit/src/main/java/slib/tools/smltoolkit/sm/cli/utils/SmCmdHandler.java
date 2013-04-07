@@ -42,7 +42,6 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.SmCli;
 import slib.tools.smltoolkit.sm.cli.profile.go.SmProfile_GO;
 import slib.utils.ex.SLIB_Exception;
 
@@ -106,12 +105,15 @@ public class SmCmdHandler extends CmdHandler {
         try {
             CommandLine line = parser.parse(options, argSMmodule);
             
-            if (line.hasOption("help")) {
-                ending("", true);
+            if (argSMmodule.length == 0 || line.hasOption("help")) {
+                ending(null, true);
             } else {
                 if (line.hasOption("xmlconf")) {
+                    
                     xmlConfFile = line.getOptionValue("xmlconf");
+                
                 } else if (line.hasOption("profile")) {
+                    
                     profile = line.getOptionValue("profile");
                     logger.info("Process profile: "+profile);
                     
