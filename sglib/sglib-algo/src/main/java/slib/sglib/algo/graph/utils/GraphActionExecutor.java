@@ -97,7 +97,7 @@ public class GraphActionExecutor {
         logger.info("-------------------------------------");
         logger.info(" Vertices Reduction");
         logger.info("-------------------------------------");
-        logger.debug("Starting " + GActionType.VERTICES_REDUCTION);
+        logger.info("Starting " + GActionType.VERTICES_REDUCTION);
 
         String regex = (String) action.getParameter("regex");
         String vocVal = (String) action.getParameter("vocabulary");
@@ -129,18 +129,22 @@ public class GraphActionExecutor {
                 DescendantEngine descEngine = new DescendantEngine(g);
                 Set<URI> descsInclusive = descEngine.getDescendantsInc(rootURI);
 
+                int classesNb = classes.size();
+
                 Set<URI> classesToRemove = classes;
                 classesToRemove.removeAll(descsInclusive);
 
-                logger.info("Removing " + classesToRemove.size() + " classes of the graph");
-                g.removeV(classesToRemove);
+                logger.info("Removing " + classesToRemove.size() + "/" + classesNb + " classes of the graph");
 
+                g.removeV(classesToRemove);
+                
                 // We then remove the entities which are not 
-                // linked to the graph current underlyign taxonomic graph
+                // linked to the graph current underlying taxonomic graph
 
                 Set<URI> instancesToRemove = new HashSet<URI>();
 
                 for (URI v : instances) {
+
                     // No links to taxonomic graph anymore 
                     if (g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()) {
                         instancesToRemove.add(v);
@@ -346,8 +350,8 @@ public class GraphActionExecutor {
         } else if (target.equals("INSTANCES")) {
             transitive_reductionInstance(action, g);
         }
-        
-        
+
+
         logger.info("Transitive reduction performed");
         logger.info("-------------------------------------");
 
@@ -356,7 +360,7 @@ public class GraphActionExecutor {
 
     private static void transitive_reductionInstance(GAction action, G g) throws SLIB_Ex_Critic {
 
-        
+
         // --------------- TO_SPLIT
 
         int invalidInstanceNb = 0;
@@ -427,7 +431,7 @@ public class GraphActionExecutor {
      * @throws SLIB_Ex_Critic
      */
     public static void applyActions(URIFactory factory, List<GAction> actions, G g) throws SLIB_Ex_Critic {
-        
+
         logger.info("-------------------------------------");
         logger.info(" Applying actions");
         logger.info("-------------------------------------");

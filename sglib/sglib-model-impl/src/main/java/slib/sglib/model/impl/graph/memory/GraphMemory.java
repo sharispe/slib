@@ -234,9 +234,12 @@ public class GraphMemory implements G {
         if (e == null) {
             return;
         }
-
-        if (edges.remove(e)) {
+        edges.remove(e);
+        if (vertexOutEdges.containsKey(e.getSource())) {
             vertexOutEdges.get(e.getSource()).remove(e);
+        }
+
+        if (vertexInEdges.containsKey(e.getTarget())) {
             vertexInEdges.get(e.getTarget()).remove(e);
         }
     }
@@ -290,18 +293,15 @@ public class GraphMemory implements G {
         Set<E> toRemove = new HashSet<E>();
 
         if (vertexOutEdges.containsKey(v)) {
-            for (E e : vertexOutEdges.get(v)) {
-                toRemove.add(e);
-            }
+            toRemove.addAll(vertexOutEdges.get(v));
             vertexOutEdges.remove(v);
         }
         if (vertexInEdges.containsKey(v)) {
-            for (E e : vertexInEdges.get(v)) {
-                toRemove.add(e);
-            }
+            toRemove.addAll(vertexInEdges.get(v));
             vertexInEdges.remove(v);
         }
         removeE(toRemove);
+
         uris.remove(v);
     }
 

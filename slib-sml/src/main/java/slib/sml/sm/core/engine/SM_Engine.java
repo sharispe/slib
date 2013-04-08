@@ -1108,7 +1108,15 @@ public class SM_Engine {
 
     private void throwErrorIfNotClass(Set<URI> c) {
         if (!classes.containsAll(c)) {
-            throw new IllegalArgumentException("The given URI " + c + " cannot be associated to a class");
+            // Search a example of URI which cannnot be associated to a class
+            String ex = null;
+            for(URI ce  : c){
+                if(!c.contains(ce)){
+                    ex = ce.toString();
+                    break;
+                }
+            }
+            throw new IllegalArgumentException("The given set of URIs " + c + " cannot be associated to a class, e.g. "+ex);
         }
     }
 
