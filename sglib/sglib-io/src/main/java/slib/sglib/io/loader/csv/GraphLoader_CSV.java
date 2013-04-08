@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.openrdf.model.URI;
@@ -14,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
@@ -25,14 +24,14 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class GraphLoader_CSV implements GraphLoader {
 
     boolean skipHeader = false;
     URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
-    HashMap<Integer, CSV_Mapping> mappings = new HashMap<Integer, CSV_Mapping>();
-    HashMap<Integer, CSV_StatementTemplate> statementTemplates = new HashMap<Integer, CSV_StatementTemplate>();
+    Map<Integer, CSV_Mapping> mappings = new HashMap<Integer, CSV_Mapping>();
+    Map<Integer, CSV_StatementTemplate> statementTemplates = new HashMap<Integer, CSV_StatementTemplate>();
     Pattern pattern = null; // the one used
     G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -62,11 +61,6 @@ public class GraphLoader_CSV implements GraphLoader {
         assert predicate_URI != null;
 
         statementTemplates.put(src_id, new CSV_StatementTemplate(src_id, target_id, predicate_URI));
-    }
-
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
     }
 
     @Override
@@ -143,7 +137,6 @@ public class GraphLoader_CSV implements GraphLoader {
             while ((line = br.readLine()) != null) {
 
                 if (skipHeader) {
-
                     skipHeader = false;
                     continue;
                 }

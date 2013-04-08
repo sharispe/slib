@@ -187,17 +187,19 @@ public class SmlToolKitCli extends CmdHandler {
                 + " -gm gic "
                 + " -go /data/go/eval/gene_ontology.1_2.obo "
                 + " -queries /data/tmp/comparison_valid.tsv"
-                + " -annots /data/go/eval/gene_association.goa_human"
+//                + " -annots /data/go/eval/gene_association.goa_human"
+                + " -annotsFormat TSV "
+                + " -annots /data/tmp/annots.tsv"
                 + " -output /tmp/testsmltoolkitgo.tsv"
-                + " -filter noEC=IEA:Taxon=9696,5454"
+//                + " -filter noEC=IEA:Taxon=9696,5454"
                 + " -noannots set=0"
                 + " -notfound stop"
                 ;
 
-        args = a.split("\\s+");
-
-        logger.debug("Init SMLTOOLKIT");
-        logger.debug("Params " + Arrays.toString(args));
+//        args = a.split("\\s+");
+//
+//        logger.debug("Init SMLTOOLKIT");
+//        logger.debug("Params " + Arrays.toString(args));
 
         try {
 

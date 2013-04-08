@@ -34,10 +34,7 @@
  */
 package slib.sglib.io.loader.bio.gaf2;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,19 +43,15 @@ import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoader;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.utils.filter.graph.Filter;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
 import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
 import slib.sglib.io.loader.utils.filter.graph.repo.FilterRepository;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.BigFileReader;
 
 /**
@@ -96,12 +89,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
     String defaultURIprefix;
     Pattern colon = Pattern.compile(":");
 
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-
-        return GraphLoaderGeneric.load(conf);
-    }
-
     /**
      * Method used to load an annotation repository considering a specific
      * configuration and a potential mapping restriction i.e. a {@link G}
@@ -121,6 +108,10 @@ public class GraphLoader_GAF_2 implements GraphLoader {
      */
     @Override
     public void populate(GDataConf conf, G graph) throws SLIB_Ex_Critic {
+
+        logger.info("-------------------------------------");
+        logger.info("Loading data using GAF2 loader.");
+        logger.info("-------------------------------------");
 
         if (graph == null) {
             throw new SLIB_Ex_Critic("Cannot process Null Graph");
@@ -274,7 +265,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
                             if (graph.containsVertex(uriGOterm)) { // if the annotation is in the graph
 
-                               
+
                                 boolean valid = true;
 
                                 if (p_taxid != null) {
@@ -298,7 +289,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                                     }
                                     graph.addE(entityID, RDF.TYPE, uriGOterm);
                                     countAnnotsLoaded++;
-                                } else{
+                                } else {
                                     taxonsRestriction++;
                                 }
                             } else {

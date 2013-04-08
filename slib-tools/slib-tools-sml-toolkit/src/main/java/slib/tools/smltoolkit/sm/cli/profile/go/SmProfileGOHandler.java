@@ -99,8 +99,8 @@ public class SmProfileGOHandler extends CmdHandler {
                 if (line.hasOption("annots")) {
                     annotsPath = line.getOptionValue("annots");
                 }
-                if (line.hasOption("annotsformat")) {
-                    annotsFormat = line.getOptionValue("annotsformat");
+                if (line.hasOption("annotsFormat")) {
+                    annotsFormat = line.getOptionValue("annotsFormat");
                 }
                 if (line.hasOption("queries")) {
                     queries = line.getOptionValue("queries");

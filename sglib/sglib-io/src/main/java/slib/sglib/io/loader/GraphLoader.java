@@ -50,13 +50,6 @@ import slib.utils.ex.SLIB_Exception;
  */
 public interface GraphLoader {
 	
-	/**
-	 * Load a new Graph considering the given configuration
-	 * @param conf a {@link GraphConf} object specifying the configuration the loader must takes into account
-	 * @return a graph {@link G}
-         * @throws SLIB_Exception 
-	 */
-	public G load(GraphConf conf) throws SLIB_Exception;
 	
 	/**
 	 * Populate an existing graph considering the given configuration

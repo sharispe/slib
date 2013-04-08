@@ -15,9 +15,7 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoader;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
@@ -31,12 +29,12 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
-    public static String ARG_CONCEPT_FILE = "concept_file";
-    public static String ARG_RELATIONSHIP_FILE = "relationship_file";
-    public static String ARG_PREFIX = "prefix";
-    public static String ARG_LOAD_INACTIVE_CONCEPTS = "load_inactive_concepts";
-    public static String ARG_LOAD_INACTIVE_RELATIONSHIPS = "load_inactive_relationships";
-    public static String ID_SUBCLASSOF_SNOMED = "116680003";
+    public final static String ARG_CONCEPT_FILE = "concept_file";
+    public final static String ARG_RELATIONSHIP_FILE = "relationship_file";
+    public final static String ARG_PREFIX = "prefix";
+    public final static String ARG_LOAD_INACTIVE_CONCEPTS = "load_inactive_concepts";
+    public final static String ARG_LOAD_INACTIVE_RELATIONSHIPS = "load_inactive_relationships";
+    public final static String ID_SUBCLASSOF_SNOMED = "116680003";
     
     
     Map<String, URI> conceptMap = new HashMap<String, URI>();
@@ -67,10 +65,6 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     private boolean LOAD_ONLY_ACTIVE_CONCEPTS = true;
     private boolean LOAD_ONLY_ACTIVE_RELATIONSHIPS = true;
 
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
-    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {

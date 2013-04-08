@@ -1,6 +1,7 @@
 package slib.tools.module;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -234,11 +235,16 @@ public class XMLConfLoaderGeneric {
 
                 String format = conf.getParamAsString("format");
                 logger.debug("- format: " + format);
+                GFormat gFormat = null;
 
-                GFormat gFormat = XMLAttributMapping.GDataFormatMapping.get(format.toUpperCase());
-
-                if (gFormat == null) {
-                    throw new SLIB_Ex_Critic("Unknow data format " + format + ", valids " + XMLAttributMapping.GDataFormatMapping.keySet());
+                if (format == null) {
+                    throw new SLIB_Ex_Critic("Please precise a data format for each data to import, valids " + Arrays.toString(GFormat.values()));
+                } else {
+                    try {
+                        gFormat = GFormat.valueOf(format.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new SLIB_Ex_Critic("Unknow data format " + format + ", valids " + Arrays.toString(GFormat.values()));
+                    }
                 }
 
                 // Data Location
@@ -283,10 +289,16 @@ public class XMLConfLoaderGeneric {
                 String type = conf.getParamAsString("type");
                 logger.debug("- type: " + type);
 
-                GActionType gType = XMLAttributMapping.GActionTypeMapping.get(type);
+                GActionType gType = null;
 
-                if (gType == null) {
-                    throw new SLIB_Ex_Critic("Unknow action type " + type + ", accepted " + XMLAttributMapping.GActionTypeMapping.keySet());
+                if (type == null) {
+                    throw new SLIB_Ex_Critic("Please precise a type for each action to perform, valids " + Arrays.toString(GActionType.values()));
+                } else {
+                    try {
+                        gType = GActionType.valueOf(type.toUpperCase());
+                    } catch (IllegalArgumentException e) {
+                        throw new SLIB_Ex_Critic("Unknow action type " + type + ", valids " + Arrays.toString(GActionType.values()));
+                    }
                 }
 
                 GAction gAction = new GAction(gType);

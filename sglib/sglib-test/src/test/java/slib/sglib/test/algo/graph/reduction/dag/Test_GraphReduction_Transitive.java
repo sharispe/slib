@@ -47,7 +47,7 @@ import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;
+import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
@@ -122,14 +122,15 @@ public class Test_GraphReduction_Transitive {
         String gofilePath = SLIB_UnitTestValues.G_GO;
 
         URIFactoryMemory.getSingleton().loadNamespacePrefix("GO", "http://GO#");
-        GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
+        
 
         GraphConf gconf = new GraphConf();
         gconf.setUri(SLIB_UnitTestValues.uriGraph);
         GDataConf conf = new GDataConf(GFormat.OBO, gofilePath);
         gconf.addGDataConf(conf);
 
-        g = loader.load(gconf);
+        
+        g = GraphLoaderGeneric.load(gconf);
 
         System.out.println(g.toString());
 

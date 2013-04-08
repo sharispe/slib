@@ -33,6 +33,11 @@
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-utils</artifactId>
+            <version>0.0.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model-impl</artifactId>
             <version>0.0.6-SNAPSHOT</version>
         </dependency>
@@ -56,7 +61,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.0</version>
             <type>jar</type>
             <scope>test</scope>
             <optional>true</optional>

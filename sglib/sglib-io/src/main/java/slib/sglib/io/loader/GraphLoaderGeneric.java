@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
+import slib.sglib.io.loader.annot.GraphLoader_TSVannot;
 import slib.sglib.io.loader.bio.gaf2.GraphLoader_GAF_2;
 import slib.sglib.io.loader.bio.mesh.GraphLoader_MESH_XML;
 import slib.sglib.io.loader.bio.obo.GraphLoader_OBO_1_2;
@@ -74,7 +75,7 @@ public class GraphLoaderGeneric {
      */
     public static GFormat[] supportedFormat = {
         GFormat.OBO, GFormat.GAF2, GFormat.NTRIPLES, GFormat.RDF_XML,
-        GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV
+        GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV, GFormat.TSV_ANNOT
     };
 
     /**
@@ -197,7 +198,10 @@ public class GraphLoaderGeneric {
             return new GraphLoader_SLIB();
         } else if (data.getFormat() == GFormat.MESH_XML) {
             return new GraphLoader_MESH_XML();
-        } else {
+        } 
+        else if (data.getFormat() == GFormat.TSV_ANNOT) {
+            return new GraphLoader_TSVannot();
+        }else {
             throw new SLIB_Ex_Critic("Unknown Graph format " + data.getFormat());
         }
     }
@@ -210,7 +214,7 @@ public class GraphLoaderGeneric {
      */
     public static boolean supportFormat(String format) {
         for (GFormat f : supportedFormat) {
-            if (f.toString().equals(format)) {
+            if (f.name().equalsIgnoreCase(format)) {
                 return true;
             }
         }

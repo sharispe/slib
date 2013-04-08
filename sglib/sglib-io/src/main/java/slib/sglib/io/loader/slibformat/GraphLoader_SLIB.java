@@ -45,9 +45,7 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
 import slib.sglib.io.loader.GraphLoader;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
@@ -68,10 +66,7 @@ public class GraphLoader_SLIB implements GraphLoader {
     String filepath;
     G g;
 
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
-    }
+
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {

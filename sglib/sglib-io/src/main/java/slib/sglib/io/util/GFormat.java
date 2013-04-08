@@ -79,5 +79,9 @@ public enum GFormat {
     /**
      *
      */
-    TURTLE;
+    TURTLE,
+    /**
+     *
+     */
+    TSV_ANNOT;
 }

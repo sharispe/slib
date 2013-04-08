@@ -16,8 +16,6 @@ import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
@@ -41,10 +39,6 @@ public class GraphLoader_Wordnet implements GraphLoader {
     
     URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
 
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
-    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {

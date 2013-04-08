@@ -115,6 +115,7 @@ public class URIFactoryMemory implements URIFactory {
     @Override
     public URI createURI(String sURI) {
         return internalUriFactory.createURI(sURI);
+        
     }
 
     @Override

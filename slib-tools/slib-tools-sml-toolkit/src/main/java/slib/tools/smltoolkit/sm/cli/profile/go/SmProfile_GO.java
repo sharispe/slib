@@ -114,10 +114,20 @@ public class SmProfile_GO implements SmlModuleCLI {
             xmlconf += "\t\t\t<data>\n";
             xmlconf += "\t\t\t\t<file format=\"OBO\"   path=\"" + c.ontologyPath + "\"/>    \n";
             if (c.annotsPath != null) {
-                if (c.annotsFormat == null) {
+                
+                if (c.annotsFormat == null || c.annotsFormat.equals("GAF2")) {
                     c.annotsFormat = "GAF_2";
+                    xmlconf += "\t\t\t\t<file format=\"" + c.annotsFormat + "\"   path=\"" + c.annotsPath + "\"/>    \n";
                 }
-                xmlconf += "\t\t\t\t<file format=\"" + c.annotsFormat + "\"   path=\"" + c.annotsPath + "\"/>    \n";
+                else if (c.annotsFormat.equals("TSV")) {
+                    c.annotsFormat = "TSV";
+                    // no prefixObject because the string will contain a PREFIX, e.g. GO:XXXXXX
+                    xmlconf += "\t\t\t\t<file format=\"TSV_ANNOT\"   path=\"" + c.annotsPath + "\" prefixSubject=\""+graphURI+"\" header=\"false\"/>    \n";
+                }
+                else{
+                    throw new SLIB_Ex_Critic("Unsupported file format "+c.annotsFormat);
+                }
+                
             }
             xmlconf += "\t\t\t</data>\n\n";
 

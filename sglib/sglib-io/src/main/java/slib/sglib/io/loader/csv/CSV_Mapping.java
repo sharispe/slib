@@ -3,7 +3,7 @@ package slib.sglib.io.loader.csv;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class CSV_Mapping {
 

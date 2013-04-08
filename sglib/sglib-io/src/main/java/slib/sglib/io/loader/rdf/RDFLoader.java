@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import slib.sglib.io.conf.GDataConf;
-import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
@@ -25,7 +23,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class RDFLoader implements GraphLoader {
 
@@ -49,10 +47,6 @@ public class RDFLoader implements GraphLoader {
 
     }
 
-    @Override
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
-    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {

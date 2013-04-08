@@ -152,10 +152,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
     Pattern exclamation = Pattern.compile("!");
     Pattern spaces = Pattern.compile("\\s+");
 
-    public G load(GraphConf conf) throws SLIB_Exception {
-        return GraphLoaderGeneric.load(conf);
-    }
-
     private void init(G g, String file, String defaultNamespace) {
 
         this.g = g;
@@ -163,7 +159,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
         this.filepath = file;
 
-        logger.info("Loading OBO specification from:" + filepath);
+
 
         this.defaultNamespace = defaultNamespace;
 
@@ -179,20 +175,30 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         oboTypeCurrent = null;
     }
 
+    @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
+        
+        String defaultNamespaceVal = (String) conf.getParameter("default-namespace");
 
-        String defaultNamespace = (String) conf.getParameter("default-namespace");
-
-        if (defaultNamespace == null) {
+        if (defaultNamespaceVal == null) {
             defaultNamespace = g.getURI().getNamespace();
             logger.info("OBO loader set default-namespace " + defaultNamespace);
-
+        }
+        else{
+            defaultNamespace = defaultNamespaceVal;
         }
 
         init(g, conf.getLoc(), defaultNamespace);
+
+        logger.info("-------------------------------------");
+        logger.info("Loading OBO specification from:" + filepath);
+        logger.info("-------------------------------------");
+
+        
         loadOboSpec();
 
-        logger.debug("OBO specification loaded.");
+        logger.info("OBO specification loaded.");
+        logger.info("-------------------------------------");
     }
 
     private void loadOboSpec() throws SLIB_Exception {
@@ -481,7 +487,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         // create  Edge Type and inverse
         for (Entry<String, OboType> e : oboTypes.entrySet()) {
 
-            String eTypeUriString = null;
+            String eTypeUriString;
 
 
             eTypeUriString = e.getKey();
@@ -493,8 +499,8 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
                 continue;
             }
         }
-        
-        
+
+
 
         // create  Edge Type and inverse only for non obsolete relationships
         for (Entry<String, OboTerm> entry : oboTerms.entrySet()) {
@@ -541,32 +547,5 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
      */
     public void setAllow_all_gafVersion(boolean allow_all_gafVersion) {
         this.allow_all_gafVersion = allow_all_gafVersion;
-    }
-
-    /**
-     *
-     * @param args
-     * @throws SLIB_Ex_Warning
-     */
-    public static void main(String[] args) throws SLIB_Ex_Warning {
-        //		String path = System.getProperty("user.dir")+"/data/graph/obo/";
-        //
-        //		String go = path+"gene_ontology_ext.obo";
-        //
-        //		try {
-        ////			DataRepository.getSingleton().loadNamespacePrefix("GO", "http://purl.obolibrary.org/obo/go#");
-        ////			DataRepository.getSingleton().loadNamespacePrefix("RO", "http://purl.org/obo/owl/ro#");
-        //
-        //			GraphLoader_OBO_1_2 loader = new GraphLoader_OBO_1_2();
-        //			GraphConf conf = new GraphConf("http://purl.obolibrary.org/obo/go#", GFormat.OBO, go, null, false);
-        //
-        //			G g = loader.load(conf);
-        //
-        //			System.out.println(g.toString());
-        //
-        //		} catch (SGL_Exception e) {
-        //			e.printStackTrace();
-        //			System.err.println(e.getMessage());
-        //		}
     }
 }
