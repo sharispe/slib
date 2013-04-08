@@ -86,6 +86,9 @@ public class GraphLoader_SLIB implements GraphLoader {
 
 
         this.filepath = conf.getLoc();
+        logger.info("-------------------------------------");
+        logger.info(" SLIB loader");
+        logger.info("-------------------------------------");
         logger.info("Loading graph from SLIB formatted file" + filepath);
 
         try {
@@ -126,6 +129,7 @@ public class GraphLoader_SLIB implements GraphLoader {
         } catch (IOException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
+        logger.info("-------------------------------------");
     }
 
     /**

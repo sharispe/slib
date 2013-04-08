@@ -27,7 +27,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * 
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public class GraphLoader_Wordnet implements GraphLoader {
@@ -35,18 +35,18 @@ public class GraphLoader_Wordnet implements GraphLoader {
     private G graph;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Map<String, PointerToEdge> pointerSymbolToURIsMap;
-    
-    
     URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
-
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
-        
+
+        logger.info("-------------------------------------");
+        logger.info(" WordNet Loader");
+        logger.info("-------------------------------------");
         logger.info("Loading from Wordnet data");
-        
-        if(conf.getFormat() != GFormat.WORDNET_DATA){
-            throw new SLIB_Ex_Critic("Cannot use "+this.getClass()+" to load file format "+conf.getFormat()+", required format is "+GFormat.WORDNET_DATA);
+
+        if (conf.getFormat() != GFormat.WORDNET_DATA) {
+            throw new SLIB_Ex_Critic("Cannot use " + this.getClass() + " to load file format " + conf.getFormat() + ", required format is " + GFormat.WORDNET_DATA);
         }
 
         initPointerToURImap();
@@ -54,8 +54,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
         graph = g;
         boolean inHeader = true;
         String filepath = conf.getLoc();
-        
-        logger.info("From "+filepath);
+
+        logger.info("From " + filepath);
 
         String uriPrefix = g.getURI().getNamespace();
         if (conf.getParameter("prefix") != null) {
@@ -64,8 +64,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
         try {
 
             FileInputStream fstream = new FileInputStream(filepath);
-            DataInputStream in      = new DataInputStream(fstream);
-            BufferedReader br       = new BufferedReader(new InputStreamReader(in));
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             String line;
             String[] data;
@@ -86,7 +86,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
                 String synset_offset = data[0];
                 String lex_filenum = data[1];
-                String ss_type      = data[2];
+                String ss_type = data[2];
 
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
 
@@ -108,23 +108,23 @@ public class GraphLoader_Wordnet implements GraphLoader {
                     if (pointerSymbolToURIsMap.containsKey(p.pointerSymbol)) {
 
                         //System.out.println("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
-                        
+
                         URI s = dataRepo.createURI(uriPrefix + synset_offset);
                         URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
-                        
+
                         graph.addV(s);
                         graph.addV(o);
-                        
+
                         E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(s, o);
-                        
+
                         g.addE(e);
-                        
+
 
                     } else {
                         //System.out.println("\tExclude Pointer symbol: " + p.pointerSymbol);
                     }
                 }
-                
+
 
             }
             in.close();
@@ -134,6 +134,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
         logger.info(graph.toString());
         logger.info("Wordnet Loading ok.");
+        logger.info("-------------------------------------");
     }
 
     private Word[] extractWords(String[] data, int start_id, int w_cnt) {
@@ -260,13 +261,13 @@ public class GraphLoader_Wordnet implements GraphLoader {
         G g = new GraphMemory(guri);
 
         GraphLoader_Wordnet loader = new GraphLoader_Wordnet();
-        
+
         String dataloc = "/home/seb/desktop/WordNet-3.0/dict/";
-        String data_noun = dataloc+"data.noun";
-        String data_verb = dataloc+"data.verb";
-        String data_adj  = dataloc+"data.adj";
-        String data_adv  = dataloc+"data.adv";
-        
+        String data_noun = dataloc + "data.noun";
+        String data_verb = dataloc + "data.verb";
+        String data_adj = dataloc + "data.adj";
+        String data_adv = dataloc + "data.adv";
+
         GDataConf dataNoun = new GDataConf(GFormat.WORDNET_DATA, data_noun);
         GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, data_verb);
         GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, data_adj);

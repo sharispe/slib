@@ -66,13 +66,16 @@ public class GraphLoader_CSV implements GraphLoader {
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
-        logger.debug("Loading CSV.");
+        logger.info("-------------------------------------");
+        logger.info("Loading CSV.");
+        logger.info("-------------------------------------");
 
         this.g = g;
 
         loadConf(conf);
         loadCSV(conf.getLoc());
-        logger.debug("CSV specification loaded.");
+        logger.info("CSV specification loaded.");
+        logger.info("-------------------------------------");
     }
 
     private void loadConf(GDataConf conf) throws SLIB_Ex_Critic {

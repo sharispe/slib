@@ -94,6 +94,9 @@ public class GraphActionExecutor {
      */
     private static void verticeReduction(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
+        logger.info("-------------------------------------");
+        logger.info(" Vertices Reduction");
+        logger.info("-------------------------------------");
         logger.debug("Starting " + GActionType.VERTICES_REDUCTION);
 
         String regex = (String) action.getParameter("regex");
@@ -146,9 +149,6 @@ public class GraphActionExecutor {
 
                 logger.info("Removing " + instancesToRemove.size() + " instances of the graph");
                 g.removeV(instancesToRemove);
-
-
-
 
             } catch (IllegalArgumentException e) {
                 throw new SLIB_Ex_Critic("Error value specified for parameter root_uri, i.e. " + rootURIs + " cannot be converted into an URI");
@@ -228,6 +228,8 @@ public class GraphActionExecutor {
             }
         }
 
+        logger.info("vertices reduction performed");
+        logger.info("-------------------------------------");
     }
 
 //    private static void rdfsInference(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
@@ -297,7 +299,9 @@ public class GraphActionExecutor {
     private static void rerooting(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
 
+        logger.info("-------------------------------------");
         logger.info("Rerooting");
+        logger.info("-------------------------------------");
 
         // Re-rooting
         String rootURIstring = (String) action.getParameter("root_uri");
@@ -319,13 +323,17 @@ public class GraphActionExecutor {
         } else {
             RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
         }
+        logger.info("Rerooting performed");
+        logger.info("-------------------------------------");
     }
 
     private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
 
         String target = (String) action.getParameter("target");
 
+        logger.info("-------------------------------------");
         logger.info("Transitive Reduction");
+        logger.info("-------------------------------------");
         logger.info("Target: " + target);
 
 
@@ -338,12 +346,17 @@ public class GraphActionExecutor {
         } else if (target.equals("INSTANCES")) {
             transitive_reductionInstance(action, g);
         }
+        
+        
+        logger.info("Transitive reduction performed");
+        logger.info("-------------------------------------");
 
 
     }
 
     private static void transitive_reductionInstance(GAction action, G g) throws SLIB_Ex_Critic {
 
+        
         // --------------- TO_SPLIT
 
         int invalidInstanceNb = 0;
@@ -414,10 +427,15 @@ public class GraphActionExecutor {
      * @throws SLIB_Ex_Critic
      */
     public static void applyActions(URIFactory factory, List<GAction> actions, G g) throws SLIB_Ex_Critic {
+        
+        logger.info("-------------------------------------");
+        logger.info(" Applying actions");
+        logger.info("-------------------------------------");
 
         for (GAction action : actions) {
-
             applyAction(factory, action, g);
         }
+        logger.info("Actions performed");
+        logger.info("-------------------------------------");
     }
 }

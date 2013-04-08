@@ -124,6 +124,10 @@ public class SmCli implements SmlModuleCLI {
      */
     public void execute(String confFile) throws SLIB_Exception {
 
+        logger.info("---------------------------------------------------------------");
+        logger.info(" Processing XML configuration " + confFile);
+        logger.info("---------------------------------------------------------------");
+
         conf = new Sm_XMLConfLoader(confFile);
 
 
@@ -171,10 +175,13 @@ public class SmCli implements SmlModuleCLI {
         }
 
 
+        logger.info("---------------------------------------------------------------");
+        logger.info(" Global parameters");
+        logger.info("---------------------------------------------------------------");
         logger.info("quiet      : " + QUIET);
         logger.info("Bench size : " + SIZE_BENCH);
         logger.info("Number of threads allowed: " + ThreadManager.getSingleton().getCapacity());
-
+        logger.info("---------------------------------------------------------------");
 
 
         // check if measure evaluated require DAG structure
@@ -193,10 +200,12 @@ public class SmCli implements SmlModuleCLI {
         computeQueries();
 
         logger.info("process done");
+        logger.info("---------------------------------------------------------------");
     }
 
     private void computeQueries() throws SLIB_Exception {
 
+        logger.info("---------------------------------------------------------------");
         logger.info("Start computation of " + conf.gConfQueries.size() + " queries");
 
         try {
@@ -223,16 +232,16 @@ public class SmCli implements SmlModuleCLI {
                         NO_ANNOTATION_SCORE = ActionParamsUtils.getSetValue(noAnnotsConf_s);
                     }
                 }
-                System.out.println(notFound_s + "\t" + NOT_FOUND_ACTION);
-                System.out.println(noAnnotsConf_s + "\t" + NO_ANNOTATION_ACTION);
 
-               
+
 
                 if (uri_prefix == null) {
                     uri_prefix = "";
                 }
 
+                logger.info("---------------------------------------------------------------");
                 logger.info("Query :" + id);
+                logger.info("---------------------------------------------------------------");
 
                 logger.info("Not Found : " + NOT_FOUND_ACTION);
 

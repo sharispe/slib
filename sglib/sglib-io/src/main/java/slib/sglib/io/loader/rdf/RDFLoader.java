@@ -53,10 +53,13 @@ public class RDFLoader implements GraphLoader {
 
         loadConf(conf);
 
-
+        logger.info("-------------------------------------");
+        logger.info(" RDF Loader");
+        logger.info("-------------------------------------");
         logger.info("Populate graph " + g.getURI()+" from "+conf.getLoc());
         load(g, conf.getLoc());
         logger.info("Graph " + g.getURI() + " populated by RDF data ");
+        logger.info("-------------------------------------");
 
     }
 

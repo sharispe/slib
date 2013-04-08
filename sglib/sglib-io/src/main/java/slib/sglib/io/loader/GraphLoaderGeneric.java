@@ -146,6 +146,10 @@ public class GraphLoaderGeneric {
      * @throws SLIB_Exception
      */
     public static G load(GraphConf graphConf, G g) throws SLIB_Exception {
+        
+        logger.info("-------------------------------------");
+        logger.info(" Loading DATA");
+        logger.info("-------------------------------------");
         for (GDataConf dataConf : graphConf.getData()) {
             populate(dataConf, g);
         }

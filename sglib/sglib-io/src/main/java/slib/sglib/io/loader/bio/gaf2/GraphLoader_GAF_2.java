@@ -121,6 +121,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         this.graph = graph;
 
         process(conf);
+        logger.info("-------------------------------------");
     }
 
     private void process(GDataConf conf) throws SLIB_Ex_Critic {

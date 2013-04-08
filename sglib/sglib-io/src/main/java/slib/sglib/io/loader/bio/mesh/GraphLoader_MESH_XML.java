@@ -120,7 +120,9 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             default_namespace = graph.getURI().getNamespace();
         }
         try {
+            logger.info("-------------------------------------");
             logger.info("Loading Mesh XML");
+            logger.info("-------------------------------------");
             idToConcepts = new HashMap<String, MeshConcept>();
             SAXParserFactory parserfactory = SAXParserFactory.newInstance();
             SAXParser saxParser;
@@ -200,6 +202,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         }
 
         logger.info("MESH loader - process performed");
+        logger.info("-------------------------------------");
     }
 
     private URI getOrCreateVertex(String descriptorUI) {

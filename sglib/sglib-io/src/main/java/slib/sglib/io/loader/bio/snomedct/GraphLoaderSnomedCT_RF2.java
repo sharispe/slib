@@ -94,7 +94,9 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             }
         }
 
+        logger.info("-------------------------------------");
         logger.info("Loading SNOMED-CT [RF2]      ");
+        logger.info("-------------------------------------");
         logger.info("Concept file:      " + concept_file);
         logger.info("Relationship file: " + relationship_file);
 
@@ -234,6 +236,9 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                 }
             }
             logger.info("Number of relationships loaded: " + relationship_count);
+            logger.info("-------------------------------------");
+            
+            
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new SLIB_Ex_Critic(ex.getMessage());

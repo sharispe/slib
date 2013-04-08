@@ -86,7 +86,7 @@ import slib.utils.impl.SetUtils;
 /**
  * This class defines a Semantic Measures Engine giving access to numerous
  * methods commonly used to define graph-based semantic measures.
- *<br/>
+ * <br/>
  * The engine distinguished two types of vertices in the graph:
  * <ul>
  * <li>
@@ -174,7 +174,9 @@ public class SM_Engine {
 
         this.graph = g;
 
+        logger.info("---------------------------------------------------------------");
         logger.info("Loading Semantic Measures Engine for graph " + graph.getURI());
+        logger.info("---------------------------------------------------------------");
         logger.info(g.toString());
 
         ancGetter = new AncestorEngine(graph);
@@ -196,6 +198,9 @@ public class SM_Engine {
 
         lcaFinder = new LCAFinderImpl();
 
+        logger.info("Inferences ");
+        logger.info("---------------------------------------------------------------");
+
         logger.info("Inferring ancestors");
         computeAllclassesAncestors();
         logger.info("Inferring descendants");
@@ -203,6 +208,7 @@ public class SM_Engine {
         logger.info("Inferring Conceptual Leaves");
         computeLeaves();
         logger.info("Semantic measures Engine initialized");
+        logger.info("---------------------------------------------------------------");
     }
 
     /**
@@ -284,7 +290,7 @@ public class SM_Engine {
      * Get the parents of a class, that is to say its direct ancestors.
      *
      * <br/><b>Important</b>:<br/>
-     * 
+     *
      * The direct parent of a class are all classes x linked to the given class
      * c to a an edge x RDFS.SUBLASSOF c. The result is not cached by the
      * engine. To ensure result coherency the underlying requires to be
@@ -514,15 +520,18 @@ public class SM_Engine {
             return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
         }
 
-        logger.info("computing IC " + icConf.getId());
 
+        logger.info("---------------------------------------------------------------");
+        logger.info("computing IC " + icConf.getId());
+        logger.info("---------------------------------------------------------------");
+        
         Class<?> cl;
         Map<URI, Double> results;
 
         try {
 
             String icClassName = icConf.getClassName();
-            logger.info("Computing IC " + icClassName);
+            logger.info("Class name " + icClassName);
 
             if (icConf instanceof IC_Conf_Corpus) {
 
@@ -560,6 +569,7 @@ public class SM_Engine {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         logger.info("ic " + icConf.id + " computed");
+        logger.info("---------------------------------------------------------------");
         return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
     }
 
@@ -933,11 +943,11 @@ public class SM_Engine {
      * @param setB the second set of vertices/classes/concepts
      * @param pairwiseConf the pairwise semantic measure configuration which
      * must be used to compute the score of a pair of vertex
-     * 
+     *
      * @return the matrix filled with the scores.
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URIs cannot be associated to a
-     * class
+     * @throws IllegalAccessException if the given URIs cannot be associated to
+     * a class
      */
     public MatrixDouble<URI, URI> getMatrixScore(
             Set<URI> setA,
@@ -970,9 +980,9 @@ public class SM_Engine {
     /**
      * Set the configuration of the engine regarding pairwise semantic measure
      * score caching.
-     * 
+     *
      * <br/><b>Important</b>:<br/>
-     * 
+     *
      * Storing the results can be very useful in specific cases. However,
      * storing the results can also lead to high memory consumption and
      * therefore slow the process or crash the process.

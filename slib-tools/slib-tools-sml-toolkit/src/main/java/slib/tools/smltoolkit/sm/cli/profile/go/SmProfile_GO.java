@@ -63,6 +63,7 @@ public class SmProfile_GO implements SmlModuleCLI {
         try {
 
             logger.info("Parameters");
+            logger.info("---------------------------------------------------------------");
             logger.info("Ontology     : " + c.ontologyPath);
             logger.info("Annots       : " + c.annotsPath);
             logger.info("Annot Format : " + c.annotsFormat);
@@ -80,6 +81,7 @@ public class SmProfile_GO implements SmlModuleCLI {
             logger.info("threads      : " + c.threads);
             logger.info("notrgo       : " + c.notrgo);
             logger.info("nonotrannots : " + c.notrannots);
+            logger.info("---------------------------------------------------------------");
             
 //            UtilDebug.exit(this);
 
@@ -191,6 +193,7 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             logger.info("XML configuration file generated");
             logger.info(xmlconf);
+            logger.info("---------------------------------------------------------------");
 
         } catch (Exception e) {
             c.ending(e.getMessage(), true, false, true);
