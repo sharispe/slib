@@ -116,7 +116,7 @@ public class SmProfile_GO implements SmlModuleCLI {
             if (c.annotsPath != null) {
                 
                 if (c.annotsFormat == null || c.annotsFormat.equals("GAF2")) {
-                    c.annotsFormat = "GAF_2";
+                    c.annotsFormat = "GAF2";
                     xmlconf += "\t\t\t\t<file format=\"" + c.annotsFormat + "\"   path=\"" + c.annotsPath + "\"/>    \n";
                 }
                 else if (c.annotsFormat.equals("TSV")) {
