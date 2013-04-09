@@ -115,9 +115,9 @@ An example is provided above.
 
 			
 * `-noannots <flag>` defines the behavior if a gene product of the query file doesn't have any annotation (GO terms). Accepted values [exclude,stop, set=<value>]:
-	* 'exclude' the entry will not be processed (a message will be logged if -quiet is not used)
-	* 'stop'    the program will stop
-	* 'set=<numerical value>' the entry will not be processed and the given value will be set as score (a message will be logged if -quiet is not used)
+	* `exclude` the entry will not be processed (a message will be logged if -quiet is not used)
+	* `stop`    the program will stop
+	* `set=<numerical value>` the entry will not be processed and the given value will be set as score (a message will be logged if -quiet is not used)
 	default value = 'set=0' the score is set to 0.
 
 			
