@@ -42,7 +42,6 @@ import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -50,7 +49,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content
  * computation. Knowledge-Based Systems 2011, 24:297-303.
  *
- * formula equation 9 p 299
+ * Adaptation from formula equation 9 p 299
  *
  * IC inner expression range : ]0,1] IC value : [0,...[
  *
@@ -60,9 +59,8 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * @author Harispe Sébastien ﻿
  */
-public class ICi_sanchez_2011_b extends LogBasedMetric implements ICtopo {
+public class ICi_sanchez_2011_b_adapted extends LogBasedMetric implements ICtopo {
 
-    // TODO include current leaf
     /**
      *
      * @param allNbOfReachableLeaves

@@ -286,7 +286,7 @@ public class TestGraphEngine {
     //@Test
     public void test_IC_Sanchez() throws SLIB_Ex_Critic {
 
-        Map<URI, Double> icSanchez = engine.computeIC(new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011_a));
+        Map<URI, Double> icSanchez = engine.computeIC(new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011));
 
         for (Entry<URI, Double> e : informationContents.get(SANCHEZ_IC).entrySet()) {
 

@@ -110,8 +110,8 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence;
 import slib.sml.sm.core.metrics.ic.topo.ICi_probOccurence_propagatted;
 import slib.sml.sm.core.metrics.ic.topo.ICi_resnik_1995;
 import slib.sml.sm.core.metrics.ic.topo.ICi_resnik_unpropagatted_1995;
-import slib.sml.sm.core.metrics.ic.topo.ICi_sanchez_2011_a;
-import slib.sml.sm.core.metrics.ic.topo.ICi_sanchez_2011_b;
+import slib.sml.sm.core.metrics.ic.topo.ICi_sanchez_2011;
+import slib.sml.sm.core.metrics.ic.topo.ICi_sanchez_2011_b_adapted;
 import slib.sml.sm.core.metrics.ic.topo.ICi_seco_2004;
 import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
 
@@ -526,11 +526,11 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String FLAG_ICI_SANCHEZ_2011_a = "ICI_SANCHEZ_2011_a";
+    public static final String FLAG_ICI_SANCHEZ_2011 = "ICI_SANCHEZ_2011";
     /**
      *
      */
-    public static final String FLAG_ICI_SANCHEZ_2011_b = "ICI_SANCHEZ_2011_b";
+    public static final String FLAG_ICI_SANCHEZ_2011_b_adapted = "ICI_SANCHEZ_2011_b_adapted";
     /**
      *
      */
@@ -591,11 +591,11 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String ICI_SANCHEZ_2011_a = ICi_sanchez_2011_a.class.getName();
+    public static final String ICI_SANCHEZ_2011 = ICi_sanchez_2011.class.getName();
     /**
      *
      */
-    public static final String ICI_SANCHEZ_2011_b = ICi_sanchez_2011_b.class.getName();
+    public static final String ICI_SANCHEZ_2011_b_adapted = ICi_sanchez_2011_b_adapted.class.getName();
     /**
      *
      */
@@ -647,8 +647,8 @@ public final class SMConstants {
         {
             put(FLAG_ICI_RESNIK_UNPROPAGATED_1995, ICI_RESNIK_UNPROPAGATED_1995);
             put(FLAG_ICI_RESNIK_1995, ICI_RESNIK_1995);
-            put(FLAG_ICI_SANCHEZ_2011_a, ICI_SANCHEZ_2011_a);
-            put(FLAG_ICI_SANCHEZ_2011_b, ICI_SANCHEZ_2011_b);
+            put(FLAG_ICI_SANCHEZ_2011, ICI_SANCHEZ_2011);
+            put(FLAG_ICI_SANCHEZ_2011_b_adapted, ICI_SANCHEZ_2011_b_adapted);
             put(FLAG_ICI_SECO_2004, ICI_SECO_2004);
             put(FLAG_ICI_ZHOU_2008, ICI_ZHOU_2008);
             put(FLAG_ICI_HARISPE_2012, ICI_HARISPE_2012);
@@ -1031,7 +1031,7 @@ public final class SMConstants {
         {
             put("lin", FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998);
             put("jc", FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);
-            put("jc_norm", FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM);
+            put("simjc_norm", FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM);
             put("resnik", FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995);
             put("schliker", FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006);
         }
@@ -1040,8 +1040,8 @@ public final class SMConstants {
         private static final long serialVersionUID = 1L;
 
         {
-            put("resnik", FLAG_ICI_RESNIK_1995);
-            put("sanchez", FLAG_ICI_SANCHEZ_2011_b);
+            put("resnik", FLAG_IC_ANNOT_RESNIK_1995);
+            put("sanchez", FLAG_ICI_SANCHEZ_2011);
             put("seco", FLAG_ICI_SECO_2004);
             put("zhou", FLAG_ICI_ZHOU_2008);
             put("depth_max_non_linear", FLAG_ICI_DEPTH_MAX_NONLINEAR);

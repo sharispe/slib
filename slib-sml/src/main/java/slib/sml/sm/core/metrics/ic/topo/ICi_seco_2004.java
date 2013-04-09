@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * ﻿1. Seco N, Veale T, Hayes J: An Intrinsic Information Content Metric for
+ * Seco N, Veale T, Hayes J: An Intrinsic Information Content Metric for
  * Semantic Similarity in WordNet. In 16th European Conference on Artificial
  * Intelligence. IOS Press; 2004, 16:1-5.
  *

@@ -45,7 +45,11 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Original IC definition
+ * Original Information Content definition
+ *
+ * Resnik P: Using Information Content to Evaluate Semantic Similarity in a
+ * Taxonomy. In Proceedings of the 14th International Joint Conference on
+ * Artificial Intelligence IJCAI. Citeseer; 1995, 1:448–453.
  *
  * @author Sebastien Harispe
  *

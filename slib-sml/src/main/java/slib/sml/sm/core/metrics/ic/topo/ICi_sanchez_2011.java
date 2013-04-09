@@ -45,7 +45,6 @@ import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.utils.SMutils;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -53,19 +52,18 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Reference: Sanchez D, Batet M, Isern D: Ontology-based information content
  * computation. Knowledge-Based Systems 2011, 24:297-303.
  *
- * formula equation 10 p 300
+ * Original definition of the IC proposed by Sanchez et al. in formula equation 10 p 300
  *
  * IC inner expression range : ]0,1] IC value : [0,...[
  *
  *
  * @author Harispe Sébastien
  */
-public class ICi_sanchez_2011_a extends LogBasedMetric implements ICtopo {
+public class ICi_sanchez_2011 extends LogBasedMetric implements ICtopo {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
-     *
      * @param allNbOfReachableLeaves
      * @param allNbAncestors
      * @return
