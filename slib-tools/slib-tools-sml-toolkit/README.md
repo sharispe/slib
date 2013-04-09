@@ -17,8 +17,10 @@ The excerpt of the documentation presented below is related to the tool dedicate
 ## Semantic measures computation
 
 Semantic measures computations are made through the SM tool (Semantic Measures tool).
-The SM tool is a fast (multi-threads supported) to compute semantic measures.
-For instance this tool is used in our laboratory to compute billion of semantic measures scores (yes billions) in few hours. 
+The SM tool is a fast (multi-threads compatible) software solution which can be used to compute semantic measures.
+For instance, this tool is used in our laboratory to compute billions of semantic measures scores (yes billions ;) in few hours. 
+
+
 This tool can be used from the SML-Toolkit typing:
 
 `java -jar sml-toolkit-<version> -t sm`
