@@ -34,7 +34,6 @@
  */
 package slib.tools.smltoolkit.sm.cli.profile.go;
 
-import java.util.Arrays;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -44,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.profile.go.utils.SmToolkitGOCst;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.UtilDebug;
 
 /**
  *

@@ -54,8 +54,8 @@ public class Util {
 	}
 	
 	/**
-	 * Convert the given {@link String} to a boolean value
-	 * return true if the given string equals to "true" or "yes".
+	 * Convert the given {@link String} to a boolean value.
+	 * return true if the given string equals null, "true" or "yes".
 	 * Ignore Case + trim the string.
 	 * @param value the string to evaluate
 	 * @return a boolean value according to the defined conditions.

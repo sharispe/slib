@@ -38,7 +38,6 @@ import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;

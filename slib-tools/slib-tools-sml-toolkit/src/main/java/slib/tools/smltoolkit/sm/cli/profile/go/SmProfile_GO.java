@@ -36,6 +36,7 @@ package slib.tools.smltoolkit.sm.cli.profile.go;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sm.cli.utils.SML_SM_module_XML_block_conf;
 import slib.tools.smltoolkit.sm.cli.utils.XMLConfUtils;
@@ -136,6 +137,7 @@ public class SmProfile_GO implements SmlModuleCLI {
             String actions = "";
 
             String goAspectValue;
+            String actionValue = "VERTICES_REDUCTION";
             if (c.aspect == null || c.aspect.equals("BP")) {
                 goAspectValue = graphURI + "0008150";
             } else if (c.aspect.equals("MF")) {
@@ -143,7 +145,8 @@ public class SmProfile_GO implements SmlModuleCLI {
             } else if (c.aspect.equals("CC")) {
                 goAspectValue = graphURI + "0005575";
             } else if (c.aspect.equals("GLOBAL")) {
-                goAspectValue = "__FICTIVE__";
+                goAspectValue = GraphActionExecutor.REROOT_UNIVERSAL_ROOT_FLAG;
+                actionValue = "REROOTING";
             } else { // expect custom=<GO term id>
                 String[] data = c.aspect.split("=");
                 if (data.length != 2) {
@@ -152,7 +155,7 @@ public class SmProfile_GO implements SmlModuleCLI {
                 goAspectValue = data[1];
                 goAspectValue = goAspectValue.trim();
             }
-            actions += "\t\t\t\t<action type=\"REROOTING\" root_uri=\"" + goAspectValue + "\" />\n";
+            actions += "\t\t\t\t<action type=\""+actionValue+"\" root_uri=\"" + goAspectValue + "\" />\n";
 
             if (!c.notrgo) {
                 actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"CLASSES\" />\n";

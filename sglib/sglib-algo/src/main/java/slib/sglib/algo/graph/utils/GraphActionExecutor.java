@@ -36,6 +36,8 @@ import slib.utils.ex.SLIB_Ex_Critic;
 public class GraphActionExecutor {
 
     static Logger logger = LoggerFactory.getLogger(GraphActionExecutor.class);
+    
+    public final static String REROOT_UNIVERSAL_ROOT_FLAG = "__FICTIVE__";
 
     /**
      * Apply an action to the graph.
@@ -314,7 +316,7 @@ public class GraphActionExecutor {
 
         URI rootURI;
 
-        if (rootURIstring == null) {
+        if (rootURIstring == null || rootURIstring.equals(REROOT_UNIVERSAL_ROOT_FLAG)) {
             rootURI = SLIBVOC.THING_OWL;
             g.addV(rootURI);
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);

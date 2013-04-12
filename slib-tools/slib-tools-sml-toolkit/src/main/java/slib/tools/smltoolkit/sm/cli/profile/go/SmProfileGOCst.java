@@ -165,13 +165,13 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
             .withDescription("\nDo not show warning messages")
             .create("quiet");
     @SuppressWarnings("static-access")
-    private static final Option _notrgo = OptionBuilder.withArgName("trgo")
+    private static final Option _notrgo = OptionBuilder.withArgName("notrgo")
             .withDescription("\nDo not perform a transitive reduction of the GO")
-            .create("trgo");
+            .create("notrgo");
     @SuppressWarnings("static-access")
-    private static final Option _notrannots = OptionBuilder.withArgName("trannots")
-            .withDescription("\nDo not remove annotation redundancy i.e. if a gene product is annoted by two GO terms {X,Y} a X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.")
-            .create("trannots");
+    private static final Option _notrannots = OptionBuilder.withArgName("notrannots")
+            .withDescription("\nDo not remove annotation redundancy i.e. if a gene product is annoted by two GO terms {X,Y} and X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.")
+            .create("notrannots");
     /*
      * Use this data structure to define order of options in help message
      */

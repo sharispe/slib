@@ -78,6 +78,9 @@ public class Sm_XML_Cst {
      *
      */
 //    public static final String QUERIES_TYPE_OTOO_FULL = "oTOo_full";
+    
+    public static final String OUTPUT_BASENAME = "output_basename";
+    
     /**
      *
      */

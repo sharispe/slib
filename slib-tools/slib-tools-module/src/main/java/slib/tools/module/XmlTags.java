@@ -39,7 +39,7 @@ package slib.tools.module;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class XmlTags {
 	
@@ -217,6 +217,8 @@ public class XmlTags {
      *
      */
     public static final String URI_PREFIX_ATTR = "uri_prefix";
+    
+    
 
 	/**
      *

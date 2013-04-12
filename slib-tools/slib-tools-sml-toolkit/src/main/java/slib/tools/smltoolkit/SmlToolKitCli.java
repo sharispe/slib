@@ -197,7 +197,7 @@ public class SmlToolKitCli extends CmdHandler {
 //                + " -notfound stop"
                 ;
 
-        args = a.split("\\s+");
+//        args = a.split("\\s+");
 
         try {
 

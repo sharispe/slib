@@ -307,8 +307,6 @@ public class XMLConfLoaderGeneric {
                 loadExtraParameters(conf, graphActionDefAtt, gAction);
 
                 gconf.addGAction(gAction);
-
-                logger.debug("");
             }
         } else if (nListGactions.getLength() > 1) {
             Util.error(XMLConstUtils.ERROR_NB_ACTIONS_SPEC);

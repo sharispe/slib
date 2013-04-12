@@ -192,7 +192,8 @@ public class XMLConfUtils {
                 + "\t\t\ttype    = \"" + mType + "\" \n"
                 + "\t\t\tfile    = \"" + c.queries + "\" \n"
                 + "\t\t\toutput  = \"" + c.output + "\" \n"
-                + "\t\t\turi_prefix = \"" + c.graphURI + "\"\n";
+                + "\t\t\turi_prefix = \"" + c.graphURI + "\"\n"
+                + "\t\t\toutput_basename = \"false\" \n";
 
 
         if (c.noAnnots != null) {

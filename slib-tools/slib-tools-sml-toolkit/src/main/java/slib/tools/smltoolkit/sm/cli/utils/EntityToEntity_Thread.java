@@ -55,7 +55,7 @@ import slib.utils.threads.PoolWorker;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader> {
 
@@ -65,6 +65,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
     int setValue = 0;
     Collection<QueryEntry> queriesBench;
     InstancesAccessor iAccessor;
+    SMQueryParam queryParam;
     SmCli sspM;
     G g;
     private int nbMeasures;
@@ -76,7 +77,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
      * @param sspM
      * @param nbMeasures
      */
-    public EntityToEntity_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, int nbMeasures) {
+    public EntityToEntity_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, int nbMeasures, SMQueryParam queryParam) {
 
         this.poolWorker = poolWorker;
         this.queriesBench = queriesBench;
@@ -84,6 +85,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
         this.nbMeasures = nbMeasures;
         this.g = sspM.getGraph();
         this.iAccessor = sspM.getiAccessor();
+        this.queryParam = queryParam;
     }
 
     @Override
@@ -100,6 +102,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             String uriE1s, uriE2s;
             StringBuilder tmp_buffer = new StringBuilder();
 
+            boolean printBaseName = queryParam.isOutputBaseName();
             URI e1, e2;
             Set<URI> setE1, setE2;
             double sim;
@@ -115,10 +118,6 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
 
-                tmp_buffer.append(uriE1s);
-                tmp_buffer.append("\t");
-                tmp_buffer.append(uriE2s);
-
                 try {
                     e1 = df.createURI(uriE1s);
                     e2 = df.createURI(uriE2s);
@@ -126,27 +125,38 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 } catch (IllegalArgumentException e) {
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
+                
+                if (printBaseName) {
+                    tmp_buffer.append(uriE1s);
+                    tmp_buffer.append("\t");
+                    tmp_buffer.append(uriE2s);
+                }
+                else{
+                    tmp_buffer.append(e1.getLocalName());
+                    tmp_buffer.append("\t");
+                    tmp_buffer.append(e2.getLocalName());
+                }
 
 
                 if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
 
-                    if (sspM.NOT_FOUND_ACTION == ActionsParams.SET) {
+                    if (queryParam.getNoFoundAction() == ActionsParams.SET) {
 
                         setValue++;
 
                         for (int i = 0; i < nbMeasures; i++) {
-                            tmp_buffer.append("\t").append(sspM.NOT_FOUND_SCORE);
+                            tmp_buffer.append("\t").append(queryParam.getNoFoundScore());
                         }
 
                         tmp_buffer.append("\n");
 
                         results.buffer.append(tmp_buffer);
 
-                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.EXCLUDE) {
+                    } else if (queryParam.getNoFoundAction() == ActionsParams.EXCLUDE) {
 
                         skipped++;
 
-                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.STOP) {
+                    } else if (queryParam.getNoFoundAction() == ActionsParams.STOP) {
                         if (!g.containsVertex(e1)) {
                             throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
                         }
@@ -155,12 +165,10 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                         }
                     }
                     if (!sspM.QUIET) {
-                        logger.info(sspM.NOT_FOUND_ACTION + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
+                        logger.info(queryParam.getNoFoundAction() + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
                     }
                     continue;
                 }
-
-
 
 
                 setE1 = iAccessor.getDirectClass(e1);
@@ -168,28 +176,28 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
                 if (setE1.isEmpty() || setE2.isEmpty()) {
 
-                    if (sspM.NO_ANNOTATION_ACTION == ActionsParams.SET) {
+                    if (queryParam.getNoAnnotAction() == ActionsParams.SET) {
                         setValue++;
 
                         for (int i = 0; i < nbMeasures; i++) {
-                            tmp_buffer.append("\t").append(sspM.NO_ANNOTATION_SCORE);
+                            tmp_buffer.append("\t").append(queryParam.getNoAnnotationScore());
                         }
 
                         tmp_buffer.append("\n");
 
                         results.buffer.append(tmp_buffer);
-                    } else if (sspM.NO_ANNOTATION_ACTION == ActionsParams.EXCLUDE) {
+                    } else if (queryParam.getNoAnnotAction() == ActionsParams.EXCLUDE) {
 
                         skipped++;
 
-                    } else if (sspM.NO_ANNOTATION_ACTION == ActionsParams.STOP) {
+                    } else if (queryParam.getNoAnnotAction() == ActionsParams.STOP) {
                         throw new SLIB_Ex_Critic("Stop the execution because an entry contains an element without annotations "
                                 + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")."
                                 + " You can exclude those entries or set a value, please consult the documentation");
                     }
 
                     if (!sspM.QUIET) {
-                        logger.info(sspM.NO_ANNOTATION_ACTION + " " + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")");
+                        logger.info(queryParam.getNoAnnotAction() + " " + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")");
                     }
                     continue;
                 }

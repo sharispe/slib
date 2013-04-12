@@ -140,6 +140,12 @@ An example is provided above.
 
 * `-quiet` do not show warning messages
 
+* `notrgo` do not perform a transitive reduction of the GO
+
+
+* `notrannots` do not remove annotation redundancies i.e. if a gene product is annotated by two GO terms {X,Y} and X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.
+
+
 
 ####  MeSH: Semantic Measures
 ---------------------------------------

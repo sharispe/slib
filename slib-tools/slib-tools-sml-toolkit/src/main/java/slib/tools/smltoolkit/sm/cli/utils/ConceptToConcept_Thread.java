@@ -59,6 +59,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
     int skipped = 0;
     int setValue = 0;
     Collection<QueryEntry> queriesBench;
+    SMQueryParam queryParam;
     SmCli sspM;
     G g;
 
@@ -68,12 +69,13 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
      * @param queriesBench
      * @param sspM
      */
-    public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM) {
+    public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, SMQueryParam queryParam) {
 
         this.poolWorker = poolWorker;
         this.queriesBench = queriesBench;
         this.sspM = sspM;
         this.g = sspM.getGraph();
+        this.queryParam = queryParam;
     }
 
     @Override
@@ -93,6 +95,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
             URI e1, e2;
             double sim;
             int nbMeasures = sspM.conf.gConfPairwise.size();
+            boolean printBaseName = queryParam.isOutputBaseName();
 
             for (QueryEntry q : queriesBench) {
 
@@ -105,12 +108,6 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
 
-                tmp_buffer.append(uriE1s);
-                tmp_buffer.append("\t");
-                tmp_buffer.append(uriE2s);
-
-
-
                 try {
                     e1 = factory.createURI(uriE1s);
                     e2 = factory.createURI(uriE2s);
@@ -119,26 +116,36 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
 
+                if (printBaseName) {
+                    tmp_buffer.append(uriE1s);
+                    tmp_buffer.append("\t");
+                    tmp_buffer.append(uriE2s);
+                } else {
+                    tmp_buffer.append(e1.getLocalName());
+                    tmp_buffer.append("\t");
+                    tmp_buffer.append(e2.getLocalName());
+                }
+
 
                 if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
 
-                    if (sspM.NOT_FOUND_ACTION == ActionsParams.SET) {
+                    if (queryParam.getNoFoundAction() == ActionsParams.SET) {
 
                         setValue++;
 
                         for (int i = 0; i < nbMeasures; i++) {
-                            tmp_buffer.append("\t").append(sspM.NOT_FOUND_SCORE);
+                            tmp_buffer.append("\t").append(queryParam.getNoFoundScore());
                         }
 
                         tmp_buffer.append("\n");
 
                         results.buffer.append(tmp_buffer);
 
-                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.EXCLUDE) {
+                    } else if (queryParam.getNoFoundAction() == ActionsParams.EXCLUDE) {
 
                         skipped++;
 
-                    } else if (sspM.NOT_FOUND_ACTION == ActionsParams.STOP) {
+                    } else if (queryParam.getNoFoundAction() == ActionsParams.STOP) {
                         if (!g.containsVertex(e1)) {
                             throw new SLIB_Ex_Critic("Cannot locate " + e1 + " in " + g.getURI());
                         }
@@ -147,7 +154,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                         }
                     }
                     if (!sspM.QUIET) {
-                        logger.info(sspM.NOT_FOUND_ACTION + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
+                        logger.info(queryParam.getNoFoundAction() + " " + e1 + " (FOUND = " + g.containsVertex(e1) + ") / " + e2 + " (FOUND = " + g.containsVertex(e2) + ")");
                     }
                     continue;
                 }

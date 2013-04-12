@@ -66,6 +66,7 @@ import slib.tools.smltoolkit.sm.cli.utils.ConceptToConcept_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.EntityToEntity_Thread;
 import slib.tools.smltoolkit.sm.cli.utils.FileWriterUtil;
 import slib.tools.smltoolkit.sm.cli.utils.QueryConceptsIterator;
+import slib.tools.smltoolkit.sm.cli.utils.SMQueryParam;
 import slib.tools.smltoolkit.sm.cli.utils.SmCmdHandler;
 import slib.tools.smltoolkit.sm.cli.utils.ThreadResultsQueryLoader;
 import slib.utils.ex.SLIB_Exception;
@@ -87,15 +88,17 @@ public class SmCli implements SmlModuleCLI {
     public Sm_XMLConfLoader conf;
     public SM_Engine simManager;
     InstancesAccessor iAccessor;
-    public ActionsParams NO_ANNOTATION_ACTION = ActionsParams.EXCLUDE;
-    public ActionsParams NOT_FOUND_ACTION = ActionsParams.STOP;
-    public double NO_ANNOTATION_SCORE = 0;
-    public double NOT_FOUND_SCORE = 0;
-    public boolean QUIET = false;
     URIFactory factory = URIFactoryMemory.getSingleton();
     G graph;
-    int SIZE_BENCH = 2000;
-    boolean CACHE_PAIRWISE_RESULTS = false;
+    // Default parameters
+    private final ActionsParams NO_ANNOTATION_ACTION = ActionsParams.EXCLUDE;
+    private final ActionsParams NOT_FOUND_ACTION = ActionsParams.STOP;
+    private final double NO_ANNOTATION_SCORE = 0;
+    private final double NOT_FOUND_SCORE = 0;
+    public boolean QUIET = false;
+    private final boolean OUTPUT_BASE_NAME = true;
+    private int SIZE_BENCH = 2000;
+    private boolean CACHE_PAIRWISE_RESULTS = false;
 
     /**
      *
@@ -218,59 +221,74 @@ public class SmCli implements SmlModuleCLI {
                 String uri_prefix = (String) gconf.getParam(XmlTags.URI_PREFIX_ATTR);
                 String noAnnotsConf_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NO_ANNOTS_ATTR);
                 String notFound_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NOT_FOUND_ATTR);
+                String outputBaseName_s = (String) gconf.getParam(Sm_XML_Cst.OUTPUT_BASENAME);
 
-                if (notFound_s != null) {
-                    NOT_FOUND_ACTION = ActionParamsUtils.getAction(notFound_s);
-                    if (NOT_FOUND_ACTION == ActionsParams.SET) {
-                        NOT_FOUND_SCORE = ActionParamsUtils.getSetValue(notFound_s);
-                    }
+                boolean outputBasedName = OUTPUT_BASE_NAME;
+                ActionsParams noAnnotAction = NO_ANNOTATION_ACTION;
+                ActionsParams noFoundAction = NOT_FOUND_ACTION;
+                double noAnnotationScore = NO_ANNOTATION_SCORE;
+                double noFoundScore = NOT_FOUND_SCORE;
+
+
+                if (outputBaseName_s != null) {
+                    outputBasedName = Util.stringToBoolean(outputBaseName_s);
                 }
 
-                if (noAnnotsConf_s != null) {
-                    NO_ANNOTATION_ACTION = ActionParamsUtils.getAction(noAnnotsConf_s);
-                    if (NO_ANNOTATION_ACTION == ActionsParams.SET) {
-                        NO_ANNOTATION_SCORE = ActionParamsUtils.getSetValue(noAnnotsConf_s);
+                if (notFound_s
+                        != null) {
+                    noFoundAction = ActionParamsUtils.getAction(notFound_s);
+                    if (noFoundAction == ActionsParams.SET) {
+                        noFoundScore = ActionParamsUtils.getSetValue(notFound_s);
                     }
                 }
-
-
-
+                if (noAnnotsConf_s
+                        != null) {
+                    noAnnotAction = ActionParamsUtils.getAction(noAnnotsConf_s);
+                    if (noAnnotAction == ActionsParams.SET) {
+                        noAnnotationScore = ActionParamsUtils.getSetValue(noAnnotsConf_s);
+                    }
+                }
                 if (uri_prefix == null) {
                     uri_prefix = "";
                 }
 
-                logger.info("---------------------------------------------------------------");
-                logger.info("Query :" + id);
-                logger.info("---------------------------------------------------------------");
+                SMQueryParam queryParam = new SMQueryParam(id);
+                queryParam.setNoAnnotAction(noAnnotAction)
+                        .setNoAnnotationScore(noAnnotationScore)
+                        .setNoFoundAction(noFoundAction)
+                        .setNoFoundScore(noFoundScore)
+                        .setOutputBaseName(outputBasedName)
+                        .setInfile(infile)
+                        .setOutfile(output)
+                        .setType(type);
 
-                logger.info("Not Found : " + NOT_FOUND_ACTION);
 
-                if (NOT_FOUND_ACTION == ActionsParams.SET) {
-                    logger.info("score associated to entries for which an element is not found in the knowledge base: " + NOT_FOUND_SCORE);
-                }
 
-                logger.info("No Annotations : " + NO_ANNOTATION_ACTION);
-
-                if (NO_ANNOTATION_ACTION == ActionsParams.SET) {
-                    logger.info("score associated to entities with no annotations : " + NO_ANNOTATION_SCORE);
-                }
+                logger.info(
+                        "---------------------------------------------------------------");
+                logger.info(
+                        "Query :" + queryParam.getId());
+                logger.info(
+                        "---------------------------------------------------------------");
+                logger.info(queryParam.toString());
 
 
                 // require file
-                if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC) || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
+                if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)
+                        || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
 
                     QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
 
                     if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)) {
-                        perform_cTOc(qloader, output);
+                        perform_cTOc(qloader, queryParam);
                     } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
-                        perform_oTOo(qloader, output);
+                        perform_oTOo(qloader, queryParam);
                     }
                 } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC_FULL)) {
 
                     QueryIterator qloader = new QueryConceptsIterator(simManager.getClasses());
 
-                    perform_cTOc(qloader, output);
+                    perform_cTOc(qloader, queryParam);
 
                 } else {
                     throw new UnsupportedOperationException(type + " is not a supported " + XmlTags.TYPE_ATTR + " of queries");
@@ -286,7 +304,7 @@ public class SmCli implements SmlModuleCLI {
      * @param output
      * @throws SGL_Exception
      */
-    private void perform_oTOo(QueryIterator qloader, String output) throws SLIB_Exception {
+    private void perform_oTOo(QueryIterator qloader, SMQueryParam queryParam) throws SLIB_Exception {
 
 
         logger.info("Starting computing query " + Sm_XML_Cst.QUERIES_TYPE_OTOO);
@@ -300,7 +318,7 @@ public class SmCli implements SmlModuleCLI {
             long queries_number = qloader.getNumberQueries();
             logger.info("Number of query " + queries_number);
 
-            FileWriter fstream = new FileWriter(output);
+            FileWriter fstream = new FileWriter(queryParam.getOutfile());
             BufferedWriter file = new BufferedWriter(fstream);
 
             // Build Header
@@ -334,7 +352,7 @@ public class SmCli implements SmlModuleCLI {
 
                 List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
 
-                EntityToEntity_Thread callable = new EntityToEntity_Thread(poolWorker, queriesBench, this, nbMeasures);
+                EntityToEntity_Thread callable = new EntityToEntity_Thread(poolWorker, queriesBench, this, nbMeasures, queryParam);
 
                 poolWorker.addTask();
 //                logger.debug("- Adding Thread task " + poolWorker.getLoad() + "/" + poolWorker.getCapacity());
@@ -392,7 +410,7 @@ public class SmCli implements SmlModuleCLI {
             file.close();
             logger.info("skipped:" + skipped + "/" + queries_number + "(" + skipped * 100 / queries_number + "%)");
             logger.info("setted :" + setValue + "/" + queries_number + "(" + setValue * 100 / queries_number + "%)");
-            logger.info("consult:" + output);
+            logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
@@ -407,7 +425,7 @@ public class SmCli implements SmlModuleCLI {
         }
     }
 
-    private void perform_cTOc(QueryIterator qloader, String output) throws SLIB_Exception {
+    private void perform_cTOc(QueryIterator qloader, SMQueryParam queryParam) throws SLIB_Exception {
 
 
         logger.info("Starting computing query " + Sm_XML_Cst.QUERIES_TYPE_CTOC);
@@ -423,7 +441,7 @@ public class SmCli implements SmlModuleCLI {
 
 
 
-            FileWriter fstream = new FileWriter(output);
+            FileWriter fstream = new FileWriter(queryParam.getOutfile());
             BufferedWriter file = new BufferedWriter(fstream);
 
             // Build Header
@@ -456,7 +474,7 @@ public class SmCli implements SmlModuleCLI {
 
                 List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
 
-                ConceptToConcept_Thread callable = new ConceptToConcept_Thread(poolWorker, queriesBench, this);
+                ConceptToConcept_Thread callable = new ConceptToConcept_Thread(poolWorker, queriesBench, this, queryParam);
 
 
 
@@ -516,7 +534,7 @@ public class SmCli implements SmlModuleCLI {
             file.close();
             logger.info("skipped:" + skipped + "/" + queries_number + "(" + skipped * 100 / queries_number + "%)");
             logger.info("setted :" + setValue + "/" + queries_number + "(" + setValue * 100 / queries_number + "%)");
-            logger.info("consult:" + output);
+            logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
