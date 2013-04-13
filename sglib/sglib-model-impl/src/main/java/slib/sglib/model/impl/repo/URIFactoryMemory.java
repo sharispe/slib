@@ -35,9 +35,8 @@
 package slib.sglib.model.impl.repo;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import org.openrdf.sail.memory.model.MemValueFactory;
 import slib.sglib.model.repo.URIFactory;
@@ -45,9 +44,9 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * This class defines the singleton used as an in memory repository which manage
- * all used URI and storage element i.e. graphs. 
- * The main goal of the DataFactory singleton is to avoid URI and NameSpace object
- * duplicates and must therefore be used to create and load URIs.
+ * all used URI and storage element i.e. graphs. The main goal of the
+ * DataFactory singleton is to avoid URI and NameSpace object duplicates and
+ * must therefore be used to create and load URIs.
  *
  * The repository must be in agreement to graph representation i.e. URI loaded
  * in a graph are linked to the corresponding storage element in the Data
@@ -60,14 +59,17 @@ public class URIFactoryMemory implements URIFactory {
 
     MemValueFactory internalUriFactory;
     private static URIFactoryMemory repository;
-    private Map<String, String> namespacesPrefix;
+    private Map<String, String> namespacePrefixes2namespaces;
+    private Map<String, String> namespaces2namespacePrefixes;
+    Pattern colon = Pattern.compile(":");
 
     /**
      * Access to the in-memory URI Factory.
+     *
      * @return the singleton
      */
     public static URIFactoryMemory getSingleton() {
-        
+
         if (repository == null) {
             repository = new URIFactoryMemory();
         }
@@ -78,48 +80,76 @@ public class URIFactoryMemory implements URIFactory {
      * Create a {@link URIFactory} which relies on in-memory data structures.
      */
     private URIFactoryMemory() {
-        
+
         internalUriFactory = new MemValueFactory();
-        namespacesPrefix = new HashMap<String, String>();
+        namespacePrefixes2namespaces = new HashMap<String, String>();
+        namespaces2namespacePrefixes = new HashMap<String, String>();
     }
 
     @Override
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic {
 
 
-        if (!namespacesPrefix.containsKey(prefix)) {
-            namespacesPrefix.put(prefix, reference);
+        if (!namespacePrefixes2namespaces.containsKey(prefix)) {
+            namespacePrefixes2namespaces.put(prefix, reference);
+            namespaces2namespacePrefixes.put(reference, prefix);
             return true;
-        } else if (namespacesPrefix.containsKey(prefix) && !namespacesPrefix.get(prefix).equals(reference)) {
+        } else if (namespacePrefixes2namespaces.containsKey(prefix) && !namespacePrefixes2namespaces.get(prefix).equals(reference)) {
             throw new SLIB_Ex_Critic("Cannot include namespace prefix " + prefix + " for namespace " + reference + ""
-                    + "\n prefix already linked to " + namespacesPrefix.get(prefix));
+                    + "\n prefix already linked to " + namespacePrefixes2namespaces.get(prefix));
         }
         return false;
     }
 
-    
     @Override
     public String getNamespace(String ns_prefix) {
         if (ns_prefix == null) {
             return null;
         }
-        return namespacesPrefix.get(ns_prefix);
+        return namespacePrefixes2namespaces.get(ns_prefix);
     }
-    
-    
+
     @Override
     public void clear() {
-        namespacesPrefix.clear();
+        namespacePrefixes2namespaces.clear();
     }
 
     @Override
     public URI createURI(String sURI) {
         return internalUriFactory.createURI(sURI);
-        
+
     }
 
     @Override
     public URI createURI(String snamespace, String sURI) {
         return internalUriFactory.createURI(snamespace, sURI);
+    }
+
+    @Override
+    public URI createURI(String sURI, boolean useLoadedPrefix) {
+        if (!useLoadedPrefix) {
+            return createURI(sURI);
+        } else {
+            int idx = sURI.indexOf(":");
+            if (idx != -1) {
+                String prefix = sURI.substring(0, idx);
+                if (namespacePrefixes2namespaces.containsKey(prefix)) {
+                    return createURI(namespacePrefixes2namespaces.get(prefix), sURI.substring(idx + 1));
+                } else {
+                    return createURI(sURI);
+                }
+            } else {
+                return createURI(sURI);
+            }
+        }
+    }
+
+    @Override
+    public String shortURIasString(URI uri) {
+        if (namespaces2namespacePrefixes.containsKey(uri.getNamespace())) {
+            return namespaces2namespacePrefixes.get(uri.getNamespace()) + ":" + uri.getLocalName();
+        } else {
+            return uri.stringValue();
+        }
     }
 }

@@ -64,8 +64,27 @@ public interface URIFactory{
     
     public URI createURI(String sURI);
     
+    /**
+     * Loaded prefixes will be used, use {@link URIFactory#createURI(java.lang.String) } if loaded prefixes are not used.
+     * An URI with a prefix is for instance GO:xxxxx.
+     * Considering that GO is defined as PREFIX for http://go/ the URI will be http://go/xxxxx.
+     * 
+     * @param sURI
+     * @param useLoadedPrefix set to true loaded prefixes will be used.
+     * @throws IllegalArgumentException if the URI is not well formed no error if the prefix do not exists
+     * @return 
+     */
+    public URI createURI(String sURI,boolean useLoadedPrefix);
+    
     public URI createURI(String snamespace, String localName);
     
     public void clear();
+    
+    /**
+     * Create a string representing the URI using the loaded prefixes if any can be used
+     * @param uri the URI
+     * @return  the URI as a string
+     */
+    public String shortURIasString(URI uri);
 
 }
