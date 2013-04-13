@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import slib.sml.sm.core.utils.SMConstants;
+import slib.tools.module.XmlTags;
+import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -189,21 +191,35 @@ public class XMLConfUtils {
         }
 
         xmlconf += "\t\t<queries id= \"query\" \n"
-                + "\t\t\ttype    = \"" + mType + "\" \n"
-                + "\t\t\tfile    = \"" + c.queries + "\" \n"
-                + "\t\t\toutput  = \"" + c.output + "\" \n"
-                + "\t\t\turi_prefix = \"" + c.graphURI + "\"\n"
-                + "\t\t\toutput_basename = \"false\" \n";
+                + "\t\t\t"+XmlTags.TYPE_ATTR+"    = \"" + mType + "\" \n"
+                + "\t\t\t"+XmlTags.FILE_ATTR+"    = \"" + c.queries + "\" \n"
+                + "\t\t\t"+XmlTags.OUTPUT_ATTR+"  = \"" + c.output + "\" \n";
 
 
         if (c.noAnnots != null) {
-            xmlconf += "\t\t\tnoAnnots = \"" + c.noAnnots + "\"\n";
+            xmlconf += "\t\t\t"+Sm_XML_Cst.OPT_NO_ANNOTS_ATTR+" = \"" + c.noAnnots + "\"\n";
 
         }
         if (c.notFound != null) {
-            xmlconf += "\t\t\tnotFound = \"" + c.notFound + "\"\n";
+            xmlconf += "\t\t\t"+Sm_XML_Cst.OPT_NOT_FOUND_ATTR+" = \"" + c.notFound + "\"\n";
 
         }
+
+        // We just prefix the URIs by the URI associated to the graph and
+        // we just output the local name in the result file
+        if (c.mtype != null && c.mtype.equals("g")) {
+            xmlconf += "\t\t\t"+XmlTags.URI_PREFIX_ATTR+" = \"" + c.graphURI + "\"\n";
+            xmlconf += "\t\t\t"+Sm_XML_Cst.OUTPUT_BASENAME_ATT+" = \"false\" \n";
+        } else {
+            // Pairwise context: users will specify GO:xxxx 
+            // we use loaded prefixes to build the URIs and
+            // to output the results using GO:xxxx
+            xmlconf += "\t\t\t"+Sm_XML_Cst.USE_URI_PREFIX_ATTR+" = \"true\"\n";
+            xmlconf += "\t\t\t"+Sm_XML_Cst.OUTPUT_BASENAME_ATT+" = \"true\" \n";
+            xmlconf += "\t\t\t"+Sm_XML_Cst.USE_URI_PREFIX_OUTPUT_ATTR+" = \"true\"\n";
+        }
+
+
         xmlconf += "\t\t/>\n";
 
         xmlconf += "\t</sml>\n";

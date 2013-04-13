@@ -42,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
 import slib.tools.smltoolkit.sm.cli.profile.go.utils.SmToolkitGOCst;
+import slib.tools.smltoolkit.sm.cli.utils.SML_SM_module_XML_block_conf;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -50,23 +51,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class SmProfileGOHandler extends CmdHandler {
 
-    public String ontologyPath;
-    public String annotsPath;
-    public String annotsFormat;
-    public String outputFile;
-    public String queries;
-    public String mType;
-    public String aspect;
-    public String notfound;
-    public String noannots;
-    public String filter;
-    public String pm;
-    public String gm;
-    public String ic;
-    public String threads;
-    public boolean notrgo;
-    public boolean notrannots;
-    public boolean quiet;
+    SML_SM_module_XML_block_conf smconf;
     static Logger logger = LoggerFactory.getLogger(SmProfileGOHandler.class);
 
     /**
@@ -76,74 +61,94 @@ public class SmProfileGOHandler extends CmdHandler {
      */
     public SmProfileGOHandler(String[] args) throws SLIB_Exception {
         super(new SmToolkitGOCst(), new SmProfileGOCst(), args);
+
     }
 
     @Override
     public void processArgs(String[] args) {
+
+        smconf = new SML_SM_module_XML_block_conf();
 
         CommandLineParser parser = new BasicParser();
 
         try {
             CommandLine line = parser.parse(options, args);
 
-            
+
             if (args == null || args.length == 0 || line.hasOption("help")) {
                 logger.info(this.cst.description);
                 ending(null, true, false, true);
             } else {
                 if (line.hasOption("go")) {
-                    ontologyPath = line.getOptionValue("go");
+                    smconf.setOntologyPath(line.getOptionValue("go"));
                 }
                 if (line.hasOption("annots")) {
-                    annotsPath = line.getOptionValue("annots");
+                    smconf.setAnnotsPath( line.getOptionValue("annots") );
                 }
                 if (line.hasOption("annotsFormat")) {
-                    annotsFormat = line.getOptionValue("annotsFormat");
+                    smconf.setAnnotsFormat( line.getOptionValue("annotsFormat") );
+                }
+                else{
+                    smconf.setAnnotsFormat(SmProfileGOCst.ANNOTSFORMAT_DEFAULT);
                 }
                 if (line.hasOption("queries")) {
-                    queries = line.getOptionValue("queries");
+                    smconf.setQueries( line.getOptionValue("queries") );
                 }
                 if (line.hasOption("output")) {
-                    outputFile = line.getOptionValue("output");
+                    smconf.setOutput(line.getOptionValue("output"));
                 }
                 if (line.hasOption("mtype")) {
-                    mType = line.getOptionValue("mtype");
+                    smconf.setMtype(line.getOptionValue("mtype"));
+                }
+                else{
+                    smconf.setMtype(SmProfileGOCst.MTYPE_DEFAULT);
                 }
                 if (line.hasOption("aspect")) {
-                    aspect = line.getOptionValue("aspect");
+                    smconf.setAspect(line.getOptionValue("aspect"));
                 }
+                else{
+                    smconf.setAspect(SmProfileGOCst.ASPECT_DEFAULT);
+                }
+                
                 if (line.hasOption("notfound")) {
-                    notfound = line.getOptionValue("notfound");
+                    smconf.setNotFound(line.getOptionValue("notfound"));
+                }
+                else{
+                    smconf.setNotFound(SmProfileGOCst.NOTFOUND_DEFAULT);
                 }
                 if (line.hasOption("noannots")) {
-                    noannots = line.getOptionValue("noannots");
+                    smconf.setNoAnnots(line.getOptionValue("noannots"));
                 }
+                else{
+                    smconf.setNoAnnots(SmProfileGOCst.NOANNOTS_DEFAULT);
+                }
+                
                 if (line.hasOption("filter")) {
-                    filter = line.getOptionValue("filter");
+                    smconf.setFilter(line.getOptionValue("filter"));
                 }
                 if (line.hasOption("pm")) {
-                    pm = line.getOptionValue("pm");
+                    smconf.setPmShortFlag(line.getOptionValue("pm"));
                 }
                 if (line.hasOption("gm")) {
-                    gm = line.getOptionValue("gm");
+                    smconf.setGmShortFlag(line.getOptionValue("gm"));
                 }
                 if (line.hasOption("ic")) {
-                    ic = line.getOptionValue("ic");
+                    smconf.setIcShortFlag(line.getOptionValue("ic"));
                 }
                 if (line.hasOption("threads")) {
-                    threads = line.getOptionValue("threads");
+                    smconf.setThreads(line.getOptionValue("threads"));
                 } else {
-                    threads = "1";
+                    smconf.setThreads(SmProfileGOCst.THREADS_DEFAULT);
                 }
 
                 if (line.hasOption("notrgo")) {
-                    notrgo = true;
+                    smconf.setNotrgo("true");
                 }
                 if (line.hasOption("notrannots")) {
-                    notrannots = true;
+                    smconf.setNotrannots("true");
                 }
                 if (line.hasOption("quiet")) {
-                    this.quiet = true;
+                    smconf.setQuiet("true");
                 }
 
             }
@@ -151,4 +156,12 @@ public class SmProfileGOHandler extends CmdHandler {
             ending(cst.appName + " Parsing failed.  Reason: " + exp.getMessage(), true);
         }
     }
+
+    public SML_SM_module_XML_block_conf getSmconf() {
+        return smconf;
+    }
+    
+    
+    
+    
 }

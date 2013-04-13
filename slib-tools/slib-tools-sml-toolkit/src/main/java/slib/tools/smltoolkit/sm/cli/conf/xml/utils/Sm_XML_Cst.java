@@ -79,7 +79,7 @@ public class Sm_XML_Cst {
      */
 //    public static final String QUERIES_TYPE_OTOO_FULL = "oTOo_full";
     
-    public static final String OUTPUT_BASENAME = "output_basename";
+    public static final String OUTPUT_BASENAME_ATT = "output_basename";
     
     /**
      *
@@ -162,6 +162,9 @@ public class Sm_XML_Cst {
     public static final String OPT_NO_ANNOTS_ATTR = "noAnnots";
     public static final String OPT_NOT_FOUND_ATTR = "notFound";
     public static final String OPT_QUIET_ATTR     = "quiet";
+    
+    public static final String USE_URI_PREFIX_ATTR = "use_uri_prefix";
+    public static final String USE_URI_PREFIX_OUTPUT_ATTR = "use_uri_prefix_output";
     
     /**
      *

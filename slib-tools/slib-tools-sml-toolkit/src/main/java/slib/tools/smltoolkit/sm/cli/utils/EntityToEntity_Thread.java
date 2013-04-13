@@ -97,15 +97,19 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             results = new ThreadResultsQueryLoader(queriesBench.size());
 
 
-            URIFactory df = URIFactoryMemory.getSingleton();
+            URIFactory factory = URIFactoryMemory.getSingleton();
 
             String uriE1s, uriE2s;
             StringBuilder tmp_buffer = new StringBuilder();
 
             boolean printBaseName = queryParam.isOutputBaseName();
+            boolean useLoadedPrefixes = queryParam.isUseLoadedURIprefixes();
+            boolean useLoadedPrefixesOutput = queryParam.isUseLoadedURIprefixesOutput();
+
             URI e1, e2;
             Set<URI> setE1, setE2;
             double sim;
+
 
             for (QueryEntry q : queriesBench) {
 
@@ -119,19 +123,25 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 uriE2s = q.getValue();
 
                 try {
-                    e1 = df.createURI(uriE1s);
-                    e2 = df.createURI(uriE2s);
+                    e1 = factory.createURI(uriE1s, useLoadedPrefixes);
+                    e2 = factory.createURI(uriE2s, useLoadedPrefixes);
 
                 } catch (IllegalArgumentException e) {
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
-                
+
                 if (printBaseName) {
-                    tmp_buffer.append(uriE1s);
-                    tmp_buffer.append("\t");
-                    tmp_buffer.append(uriE2s);
-                }
-                else{
+                    if(useLoadedPrefixesOutput){
+                        tmp_buffer.append(factory.shortURIasString(e1));
+                        tmp_buffer.append("\t");
+                        tmp_buffer.append(factory.shortURIasString(e2));
+                    }
+                    else{
+                        tmp_buffer.append(uriE1s);
+                        tmp_buffer.append("\t");
+                        tmp_buffer.append(uriE2s);
+                    }
+                } else {
                     tmp_buffer.append(e1.getLocalName());
                     tmp_buffer.append("\t");
                     tmp_buffer.append(e2.getLocalName());

@@ -96,6 +96,8 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
             double sim;
             int nbMeasures = sspM.conf.gConfPairwise.size();
             boolean printBaseName = queryParam.isOutputBaseName();
+            boolean useLoadedPrefixes = queryParam.isUseLoadedURIprefixes();
+            boolean useLoadedPrefixesOutput = queryParam.isUseLoadedURIprefixesOutput();
 
             for (QueryEntry q : queriesBench) {
 
@@ -109,17 +111,24 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 uriE2s = q.getValue();
 
                 try {
-                    e1 = factory.createURI(uriE1s);
-                    e2 = factory.createURI(uriE2s);
+                    e1 = factory.createURI(uriE1s, useLoadedPrefixes);
+                    e2 = factory.createURI(uriE2s, useLoadedPrefixes);
                 } catch (IllegalArgumentException e) {
 
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
 
                 if (printBaseName) {
-                    tmp_buffer.append(uriE1s);
-                    tmp_buffer.append("\t");
-                    tmp_buffer.append(uriE2s);
+                    if(useLoadedPrefixesOutput){
+                        tmp_buffer.append(factory.shortURIasString(e1));
+                        tmp_buffer.append("\t");
+                        tmp_buffer.append(factory.shortURIasString(e2));
+                    }
+                    else{
+                        tmp_buffer.append(uriE1s);
+                        tmp_buffer.append("\t");
+                        tmp_buffer.append(uriE2s);
+                    }
                 } else {
                     tmp_buffer.append(e1.getLocalName());
                     tmp_buffer.append("\t");

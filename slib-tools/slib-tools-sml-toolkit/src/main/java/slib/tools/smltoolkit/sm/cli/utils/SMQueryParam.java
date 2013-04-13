@@ -42,9 +42,35 @@ public class SMQueryParam {
     double noAnnotationScore;
     double notFoundScore;
     boolean outputBaseName;
+    boolean useLoadedURIprefixes;
+    boolean useLoadedURIprefixesOutput; // The URIs will be shortned in the output file
     String infile;
     String outfile;
     String type;
+
+    @Override
+    public String toString() {
+        String out = "Query :" + id + "\n";
+        out += "Not Found : " + notFoundAction + "\n";
+
+        if (notFoundAction == ActionsParams.SET) {
+            out += "score associated to entries for which an element is not found in the knowledge base: " + notFoundScore + "\n";
+        }
+
+        out += "No Annotations : " + noAnnotAction + "\n";
+
+        if (noAnnotAction == ActionsParams.SET) {
+            out += "score associated to entities with no annotations : " + noAnnotAction + "\n";
+        }
+
+        out += "infile = " + infile + "\n";
+        out += "outfile = " + outfile + "\n";
+        out += "type = " + type + "\n";
+        out += "use URI prefixes = " + useLoadedURIprefixes + "\n";
+        out += "use URI prefixes (output)= " + useLoadedURIprefixesOutput + "\n";
+
+        return out;
+    }
 
     public SMQueryParam(String id) {
         this.id = id;
@@ -94,12 +120,28 @@ public class SMQueryParam {
         return outputBaseName;
     }
 
+    public boolean isUseLoadedURIprefixes() {
+        return useLoadedURIprefixes;
+    }
+
+    public SMQueryParam setUseLoadedURIprefixes(boolean useLoadedURIprefixes) {
+        this.useLoadedURIprefixes = useLoadedURIprefixes;
+        return this;
+    }
+
+    public boolean isUseLoadedURIprefixesOutput() {
+        return useLoadedURIprefixesOutput;
+    }
+
+    public SMQueryParam setUseLoadedURIprefixesOutput(boolean useLoadedURIprefixes) {
+        this.useLoadedURIprefixesOutput = useLoadedURIprefixes;
+        return this;
+    }
+
     public SMQueryParam setOutputBaseName(boolean outputBaseName) {
         this.outputBaseName = outputBaseName;
         return this;
     }
-
-    
 
     public String getOutfile() {
         return outfile;
@@ -126,28 +168,5 @@ public class SMQueryParam {
     public SMQueryParam setInfile(String infile) {
         this.infile = infile;
         return this;
-    }
-    
-    
-    @Override
-    public String toString() {
-        String out = "Query :" + id + "\n";
-        out += "Not Found : " + notFoundAction + "\n";
-
-        if (notFoundAction == ActionsParams.SET) {
-            out += "score associated to entries for which an element is not found in the knowledge base: " + notFoundScore + "\n";
-        }
-
-        out += "No Annotations : " + noAnnotAction + "\n";
-
-        if (noAnnotAction == ActionsParams.SET) {
-            out += "score associated to entities with no annotations : " + noAnnotAction + "\n";
-        }
-        
-        out += "infile = "+infile+"\n";
-        out += "outfile = "+outfile+"\n";
-        out += "type = "+type+"\n";
-
-        return out;
     }
 }

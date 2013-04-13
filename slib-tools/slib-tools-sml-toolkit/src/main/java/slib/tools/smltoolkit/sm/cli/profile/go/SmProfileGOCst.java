@@ -34,7 +34,6 @@
  */
 package slib.tools.smltoolkit.sm.cli.profile.go;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.cli.Option;
@@ -60,6 +59,14 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
      *
      */
     private static boolean _debugMode = false;
+    static String ANNOTSFORMAT_DEFAULT = "GAF2";
+    static String MTYPE_PAIRWISE = "p";
+    static String MTYPE_GROUPWISE = "g";
+    static String MTYPE_DEFAULT = "p";
+    static String ASPECT_DEFAULT = "BP";
+    static String NOTFOUND_DEFAULT = "exclude";
+    static String NOANNOTS_DEFAULT = "set=-1";
+    static String THREADS_DEFAULT = "1";
     /*
      * Error messages  
      */

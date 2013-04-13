@@ -44,6 +44,8 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Query Iterator implementing the {@link QueryIterator} interface used to
@@ -54,6 +56,7 @@ import java.util.List;
  */
 public class QueryFileIterator implements QueryIterator {
 
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     BufferedReader br;
     DataInputStream in;
     String filepath;
@@ -67,15 +70,7 @@ public class QueryFileIterator implements QueryIterator {
      * @throws IOException if an IO exception appends
      */
     public QueryFileIterator(String filepath) throws IOException {
-
-
-        FileInputStream fstream = new FileInputStream(filepath);
-        in = new DataInputStream(fstream);
-        br = new BufferedReader(new InputStreamReader(in));
-        line = br.readLine();
-
-        this.filepath = filepath;
-        this.uriPrefix = "";
+        this(filepath, null);
     }
 
     /**
@@ -87,6 +82,8 @@ public class QueryFileIterator implements QueryIterator {
      */
     public QueryFileIterator(String filepath, String uriPrefix) throws IOException {
 
+        logger.info("Loading Query file iterator: "+filepath);
+        logger.info("prefix : "+uriPrefix);
         this.filepath = filepath;
         this.uriPrefix = uriPrefix;
 
@@ -125,14 +122,14 @@ public class QueryFileIterator implements QueryIterator {
         try {
             String[] csvRow = line.split("\t");
 
-            String key = null;
-            String value = null;
 
             if (csvRow.length == 2) {
 
-                key = uriPrefix + csvRow[0];
-                value = uriPrefix + csvRow[1];
-                entry = new QueryEntry(key, value);
+                if (uriPrefix != null) {
+                    entry = new QueryEntry(uriPrefix + csvRow[0], uriPrefix + csvRow[1]);
+                } else {
+                    entry = new QueryEntry(csvRow[0], csvRow[1]);
+                }
             }
 
             line = br.readLine();

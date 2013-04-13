@@ -69,6 +69,7 @@ import slib.tools.smltoolkit.sm.cli.utils.QueryConceptsIterator;
 import slib.tools.smltoolkit.sm.cli.utils.SMQueryParam;
 import slib.tools.smltoolkit.sm.cli.utils.SmCmdHandler;
 import slib.tools.smltoolkit.sm.cli.utils.ThreadResultsQueryLoader;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
 import slib.utils.impl.QueryEntry;
@@ -111,11 +112,12 @@ public class SmCli implements SmlModuleCLI {
         if (c.xmlConfFile != null) {
             execute(c.xmlConfFile);
         } else {
-            String profileconf = "/tmp/sml-xmlconf.xml";
-            logger.debug("Writing profile configuration to " + profileconf);
+            String profileconf = System.getProperty("user.dir") + "/sml-xmlconf.xml";
+            logger.info("Writing profile configuration to " + profileconf);
             FileWriterUtil.writeToFile(profileconf, c.xmlConfAsString);
             execute(profileconf);
-            logger.debug("A profile has been executed");
+            logger.info("A profile has been executed");
+            logger.info("The XML configuration can be retrieved at " + profileconf);
         }
     }
 
@@ -219,15 +221,19 @@ public class SmCli implements SmlModuleCLI {
                 String infile = (String) gconf.getParam(XmlTags.FILE_ATTR);
                 String output = (String) gconf.getParam(XmlTags.OUTPUT_ATTR);
                 String uri_prefix = (String) gconf.getParam(XmlTags.URI_PREFIX_ATTR);
+                String use_uri_prefix = (String) gconf.getParam(Sm_XML_Cst.USE_URI_PREFIX_ATTR);
+                String use_uri_prefix_output = (String) gconf.getParam(Sm_XML_Cst.USE_URI_PREFIX_OUTPUT_ATTR);
                 String noAnnotsConf_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NO_ANNOTS_ATTR);
                 String notFound_s = (String) gconf.getParam(Sm_XML_Cst.OPT_NOT_FOUND_ATTR);
-                String outputBaseName_s = (String) gconf.getParam(Sm_XML_Cst.OUTPUT_BASENAME);
+                String outputBaseName_s = (String) gconf.getParam(Sm_XML_Cst.OUTPUT_BASENAME_ATT);
 
                 boolean outputBasedName = OUTPUT_BASE_NAME;
                 ActionsParams noAnnotAction = NO_ANNOTATION_ACTION;
                 ActionsParams noFoundAction = NOT_FOUND_ACTION;
                 double noAnnotationScore = NO_ANNOTATION_SCORE;
                 double noFoundScore = NOT_FOUND_SCORE;
+                boolean useLoadedURIprefixes = Util.stringToBoolean(use_uri_prefix);
+                boolean useLoadedURIprefixesOutput = Util.stringToBoolean(use_uri_prefix_output);
 
 
                 if (outputBaseName_s != null) {
@@ -250,7 +256,11 @@ public class SmCli implements SmlModuleCLI {
                 }
                 if (uri_prefix == null) {
                     uri_prefix = "";
+                } else if (useLoadedURIprefixes) {
+                    // conflict those two parameters cannot be used togethers
+                    throw new SLIB_Ex_Critic("Error loading query " + id + ", parameters " + XmlTags.URI_PREFIX_ATTR + " and " + Sm_XML_Cst.USE_URI_PREFIX_ATTR + " cannot be used togethers. Consult documentation");
                 }
+
 
                 SMQueryParam queryParam = new SMQueryParam(id);
                 queryParam.setNoAnnotAction(noAnnotAction)
@@ -260,8 +270,9 @@ public class SmCli implements SmlModuleCLI {
                         .setOutputBaseName(outputBasedName)
                         .setInfile(infile)
                         .setOutfile(output)
-                        .setType(type);
-
+                        .setType(type)
+                        .setUseLoadedURIprefixes(useLoadedURIprefixes)
+                        .setUseLoadedURIprefixesOutput(useLoadedURIprefixesOutput);
 
 
                 logger.info(
@@ -299,11 +310,6 @@ public class SmCli implements SmlModuleCLI {
         }
     }
 
-    /**
-     * @param queryFile
-     * @param output
-     * @throws SGL_Exception
-     */
     private void perform_oTOo(QueryIterator qloader, SMQueryParam queryParam) throws SLIB_Exception {
 
 

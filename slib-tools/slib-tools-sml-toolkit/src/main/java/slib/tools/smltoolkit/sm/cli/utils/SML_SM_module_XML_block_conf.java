@@ -37,6 +37,13 @@ package slib.tools.smltoolkit.sm.cli.utils;
  */
 public class SML_SM_module_XML_block_conf {
 
+    public String ontologyPath;
+    public String annotsPath;
+    public String annotsFormat;
+    public String aspect;
+    public String filter;
+    public String notrgo;
+    public String notrannots;
     public String graphURI;
     public String threads;
     public String icShortFlag;
@@ -93,7 +100,7 @@ public class SML_SM_module_XML_block_conf {
         this.noAnnots = noannots;
         return this;
     }
-    
+
     public SML_SM_module_XML_block_conf setNotFound(String e) {
         this.notFound = e;
         return this;
@@ -103,4 +110,40 @@ public class SML_SM_module_XML_block_conf {
         this.quiet = e;
         return this;
     }
+
+    public SML_SM_module_XML_block_conf setOntologyPath(String ontologyPath) {
+        this.ontologyPath = ontologyPath;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setAnnotsPath(String annotsPath) {
+        this.annotsPath = annotsPath;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setAnnotsFormat(String annotsFormat) {
+        this.annotsFormat = annotsFormat;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setAspect(String aspect) {
+        this.aspect = aspect;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setFilter(String filter) {
+        this.filter = filter;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setNotrgo(String notrgo) {
+        this.notrgo = notrgo;
+        return this;
+    }
+
+    public SML_SM_module_XML_block_conf setNotrannots(String notrannots) {
+        this.notrannots = notrannots;
+        return this;
+    }
+
 }

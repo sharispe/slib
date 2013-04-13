@@ -116,7 +116,7 @@ public class SmlToolKitCli extends CmdHandler {
         else if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
             ending(SmlToolKitCliCst.errorTool, true);
         } else if (tool.equals(SmlToolKitCliCst.ToolName_SM)) {
-            logger.debug("Loading SM module");
+            logger.info("Loading SM Tool");
             cli = new SmCli();
         }
 //        else if (tool.equals(SmlToolKitCliCst.ToolName_SMBB)) {

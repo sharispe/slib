@@ -84,10 +84,11 @@ This file can be downloaded at http://www.geneontology.org/
 Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content)
 This file can be downloaded at http://www.geneontology.org/
 
-* `-annotsFormat <format>` the format of the annotation file, accepted values [GAF_2,TSV], more information about the TSV format above, default GAF_2
+* `-annotsFormat <format>` the format of the annotation file, accepted values [GAF2,TSV], more information about the TSV format above, default GAF2
 
 * `-queries <file path>` the path to the file containing the queries.
 This file must contain the pairs of GO term or gene product ids separated by tabs (required). 
+When similarities between gene products are computed, the ids are the values specified in the second column of the GAF2 file specifying the annotations of the gene products.
 An example is provided above.
 
 * `-output <file path>` output file in which the results will be flushed (required).
@@ -118,7 +119,7 @@ An example is provided above.
 	* `exclude` the entry will not be processed (a message will be logged if -quiet is not used)
 	* `stop`    the program will stop
 	* `set=<numerical value>` the entry will not be processed and the given value will be set as score (a message will be logged if -quiet is not used)
-	default value = 'set=0' the score is set to 0.
+	default value = 'set=-1' the score is set to -1.
 
 			
 * `-filter <params>` this parameter can be used to filter the GO terms associated to a gene product when the provided annotation file is in GAF2 format.
