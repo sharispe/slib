@@ -53,7 +53,7 @@ public class IC_Conf_Topo extends ICconf {
 
         super(id, label, flag);
 
-        if (isCorpusBased) {
+        if (isCorpusBased()) {
             throw new SLIB_Ex_Critic(flag + " is not an intrinsic IC");
         }
     }

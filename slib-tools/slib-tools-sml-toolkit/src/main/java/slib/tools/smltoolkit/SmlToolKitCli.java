@@ -178,7 +178,7 @@ public class SmlToolKitCli extends CmdHandler {
 
         //DEBUG
         String a =  ""
-                + " -t sm -xmlconf /data/tmp/testsml.xml ";
+//                + " -t sm -xmlconf /data/tmp/testsml.xml ";
 //                +"-t sm "
 //                + " -profile GO "
 //                + " -quiet "

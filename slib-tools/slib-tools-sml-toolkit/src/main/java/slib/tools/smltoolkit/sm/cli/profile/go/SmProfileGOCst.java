@@ -179,6 +179,11 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
     private static final Option _notrannots = OptionBuilder.withArgName("notrannots")
             .withDescription("\nDo not remove annotation redundancy i.e. if a gene product is annoted by two GO terms {X,Y} and X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.")
             .create("notrannots");
+    @SuppressWarnings("static-access")
+    private static final Option _threads = OptionBuilder.withArgName("nb")
+            .hasArg()
+            .withDescription("\nInteger definying the number of threads to use, i.e. processes allocates to the execution, default 1.\n Setting more threads reduce execution time, suited configuration depends on tour computer, use with care if you don't get the implications in term of computational resources which will be used.")
+            .create("threads");
     /*
      * Use this data structure to define order of options in help message
      */
@@ -201,6 +206,7 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
         _optionsOrder.put(_quiet, _optionsOrder.size());
         _optionsOrder.put(_notrgo, _optionsOrder.size());
         _optionsOrder.put(_notrannots, _optionsOrder.size());
+        _optionsOrder.put(_threads, _optionsOrder.size());
     }
 
     /**

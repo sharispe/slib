@@ -47,23 +47,23 @@ public abstract class ICconf extends Conf {
     /**
      * ID used to represent the IC.
      */
-    public String id;
+    private final String id;
     /**
      * label used to plot IC values.
      */
-    public String label;
+    private final String label;
     /**
      * Flag corresponding to the IC computation method.
      */
-    public String flag;
+    private final String flag;
     /**
      * Class name of the computation method.
      */
-    public String className;
+    private String className;
     /**
      * Define if the IC is corpus-based (extrinsic).
      */
-    public boolean isCorpusBased;
+    private boolean isCorpusBased;
 
     /**
      * Builder of the IC configuration.
@@ -189,7 +189,7 @@ public abstract class ICconf extends Conf {
     @Override
     public String toString() {
         String out = "id : " + id + "\n";
-        out += "label : " + id + "\n";
+        out += "label : " + label + "\n";
         out += "corpusBased : " + isCorpusBased + "\n";
         out += "flag : " + flag + "\n";
         out += super.toString();

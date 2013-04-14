@@ -1025,6 +1025,9 @@ public final class SMConstants {
             addAll(SIM_PAIRWISE_DAG_NODE_BASED.keySet());
         }
     };
+    
+    public final static String SHORT_FLAG_PM_SCHLICKER = "schlicker";
+    
     public static final Map<String, String> SIM_PAIRWISE_SHORT_FLAG = new HashMap<String, String>() {
         private static final long serialVersionUID = 1L;
 
@@ -1033,7 +1036,7 @@ public final class SMConstants {
             put("jc", FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);
             put("simjc_norm", FLAG_SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997_NORM);
             put("resnik", FLAG_SIM_PAIRWISE_DAG_NODE_RESNIK_1995);
-            put("schliker", FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006);
+            put(SHORT_FLAG_PM_SCHLICKER, FLAG_SIM_PAIRWISE_DAG_NODE_SCHLICKER_2006);
         }
     };
     public static final Map<String, String> IC_SHORT_FLAG = new HashMap<String, String>() {

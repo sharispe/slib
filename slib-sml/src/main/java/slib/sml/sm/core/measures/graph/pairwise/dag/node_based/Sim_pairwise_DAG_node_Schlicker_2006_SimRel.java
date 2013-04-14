@@ -80,9 +80,7 @@ public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) throws SLIB_Ex_Critic {
 
-        Sim_pairwise_DAG_node_Lin_1998 simLin = new Sim_pairwise_DAG_node_Lin_1998();
-
-        double simLinVal = simLin.sim(ic_a, ic_b, ic_mica);
+        double simLinVal = Sim_pairwise_DAG_node_Lin_1998.sim(ic_a, ic_b, ic_mica);
 
         return simLinVal * (1. - p_mica);
     }

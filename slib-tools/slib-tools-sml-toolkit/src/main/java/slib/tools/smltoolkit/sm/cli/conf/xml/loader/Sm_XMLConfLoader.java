@@ -240,23 +240,19 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         for (ICconf m : gConfICs) {
 
-            String flag = m.flag;
-            String id = m.id;
+            String flag = m.getFlag();
+            String id = m.getId();
+            String label = m.getLabel();
 
             if (SMConstants.IC_FLAGS.contains(flag)) {
 
-                String label = m.getLabel();
-
-                if (label == null) {
-                    label = id;
-                }
-
                 // Check for duplicate label && id
                 for (ICconf mm : gConfICs) {
-                    if (mm != m && (m.getLabel().equals(mm.label)
-                            || m.getId().equals(mm.id))) {
 
-                        if (m.getId().equals(mm.id)) {
+                    if (mm != m && (label.equals(mm.getLabel())
+                            || id.equals(mm.getId()))) {
+
+                        if (id.equals(mm.getId())) {
                             Util.error("Duplicate IC id:" + m.getId());
                         } else {
                             Util.error("Duplicate IC label:" + label);
@@ -265,13 +261,13 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                 }
             } else {
                 if (flag == null) {
-                    Util.error("An IC have no flag specified");
+                    Util.error("A flag must be specified to each IC tag specified");
                 } else {
                     Util.error("Unknown IC flag:" + flag);
                 }
             }
         }
-        logger.info(gConfICs.size() + " IC conf loaded ");
+        logger.info(gConfICs.size() + " IC configurations loaded ");
     }
 
     private void loadQueries(Element item) throws SLIB_Ex_Critic {
@@ -328,7 +324,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                     ICconf ic = m.getICconf();
 
-                    if (ic == null || ic.id == null) {
+                    if (ic == null || ic.getId() == null) {
                         Util.error("Please specify an IC to node based measure: " + m.id);
                     }
 
@@ -336,7 +332,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     boolean valid = false;
 
                     for (ICconf gc : gConfICs) {
-                        if (gc.getId().equals(ic.id)) {
+                        if (gc.getId().equals(ic.getId())) {
                             valid = true;
                             break;
                         }
@@ -401,7 +397,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                     ICconf ic = m.getICconf();
 
-                    if (ic == null || ic.id == null) {
+                    if (ic == null || ic.getId() == null) {
                         Util.error("Please specify an IC to measure: " + m.id);
                     }
 
@@ -409,7 +405,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     boolean valid = false;
 
                     for (ICconf gc : gConfICs) {
-                        if (gc.getId().equals(ic.id)) {
+                        if (gc.getId().equals(ic.getId())) {
                             valid = true;
                             break;
                         }
@@ -508,17 +504,17 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                         continue;
                     }
 
-                    String id_tmp = id + "_" + ic_conf.id;
+                    String id_tmp = id + "_" + ic_conf.getId();
                     String label_tmp = label;
 
                     if (label != null) {
-                        label_tmp = label + "_" + ic_conf.id;
+                        label_tmp = label + "_" + ic_conf.getId();
                     }
 
                     c.addParam(XmlTags.ID_ATTR, id_tmp);
                     c.addParam(XmlTags.LABEL_ATTR, label_tmp);
 
-                    c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                    c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.getId());
                     sspPairwiseConf.add(buildPairwiseConf(c));
                 }
             } else {
@@ -604,7 +600,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
     private ICconf getIC(String icID) {
 
         for (ICconf ic : gConfICs) {
-            if (ic.id.equals(icID)) {
+            if (ic.getId().equals(icID)) {
                 return ic;
             }
         }
@@ -650,17 +646,17 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                         for (ICconf ic_conf : gConfICs) {
 
-                            String id_tmp_2 = id_tmp + "_" + ic_conf.id;
+                            String id_tmp_2 = id_tmp + "_" + ic_conf.getId();
                             String label_tmp_2 = null;
 
                             if (label_tmp != null) {
-                                label_tmp_2 = label_tmp + "_" + ic_conf.id;
+                                label_tmp_2 = label_tmp + "_" + ic_conf.getId();
                             }
 
                             c.addParam(XmlTags.ID_ATTR, id_tmp_2);
                             c.addParam(XmlTags.LABEL_ATTR, label_tmp_2);
 
-                            c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                            c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.getId());
                             sspGoupwiseConf.add(buildGroupwiseConf(c));
                         }
                     } else {
@@ -674,17 +670,17 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                     for (ICconf ic_conf : gConfICs) {
 
-                        String id_tmp = id + "_" + ic_conf.id;
+                        String id_tmp = id + "_" + ic_conf.getId();
                         String label_tmp = label;
 
                         if (label != null) {
-                            label_tmp = label + "_" + ic_conf.id;
+                            label_tmp = label + "_" + ic_conf.getId();
                         }
 
                         c.addParam(XmlTags.ID_ATTR, id_tmp);
                         c.addParam(XmlTags.LABEL_ATTR, label_tmp);
 
-                        c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.id);
+                        c.addParam(Sm_XML_Cst.IC_ATTR, ic_conf.getId());
                         sspGoupwiseConf.add(buildGroupwiseConf(c));
                     }
                 } else {
@@ -719,7 +715,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         if (ic_id != null) { // search ic
 
             for (ICconf ic : gConfICs) {
-                if (ic.id.equals(ic_id)) {
+                if (ic.getId().equals(ic_id)) {
                     icConf = ic;
                     break;
                 }
@@ -793,6 +789,13 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             String label = (String) c.getParam(XmlTags.LABEL_ATTR);
             String flag = (String) c.getParam(Sm_XML_Cst.FLAG_ATTR);
 
+            if (id == null) {
+                id = flag;
+            }
+            if (label == null) {
+                label = id;
+            }
+
             ICconf ic = null;
 
             if (SMConstants.SIM_PAIRWISE_DAG_NODE_IC_INTRINSIC.containsKey(flag)) {
@@ -808,8 +811,8 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
 
             for (ICconf m : icConfSet) {
-                if (m.id.equals(ic.id)) {
-                    throw new SLIB_Ex_Critic("Duplicate id for IC " + ic.id);
+                if (m.getId().equals(ic.getId())) {
+                    throw new SLIB_Ex_Critic("Duplicate id for IC " + ic.getId());
                 }
             }
             icConfSet.add(ic);
@@ -829,11 +832,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         return cachePairwiseResults;
     }
 
-    
-
     public boolean isQuiet() {
         return quiet;
     }
-    
-    
 }

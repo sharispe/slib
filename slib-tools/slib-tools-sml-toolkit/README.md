@@ -25,11 +25,11 @@ This tool can be used from the SML-Toolkit typing:
 
 `java -jar sml-toolkit-<version> -t sm`
 
-Note that the last build of the toolkit can be downloaded at http://www.semantic-measures-library.org
+The last release of the toolkit can be downloaded at http://www.semantic-measures-library.org
 
-The toolkit provides two interfaces to specify a configuration:
+The toolkit provides two command line interfaces to specify a configuration:
 * **Profile configurations**: context specific interfaces which can be used to compute semantic measures for specific use cases, e.g. involving particular ontologies (the Gene Ontology, MesH) ...
-* **Generic configuration**: Generic configuration through an XML file, this is a configuration mode for advanced user. It gives a low level access to the SML-Toolkit but can be not suited for practitionners which know few about semantic measures.
+* **Generic configuration**: Generic configuration through an XML file, this is a configuration mode for advanced users. It gives a low level access to the SML-Toolkit but can be not suited for practitionners which know few about semantic measures.
 
 We briefly present the *profile configurations* available.
 
@@ -43,37 +43,36 @@ Profiles provide easy-to-use command-line interfaces for specific contexts of us
 Indeed, the generic configuration which can be made through the XML interface requires complex configuration files to be specified and is therefore not suited for most practionners.
 
 To ease the use of the SML-Toolkit, specific profiles (or command-line interfaces) have been developped to wrap the generic configuration mode into domain specific layers.
-Those profile aim at generating XML configuration files from command-line parameters.
+Those profiles aim at generating XML configuration files from command-line parameters.
 Such a configuration mode is therefore particularly adapted for users which are not experts of semantic measures and/or those only interested on a easy-to-use command line tool (not a geeky and complex tool ;).
 
 Various profiles are supported by the SML-Toolkit.
-Below, the list of contexts of use for which a profile is provided:
+Below, the list of contexts of use for which a profile is/will be provided:
 * Graph-Based Semantic Similarity or Relatedness
-	* **GOFast**, the profile dedicated to the Gene Ontology. This profile can be used to compute semantic measure scores between GO terms or gene products. See dedicated section above.
-	* **MeSH**, the profile dedicated to the MeSH. Planned for the next version of the toolkit
-	* **SnomedCT**, the profile dedicated to the SnomedCt. Planned for the next version of the toolkit
-	* **WordNet**, the profile dedicated to the WordNet. Planned for the next version of the toolkit
-	* **Disease Ontology**, the profile dedicated to the Disease Ontology. Planned for the next version of the toolkit
-	* **Yago**, the profile dedicated to the YaGO Ontology. Planned for the next version of the toolkit
-	* **OBO**, the general profile dedicated to the OBO Ontologies. Planned for the next version of the toolkit
-	* **RDF**, the general profile dedicated to the ontologies expressed in RDF. Planned for the next version of the toolkit
+	* **Gene Ontology**, This profile can be used to compute semantic measure scores between Gene Ontology terms or gene products annotated by Gene Ontology terms. See dedicated section above.
+	* **MeSH**, the profile dedicated to the MeSH. Planned for the next releases
+	* **SnomedCT**. Planned for the next releases
+	* **WordNet**. Planned for the next releases
+	* **Disease Ontology**. Planned for the next releases
+	* **Yago**. Planned for the next releases
+	* **OBO**, the general profile dedicated to the OBO Ontologies. Planned for the next releases
+	* **RDF**, the general profile dedicated to the ontologies expressed in RDF. Planned for the next releases
 
 
 
 
-####  GOFast : Semantic Measures and Gene Ontology
+####  Semantic measures over the Gene Ontology
 ---------------------------------------
 
 This profile is dedicated to the Gene Ontology (GO).
-It can be used to compute semantic measures (SMs) between GO terms or gene products annotated by GO terms.
-The Gene Ontology must be in OBO format, the gene products annotations must be in GAF2 format or TSV (Tabulated Separated Values).
-The GO and associated annotations can be downloaded at http://www.geneontology.org/
+It can be used to compute semantic measures between GO terms or gene products annotated by GO terms.
+The Gene Ontology must be in OBO format (version 1.2), the gene products annotations must be in GAF2 format or TSV (Tabulated Separated Values, an example is provided below).
+The Gene Ontology and associated annotations can be downloaded at http://www.geneontology.org/
 
-Please post a message to http://semantic-measures-library.org if you encounter any troubles.
-More information can also be found on the website. 
+Please post a message to http://semantic-measures-library.org if you encounter any troubles or if you have any questions.
+More information and documentation can also be found on the website. 
 
 Below the parameters which can be used, command-line examples are also provided:
-
 
 ##### Parameters
 
@@ -84,12 +83,11 @@ This file can be downloaded at http://www.geneontology.org/
 Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content)
 This file can be downloaded at http://www.geneontology.org/
 
-* `-annotsFormat <format>` the format of the annotation file, accepted values [GAF2,TSV], more information about the TSV format above, default GAF2
+* `-annotsFormat <format>` the format of the annotation file, accepted values [GAF2, TSV], more information about the TSV format above, default GAF2
 
 * `-queries <file path>` the path to the file containing the queries.
 This file must contain the pairs of GO term or gene product ids separated by tabs (required). 
-When similarities between gene products are computed, the ids are the values specified in the second column of the GAF2 file specifying the annotations of the gene products.
-An example is provided above.
+When similarities between gene products are computed, the ids are the values specified in the second column of the GAF2 file specifying the annotations of the gene products. An example is provided above.
 
 * `-output <file path>` output file in which the results will be flushed (required).
 
@@ -112,7 +110,7 @@ An example is provided above.
 	* `exclude` the entry will not be processed (a message will be logged if `-quiet` is not used)
 	* `stop`    the program will stop
 	* `set=<numerical value>` the entry will not be processed and the given value will be set as score (a message will be logged if `-quiet` is not used)
-	default value = 'exclude'.
+	default value = 'exclude'. Note that Gene products which are not annotated by at least one GO term of the selected aspect is removed and will therefore not be found despite it was defined in the annotation file. 
 
 			
 * `-noannots <flag>` defines the behavior if a gene product of the query file doesn't have any annotation (GO terms). Accepted values [exclude,stop, set=<value>]:
@@ -141,11 +139,113 @@ An example is provided above.
 
 * `-quiet` do not show warning messages
 
-* `notrgo` do not perform a transitive reduction of the GO
+* `-notrgo` do not perform a transitive reduction of the GO
 
 
-* `notrannots` do not remove annotation redundancies i.e. if a gene product is annotated by two GO terms {X,Y} and X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.
+* `-notrannots` do not remove annotation redundancies i.e. if a gene product is annotated by two GO terms {X,Y} and X is subsumed by Y in the GO, the GO term Y will be removed from the annotations.
 
+* `-threads` Integer defining the number of threads to use, i.e. processes allocates to the execution, default 1. Setting more threads reduce the execution time on large processes, suited configuration depends on your computer configuration, use with care if you don't get the implications in term of computational resources which will be used. Note also that results will not be ordered according to query file ordering.
+
+##### Examples
+
+###### Semantic similarity between Gene Ontology terms.
+
+We compute the semantic similarity of each pair of GO terms specified in the query file `-queries`.
+Those GO terms come from the Molecular function aspect of the Gene Ontology `-aspect MF`.
+We use the measure proposed by Sclicker et al. and the Information content defined by Sanchez et al. (See the Semantic measures Library website for references).
+
+```
+-jar sml-toolkit-<version>.jar -t sm -profile GO -go /data/go/eval/gene_ontology.1_2.obo -mtype p -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm schlicker -ic sanchez -aspect MF
+```
+
+###### Semantic similarity between Gene products.
+
+We compute the semantic similarity of each pair of gene products identifiers specified in the query file `-queries`.
+The annotations are in GAF2 format. We exclude the annotations inferred electronically (IEA) `-filter noEC=IEA`
+We only want to consider the Biological Process aspect of the Gene Ontology `-aspect BP`.
+We use the measure proposed by Lin et al., the Information content defined by Resnik and the Best Match Average miwing strategy. (See the Semantic measures Library website for references).
+If an entry contains no BP GO terms as annotations, it will not be found, we therefore set -1 as score `--notfound set=-1`.
+Finally, we do not want the warnings to be shown `-quiet` and we allocate multiple threads to the process to reduce execution time `-treads 4` (use with care, i.e. `-treads 1`, if you don't understand the implications).
+
+```
+java -jar sml-toolkit-<version>.jar -t sm -profile GO -annots /data/go/eval/gene_association.goa_human -filter noEC=IEA --notfound set=-1  -go /data/go/eval/gene_ontology.1_2.obo -mtype g -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm lin -ic resnik -gm bma -aspect BP -quiet -threads 4
+```
+
+
+##### Supported measures
+
+
+
+Excerpt of available measures and metrics, please refer to http://www.semantic-measures-library.org/sml/index.php?q=sml-semantic-measures to consult the updated list of semantic measures available.
+
+Information content (IC):
+
+* Intrinsic 
+    * `sanchez`
+    * `zhou`
+    * `seco`
+
+* Extrinsic (requires annotations)
+    * `resnik` 
+
+Pairwise measures:
+
+* IC-based (requires an IC to be defined)
+    * `resnik` 
+    * `lin` (requires an IC)
+    * `schlicker` (requires an IC)
+    * `jc` (requires an IC)
+
+Groupwise measures:
+
+* Direct
+    * `to`
+    * `nto`
+    * `ui`
+    * `lp`
+    * `lee`
+    * `ali_and_deane`
+    * `gic`
+
+* Indirect (requires a pairwise measure)
+    * `min`
+    * `max`
+    * `avg`
+    * `avgnorm`
+    * `bma`
+    * `bmm`
+    * `maxnorm`
+
+##### Extra documentation
+
+###### Query file
+One line per entry.
+An entry defines the two elements to compare (i.e. GO terms or gene products).
+use a unique tab to separate the two ids.
+
+```
+GENE_ID_1 GENE_ID_2
+GENE_ID_2 GENE_ID_3
+GENE_ID_4 GENE_ID_1
+...
+```
+
+```
+GO_TERM1 GO_TERM2
+GO_TERM3 GO_TERM2
+GO_TERM4 GO_TERM2
+...
+```
+
+###### Annotation in TSV format
+One line per gene product, use a unique tab to separate the gene product id and the GO terms ids.
+Two GO terms ids must be separated using a unique semicolon
+
+```
+GENE_ID_1 GO_TERM1;GO_TERM2;GO_TERM3
+GENE_ID_2 GO_TERM1;GO_TERM3
+...
+```
 
 
 ####  MeSH: Semantic Measures
@@ -200,14 +300,13 @@ Note that profiles only generate the configuration file which can be manually sp
 More about the syntax of the configuration file at http://www.semantic-measures-library.org
 
 
-## Questions
+## Questions, Bugs and Requests
 Do you have a question about the usage of this toolkit in your project? 
 Please use the dedicated mailing list at http://www.semantic-measures-library.org
 
-## Bugs and requests
-If you have found a bug or a request for additional functionality, please use the issue tracker on GitHub.
+If you have found a bug or a request for additional functionality you can also use the issue tracker on GitHub.
 
-https://github.com/sharispe/slib/issues using [SML-Toolkit] as message prefix.
+https://github.com/sharispe/slib/issues using [SML-Toolkit] as label.
 
 ##About
 

@@ -98,34 +98,41 @@ public class XMLConfUtils {
 
         return conf;
     }
-
+    /**
+     * Build a String representation of the Semantic Measures XML tag considering the given configuration. 
+     * @param c the configuration used to build the XML tag
+     * @return a String representation of the Semantic Measures XML tag corresponding to the given configuration
+     * @throws SLIB_Ex_Critic 
+     */
     public static String buildSML_SM_module_XML_block(SML_SM_module_XML_block_conf c) throws SLIB_Ex_Critic {
 
-        String xmlconf = "\t<sml module=\"sm\" graph=\"" + c.graphURI + "\" >\n\n";
 
-        xmlconf += "\t\t<opt_module threads=\"" + c.threads + "\" ";
-
-        if (c.quiet != null) {
-            xmlconf += "\tquiet = \"" + c.quiet + "\"\n";
-        }
-        xmlconf += "/>\n\n";
-
-
+        String optModuleXML = "";
+        String icXML = "";
+        String pmXML = "";
+        String gmXML = "";
+        String queryXML = "";
 
         String icflag = null;
         String pmflag = null;
         String gmflag = null;
 
+        optModuleXML += "\t\t<opt_module threads=\"" + c.threads + "\" ";
 
-        //Create the XML part corresponding to the semantic measures.
+        if (c.quiet != null) {
+            optModuleXML += "\tquiet = \"" + c.quiet + "\"\n";
+        }
+        optModuleXML += "/>\n\n";
+
+        //Create the XML part corresponding to the semantic measures
+        
         if (c.icShortFlag != null) {
             if (SMConstants.IC_SHORT_FLAG.containsKey(c.icShortFlag)) {
 
                 icflag = SMConstants.IC_SHORT_FLAG.get(c.icShortFlag);
 
-                xmlconf += "\n\t\t<ics>\n"
-                        + "\t\t\t<ic id   = \"" + c.icShortFlag + "\" flag = \"" + icflag + "\"  />\n"
-                        + "\t\t</ics>\n\n";
+                icXML += "\n\t\t<ics>\n"
+                        + "\t\t\t<ic id   = \"" + c.icShortFlag + "\" flag = \"" + icflag + "\"  />\n";
 
             } else {
                 throw new SLIB_Ex_Critic("The flag of the information content you selected '" + c.icShortFlag + "' cannot be associated to a measure, supported are " + SMConstants.IC_SHORT_FLAG.keySet());
@@ -139,11 +146,16 @@ public class XMLConfUtils {
                 pmflag = SMConstants.SIM_PAIRWISE_SHORT_FLAG.get(c.pmShortFlag);
                 String icAtt = "";
                 if (icflag != null) {
-                    icAtt = "ic = \"" + c.icShortFlag + "\"";
+                    icAtt = "ic = \"" + c.icShortFlag + "\" ";
+                }
+
+                if (c.pmShortFlag.equals(SMConstants.SHORT_FLAG_PM_SCHLICKER)) {
+                    icXML += "\t\t\t<ic id   = \"ic_prob_propagatted\" flag = \"" + SMConstants.FLAG_ICI_PROB_OCCURENCE_PROPAGATED + "\"  />\n";
+                    icAtt += " ic_prob = \"ic_prob_propagatted\"";
                 }
 
 
-                xmlconf += "\t\t<measures type = \"pairwise\">\n"
+                pmXML += "\t\t<measures type = \"pairwise\">\n"
                         + "\t\t\t<measure   id   = \"" + c.pmShortFlag + "\" flag = \"" + pmflag + "\"  " + icAtt + " />\n"
                         + "\t\t</measures>\n\n";
             } else {
@@ -166,7 +178,7 @@ public class XMLConfUtils {
                     icAtt = "ic = \"" + c.icShortFlag + "\"";
                 }
 
-                xmlconf += "\t\t<measures type = \"groupwise\">\n"
+                gmXML += "\t\t<measures type = \"groupwise\">\n"
                         + "\t\t\t<measure   id   = \"" + c.gmShortFlag + "\" flag = \"" + gmflag + "\"  " + pmAtt + " " + icAtt + " />\n"
                         + "\t\t</measures>\n\n";
             } else {
@@ -175,6 +187,10 @@ public class XMLConfUtils {
         }
 
 
+        icXML += "\t\t</ics>\n\n";
+
+
+        // Query
 
 
 
@@ -190,37 +206,43 @@ public class XMLConfUtils {
             throw new SLIB_Ex_Critic("Please precise a pairwise measure -pm");
         }
 
-        xmlconf += "\t\t<queries id= \"query\" \n"
-                + "\t\t\t"+XmlTags.TYPE_ATTR+"    = \"" + mType + "\" \n"
-                + "\t\t\t"+XmlTags.FILE_ATTR+"    = \"" + c.queries + "\" \n"
-                + "\t\t\t"+XmlTags.OUTPUT_ATTR+"  = \"" + c.output + "\" \n";
+        queryXML += "\t\t<queries id= \"query\" \n"
+                + "\t\t\t" + XmlTags.TYPE_ATTR + "    = \"" + mType + "\" \n"
+                + "\t\t\t" + XmlTags.FILE_ATTR + "    = \"" + c.queries + "\" \n"
+                + "\t\t\t" + XmlTags.OUTPUT_ATTR + "  = \"" + c.output + "\" \n";
 
 
         if (c.noAnnots != null) {
-            xmlconf += "\t\t\t"+Sm_XML_Cst.OPT_NO_ANNOTS_ATTR+" = \"" + c.noAnnots + "\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OPT_NO_ANNOTS_ATTR + " = \"" + c.noAnnots + "\"\n";
 
         }
         if (c.notFound != null) {
-            xmlconf += "\t\t\t"+Sm_XML_Cst.OPT_NOT_FOUND_ATTR+" = \"" + c.notFound + "\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OPT_NOT_FOUND_ATTR + " = \"" + c.notFound + "\"\n";
 
         }
 
         // We just prefix the URIs by the URI associated to the graph and
         // we just output the local name in the result file
         if (c.mtype != null && c.mtype.equals("g")) {
-            xmlconf += "\t\t\t"+XmlTags.URI_PREFIX_ATTR+" = \"" + c.graphURI + "\"\n";
-            xmlconf += "\t\t\t"+Sm_XML_Cst.OUTPUT_BASENAME_ATT+" = \"false\" \n";
+            queryXML += "\t\t\t" + XmlTags.URI_PREFIX_ATTR + " = \"" + c.graphURI + "\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"false\" \n";
         } else {
             // Pairwise context: users will specify GO:xxxx 
             // we use loaded prefixes to build the URIs and
             // to output the results using GO:xxxx
-            xmlconf += "\t\t\t"+Sm_XML_Cst.USE_URI_PREFIX_ATTR+" = \"true\"\n";
-            xmlconf += "\t\t\t"+Sm_XML_Cst.OUTPUT_BASENAME_ATT+" = \"true\" \n";
-            xmlconf += "\t\t\t"+Sm_XML_Cst.USE_URI_PREFIX_OUTPUT_ATTR+" = \"true\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.USE_URI_PREFIX_ATTR + " = \"true\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"true\" \n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.USE_URI_PREFIX_OUTPUT_ATTR + " = \"true\"\n";
         }
+        queryXML += "\t\t/>\n";
 
 
-        xmlconf += "\t\t/>\n";
+        String xmlconf = "\t<sml module=\"sm\" graph=\"" + c.graphURI + "\" >\n\n";
+        xmlconf += optModuleXML;
+        xmlconf += icXML;
+        xmlconf += pmXML;
+        xmlconf += gmXML;
+        xmlconf += queryXML;
 
         xmlconf += "\t</sml>\n";
         return xmlconf;

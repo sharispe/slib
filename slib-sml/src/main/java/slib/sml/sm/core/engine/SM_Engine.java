@@ -559,7 +559,7 @@ public class SM_Engine {
 
             for (Entry<URI, Double> e : results.entrySet()) {
                 if (Double.isNaN(e.getValue()) || Double.isInfinite(e.getValue())) {
-                    throw new SLIB_Ex_Critic("Incoherency found in IC " + icConf.className + "\nIC of vertex " + e.getKey() + " is set to " + e.getValue());
+                    throw new SLIB_Ex_Critic("Incoherency found in IC " + icConf.getClassName() + "\nIC of vertex " + e.getKey() + " is set to " + e.getValue());
                 }
             }
 
@@ -568,7 +568,7 @@ public class SM_Engine {
             e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
-        logger.info("ic " + icConf.id + " computed");
+        logger.info("ic " + icConf.getLabel() + " computed");
         logger.info("---------------------------------------------------------------");
         return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
     }

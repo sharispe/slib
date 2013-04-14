@@ -37,6 +37,7 @@ package slib.tools.smltoolkit.sm.cli.profile.go;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.utils.GraphActionExecutor;
+import slib.sglib.io.util.GFormat;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sm.cli.utils.SML_SM_module_XML_block_conf;
 import slib.tools.smltoolkit.sm.cli.utils.XMLConfUtils;
@@ -186,8 +187,8 @@ public class SmProfile_GO implements SmlModuleCLI {
             xmlconf += "\t</graphs>\n\n";
 
             if (smconf.filter != null) {
-                if (!smconf.annotsFormat.equals("GAF_2")) {
-                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type GAF_2");
+                if (!smconf.annotsFormat.equals(GFormat.GAF2.toString())) {
+                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type "+GFormat.GAF2.toString());
                 }
                 xmlconf += "\t<filters>\n" + XMLConfUtils.buildSML_FilterGAF2_XML_block(smconf.filter) + "\t</filters>\n";
             }
