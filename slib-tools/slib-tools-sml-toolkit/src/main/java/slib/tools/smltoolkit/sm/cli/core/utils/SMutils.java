@@ -32,25 +32,52 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit.sm.cli.core.utils;
 
-import slib.tools.module.ModuleCst;
-import slib.tools.smltoolkit.SmlToolKitCst;
+import org.openrdf.model.URI;
+import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author seb
  */
-public class SmToolkitCst extends ModuleCst {
-
-    public static final String properties_prefix = "sml-toolkit.sm";
+public class SMutils {
 
     /**
      *
+     * @param pairwiseConf
+     * @param a
+     * @param b
+     * @param value
      * @throws SLIB_Ex_Critic
      */
-    public SmToolkitCst() throws SLIB_Ex_Critic {
-        super(SmlToolKitCst.properties_file_name, properties_prefix);
+    public static void throwArithmeticCriticalException(SMconf pairwiseConf, URI a, URI b, Object value) throws SLIB_Ex_Critic {
+
+        throw new SLIB_Ex_Critic("Critical error. \n"
+                + "A result produced by the pairwise measure " + pairwiseConf.flag + " was not a number " + value + " (NaN/Infinity). \n"
+                + "Pairwise measure in use " + pairwiseConf.flag + " id=" + pairwiseConf.id + ". \n"
+                + "Classes compared " + a + " vs " + b + ". \n"
+                + "This issue can be encountred if an infinite value have been detected.\n"
+                + "Please report the bug to the developpers\n");
+    }
+
+    /**
+     *
+     * @param m
+     * @param p
+     * @param e1
+     * @param e2
+     * @param value
+     * @throws SLIB_Ex_Critic
+     */
+    public static void throwArithmeticCriticalException(SMconf m, SMconf p, URI e1,
+            URI e2, Object value) throws SLIB_Ex_Critic {
+        throw new SLIB_Ex_Critic("Critical error. \n"
+                + "A result produced by the measure " + m.flag + " was not a number " + value + " (NaN/infinity). \n"
+                + "Pairwise measure in use " + p.flag + " id=" + p.id + ". \n"
+                + "Entities compared " + e1 + " vs " + e2 + ". \n"
+                + "This issue can be encountred if an infinite value have been detected.\n"
+                + "Please report the bug to the developpers\n");
     }
 }

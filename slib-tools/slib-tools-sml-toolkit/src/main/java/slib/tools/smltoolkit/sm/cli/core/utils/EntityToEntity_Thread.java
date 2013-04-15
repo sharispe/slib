@@ -32,49 +32,59 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit.sm.cli.core.utils;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.Callable;
+
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
+import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
-import slib.tools.smltoolkit.sm.cli.SmCli;
+import slib.tools.smltoolkit.sm.cli.core.SmCli;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
 import slib.utils.threads.PoolWorker;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
-public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoader> {
+public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader> {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     PoolWorker poolWorker;
     int skipped = 0;
     int setValue = 0;
     Collection<QueryEntry> queriesBench;
+    InstancesAccessor iAccessor;
     SMQueryParam queryParam;
     SmCli sspM;
     G g;
+    private int nbMeasures;
 
     /**
      *
      * @param poolWorker
      * @param queriesBench
      * @param sspM
+     * @param nbMeasures
      */
-    public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, SMQueryParam queryParam) {
+    public EntityToEntity_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, int nbMeasures, SMQueryParam queryParam) {
 
         this.poolWorker = poolWorker;
         this.queriesBench = queriesBench;
         this.sspM = sspM;
+        this.nbMeasures = nbMeasures;
         this.g = sspM.getGraph();
+        this.iAccessor = sspM.getiAccessor();
         this.queryParam = queryParam;
     }
 
@@ -92,12 +102,14 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
             String uriE1s, uriE2s;
             StringBuilder tmp_buffer = new StringBuilder();
 
-            URI e1, e2;
-            double sim;
-            int nbMeasures = sspM.conf.gConfPairwise.size();
             boolean printBaseName = queryParam.isOutputBaseName();
             boolean useLoadedPrefixes = queryParam.isUseLoadedURIprefixes();
             boolean useLoadedPrefixesOutput = queryParam.isUseLoadedURIprefixesOutput();
+
+            URI e1, e2;
+            Set<URI> setE1, setE2;
+            double sim;
+
 
             for (QueryEntry q : queriesBench) {
 
@@ -113,8 +125,8 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 try {
                     e1 = factory.createURI(uriE1s, useLoadedPrefixes);
                     e2 = factory.createURI(uriE2s, useLoadedPrefixes);
-                } catch (IllegalArgumentException e) {
 
+                } catch (IllegalArgumentException e) {
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());
                 }
 
@@ -168,17 +180,73 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                     continue;
                 }
 
-                for (SMconf p : sspM.conf.gConfPairwise) {
 
-                    sim = sspM.simManager.computePairwiseSim(p, e1, e2);
+                setE1 = iAccessor.getDirectClass(e1);
+                setE2 = iAccessor.getDirectClass(e2);
 
-                    tmp_buffer.append("\t").append(sim);
+                if (setE1.isEmpty() || setE2.isEmpty()) {
 
-                    if (Double.isNaN(sim) || Double.isInfinite(sim)) {
-                        SMutils.throwArithmeticCriticalException(p, e1, e2, sim);
+                    if (queryParam.getNoAnnotAction() == ActionsParams.SET) {
+                        setValue++;
+
+                        for (int i = 0; i < nbMeasures; i++) {
+                            tmp_buffer.append("\t").append(queryParam.getNoAnnotationScore());
+                        }
+
+                        tmp_buffer.append("\n");
+
+                        results.buffer.append(tmp_buffer);
+                    } else if (queryParam.getNoAnnotAction() == ActionsParams.EXCLUDE) {
+
+                        skipped++;
+
+                    } else if (queryParam.getNoAnnotAction() == ActionsParams.STOP) {
+                        throw new SLIB_Ex_Critic("Stop the execution because an entry contains an element without annotations "
+                                + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")."
+                                + " You can exclude those entries or set a value, please consult the documentation");
                     }
 
+                    if (!sspM.QUIET) {
+                        logger.info(queryParam.getNoAnnotAction() + " " + e1 + " (annot size = " + setE1.size() + ") / " + e2 + " (annot size = " + setE2.size() + ")");
+                    }
+                    continue;
+                }
 
+                for (SMconf m : sspM.conf.gConfGroupwise) {
+
+                    if (SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(m.flag)) {
+
+                        String pm_id = m.pairwise_measure_id;
+                        SMconf pm_conf = null;
+
+                        for (SMconf p : sspM.conf.gConfPairwise) {
+                            if (pm_id.equals(p.id)) {
+                                pm_conf = p;
+                                break;
+                            }
+                        }
+                        if (pm_conf == null) {
+                            throw new SLIB_Ex_Critic("Cannot locate configuration associated to pairwise measure " + pm_id);
+                        }
+
+                        sim = sspM.simManager.computeGroupwiseAddOnSim(m, pm_conf, setE1, setE2);
+
+                        tmp_buffer.append("\t").append(sim);
+
+                        if (Double.isNaN(sim) || Double.isInfinite(sim)) {
+                            SMutils.throwArithmeticCriticalException(m, pm_conf, e1, e2, sim);
+                        }
+                    } else {
+
+                        sim = sspM.simManager.computeGroupwiseStandaloneSim(m, setE1, setE2);
+
+                        if (Double.isNaN(sim) || Double.isInfinite(sim)) {
+                            SMutils.throwArithmeticCriticalException(m, e1, e2, sim);
+                        }
+
+                        tmp_buffer.append("\t");
+                        tmp_buffer.append(sim);
+                    }
                 }
                 tmp_buffer.append("\n");
             }

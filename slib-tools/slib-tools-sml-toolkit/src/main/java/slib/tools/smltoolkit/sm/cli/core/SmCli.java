@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli;
+package slib.tools.smltoolkit.sm.cli.core;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -60,15 +60,15 @@ import slib.tools.module.XmlTags;
 import slib.tools.smltoolkit.SmlModuleCLI;
 import slib.tools.smltoolkit.sm.cli.conf.xml.loader.Sm_XMLConfLoader;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
-import slib.tools.smltoolkit.sm.cli.utils.ActionParamsUtils;
-import slib.tools.smltoolkit.sm.cli.utils.ActionsParams;
-import slib.tools.smltoolkit.sm.cli.utils.ConceptToConcept_Thread;
-import slib.tools.smltoolkit.sm.cli.utils.EntityToEntity_Thread;
-import slib.tools.smltoolkit.sm.cli.utils.FileWriterUtil;
-import slib.tools.smltoolkit.sm.cli.utils.QueryConceptsIterator;
-import slib.tools.smltoolkit.sm.cli.utils.SMQueryParam;
-import slib.tools.smltoolkit.sm.cli.utils.SmCmdHandler;
-import slib.tools.smltoolkit.sm.cli.utils.ThreadResultsQueryLoader;
+import slib.tools.smltoolkit.sm.cli.core.utils.ActionParamsUtils;
+import slib.tools.smltoolkit.sm.cli.core.utils.ActionsParams;
+import slib.tools.smltoolkit.sm.cli.core.utils.ConceptToConcept_Thread;
+import slib.tools.smltoolkit.sm.cli.core.utils.EntityToEntity_Thread;
+import slib.tools.smltoolkit.sm.cli.core.utils.FileWriterUtil;
+import slib.tools.smltoolkit.sm.cli.core.utils.QueryConceptsIterator;
+import slib.tools.smltoolkit.sm.cli.core.utils.SMQueryParam;
+import slib.tools.smltoolkit.sm.cli.core.utils.SmCmdHandler;
+import slib.tools.smltoolkit.sm.cli.core.utils.ThreadResultsQueryLoader;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;

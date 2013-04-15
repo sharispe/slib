@@ -29,7 +29,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  * 
  */
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit.sm.cli.core.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,11 +98,15 @@ public class XMLConfUtils {
 
         return conf;
     }
+
     /**
-     * Build a String representation of the Semantic Measures XML tag considering the given configuration. 
+     * Build a String representation of the Semantic Measures XML tag
+     * considering the given configuration.
+     *
      * @param c the configuration used to build the XML tag
-     * @return a String representation of the Semantic Measures XML tag corresponding to the given configuration
-     * @throws SLIB_Ex_Critic 
+     * @return a String representation of the Semantic Measures XML tag
+     * corresponding to the given configuration
+     * @throws SLIB_Ex_Critic
      */
     public static String buildSML_SM_module_XML_block(SML_SM_module_XML_block_conf c) throws SLIB_Ex_Critic {
 
@@ -125,7 +129,7 @@ public class XMLConfUtils {
         optModuleXML += "/>\n\n";
 
         //Create the XML part corresponding to the semantic measures
-        
+
         if (c.icShortFlag != null) {
             if (SMConstants.IC_SHORT_FLAG.containsKey(c.icShortFlag)) {
 
@@ -187,8 +191,9 @@ public class XMLConfUtils {
         }
 
 
-        icXML += "\t\t</ics>\n\n";
-
+        if (!icXML.isEmpty()) {
+            icXML += "\t\t</ics>\n\n";
+        }
 
         // Query
 

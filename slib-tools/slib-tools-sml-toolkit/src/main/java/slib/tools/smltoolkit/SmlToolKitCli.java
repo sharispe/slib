@@ -43,7 +43,7 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.SmCli;
+import slib.tools.smltoolkit.sm.cli.core.SmCli;
 import slib.utils.ex.SLIB_Exception;
 
 /**

@@ -29,7 +29,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  * 
  */
-package slib.tools.smltoolkit.sm.cli.utils;
+package slib.tools.smltoolkit.sm.cli.core.utils;
 
 /**
  * @author Sébastien Harispe
