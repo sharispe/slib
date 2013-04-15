@@ -182,6 +182,9 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 }
                 tmp_buffer.append("\n");
             }
+            results.buffer.append(tmp_buffer);
+            
+            
             results.setSetValue(setValue);
             results.setSkipped(skipped);
         } catch (Exception e) {

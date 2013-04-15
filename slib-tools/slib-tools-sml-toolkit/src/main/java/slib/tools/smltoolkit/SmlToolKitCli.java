@@ -177,8 +177,10 @@ public class SmlToolKitCli extends CmdHandler {
     public static void main(String[] args) {
 
         //DEBUG
-        String a =  ""
+//        String a =  ""
 //                + " -t sm -xmlconf /data/tmp/testsml.xml ";
+//                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
+                
 //                +"-t sm "
 //                + " -profile GO "
 //                + " -quiet "
@@ -195,13 +197,11 @@ public class SmlToolKitCli extends CmdHandler {
 ////                + " -filter noEC=IEA:Taxon=9696,5454"
 //                + " -noannots set=0"
 //                + " -notfound stop"
-                ;
+//                ;
 
 //        args = a.split("\\s+");
 
         try {
-
-
             SmlToolKitCli c = new SmlToolKitCli(args);
 
         } catch (Exception e) {

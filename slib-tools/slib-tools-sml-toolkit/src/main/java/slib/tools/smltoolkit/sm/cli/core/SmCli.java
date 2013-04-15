@@ -328,7 +328,7 @@ public class SmCli implements SmlModuleCLI {
             BufferedWriter file = new BufferedWriter(fstream);
 
             // Build Header
-            String header = Sm_XML_Cst.E1_ATTR + "\t" + Sm_XML_Cst.E1_ATTR;
+            String header = Sm_XML_Cst.E1_ATTR + "\t" + Sm_XML_Cst.E2_ATTR;
 
             int nbMeasures = conf.gConfGroupwise.size();
 
@@ -451,7 +451,7 @@ public class SmCli implements SmlModuleCLI {
             BufferedWriter file = new BufferedWriter(fstream);
 
             // Build Header
-            String header = Sm_XML_Cst.C1_ATTR + "\t" + Sm_XML_Cst.C1_ATTR;
+            String header = Sm_XML_Cst.C1_ATTR + "\t" + Sm_XML_Cst.C2_ATTR;
 
 
             for (SMconf m : conf.gConfPairwise) {
@@ -538,8 +538,8 @@ public class SmCli implements SmlModuleCLI {
             }
 
             file.close();
-            logger.info("skipped:" + skipped + "/" + queries_number + "(" + skipped * 100 / queries_number + "%)");
-            logger.info("setted :" + setValue + "/" + queries_number + "(" + setValue * 100 / queries_number + "%)");
+            logger.info("skipped:" + skipped + "/" + queries_number + " (" + skipped * 100 / queries_number + "%)");
+            logger.info("setted :" + setValue + "/" + queries_number + " (" + setValue * 100 / queries_number + "%)");
             logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {
