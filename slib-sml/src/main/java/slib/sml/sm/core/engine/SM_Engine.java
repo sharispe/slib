@@ -196,7 +196,7 @@ public class SM_Engine {
         groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
         groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
 
-        lcaFinder = new LCAFinderImpl();
+        lcaFinder = new LCAFinderImpl(this);
 
         logger.info("Inferences ");
         logger.info("---------------------------------------------------------------");
@@ -1048,7 +1048,7 @@ public class SM_Engine {
     }
 
     public Set<URI> getLCAs(URI a, URI b) throws SLIB_Exception {
-        return lcaFinder.getLCAs(graph, a, b);
+        return lcaFinder.getLCAs(a, b);
     }
 
     /**
