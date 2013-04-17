@@ -25,6 +25,7 @@ import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -56,12 +57,18 @@ public class GraphLoader_Wordnet implements GraphLoader {
         String filepath = conf.getLoc();
 
         logger.info("From " + filepath);
+        logger.info("-----------------------------------------------------------");
+        
+        
 
         String uriPrefix = g.getURI().getNamespace();
         if (conf.getParameter("prefix") != null) {
             uriPrefix = (String) conf.getParameter("prefix");
         }
         try {
+            
+            if(filepath == null)
+                throw new SLIB_Ex_Critic("Error please precise a  file to load.");
 
             FileInputStream fstream = new FileInputStream(filepath);
             DataInputStream in = new DataInputStream(fstream);
@@ -89,11 +96,11 @@ public class GraphLoader_Wordnet implements GraphLoader {
                 String ss_type = data[2];
 
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
+                
 
+//                logger.info(synset_offset);
 
                 //System.out.println(synset_offset + "\t" + w_cnt);
-
-
 
                 Word[] words = extractWords(data, 4, w_cnt);
 
@@ -107,7 +114,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
                     if (pointerSymbolToURIsMap.containsKey(p.pointerSymbol)) {
 
-                        //System.out.println("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
+//                        logger.info("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
 
                         URI s = dataRepo.createURI(uriPrefix + synset_offset);
                         URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
@@ -116,20 +123,20 @@ public class GraphLoader_Wordnet implements GraphLoader {
                         graph.addV(o);
 
                         E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(s, o);
+                        
+//                        logger.info("\t"+e.toString());
 
                         g.addE(e);
 
 
                     } else {
-                        //System.out.println("\tExclude Pointer symbol: " + p.pointerSymbol);
+                        logger.info("\tExclude Pointer symbol: " + p.pointerSymbol);
                     }
                 }
-
-
             }
             in.close();
         } catch (IOException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
+            throw new SLIB_Ex_Critic("Error loading the file: "+e.getMessage());
         }
 
         logger.info(graph.toString());
@@ -176,8 +183,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
     private void initPointerToURImap() {
         pointerSymbolToURIsMap = new HashMap<String, PointerToEdge>();
 
-        PointerToEdge hypernym = new PointerToEdge(RDFS.SUBCLASSOF, false);
-        PointerToEdge hyponym = new PointerToEdge(RDFS.SUBCLASSOF, true);
+        PointerToEdge hypernym = new PointerToEdge(RDFS.SUBCLASSOF, true);
+        PointerToEdge hyponym = new PointerToEdge(RDFS.SUBCLASSOF, false);
 
         // @ Hypernym / @i instance hypernym
         pointerSymbolToURIsMap.put("@", hypernym);
@@ -262,20 +269,20 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
         GraphLoader_Wordnet loader = new GraphLoader_Wordnet();
 
-        String dataloc = "/home/seb/desktop/WordNet-3.0/dict/";
+        String dataloc = "/data/WordNet-3.0/dict/";
         String data_noun = dataloc + "data.noun";
         String data_verb = dataloc + "data.verb";
         String data_adj = dataloc + "data.adj";
         String data_adv = dataloc + "data.adv";
 
         GDataConf dataNoun = new GDataConf(GFormat.WORDNET_DATA, data_noun);
-        GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, data_verb);
-        GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, data_adj);
-        GDataConf dataAdv = new GDataConf(GFormat.WORDNET_DATA, data_adv);
+//        GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, data_verb);
+//        GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, data_adj);
+//        GDataConf dataAdv = new GDataConf(GFormat.WORDNET_DATA, data_adv);
 
         loader.populate(dataNoun, g);
-        loader.populate(dataVerb, g);
-        loader.populate(dataAdj, g);
-        loader.populate(dataAdv, g);
+//        loader.populate(dataVerb, g);
+//        loader.populate(dataAdj, g);
+//        loader.populate(dataAdv, g);
     }
 }
