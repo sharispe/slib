@@ -41,7 +41,6 @@ import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.tools.module.CmdHandler;
-import slib.tools.smltoolkit.sm.cli.profile.go.utils.SmToolkitGOCst;
 import slib.tools.smltoolkit.sm.cli.core.utils.SML_SM_module_XML_block_conf;
 import slib.utils.ex.SLIB_Exception;
 

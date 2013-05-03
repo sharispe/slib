@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -19,19 +20,22 @@ import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
+ * DUMMY INDEXER USED TO DEBUG. INPUT: index.*
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class IndexerWordNetBasic{
-    
+public class IndexerWordNetBasic {
+
     Map<String, Set<URI>> stringToSynsetIndex = new HashMap<String, Set<URI>>();
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    
     G graph;
-    
+
+    public IndexerWordNetBasic() {
+    }
+
     /**
      *
      * @param factory
@@ -39,22 +43,23 @@ public class IndexerWordNetBasic{
      * @param file
      * @throws SLIB_Ex_Critic
      */
-    public IndexerWordNetBasic(URIFactory factory, G g, String file) throws SLIB_Ex_Critic{
-        
-        graph = g;
-        populateIndex(factory,file);
-    } 
+    public IndexerWordNetBasic(URIFactory factory, G g, String file) throws SLIB_Ex_Critic {
 
-    private void populateIndex(URIFactory factory,String filepath) throws SLIB_Ex_Critic {
-        
-        logger.info("Populating index from "+filepath);
-        
+        graph = g;
+        populateIndex(factory, file);
+    }
+
+    private void populateIndex(URIFactory factory, String filepath) throws SLIB_Ex_Critic {
+
+        logger.info("---------------------------------");
+        logger.info("Populating index from " + filepath);
+
         boolean inHeader = true;
         try {
 
             FileInputStream fstream = new FileInputStream(filepath);
-            DataInputStream in      = new DataInputStream(fstream);
-            BufferedReader br       = new BufferedReader(new InputStreamReader(in));
+            DataInputStream in = new DataInputStream(fstream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             String line;
             String[] data;
@@ -71,30 +76,33 @@ public class IndexerWordNetBasic{
 
                 line = line.trim();
                 data = line.split("\\s+");
-                //System.out.println( Arrays.toString(data) );
-                
-                String valString  = data[0];
-                String pos        = data[1];
+//                System.out.println( Arrays.toString(data) );
+
+                String valString = data[0];
+                String pos = data[1];
                 int synset_cnt = Integer.parseInt(data[2]);
-                int p_cnt      = Integer.parseInt(data[3]);
-                
-//                System.out.println(valString+"\t"+p_cnt);
+                int p_cnt = Integer.parseInt(data[3]);
+
+
                 int c = 4 + p_cnt;
-                
+
                 int sense_cnt = Integer.parseInt(data[c]);
-                c+= 2; // sense_cnt + tagsense_cnt
-                
+                c += 2; // sense_cnt + tagsense_cnt
+
                 Set<URI> synsets = new HashSet<URI>();
-                
+
                 for (int i = 0; i < sense_cnt; i++) {
-                    URI u = factory.createURI(graph.getURI().getNamespace()+""+data[c+i]);
+                    URI u = factory.createURI(graph.getURI().getNamespace() + "" + data[c + i]);
 //                    System.out.println(u);
-                    
-                    if(!graph.containsVertex(u)){
-                        System.out.println("Error cannot locate synset "+u);
-                        UtilDebug.exit(this);
+
+                    if (!graph.containsVertex(u)) {
+                        throw new SLIB_Ex_Critic("Error cannot locate synset " + u);
                     }
                     synsets.add(u);
+//                    if(!synsetIndexToString.containsKey(u)){
+//                        throw new SLIB_Ex_Critic("Oooops duplicate "+u+"\t"+synsetIndexToString.get(u)+"\t"+valString);
+//                    }
+//                    synsetIndexToString.put(u, valString);
                 }
                 stringToSynsetIndex.put(valString, synsets);
             }
@@ -102,10 +110,10 @@ public class IndexerWordNetBasic{
         } catch (IOException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
-        
-        logger.info("Index build" );
+
+        logger.info("Index build");
     }
-    
+
     /**
      *
      * @param query
@@ -114,7 +122,25 @@ public class IndexerWordNetBasic{
     public Set<URI> get(String query) {
         return stringToSynsetIndex.get(query);
     }
-    
+
+    public void add(String query, URI uri) {
+
+        if (!stringToSynsetIndex.containsKey(query)) {
+            stringToSynsetIndex.put(query, new HashSet<URI>());
+        }
+
+        stringToSynsetIndex.get(query).add(uri);
+    }
+
+    public void add(String query, Collection<URI> uris) {
+
+        if (!stringToSynsetIndex.containsKey(query)) {
+            stringToSynsetIndex.put(query, new HashSet<URI>());
+        }
+
+        stringToSynsetIndex.get(query).addAll(uris);
+    }
+
     /**
      *
      * @return
@@ -122,6 +148,4 @@ public class IndexerWordNetBasic{
     public Map<String, Set<URI>> getIndex() {
         return stringToSynsetIndex;
     }
-    
-    
 }

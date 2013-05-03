@@ -207,9 +207,7 @@ public class ValidatorDAG {
     }
 
     /**
-     * Check if the underlying graph defined by the edges of edgeTypes, the
-     * given edges type ,and build using a traversal starting from the root
-     * vertices according to the inverse of edgeTypes is a DAG. shortcut of
+     * Check if the underlying graph defined by given {@link WalkConstraint} is a DAG. shortcut of
      * {@link ValidatorDAG#isDag(G, Set, Set)} considering the given edge types
      * and the root vertices according to the inverse of the specified edge
      * types as root (see {@link ValidatorDAG#getDAGRoots(G, EType)})

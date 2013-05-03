@@ -80,7 +80,6 @@ public class GraphLoader_Wordnet implements GraphLoader {
             while ((line = br.readLine()) != null) {
 
                 if (inHeader) {
-
                     if (line.startsWith("  ")) {
                         continue;
                     }
@@ -89,13 +88,17 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
                 line = line.trim();
                 data = line.split("\\s+");
-                //System.out.println( Arrays.toString(data) );
 
                 String synset_offset = data[0];
                 String lex_filenum = data[1];
                 String ss_type = data[2];
 
+                URI synset = dataRepo.createURI(uriPrefix + synset_offset);
+                graph.addV(synset);
+                
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
+                
+                
                 
 
 //                logger.info(synset_offset);
@@ -130,7 +133,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
 
                     } else {
-                        logger.info("\tExclude Pointer symbol: " + p.pointerSymbol);
+                        logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
                     }
                 }
             }

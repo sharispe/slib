@@ -57,5 +57,5 @@ public interface LCAFinder {
      *
      * @throws SLIB_Exception
      */
-    Set<URI> getLCAs(G graph, URI a, URI b) throws SLIB_Exception;
+    Set<URI> getLCAs(URI a, URI b) throws SLIB_Exception;
 }

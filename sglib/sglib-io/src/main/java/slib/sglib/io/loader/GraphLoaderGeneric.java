@@ -52,6 +52,7 @@ import slib.sglib.io.loader.bio.snomedct.GraphLoaderSnomedCT_RF2;
 import slib.sglib.io.loader.csv.GraphLoader_CSV;
 import slib.sglib.io.loader.rdf.RDFLoader;
 import slib.sglib.io.loader.slibformat.GraphLoader_SLIB;
+import slib.sglib.io.loader.wordnet.GraphLoader_Wordnet;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
@@ -75,7 +76,8 @@ public class GraphLoaderGeneric {
      */
     public static GFormat[] supportedFormat = {
         GFormat.OBO, GFormat.GAF2, GFormat.NTRIPLES, GFormat.RDF_XML,
-        GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV, GFormat.TSV_ANNOT
+        GFormat.RDF_XML, GFormat.SNOMED_CT_RF2, GFormat.MESH_XML, GFormat.CSV, GFormat.TSV_ANNOT,
+        GFormat.WORDNET_DATA
     };
 
     /**
@@ -146,7 +148,7 @@ public class GraphLoaderGeneric {
      * @throws SLIB_Exception
      */
     public static G load(GraphConf graphConf, G g) throws SLIB_Exception {
-        
+
         logger.info("-------------------------------------");
         logger.info(" Loading DATA");
         logger.info("-------------------------------------");
@@ -202,10 +204,11 @@ public class GraphLoaderGeneric {
             return new GraphLoader_SLIB();
         } else if (data.getFormat() == GFormat.MESH_XML) {
             return new GraphLoader_MESH_XML();
-        } 
-        else if (data.getFormat() == GFormat.TSV_ANNOT) {
+        } else if (data.getFormat() == GFormat.TSV_ANNOT) {
             return new GraphLoader_TSVannot();
-        }else {
+        } else if (data.getFormat() == GFormat.WORDNET_DATA) {
+            return new GraphLoader_Wordnet();
+        } else {
             throw new SLIB_Ex_Critic("Unknown Graph format " + data.getFormat());
         }
     }
@@ -227,6 +230,7 @@ public class GraphLoaderGeneric {
 
     /**
      * Access to the set of supported format.
+     *
      * @return
      */
     public static GFormat[] getSupportedFormat() {

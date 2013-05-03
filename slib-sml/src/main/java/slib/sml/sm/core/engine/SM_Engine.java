@@ -588,6 +588,18 @@ public class SM_Engine {
         }
         return Collections.unmodifiableMap(cache.reachableLeaves);
     }
+    
+    /**
+     * Compute for each class x the classes which are leaves which are subsumed
+     * by x. Inclusive i.e. a leaf will contain itself in it set of reachable
+     * leaves. The result is cached for fast access.
+     *
+     *
+     * @return the subsumed leaves for each classes
+     */
+    public synchronized Set<URI> getReachableLeaves(URI uri) {
+        return Collections.unmodifiableSet(getReachableLeaves().get(uri));
+    }
 
     /**
      * Access to a view of the set of leaves of the underlying taxonomic graph.
@@ -1099,7 +1111,7 @@ public class SM_Engine {
     public Set<URI> getInstances() {
         return instances;
     }
-
+    
     private void throwErrorIfNotClass(URI c) {
         if (!classes.contains(c)) {
             throw new IllegalArgumentException("The given URI " + c + " cannot be associated to a class");

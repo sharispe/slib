@@ -62,6 +62,16 @@ import slib.utils.impl.SetUtils;
 public class LCAFinderImpl implements LCAFinder {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
+    
+    G graph;
+    SM_Engine engine;
+    
+    public LCAFinderImpl(SM_Engine engine){
+        this.engine = engine;
+        graph = engine.getGraph();
+    }
+    
+    
 
     private URI getNextUnvisited(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
         for (int i = ancestorsOrdered.size() - 1; i >= 0; i--) {
@@ -92,7 +102,7 @@ public class LCAFinderImpl implements LCAFinder {
     }
 
     @Override
-    public Set<URI> getLCAs(G graph, URI a, URI b) throws SLIB_Exception {
+    public Set<URI> getLCAs(URI a, URI b) throws SLIB_Exception {
 
         if (!graph.containsVertex(a)) {
             throw new SLIB_Ex_Critic("Graph " + graph.getURI() + " doesn't contain vertice " + a);
@@ -102,8 +112,6 @@ public class LCAFinderImpl implements LCAFinder {
 
 
         Set<URI> lca = new HashSet<URI>();
-
-        SM_Engine engine = new SM_Engine(graph);
 
         Set<URI> ancA = engine.getAncestorsInc(a);
         Set<URI> ancB = engine.getAncestorsInc(b);
