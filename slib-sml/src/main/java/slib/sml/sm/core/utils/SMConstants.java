@@ -89,7 +89,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_Schlicker_Jaccard_SimRel;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Sim_IC_2010;
-import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_Average;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchAverage;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchMax;
@@ -705,10 +705,14 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998 = "SIM_PAIRWISE_DAG_NODE_LIN_1998";
+    
+   
     /**
      *
      */
-    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC";
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL";
+    
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = "SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL";
     /**
      *
      */
@@ -757,7 +761,9 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC = Sim_pairwise_DAG_node_Tversky_IC.class.getName();
+    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model.class.getName();
+    
+    public static final String SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model.class.getName();
     /**
      *
      */
@@ -843,7 +849,8 @@ public final class SMConstants {
 
         {
             put(FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, SIM_PAIRWISE_DAG_NODE_LIN_1998);
-            put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL, SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_IC);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC);
             put(FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997, SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);

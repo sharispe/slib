@@ -46,14 +46,14 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Tversky_IC implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model implements Sim_DAG_node_abstract {
 
     public static final String alpha_param_name = "alpha";
     public static final String beta_param_name = "beta";
-    private double alpha = 0.5;
-    private double beta = 0.5;
+    protected double alpha = 0.5;
+    protected double beta = 0.5;
 
-    public Sim_pairwise_DAG_node_Tversky_IC() {
+    public Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model() {
     }
 
     /**
@@ -62,7 +62,7 @@ public class Sim_pairwise_DAG_node_Tversky_IC implements Sim_DAG_node_abstract {
      * @param alpha
      * @param beta
      */
-    public Sim_pairwise_DAG_node_Tversky_IC(double alpha, double beta) {
+    public Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model(double alpha, double beta) {
         this.alpha = alpha;
         this.beta = beta;
     }
@@ -86,10 +86,10 @@ public class Sim_pairwise_DAG_node_Tversky_IC implements Sim_DAG_node_abstract {
         double ic_b = c.getIC(conf.getICconf(), b);
         double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
 
-        return sim(ic_a, ic_b, ic_MICA);
+        return sim(ic_a, ic_b, ic_MICA, alpha, beta);
     }
 
-    public double sim(double ic_a, double ic_b, double ic_mica) throws SLIB_Ex_Critic {
+    public static double sim(double ic_a, double ic_b, double ic_mica, double alpha, double beta) throws SLIB_Ex_Critic {
 
         if (ic_mica > ic_a || ic_mica > ic_b) {
             throw new SLIB_Ex_Critic("Wrong parameters used with Tversky measure. "

@@ -39,7 +39,7 @@ import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_DAG_node_abstract;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Constants;
-import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -114,9 +114,7 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {
 
-        Sim_pairwise_DAG_node_Tversky_IC m = new Sim_pairwise_DAG_node_Tversky_IC(alpha, beta);
-
-        double sim = m.sim(ic_a, ic_b, ic_mica);
+        double sim = Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model.sim(ic_a, ic_b, ic_mica,alpha, beta);
 
         return sim * (1. - p_mica);
     }
