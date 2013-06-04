@@ -46,14 +46,14 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model implements Sim_DAG_node_abstract {
 
     public static final String alpha_param_name = "alpha";
     public static final String beta_param_name = "beta";
     protected double alpha = 0.5;
     protected double beta = 0.5;
 
-    public Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model() {
+    public Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model() {
     }
 
     /**
@@ -62,7 +62,7 @@ public class Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model implements Sim_DAG_nod
      * @param alpha
      * @param beta
      */
-    public Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model(double alpha, double beta) {
+    public Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model(double alpha, double beta) {
         this.alpha = alpha;
         this.beta = beta;
     }

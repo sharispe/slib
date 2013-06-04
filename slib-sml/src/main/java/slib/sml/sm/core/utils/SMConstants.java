@@ -68,6 +68,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.experimental.Sim_
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Stojanovic_2001;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Wu_Palmer_1994;
 import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.experimental.Sim_pairwise_DAG_hybrid_Ranwez_2006;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model;
 //import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Wang_2007;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_GL_GraSM;
@@ -89,7 +90,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_Schlicker_Jaccard_SimRel;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Sim_IC_2010;
-import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_Average;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchAverage;
 import slib.sml.sm.core.measures.others.groupwise.indirect.Sim_groupwise_BestMatchMax;
@@ -761,9 +762,9 @@ public final class SMConstants {
     /**
      *
      */
-    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model.class.getName();
+    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model.class.getName();
     
-    public static final String SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model.class.getName();
+    public static final String SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model.class.getName();
     /**
      *
      */

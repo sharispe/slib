@@ -46,7 +46,7 @@ import slib.utils.impl.SetUtils;
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairwise_DAG_node_Tversky_IC_Ratio_Model {
+public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model {
 
     public Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model() {}
 
