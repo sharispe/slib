@@ -36,34 +36,45 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
+import static slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model.gamma_param_name;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * Feature-based formulation of the Tversky Ratio Model.
- * A concept is represented as its sets of inclusive subsumers.
- * Note that the commonality is assessed based on the size of the intersection of the inclusive subsumers of the two compared concepts (which is, in some cases, not the same as the inclusive ancestors of a single common subsumer of the two concepts, i.e. feature-like definition of the MICA/LCA ).
+ * Feature-based formulation of the Tversky Ratio Model. A concept is
+ * represented as its sets of inclusive subsumers. Note that the commonality is
+ * assessed based on the size of the intersection of the inclusive subsumers of
+ * the two compared concepts (which is, in some cases, not the same as the
+ * inclusive ancestors of a single common subsumer of the two concepts, i.e.
+ * feature-like definition of the MICA/LCA ).
  *
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model {
+public class Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model extends Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model {
 
-    public Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model() {}
+    public Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model() {
+    }
 
     /**
-     * Create a Tversky measure specifying alpha and beta parameters
-     * @param alpha
-     * @param beta
+     * Create a Tversky measure specifying gamma, alpha and beta parameters
+     *
+     * @param gamma importance of commonality
+     * @param alpha importance of part of A not in B
+     * @param beta importance of part of B not in A
      */
-    public Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model(double alpha, double beta) {
-        super(alpha,beta);
+    public Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model(double gamma, double alpha, double beta) {
+        super(gamma, alpha, beta);
     }
 
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
+        if (conf != null && conf.containsParam(gamma_param_name)) {
+            gamma = conf.getParamAsDouble(gamma_param_name);
+        }
+        
         if (conf != null && conf.containsParam(alpha_param_name)) {
             alpha = conf.getParamAsDouble(alpha_param_name);
         }
@@ -74,9 +85,9 @@ public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairw
 
         double ic_a = c.getAncestorsInc(a).size();
         double ic_b = c.getAncestorsInc(b).size();
-        
+
         double ic_MICA = SetUtils.intersection(c.getAncestorsInc(a), c.getAncestorsInc(b)).size();
-        
-        return sim(ic_a, ic_b, ic_MICA, alpha, beta);
+
+        return sim(ic_a, ic_b, ic_MICA, gamma, alpha, beta);
     }
 }

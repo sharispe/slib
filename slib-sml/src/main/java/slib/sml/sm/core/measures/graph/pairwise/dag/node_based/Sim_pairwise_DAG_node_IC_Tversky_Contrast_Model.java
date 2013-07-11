@@ -37,33 +37,47 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.SetUtils;
 
 /**
- * Feature-based formulation of the Tversky Ratio Model.
- * A concept is represented as its sets of inclusive subsumers.
- * Note that the commonality is assessed based on the size of the intersection of the inclusive subsumers of the two compared concepts (which is, in some cases, not the same as the inclusive ancestors of a single common subsumer of the two concepts, i.e. feature-like definition of the MICA/LCA ).
+ * IC formulation of Tversky Ratio Model
  *
  * @author Sebastien Harispe
  *
  */
-public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model {
+public class Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model implements Sim_DAG_node_abstract {
 
-    public Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model() {}
+    public static final String gamma_param_name = "gamma";
+    public static final String alpha_param_name = "alpha";
+    public static final String beta_param_name = "beta";
+
+    protected double gamma = 1.;
+    protected double alpha = 1.;
+    protected double beta = 1.;
+
+    public Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model() {
+    }
 
     /**
-     * Create a Tversky measure specifying alpha and beta parameters
-     * @param alpha
-     * @param beta
+     * Create a Tversky measure specifying gamma, alpha and beta parameters
+     *@param gamma importance of commonality
+     * @param alpha importance of part of A not in B
+     * @param beta importance of part of B not in A
      */
-    public Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model(double alpha, double beta) {
-        super(alpha,beta);
+    public Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model(double gamma, double alpha, double beta) {
+        this.gamma = gamma;
+        this.alpha = alpha;
+        this.beta = beta;
     }
 
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
+        if (conf != null && conf.containsParam(gamma_param_name)) {
+            gamma = conf.getParamAsDouble(gamma_param_name);
+        }
+         
         if (conf != null && conf.containsParam(alpha_param_name)) {
             alpha = conf.getParamAsDouble(alpha_param_name);
         }
@@ -72,11 +86,35 @@ public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairw
             beta = conf.getParamAsDouble(beta_param_name);
         }
 
-        double ic_a = c.getAncestorsInc(a).size();
-        double ic_b = c.getAncestorsInc(b).size();
-        
-        double ic_MICA = SetUtils.intersection(c.getAncestorsInc(a), c.getAncestorsInc(b)).size();
-        
-        return sim(ic_a, ic_b, ic_MICA, alpha, beta);
+        if (conf == null || conf.getICconf() == null) {
+            throw new IllegalArgumentException("Measure " + this.getClass().getSimpleName() + " requires a configuration to be specified an IC to be specified");
+        }
+
+        double ic_a = c.getIC(conf.getICconf(), a);
+        double ic_b = c.getIC(conf.getICconf(), b);
+        double ic_MICA = c.getIC_MICA(conf.getICconf(), a, b);
+
+        return sim(ic_a, ic_b, ic_MICA, gamma, alpha, beta);
+    }
+
+    public static double sim(double ic_a, double ic_b, double ic_mica,double gamma, double alpha, double beta) throws SLIB_Ex_Critic {
+
+        if (ic_mica > ic_a || ic_mica > ic_b) {
+            throw new SLIB_Ex_Critic("Wrong parameters used with Tversky measure. "
+                    + "IC MICA must be inferior to IC(a) and IC(b)");
+        }
+
+        double j = 0.;
+
+        if (ic_mica != 0) {
+            j = gamma * (ic_mica) - alpha * (ic_a - ic_mica) - beta * (ic_b - ic_mica);
+        }
+
+        return j;
+    }
+
+    @Override
+    public boolean isSymmetric() {
+        return alpha == beta;
     }
 }

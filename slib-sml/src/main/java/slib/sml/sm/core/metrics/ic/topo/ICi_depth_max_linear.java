@@ -34,28 +34,19 @@
  */
 package slib.sml.sm.core.metrics.ic.topo;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.openrdf.model.URI;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.utils.LogBasedMetric;
-import slib.sml.sm.core.utils.MathSML;
-import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
- *
  * @author Sebastien Harispe
  *
  */
-public class ICi_depth_min_nonlinear extends LogBasedMetric implements ICtopo {
-
-    /**
-     *
-     */
-    public ICi_depth_min_nonlinear() {
-    }
+public class ICi_depth_max_linear extends LogBasedMetric implements ICtopo {
 
     /**
      *
@@ -67,19 +58,9 @@ public class ICi_depth_min_nonlinear extends LogBasedMetric implements ICtopo {
 
         Map<URI, Double> results = new HashMap<URI, Double>();
 
-        double max_depth = Collections.max(alldepths.values()) + 1;
-
-        int depth;
-
-        double cur_ic;
-
+       
         for (URI v : alldepths.keySet()) {
-
-            depth = alldepths.get(v);
-
-            cur_ic = MathSML.log(depth + 1., getLogBase()) / MathSML.log(max_depth, getLogBase());
-
-            results.put(v, cur_ic);
+            results.put(v, new Double(alldepths.get(v)));
         }
 
         return results;
@@ -91,6 +72,6 @@ public class ICi_depth_min_nonlinear extends LogBasedMetric implements ICtopo {
 
         setLogBase(conf);
 
-        return compute(manager.getMinDepths());
+        return compute(manager.getMaxDepths());
     }
 }

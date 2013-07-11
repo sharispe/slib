@@ -68,9 +68,13 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.experimental.Sim_
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Stojanovic_2001;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_pairwise_DAG_edge_Wu_Palmer_1994;
 import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.experimental.Sim_pairwise_DAG_hybrid_Ranwez_2006;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model;
 //import slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.Sim_pairwise_DAG_hybrid_Wang_2007;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_GL;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Prop_Tversky_Contrast_Model;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model;
+import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_GL_GraSM;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.experimental.Sim_pairwise_DAG_node_Harispe_2013;
 import slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_Jaccard_3W_IC;
@@ -104,6 +108,7 @@ import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995;
 import slib.sml.sm.core.metrics.ic.annot.IC_annot_resnik_1995_Normalized;
 import slib.sml.sm.core.metrics.ic.annot.IC_probOccurence_propagatted;
 import slib.sml.sm.core.metrics.ic.topo.ICi_ancestors_norm;
+import slib.sml.sm.core.metrics.ic.topo.ICi_depth_max_linear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_max_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_depth_min_nonlinear;
 import slib.sml.sm.core.metrics.ic.topo.ICi_harispe_2012;
@@ -397,6 +402,7 @@ public final class SMConstants {
             addAll(groupwiseMeasureMapping.keySet());
         }
     };
+    
 
     /**
      *
@@ -549,6 +555,8 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_ICI_DEPTH_MAX_NONLINEAR = "ICI_DEPTH_MAX_NONLINEAR";
+    
+    public static final String FLAG_ICI_DEPTH_MAX_LINEAR = "ICI_DEPTH_MAX_LINEAR";
     /**
      *
      */
@@ -610,6 +618,7 @@ public final class SMConstants {
      *
      */
     public static final String ICI_DEPTH_MAX_NONLINEAR = ICi_depth_max_nonlinear.class.getName();
+    public static final String ICI_DEPTH_MAX_LINEAR = ICi_depth_max_linear.class.getName();
     /**
      *
      */
@@ -654,6 +663,7 @@ public final class SMConstants {
             put(FLAG_ICI_ZHOU_2008, ICI_ZHOU_2008);
             put(FLAG_ICI_HARISPE_2012, ICI_HARISPE_2012);
             put(FLAG_ICI_DEPTH_MAX_NONLINEAR, ICI_DEPTH_MAX_NONLINEAR);
+            put(FLAG_ICI_DEPTH_MAX_LINEAR, ICI_DEPTH_MAX_LINEAR);
             put(FLAG_ICI_DEPTH_MIN_NONLINEAR, ICI_DEPTH_MIN_NONLINEAR);
             put(FLAG_ICI_PROB_OCCURENCE, ICI_PROB_OCCURENCE);
             put(FLAG_ICI_PROB_OCCURENCE_PROPAGATED, ICI_PROB_OCCURENCE_PROPAGATED);
@@ -712,8 +722,13 @@ public final class SMConstants {
      *
      */
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL";
-    
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_RATIO_MODEL  = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_RATIO_MODEL";
     public static final String FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = "SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL";
+    
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_CONTRAST_MODEL = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_CONTRAST_MODEL";
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_CONTRAST_MODEL  = "SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_CONTRAST_MODEL";
+    public static final String FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_CONTRAST_MODEL = "SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_CONTRAST_MODEL";
+    
     /**
      *
      */
@@ -764,7 +779,17 @@ public final class SMConstants {
      */
     public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL = Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model.class.getName();
     
+    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_RATIO_MODEL = Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model.class.getName();
+    
     public static final String SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL = Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model.class.getName();
+    
+    
+    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_CONTRAST_MODEL = Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model.class.getName();
+    
+    public static final String SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_CONTRAST_MODEL = Sim_pairwise_DAG_node_IC_Prop_Tversky_Contrast_Model.class.getName();
+    
+    public static final String SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_CONTRAST_MODEL = Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model.class.getName();
+    
     /**
      *
      */
@@ -851,7 +876,13 @@ public final class SMConstants {
         {
             put(FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, SIM_PAIRWISE_DAG_NODE_LIN_1998);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_RATIO_MODEL);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_RATIO_MODEL, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_RATIO_MODEL);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL, SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_RATIO_MODEL);
+            
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_CONTRAST_MODEL, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_CONTRAST_MODEL);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_CONTRAST_MODEL, SIM_PAIRWISE_DAG_NODE_TVERSKY_IC_PROP_CONTRAST_MODEL);
+            put(FLAG_SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_CONTRAST_MODEL, SIM_PAIRWISE_DAG_NODE_FEATURE_TVERSKY_CONTRAST_MODEL);
+            
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_IC);
             put(FLAG_SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC, SIM_PAIRWISE_DAG_NODE_JACCARD_3W_IC);
             put(FLAG_DIST_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997, SIM_PAIRWISE_DAG_NODE_JIANG_CONRATH_1997);

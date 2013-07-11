@@ -46,12 +46,6 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * Zhou Z, Wang Y, Gu J: A New Model of Information Content for Semantic
- * Similarity in WordNet. In FGCNS ’08 Proceedings of the 2008 Second
- * International Conference on Future Generation Communication and Networking
- * Symposia Volume 03. IEEE Computer Society; 2008:85-89. Zhou (k = 0) IC range
- * : [0,1]
- *
  * @author Sebastien Harispe
  *
  */
