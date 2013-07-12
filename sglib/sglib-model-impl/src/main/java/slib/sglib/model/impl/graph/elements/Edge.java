@@ -113,6 +113,6 @@ public class Edge implements E {
 
     @Override
     public String toString() {
-        return source.stringValue() + "\t" + predicate.stringValue() + "\t" + target.stringValue();
+        return source.stringValue() + " -- " + predicate.stringValue() + " -- " + target.stringValue();
     }
 }
