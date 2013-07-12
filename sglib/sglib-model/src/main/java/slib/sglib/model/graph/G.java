@@ -39,7 +39,6 @@ import org.openrdf.model.URI;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraint;
-import slib.sglib.model.repo.URIFactory;
 
 /**
  * Interface of a multi directed Graph defined as a set of vertices and a set of
@@ -273,6 +272,16 @@ public interface G {
      */
     public boolean containsVertex(URI v);
 
+    
+    /**
+     * Check if the graph contains the specified triplet.
+     * @param s the subject of the triplet
+     * @param p the predicate of the triplet
+     * @param o the object
+     * @return true if the triplet exists
+     */
+    public boolean containsEdge(URI s, URI p, URI o);
+    
     /**
      * @return an unmodifiable view of the set of vertices contained in the
      * graph.

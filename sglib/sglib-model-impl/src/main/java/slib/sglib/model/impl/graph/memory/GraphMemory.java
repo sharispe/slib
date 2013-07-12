@@ -319,6 +319,16 @@ public class GraphMemory implements G {
     public boolean containsVertex(URI v) {
         return uris.contains(v);
     }
+    
+    @Override
+    public boolean containsEdge(URI s, URI p, URI o){
+        
+        for(E e : getE(p, s, Direction.OUT)){
+            if(e.getTarget().equals(o))
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public int getNumberVertices() {
