@@ -49,7 +49,9 @@ import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.repo.URIFactory;
+import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.ex.SLIB_Exception;
@@ -57,8 +59,8 @@ import slib.utils.impl.SetUtils;
 
 /**
  * Algorithm used to extract a subgraph from a DAG (Directed Acyclic Graph)
- * <br/> Implementation of Ranwez et al. 2011 algorithm. <br/> For in deep
- * details please refer to the original paper: <br/>
+ * <br/> Implementation of Ranwez et al. 2011 algorithm. <br/>
+ * original paper: <br/>
  *
  * ﻿Ranwez V, Ranwez S, Janaqi S: Sub-Ontology Extraction Using Hyponym and
  * Hypernym Closure on is-a Directed Acyclic Graphs. IEEE Transactions on
@@ -71,7 +73,6 @@ public class GraphReduction_DAG_Ranwez_2011 {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
     G graph_reduction;
-    URIFactory data;
     Set<URI> selectedURI;
     URI rootVertex;
     Set<URI> verticesRed;
@@ -93,11 +94,11 @@ public class GraphReduction_DAG_Ranwez_2011 {
             G graph,
             URI rootURI) throws SLIB_Exception {
 
-        this(factory, graph, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF), SetUtils.buildSet(RDFS.SUBCLASSOF), true);
+        this(graph, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF), SetUtils.buildSet(RDFS.SUBCLASSOF), true);
     }
 
     /**
-     * Method used to perform the subGraph extraction The graph reduction is
+     * Method used to perform the subGraph extraction.The graph reduction is
      * performed considering: <br/> <ul> <li> a collection of URI corresponding
      * to the vertices to consider for the reduction (Query) </li> <li> a
      * collection of edge types (Collection). An inverse collection
@@ -125,23 +126,19 @@ public class GraphReduction_DAG_Ranwez_2011 {
      * @throws SLIB_Exception
      */
     public GraphReduction_DAG_Ranwez_2011(
-            URIFactory factory,
             G graph,
             URI rootURI,
             Set<URI> edgesTypes,
             Set<URI> edgesTypesDirect,
             boolean validateDAGproperty) throws SLIB_Exception {
 
-        data = factory;
-
         this.edgesTypes = edgesTypes;
         this.edgesTypesDirect = edgesTypesDirect;
 
-
+        rootVertex = rootURI;
         this.graph = graph;
 
-        if (!graph.containsVertex(rootURI)) {
-            rootVertex = rootURI;
+        if (!graph.containsVertex(rootURI)) {    
             graph.addV(rootURI);
         }
 
@@ -152,9 +149,9 @@ public class GraphReduction_DAG_Ranwez_2011 {
             logger.debug("Checking DAG property");
 
             ValidatorDAG vdag = new ValidatorDAG();
-            
-            WalkConstraintTax wc = new WalkConstraintTax();
-            for(URI edgeType : edgesTypes){
+
+            WalkConstraint wc = new WalkConstraintGeneric();
+            for (URI edgeType : edgesTypes) {
                 wc.addAcceptedTraversal(edgeType, Direction.IN);
             }
 
@@ -241,16 +238,12 @@ public class GraphReduction_DAG_Ranwez_2011 {
         }
 
 
-        // set direct edges
-        if (edgesTypesDirect == null) {
-            edgesTypesDirect = data.getPredicateFactory().getURIs();
-        }
 
         logger.debug("Adding direct edges considering " + edgesTypesDirect.size() + " eType(s)");
         logger.debug("" + edgesTypesDirect);
 
         // Add Direct edges 
-        for (V v : verticesRed) {
+        for (URI v : verticesRed) {
 
             Collection<E> outEdges = graph.getE(v, Direction.OUT);
 
@@ -258,7 +251,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
                 if (edgesTypesDirect.contains(e.getURI())
                         && verticesRed.contains(e.getTarget())
-                        && !graph_reduction.containsEdge(v, e.getTarget(), Direction.OUT, e.getURI())) {
+                        && !graph_reduction.containsEdge(v, e.getURI(), e.getTarget())) {
 
                     graph_reduction.addE(e.getSource(), e.getTarget(), e.getURI());
                 }
@@ -272,35 +265,36 @@ public class GraphReduction_DAG_Ranwez_2011 {
     }
 
     private void computeTraversalRestriction() {
-        WalkConstraintTax wc = new WalkConstraintTax();
-        for(URI edgesType : edgesTypes){
+        WalkConstraint wc = new WalkConstraintGeneric();
+        for (URI edgesType : edgesTypes) {
             wc.addAcceptedTraversal(edgesType, Direction.IN);
         }
-        
+
+        System.out.println(rootVertex);
         DFS dfs = new DFS(graph, rootVertex, wc);
         traversalOrder = dfs.getTraversalOrder(); // rootID as last element
     }
 
-    private void addEdges(List<V> traversalOrder, URI edgeType) {
+    private void addEdges(List<URI> traversalOrder, URI edgeType) {
 
         logger.debug("Adding Edges of transitive type : " + edgeType);
         logger.debug("verticesRed : " + verticesRed);
         logger.debug("Starting from  : " + traversalOrder.get(0));
 
-        HashMap<V, Collection<V>> vrra = new HashMap<V, Collection<V>>();
+        HashMap<URI, Collection<URI>> vrra = new HashMap<URI, Collection<URI>>();
 
 
 
         for (int i = 0; i < traversalOrder.size(); i++) {
 
-            V u = traversalOrder.get(i);
+            URI u = traversalOrder.get(i);
 
 //			logger.debug("Processing  : "+u);
 
 
             if (!vrra.containsKey(u)) // leaf or root init
             {
-                vrra.put(u, new HashSet<V>());
+                vrra.put(u, new HashSet<URI>());
             }
 
 //			logger.debug("Set : "+vrra.get(u));
@@ -310,17 +304,17 @@ public class GraphReduction_DAG_Ranwez_2011 {
 //				logger.debug(""+u.getURI().getFragment());
 //				logger.debug("nb "+vrra.get(u).size());
 
-                for (V r : vrra.get(u)) {
+                for (URI r : vrra.get(u)) {
 
 
-                    V source = graph_reduction.getV((URI) u.getValue());
-                    V target = graph_reduction.getV((URI) r.getValue());
+                    URI source = u;
+                    URI target = r;
 
-                    graph_reduction.addE(target, source, edgeType);
+                    graph_reduction.addE(target,edgeType,source);
 
 //					logger.debug("\tAdding edge... "+target.getURI().getFragment()+" "+edgeType.getURI().getFragment()+" "+source.getURI().getFragment());
                 }
-                vrra.put(u, new HashSet<V>());
+                vrra.put(u, new HashSet<URI>());
                 vrra.get(u).add(u);
             }
 
@@ -328,10 +322,10 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
             for (E e : edges) {
 
-                V f = e.getTarget();
+                URI f = e.getTarget();
 
                 if (!vrra.containsKey(f)) {
-                    vrra.put(f, new HashSet<V>());
+                    vrra.put(f, new HashSet<URI>());
                 }
 
                 vrra.put(f, SetUtils.union(vrra.get(u), vrra.get(f)));
@@ -354,27 +348,27 @@ public class GraphReduction_DAG_Ranwez_2011 {
      * @return	a collection of vertices corresponding to the expansion of the
      * query
      */
-    private Set<V> reduce(List<V> order, Set<URI> edgeTypes, Direction dir) {
+    private Set<URI> reduce(List<URI> order, Set<URI> edgeTypes, Direction dir) {
 
         logger.debug("'Transitive Closure' considering EdgeTypes : " + edgeTypes);
         logger.debug("Propogation started from : " + order.get(0));
 
-        HashMap<V, HashSet<V>> sd = new HashMap<V, HashSet<V>>(traversalOrder.size());
-        HashMap<V, Integer> maxSd = new HashMap<V, Integer>();
+        HashMap<URI, HashSet<URI>> sd = new HashMap<URI, HashSet<URI>>(traversalOrder.size());
+        HashMap<URI, Integer> maxSd = new HashMap<URI, Integer>();
 
 
-        Set<V> verticesReduction = new HashSet<V>();
+        Set<URI> verticesReduction = new HashSet<URI>();
 
-        for (V v : order) {
-            sd.put(v, new HashSet<V>());
+        for (URI v : order) {
+            sd.put(v, new HashSet<URI>());
             maxSd.put(v, 0);
         }
 
-        for (V v : order) {
+        for (URI v : order) {
 
 //			System.out.println("---> "+v);
 
-            if (selectedURI.contains((URI) v.getValue())) {
+            if (selectedURI.contains(v)) {
                 sd.get(v).add(v);
 //				System.out.println("---> Adding (QUERY) "+v);
             }
@@ -388,7 +382,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
             for (E e : graph.getE(edgeTypes, v, dir)) {
 
-                V t = (V) e.getTarget();
+                URI t = e.getTarget();
 
                 // check that the vertex is contained in the traversal 
                 // restriction defined by the root selected 
@@ -397,7 +391,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
                 if (sd.containsKey(t)) {
 
-                    HashSet<V> union = new HashSet<V>(SetUtils.union(sd.get(t), sd.get(v)));
+                    HashSet<URI> union = new HashSet<URI>(SetUtils.union(sd.get(t), sd.get(v)));
 //					System.out.println("Union "+union);
                     sd.put(t, union);
                     maxSd.put(t, Math.max(sd.get(v).size(), maxSd.get(t)));
@@ -410,6 +404,11 @@ public class GraphReduction_DAG_Ranwez_2011 {
         return verticesReduction;
     }
 
+    /**
+     * Check the parameters of the current configuration
+     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Warning 
+     */
     private void checkQueryValidity() throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
 
