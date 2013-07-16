@@ -165,7 +165,7 @@ public class Conf {
      * @return true if at least a parameter is loaded.
      */
     public boolean containsParams() {
-        return (params != null && params.size() != 0);
+        return (params != null && params.isEmpty());
     }
 
     @Override
