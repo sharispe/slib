@@ -686,9 +686,6 @@ public class SM_Engine {
                 sim = cache.pairwise_results.get(pairwiseConf).get(a).get(b);
             } else {
 
-
-
-
                 Sim_Pairwise pMeasure;
 
                 synchronized (pairwiseMeasures) {
