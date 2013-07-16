@@ -76,6 +76,18 @@ public class SMconf extends Conf {
     public String pairwise_measure_id;
 
     /**
+     * Build an instance of configuration considering the given flag, the id of
+     * the configuration (which must be unique) will be set to the value of the flag.
+     *
+     * @param flag the flag defining the semantic measure method associated to
+     * the configuration.
+     * @throws SLIB_Ex_Critic
+     */
+    public SMconf(String flag) throws SLIB_Ex_Critic {
+        this(flag, flag);
+    }
+
+    /**
      * Build an instance of configuration considering the given id and flag
      *
      * @param id the id of the configuration (must be unique).
@@ -115,7 +127,7 @@ public class SMconf extends Conf {
         this(flag, flag, flag, icConf);
     }
 
-        /**
+    /**
      * Build an instance of configuration considering the given flag and
      * Information Content configuration.
      *
@@ -125,9 +137,10 @@ public class SMconf extends Conf {
      * @param icConf the IC configuration associated to the configuration
      * @throws SLIB_Ex_Critic
      */
-    public SMconf(String id,String flag, ICconf icConf) throws SLIB_Ex_Critic {
+    public SMconf(String id, String flag, ICconf icConf) throws SLIB_Ex_Critic {
         this(id, flag, id, icConf);
     }
+
     /**
      * Build an instance of configuration considering the given id, flag and
      * Information Content configuration.
