@@ -4,7 +4,7 @@
     <groupId>fr.lgi2p.kid</groupId>
     <name>slib</name>
     <artifactId>slib</artifactId>
-    <version>0.0.6-rc0</version>
+    <version>0.0.6</version>
     <packaging>pom</packaging>
     
     <properties>
@@ -104,7 +104,7 @@
                                 <goal>aggregate</goal>
                                 <goal>aggregate-jar</goal>
                             </goals>
-                            <phase>install</phase>
+                            <phase>site</phase>
                         </execution>
                     </executions>
                 </plugin>
