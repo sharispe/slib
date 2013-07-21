@@ -59,13 +59,54 @@ Below, the list of contexts of use for which a profile is/will be provided:
 	* **RDF**, the general profile dedicated to the ontologies expressed in RDF. Planned for the next releases
 
 
+##### Semantic Measures and Metrics supported by the SML-Toolkit
 
+
+Excerpt of available measures and metrics, please refer to http://www.semantic-measures-library.org/sml/index.php?q=sml-semantic-measures to consult the updated list of semantic measures available.
+
+Information content (IC):
+
+* Intrinsic 
+    * `sanchez`
+    * `zhou`
+    * `seco`
+
+* Extrinsic (requires annotations)
+    * `resnik` 
+
+Pairwise measures:
+
+* IC-based (requires an IC to be defined)
+    * `resnik` 
+    * `lin` (requires an IC)
+    * `schlicker` (requires an IC)
+    * `jc` (requires an IC)
+
+Groupwise measures:
+
+* Direct
+    * `to`
+    * `nto`
+    * `ui`
+    * `lp`
+    * `lee`
+    * `ali_and_deane`
+    * `gic`
+
+* Indirect (requires a pairwise measure)
+    * `min`
+    * `max`
+    * `avg`
+    * `avgnorm`
+    * `bma`
+    * `bmm`
+    * `maxnorm`
 
 ####  Semantic measures over the Gene Ontology
 ---------------------------------------
 
 This profile is dedicated to the Gene Ontology (GO).
-It can be used to compute semantic measures between GO terms or gene products annotated by GO terms.
+It can be used to compute semantic measures scores between GO terms or gene products annotated by GO terms.
 The Gene Ontology must be in OBO format (version 1.2), the gene products annotations must be in GAF2 format or TSV (Tabulated Separated Values, an example is provided below).
 The Gene Ontology and associated annotations can be downloaded at http://www.geneontology.org/
 
@@ -171,51 +212,6 @@ Finally, we do not want the warnings to be shown `-quiet` and we allocate multip
 java -jar sml-toolkit-<version>.jar -t sm -profile GO -annots /data/go/eval/gene_association.goa_human -filter noEC=IEA --notfound set=-1  -go /data/go/eval/gene_ontology.1_2.obo -mtype g -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm lin -ic resnik -gm bma -aspect BP -quiet -threads 4
 ```
 
-
-##### Supported measures
-
-
-
-Excerpt of available measures and metrics, please refer to http://www.semantic-measures-library.org/sml/index.php?q=sml-semantic-measures to consult the updated list of semantic measures available.
-
-Information content (IC):
-
-* Intrinsic 
-    * `sanchez`
-    * `zhou`
-    * `seco`
-
-* Extrinsic (requires annotations)
-    * `resnik` 
-
-Pairwise measures:
-
-* IC-based (requires an IC to be defined)
-    * `resnik` 
-    * `lin` (requires an IC)
-    * `schlicker` (requires an IC)
-    * `jc` (requires an IC)
-
-Groupwise measures:
-
-* Direct
-    * `to`
-    * `nto`
-    * `ui`
-    * `lp`
-    * `lee`
-    * `ali_and_deane`
-    * `gic`
-
-* Indirect (requires a pairwise measure)
-    * `min`
-    * `max`
-    * `avg`
-    * `avgnorm`
-    * `bma`
-    * `bmm`
-    * `maxnorm`
-
 ##### Extra documentation
 
 ###### Query file
@@ -251,7 +247,69 @@ GENE_ID_2 GO_TERM1;GO_TERM3
 ####  MeSH: Semantic Measures
 ---------------------------------------
 
-Coming soon (Already available through the generic XML interface)
+```
+WORK IN PROGRESS. Coming soon (Already available through the generic XML interface)
+```
+
+This profile is dedicated to the Medical Subject Headings (MeSH).
+It can be used to compute semantic measures scores between MeSH Descriptors or sets of MeSH Descriptors (e.g. documents annotated by MeSH descriptors).
+The MeSH must be in XML (2013 version supported), the sets of MeSH Descriptors must be in TSV format (Tabulated Separated Values, an example is provided below).
+The MeSH can be downloaded at http://changeme.com/
+
+```
+Discuss MeSH modifications
+```
+
+Please post a message to http://semantic-measures-library.org if you encounter any troubles or if you have any questions.
+More information and documentation can also be found on the website. 
+
+Below the parameters which can be used, command-line examples are also provided:
+
+##### Parameters
+
+* `-mesh <file path>` the path to the MeSH in XML format, other format are not supported (required).
+This file can be downloaded at http://www.changeme.com/
+
+* `-annots <file path>` the path to the annotation file. 
+Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content).
+This file is expected to be in XML format.
+
+* `-queries <file path>` the path to the file containing the queries.
+This file must contain the pairs of MeSH Descriptors or sets ids separated by tabs (required). 
+
+* `-output <file path>` output file in which the results will be flushed (required).
+
+* `-mtype <type>` the type of semantic measures you want to use: 
+	* `p` (pairwise) to compute semantic measures between two MeSH descriptors.
+	* `g` (groupwise) to compute semantic measures between two sets of MeSH descriptors.
+	Accepted values [p,g], default `p`. example `-mtype p`.
+
+		
+* `-notfound <flag>` defines the behavior of the program if an entry element of the query file cannot be found, (i) in pairwise measures: one of the two MeSH descriptors cannot be found, (ii) in groupwise measures: one of the sets ids cannot be found. Accepted values [exclude, stop, set=<value>]:
+	* `exclude` the entry will not be processed (a message will be logged if `-quiet` is not used)
+	* `stop`    the program will stop
+	* `set=<numerical value>` the entry will not be processed and the given value will be set as score (a message will be logged if `-quiet` is not used)
+	default value = 'exclude'. 
+			
+* `-pm <flag>` a String value defining the pairwise measure to use. See the list of available measures below (required for pairwise measures or indirect groupwise measures).
+
+
+* `-gm <flag>` a String value defining the direct groupwise measure or aggregation method (if an indirect groupwise measure must be used). See the list of available measures below (required for groupwise measures).
+
+
+* `-ic <flag>` a String value defining the Information Content method to use (required by some measures). See the list of IC available below. 
+
+
+* `-quiet` do not show warning messages
+
+
+* `-notr` do not perform a transitive reduction of the MeSH
+
+
+* `-notrannots` do not remove annotation redundancies i.e. if a set is annotated by two MeSH Descriptors {X,Y} and X is subsumed by Y in the MeSH, the MeSH descriptor Y will be removed from the annotations.
+
+* `-threads` Integer defining the number of threads to use, i.e. processes allocates to the execution, default 1. Setting more threads reduce the execution time on large processes, suited configuration depends on your computer configuration, use with care if you don't get the implications in term of computational resources which will be used. Note also that results will not be ordered according to query file ordering.
+
 
 ####  SnomedCT: Semantic Measures
 ---------------------------------------
