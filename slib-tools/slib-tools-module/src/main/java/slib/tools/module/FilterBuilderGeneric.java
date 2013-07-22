@@ -48,14 +48,14 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class FilterBuilderGeneric {
 
     /**
      *
      * @param gconf
-     * @return
+     * @return a filter
      * @throws SLIB_Ex_Critic
      */
     public static Filter buildFilter(Conf gconf) throws SLIB_Ex_Critic {
@@ -93,7 +93,7 @@ public class FilterBuilderGeneric {
     /**
      *
      * @param type
-     * @return
+     * @return true if the type of filter is supported
      */
     public static boolean supportType(String type) {
         return Arrays.asList(FilterCst.supportedTypes).contains(type);

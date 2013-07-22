@@ -558,7 +558,7 @@ public class SmCli implements SmlModuleCLI {
     /**
      *
      * @param icID
-     * @return
+     * @return the IC configuration associated to a given ID.
      */
     public ICconf getICconf(String icID) {
 
@@ -585,7 +585,7 @@ public class SmCli implements SmlModuleCLI {
 
     /**
      *
-     * @return
+     * @return the graph
      */
     public G getGraph() {
         return graph;
@@ -593,7 +593,7 @@ public class SmCli implements SmlModuleCLI {
 
     /**
      *
-     * @return
+     * @return the object used to retrieve the instances.
      */
     public InstancesAccessor getiAccessor() {
         return iAccessor;

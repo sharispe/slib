@@ -124,7 +124,7 @@ public class MatrixDouble<C, R> {
      * Return the row associated to the given element
      *
      * @param r
-     * @return
+     * @return the row associated to the given element
      */
     public Double[] getRow(R r) {
 
@@ -145,7 +145,8 @@ public class MatrixDouble<C, R> {
      *
      * @param colResource
      * @param rowResource
-     * @return
+     * @return the value associated to the column and row resources. null if no
+     * value exists.
      */
     public Double getValueCheckIndex(C colResource, R rowResource) {
         if (isInColumnIndex(colResource) && isInRowIndex(rowResource)) {
@@ -158,7 +159,7 @@ public class MatrixDouble<C, R> {
      *
      * @param colResource
      * @param rowResource
-     * @return
+     * @return the value associated to the column and row resources.
      * @throws SLIB_Ex_Critic
      */
     public Double getValue(C colResource, R rowResource) throws SLIB_Ex_Critic {
@@ -182,7 +183,7 @@ public class MatrixDouble<C, R> {
     /**
      *
      * @param r
-     * @return
+     * @return true if the given resource is in the row index.
      */
     public boolean isInRowIndex(R r) {
 
@@ -192,7 +193,7 @@ public class MatrixDouble<C, R> {
     /**
      *
      * @param r
-     * @return
+     * @return true if the given resource is in the column index.
      */
     public boolean isInColumnIndex(C r) {
         return columnIndex.keySet().contains(r);
@@ -200,7 +201,7 @@ public class MatrixDouble<C, R> {
 
     /**
      *
-     * @return
+     * @return the number of column.
      */
     public int getNbColumns() {
         return columns_number;
@@ -208,7 +209,7 @@ public class MatrixDouble<C, R> {
 
     /**
      *
-     * @return
+     * @return the number of row.
      */
     public int getNbRows() {
         return rows_number;
@@ -216,7 +217,7 @@ public class MatrixDouble<C, R> {
 
     /**
      *
-     * @return
+     * @return true if the matrix is square
      */
     public boolean isSquare() {
         return rows_number == columns_number;
@@ -240,7 +241,8 @@ public class MatrixDouble<C, R> {
 
     /**
      * @return the maximal value stored in the column of the given resource
-     * @throws IllegalArgumentException if the given value cannot be associated to a column
+     * @throws IllegalArgumentException if the given value cannot be associated
+     * to a column
      */
     public Double getMaxColumn(C v) {
 
@@ -260,7 +262,8 @@ public class MatrixDouble<C, R> {
 
     /**
      * @return the maximal value stored in the row of the given resource
-     * @throws IllegalArgumentException if the given value cannot be associated to a row
+     * @throws IllegalArgumentException if the given value cannot be associated
+     * to a row
      */
     public Double getMaxRow(R v) {
 

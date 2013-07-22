@@ -2,13 +2,13 @@ package slib.utils.i;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public interface CheckableValidity {
 
-	/**
+    /**
      *
-     * @return
+     * @return true if valid
      */
     public boolean isValid();
 }

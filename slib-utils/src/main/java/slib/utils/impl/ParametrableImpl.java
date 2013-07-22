@@ -34,7 +34,7 @@ public class ParametrableImpl implements Parametrable {
     /**
      *
      * @param name
-     * @return
+     * @return the value associated to the key.
      */
     @Override
     public Object getParameter(String name) {
@@ -66,7 +66,7 @@ public class ParametrableImpl implements Parametrable {
     /**
      *
      * @param pname
-     * @return
+     * @return true if the parameter exists.
      */
     @Override
     public boolean existsParam(String pname) {
@@ -75,7 +75,8 @@ public class ParametrableImpl implements Parametrable {
 
     /**
      * Can be null
-     * @return 
+     *
+     * @return the map of parameters and associated values.
      */
     @Override
     public Map<String, Object> getParams() {

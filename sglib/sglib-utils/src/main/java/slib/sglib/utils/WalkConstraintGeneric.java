@@ -13,8 +13,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * Class used to facilitate the use of WalkConstraint over graph, only
- * considering the vertices associated to {@link VType#CLASS}.
+ * Class used to facilitate the use of WalkConstraint over graph.
  *
  * @author Harispe Sébastien
  */

@@ -42,7 +42,7 @@ import java.util.Set;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class SetUtils {
 
@@ -52,7 +52,7 @@ public class SetUtils {
      * @param <X>
      * @param a
      * @param b
-     * @return
+     * @return the union
      */
     public static <X> Set<X> union(Collection<X> a, Collection<X> b) {
 
@@ -67,7 +67,7 @@ public class SetUtils {
      * @param <X>
      * @param anc_setA
      * @param anc_setB
-     * @return
+     * @return the intersection
      */
     public static <X> Set<X> intersection(Collection<X> anc_setA, Collection<X> anc_setB) {
         Set<X> inter = new HashSet<X>(anc_setA);
@@ -79,7 +79,7 @@ public class SetUtils {
      *
      * @param <X>
      * @param nbOccurrence
-     * @return
+     * @return the maximum number as specified as a value of the map.
      */
     public static <X> double getMax(HashMap<X, Integer> nbOccurrence) {
 
@@ -94,8 +94,8 @@ public class SetUtils {
     }
 
     /**
-     * Build a Set<X> containing the given object of type X.
-     * If the object is null, null is returned
+     * Build a Set<X> containing the given object of type X. If the object is
+     * null, null is returned
      *
      * @param <X>
      * @param o

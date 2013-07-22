@@ -52,7 +52,7 @@ import slib.utils.impl.OBOconstants;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class IndexerOBO {
 
@@ -72,7 +72,7 @@ public class IndexerOBO {
      * @param factory
      * @param filepath
      * @param defaultNamespace
-     * @return
+     * @return the index.
      * @throws SLIB_Exception
      */
     public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {

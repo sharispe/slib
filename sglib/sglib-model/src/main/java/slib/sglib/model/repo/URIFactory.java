@@ -50,7 +50,7 @@ public interface URIFactory{
      *
      * @param prefix
      * @param reference
-     * @return
+     * @return true if the prefix is loaded
      * @throws SLIB_Ex_Critic
      */
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic;
@@ -58,7 +58,7 @@ public interface URIFactory{
 
     /**
      * @param ns_prefix
-     * @return
+     * @return the namespace associated to the prefix
      */
     public String getNamespace(String ns_prefix);
     
@@ -72,7 +72,7 @@ public interface URIFactory{
      * @param sURI
      * @param useLoadedPrefix set to true loaded prefixes will be used.
      * @throws IllegalArgumentException if the URI is not well formed no error if the prefix do not exists
-     * @return 
+     * @return the URI
      */
     public URI createURI(String sURI,boolean useLoadedPrefix);
     

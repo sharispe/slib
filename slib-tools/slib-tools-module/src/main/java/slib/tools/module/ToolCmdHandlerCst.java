@@ -63,7 +63,7 @@ public abstract class ToolCmdHandlerCst {
 
     /**
      *
-     * @return
+     * @return the name of the command line
      */
     public String getAppCmdName() {
         return appCmdName;
@@ -71,7 +71,7 @@ public abstract class ToolCmdHandlerCst {
 
     /**
      *
-     * @return
+     * @return true if the application is in debug mode
      */
     public boolean getDebugMode() {
         return debugMode;
@@ -79,7 +79,7 @@ public abstract class ToolCmdHandlerCst {
 
     /**
      *
-     * @return
+     * @return the option order
      */
     public Map<Option, Integer> getOptionOrder() {
         return optionsOrder;

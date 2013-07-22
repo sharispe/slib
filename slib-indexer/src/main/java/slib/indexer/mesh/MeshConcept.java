@@ -9,26 +9,27 @@ import java.util.Set;
 
 /**
  * Dummy representation of a Mesh Concept
+ *
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
-public class MeshConcept{
-    
+public class MeshConcept {
+
     String descriptorUI;
     String descriptorName;
     Set<String> treeNumberList;
     Set<String> descriptions; // Term as string
-    
+
     /**
      *
      */
-    public MeshConcept(){
+    public MeshConcept() {
         treeNumberList = new HashSet<String>();
         descriptions = new HashSet<String>();
     }
 
     /**
      *
-     * @return
+     * @return the descriptor id
      */
     public String getDescriptorUI() {
         return descriptorUI;
@@ -44,7 +45,7 @@ public class MeshConcept{
 
     /**
      *
-     * @return
+     * @return the name
      */
     public String getDescriptorName() {
         return descriptorName;
@@ -57,23 +58,20 @@ public class MeshConcept{
     public void setDescriptorName(String descriptorName) {
         this.descriptorName = descriptorName;
     }
-    
-    
+
     /**
      *
      * @param treeNumber
      */
-    public void addTreeNumber(String treeNumber){
+    public void addTreeNumber(String treeNumber) {
         treeNumberList.add(treeNumber);
     }
-    
+
     @Override
-    public String toString(){
-        String out = descriptorUI +"\n";
-        out += "\t"+descriptorName+"\n";
-        out += "\t"+treeNumberList+"\n";
+    public String toString() {
+        String out = descriptorUI + "\n";
+        out += "\t" + descriptorName + "\n";
+        out += "\t" + treeNumberList + "\n";
         return out;
     }
-    
-    
 }

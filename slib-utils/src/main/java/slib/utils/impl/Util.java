@@ -69,7 +69,7 @@ public class Util {
     /**
      *
      * @param val
-     * @return
+     * @return the integer associated to the string
      * @throws SLIB_Ex_Critic
      */
     public static Integer stringToInteger(String val) throws SLIB_Ex_Critic {
@@ -86,7 +86,7 @@ public class Util {
     /**
      *
      * @param val
-     * @return
+     * @return the Double associated to the string.
      * @throws SLIB_Ex_Critic
      */
     public static Double stringToDouble(String val) throws SLIB_Ex_Critic {
@@ -103,7 +103,7 @@ public class Util {
     /**
      *
      * @param val
-     * @return
+     * @return the Long associated to the string.
      * @throws SLIB_Ex_Critic
      */
     public static Long stringToLong(String val) throws SLIB_Ex_Critic {
@@ -116,6 +116,4 @@ public class Util {
         }
         return a;
     }
-    
-    
 }

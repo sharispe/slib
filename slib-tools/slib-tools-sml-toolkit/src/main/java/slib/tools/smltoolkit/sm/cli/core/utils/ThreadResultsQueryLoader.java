@@ -57,7 +57,7 @@ public class ThreadResultsQueryLoader {
 
     /**
      *
-     * @return
+     * @return the number of entries which have been skipped.
      */
     public int getSkipped() {
         return skipped;
@@ -73,7 +73,7 @@ public class ThreadResultsQueryLoader {
 
     /**
      *
-     * @return
+     * @return the number of scores which have be set.
      */
     public int getSetValue() {
         return setValue;
@@ -89,7 +89,7 @@ public class ThreadResultsQueryLoader {
 
     /**
      *
-     * @return
+     * @return the size of the job.
      */
     public int getJobSize() {
         return jobSize;

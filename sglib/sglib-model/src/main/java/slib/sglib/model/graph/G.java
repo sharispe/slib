@@ -268,7 +268,6 @@ public interface G {
      *
      * @param v the value to test
      * @return a boolean : true if the vertex exists else return false
-     * @see V#equals(Object)
      */
     public boolean containsVertex(URI v);
 

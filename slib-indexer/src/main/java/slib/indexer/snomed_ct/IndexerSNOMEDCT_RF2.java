@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
-import org.openrdf.model.Value;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.indexer.IndexElementBasic;
@@ -43,13 +42,10 @@ public class IndexerSNOMEDCT_RF2 {
      * @param description_file
      * @param defaultNamespace
      * @param EXCLUDE_INACTIVE_DESCRIPTIONS
-     * @param EXCLUDE_OLD_DESCRIPTIONS
-     * @return
+     * @return the index.
      * @throws SLIB_Exception
      */
     public IndexHash buildIndex(URIFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
-
-
 
         repo = factory;
         logger.info("Building Index");
@@ -112,15 +108,12 @@ public class IndexerSNOMEDCT_RF2 {
     /**
      * Same as builIndex removing the index not associated to a loaded vertex
      *
-     * @see #buildIndex(slib.sglib.model.repo.DataFactory, java.lang.String,
-     * java.lang.String)
      * @param factory
      * @param description_file
      * @param defaultNamespace
      * @param graph
      * @param EXCLUDE_INACTIVE_DESCRIPTIONS
-     * @param EXCLUDE_OLD_DESCRIPTIONS
-     * @return
+     * @return the index.
      * @throws SLIB_Exception
      */
     public IndexHash buildIndex(URIFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {

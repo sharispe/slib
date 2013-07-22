@@ -104,7 +104,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the version of the module
      */
     public String getVersion() {
         return version;
@@ -112,7 +112,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the name of the application
      */
     public String getAppName() {
         return appName;
@@ -120,7 +120,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the reference associated to the application
      */
     public String getReference() {
         return reference;
@@ -128,7 +128,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the description of the application
      */
     public String getDescription() {
         return description;
@@ -136,7 +136,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the contact associated to the application
      */
     public String getContact() {
         return contact;
@@ -144,7 +144,7 @@ public abstract class ModuleCst {
 
     /**
      *
-     * @return
+     * @return the version of the snapshot
      */
     public String getVersionSnapshot() {
         return versionSnapshot;

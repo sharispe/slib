@@ -39,7 +39,7 @@ import org.openrdf.model.URI;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class IndexHash {
 
@@ -47,7 +47,7 @@ public class IndexHash {
 
     /**
      *
-     * @return
+     * @return the complete mapping
      */
     public HashMap<URI, IndexedElement> getMapping() {
         return mapping;
@@ -56,13 +56,12 @@ public class IndexHash {
     /**
      *
      * @param v
-     * @return
+     * @return the value associated to the given URI.
      */
     public IndexedElement valuesOf(URI v) {
         return mapping.get(v);
     }
-    
-    
+
     /**
      *
      * @param x
@@ -72,14 +71,12 @@ public class IndexHash {
         mapping.put(x, o);
     }
 
-    
     /**
      *
      * @param x
-     * @return
+     * @return true is the given URI is indexed
      */
     public boolean containsIndexFor(URI x) {
         return mapping.containsKey(x);
     }
-    
 }

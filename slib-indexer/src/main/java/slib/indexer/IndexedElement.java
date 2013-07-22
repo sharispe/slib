@@ -40,46 +40,46 @@ import org.openrdf.model.Value;
  * @author Harispe Sébastien <harispe.sebastien@gmail.com>
  */
 public interface IndexedElement {
-    
-    
+
     /**
      *
      * @param d
      */
     public void addDescription(String d);
+
     /**
      *
      * @param d
      */
     public void addDescriptions(Collection<String> d);
+
     /**
      *
-     * @return
+     * @return the descriptions
      */
     public Set<String> getDescriptions();
-    
+
     /**
      *
-     * @return
+     * @return the value
      */
     public Value getValue();
+
     /**
      *
-     * @return
+     * @return the preferred description
      */
     public String getPreferredDescription();
+
     /**
      *
      * @param d
      */
     public void setPreferredDescription(String d);
-    
-    
+
     /**
      *
      * @param d
      */
     public void addDescriptions(String[] d);
-    
-    
 }

@@ -524,7 +524,7 @@ public class XMLConfLoaderGeneric {
 
     /**
      *
-     * @return
+     * @return the linked list of configurations.
      */
     public LinkedList<GraphConf> getGraphConfs() {
         return graphConfs;

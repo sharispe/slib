@@ -179,7 +179,7 @@ public class Dijkstra {
      * @return a Map containing the shortest path from the given source to the
      * other vertices of the graph.
      */
-    public Map<URI, Double> shortestPath(URI source) {
+    public ConcurrentHashMap<URI, Double> shortestPath(URI source) {
 
         logger.debug("\tComputing Shortest path... from " + source + "  " + ws);
 

@@ -54,7 +54,7 @@ public class XMLConfUtils {
      * 9696 Example of value -filter EC=IEA,XXX:Taxon=9696
      *
      * @param filterConfAsString
-     * @return
+     * @return a string corresponding to the filter configuration.
      * @throws SLIB_Ex_Critic
      */
     public static String buildSML_FilterGAF2_XML_block(String filterConfAsString) throws SLIB_Ex_Critic {

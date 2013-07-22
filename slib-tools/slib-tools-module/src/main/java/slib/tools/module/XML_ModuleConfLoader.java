@@ -43,9 +43,6 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class XML_ModuleConfLoader {
 
-    /**
-     *
-     */
     public XMLConfLoaderGeneric generic;
 
     /**
@@ -62,7 +59,7 @@ public class XML_ModuleConfLoader {
      *
      * @param e
      * @param a
-     * @return
+     * @return the value associated to the attribute.
      */
     public String getAttValue(Element e, String a) {
 

@@ -53,7 +53,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class Indexer_MESH_XML {
 
@@ -67,7 +67,7 @@ public class Indexer_MESH_XML {
      * Return parent ID i.e. giving C10.228.140.300.275.500 will return
      * C10.228.140.300.275
      *
-     * @return
+     * @return the ID of the parent node
      */
     private String getParentId(String id) {
 
@@ -96,7 +96,7 @@ public class Indexer_MESH_XML {
      * @param factory
      * @param filepath
      * @param defaultNamespace
-     * @return
+     * @return the index
      * @throws SLIB_Exception
      */
     public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
@@ -118,8 +118,8 @@ public class Indexer_MESH_XML {
 
             logger.info("Number of descriptor loaded " + concepts.size());
             logger.info("Generating relationships ");
-            
-            
+
+
 
             // create relationships 
             for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
@@ -128,12 +128,12 @@ public class Indexer_MESH_XML {
 
                 String uriConceptAsString = default_namespace + c.getDescriptorUI();
                 URI uriConcept = factory.createURI(uriConceptAsString);
-                
-                IndexElementBasic i = new IndexElementBasic(uriConcept,c.descriptorName);
+
+                IndexElementBasic i = new IndexElementBasic(uriConcept, c.descriptorName);
                 i.addDescriptions(c.descriptions);
-                
+
                 index.addValue(uriConcept, i);
-                                
+
             }
 
         } catch (Exception ex) { // sorry

@@ -67,7 +67,7 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
@@ -822,7 +822,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
     /**
      *
-     * @return
+     * @return the allocated size of the bench
      */
     public Integer getBenchSize() {
         return benchSize;

@@ -119,7 +119,7 @@ public interface GWS {
      * @return the default weight associated to the predicate. Null if no weight
      * is associated to the predicate.
      */
-    Double getWeight(URI e);
+    Double getWeight(URI predicate);
 
     /**
      * Set the default weight for the specified URI. 

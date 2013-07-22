@@ -117,7 +117,7 @@ public class IndexerWordNetBasic {
     /**
      *
      * @param query
-     * @return
+     * @return the URIs associated to the given string
      */
     public Set<URI> get(String query) {
         return stringToSynsetIndex.get(query);
@@ -143,7 +143,7 @@ public class IndexerWordNetBasic {
 
     /**
      *
-     * @return
+     * @return the complete index.
      */
     public Map<String, Set<URI>> getIndex() {
         return stringToSynsetIndex;

@@ -79,7 +79,7 @@ public class IndexElementBasic implements IndexedElement{
 
     /**
      *
-     * @return
+     * @return the descriptions
      */
     @Override
     public Set<String> getDescriptions() {
@@ -88,7 +88,7 @@ public class IndexElementBasic implements IndexedElement{
 
     /**
      *
-     * @return
+     * @return the preferred description
      */
     @Override
     public String getPreferredDescription() {
@@ -126,7 +126,7 @@ public class IndexElementBasic implements IndexedElement{
 
     /**
      *
-     * @return
+     * @return the value
      */
     @Override
     public Value getValue() {

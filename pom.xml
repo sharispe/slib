@@ -104,7 +104,7 @@
                                 <goal>aggregate</goal>
                                 <goal>aggregate-jar</goal>
                             </goals>
-                            <phase>site</phase>
+                            <phase>install</phase>
                         </execution>
                     </executions>
                 </plugin>
