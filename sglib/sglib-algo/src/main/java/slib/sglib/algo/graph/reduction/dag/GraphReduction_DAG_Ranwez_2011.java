@@ -115,7 +115,6 @@ public class GraphReduction_DAG_Ranwez_2011 {
      * to consider,
      *
      *
-     * @param factory
      * @param graph	the graph
      * @param rootURI	the node to consider as root of the graph
      * @param edgesTypes	Collection of edge type corresponding to edge types of

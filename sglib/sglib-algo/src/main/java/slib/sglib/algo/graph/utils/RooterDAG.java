@@ -82,14 +82,12 @@ public class RooterDAG {
      * (no unique root) <br/>
      *
      * @param g the graph to root
-     * @param etypeDAG the set of edge types used to detect the underlying DAG.
-     * The inverse of etypeDAG is used to detect uDAG roots.
+     * @param wc the constraints associated to the walk.
      * @param checkUnderlyingDAG if true DAG conformity of the underlying graph
      * induced by etypeDAG is checked. If checkUnderlyingDAG is set to true and
      * uDAG DAG property is not validated an critical exception is
      * thrown.
      * @param rootUri 
-     * @param dir 
      * @return the URI of the root
      * @throws SLIB_Ex_Critic  
      *
@@ -151,7 +149,6 @@ public class RooterDAG {
      * @param g 
      * @param rootUri 
      * @return the URI of the root
-     * @see RooterDAG#rootUnderlyingDAG(G, Set, boolean, URI)
      * @throws SLIB_Ex_Critic 
      */
     public static URI rootUnderlyingTaxonomicDAG(G g, URI rootUri) throws SLIB_Ex_Critic {

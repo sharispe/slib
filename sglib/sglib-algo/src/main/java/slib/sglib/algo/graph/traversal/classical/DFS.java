@@ -82,10 +82,6 @@ public class DFS implements GraphTraversal {
         init();
     }
 
-    /**
-     * Shortcut of {@link DFS#DFS(G, Set, Set)}
-     *
-     */
     public DFS(G g, URI source, WalkConstraint wc) {
         this(g, SetUtils.buildSet(source), wc);
     }
@@ -98,7 +94,7 @@ public class DFS implements GraphTraversal {
         logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources);
         logger.debug("Considering Walconstraint " + wc);
         logger.debug("Start DFS");
-        
+
         for (URI r : sources) {
             performDFS(r);
         }
@@ -129,19 +125,11 @@ public class DFS implements GraphTraversal {
         }
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public boolean hasNext() {
         return current_id > 0;
     }
 
-    /**
-     *
-     * @return
-     */
     @Override
     public URI next() {
         removePerformed = false;
@@ -156,7 +144,7 @@ public class DFS implements GraphTraversal {
      * impact DFS behavior and coherence.
      *
      * @return the data structure on which the iterator relies i.e. precomputed
-     * topological ordering as an {@link ArrayList} of {@link V}
+     * topological ordering as a List of URI.
      */
     public List<URI> getTraversalOrder() {
         return topoSort;

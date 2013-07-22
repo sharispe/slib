@@ -61,7 +61,7 @@ public class GraphAccessor {
      * <li> ? RDF.TYPE v </li>
      * </ul>
      *
-     * @parm g the graph
+     * @param graph the graph
      * @return a set of URI corresponding to the classes of the graph
      */
     public static Set<URI> getClasses(G graph) {
@@ -94,7 +94,7 @@ public class GraphAccessor {
      * RDFS.CONTAINER will be considered as instance...
      * </ul>
      *
-     * @parm g the graph
+     * @param graph the graph
      * @return a set of URI corresponding to the classes of the graph
      */
     public static Set<URI> getInstances(G graph) {

@@ -53,7 +53,6 @@ import slib.sglib.utils.WalkConstraintUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
-
 /**
  * Class used to analyze depth of vertices composing an acyclic graph
  *
@@ -70,7 +69,6 @@ public class DepthAnalyserAG {
      * Create a DepthAnalyserAG object considering a particular acyclic graph
      * and set of edge types Note that graph acyclicity is not evaluated.
      *
-     * @param factory
      * @param g The graph to consider
      * @param wc
      */

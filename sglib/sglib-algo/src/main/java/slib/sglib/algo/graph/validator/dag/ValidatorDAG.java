@@ -55,8 +55,6 @@ import slib.utils.impl.SetUtils;
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
  *
- * @todo use {@link WalkConstraints} to simplify the code and the parameters
- * passed to the methods.
  * @author Sebastien Harispe
  */
 public class ValidatorDAG {
@@ -76,8 +74,7 @@ public class ValidatorDAG {
      *
      * @param graph
      * @param startingURIs
-     * @param edgesTypes
-     * @param dir
+     * @param wc
      * @return true if the graph is a DAG
      * @throws SLIB_Ex_Critic
      */
@@ -180,13 +177,12 @@ public class ValidatorDAG {
     /**
      * Check if the underlying graph defined by the edges of the given edge
      * types and build using a traversal starting from the given root node is a
-     * DAG. shortcut of {@link ValidatorDAG#isDag(G, Set, Set)} only considering
-     * the given set of edge types
+     * DAG. shortcut of {@link ValidatorDAG#isDag(G, WalkConstraint)} only
+     * considering the given set of edge types
      *
      * @param graph the graph on which the evaluation has to be made
      * @param rootURI
-     * @param edgeTypes
-     * @param dir
+     * @param wc
      * @return true if the the (underlying) graph reduction is a DAG
      * @throws SLIB_Ex_Critic
      *
@@ -198,7 +194,7 @@ public class ValidatorDAG {
     /**
      *
      * @param graph
-     * @return
+     * @return true if the graph contains a taxonomic graph.
      * @throws SLIB_Ex_Critic
      */
     public boolean containsTaxonomicDag(G graph) throws SLIB_Ex_Critic {
@@ -207,21 +203,21 @@ public class ValidatorDAG {
     }
 
     /**
-     * Check if the underlying graph defined by given {@link WalkConstraint} is a DAG. shortcut of
-     * {@link ValidatorDAG#isDag(G, Set, Set)} considering the given edge types
-     * and the root vertices according to the inverse of the specified edge
-     * types as root (see {@link ValidatorDAG#getDAGRoots(G, EType)})
+     * Check if the underlying graph defined by given {@link WalkConstraint} is
+     * a DAG. shortcut of {@link ValidatorDAG#isDag(G, WalkConstraint)}
+     * considering the given edge types and the root vertices according to the
+     * inverse of the specified edge types as root (see
+     * {@link ValidatorDAG#getDAGRoots(G, WalkConstraint)})
      *
      * @param graph the graph on which the evaluation has to be made
-     * @param edgeTypes
-     * @param dir
+     * @param wc
      * @return true if the the (underlying) graph reduction is a DAG
      *
      * @throws SLIB_Ex_Critic
      */
     public boolean isDag(G graph, WalkConstraint wc) throws SLIB_Ex_Critic {
 
-        logger.debug("Check DAG property of the graph "+graph.getURI()+" considering the walkconstraint "+wc);
+        logger.debug("Check DAG property of the graph " + graph.getURI() + " considering the walkconstraint " + wc);
         Set<URI> startingNodes = getDAGRoots(graph, WalkConstraintUtils.getInverse(wc, false));
 
         logger.info("Starting process from " + startingNodes.size() + " vertices");
@@ -242,8 +238,7 @@ public class ValidatorDAG {
      * Do not check if the graph is a DAG
      *
      * @param g the graph on which the root vertices need to be retrieve
-     * @param etypes e.g. if taxonomic graph use SUPERCLASSOF
-     * @param dir
+     * @param wc
      * @return The set of vertices matching the predefined conditions
      */
     public Set<URI> getDAGRoots(G g, WalkConstraint wc) {
@@ -263,7 +258,7 @@ public class ValidatorDAG {
     /**
      * Check if the given graph contains a unique underlying rooted taxonomic
      * graph Do not check if the graph is a DAG Shortcut of
-     * {@link ValidatorDAG#getDAGRoots(G, EType)} == 1 only considering
+     * {@link ValidatorDAG#getDAGRoots(G, WalkConstraint)} == 1 only considering
      * SUBCLASSOF relationships
      *
      * @param g the graph on which the test is performed
@@ -299,8 +294,8 @@ public class ValidatorDAG {
      * If the given graph does not contain a unique underlying rooted taxonomic
      * graph an SGL_Exception_Critical exception is thrown.
      *
-     * Calls {@link ValidatorDAG#getDAGRoots(G, EType)} only considering
-     * SUBCLASSOF relationships
+     * Calls {@link ValidatorDAG#getDAGRoots(G, WalkConstraint)} only
+     * considering SUBCLASSOF relationships
      *
      * @param g the graph
      * @return the root vertex
@@ -308,7 +303,6 @@ public class ValidatorDAG {
      * @throws IllegalArgumentException if the underlying taxonomic graph of the
      * given graph contains multiple roots.
      *
-     * @see
      */
     public URI getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
 
@@ -316,7 +310,7 @@ public class ValidatorDAG {
         Set<URI> roots = getDAGRoots(g, wc);
 
         if (roots.size() != 1) {
-            throw new IllegalArgumentException("Multiple roots detected in the underlying taxonomic graph of graph "+g.getURI());
+            throw new IllegalArgumentException("Multiple roots detected in the underlying taxonomic graph of graph " + g.getURI());
         }
 
         return roots.iterator().next();
@@ -326,7 +320,9 @@ public class ValidatorDAG {
      * Do not check if the graph is a DAG
      *
      * @param g
-     * @return
+     * @return the vertices which can be considered as a root, i.e. all the
+     * vertices which are not subsumed by an other vertex through a taxonomic
+     * relationship.
      */
     public Set<URI> getTaxonomicDAGRoots(G g) {
         return getDAGRoots(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
@@ -338,8 +334,7 @@ public class ValidatorDAG {
      *
      * @param g the graph to consider
      * @param rootURI the URI to test
-     * @param edgesType the edge type to consider only OUT direction is
-     * considered
+     * @param wc the edge type to consider only OUT direction is considered
      * @return true if the graph defined by the specified constraint is rooted
      * by the given URI
      */
@@ -357,7 +352,8 @@ public class ValidatorDAG {
     /**
      * @param g
      * @param root
-     * @return
+     * @return true if the graph contains a taxonomic graph which is rooted by a
+     * unique vertex.
      * @throws SLIB_Ex_Critic
      */
     public boolean isUniqueRootedTaxonomicDag(G g, URI root) throws SLIB_Ex_Critic {
@@ -371,9 +367,8 @@ public class ValidatorDAG {
      *
      * @param g
      * @param root
-     * @param edgesType
-     * @param dir
-     * @return
+     * @param wc
+     * @return true if the graph is a DAG and rooted by a unique vertex.
      * @throws SLIB_Ex_Critic
      */
     public boolean isUniqueRootedDagRoot(G g, URI root, WalkConstraint wc) throws SLIB_Ex_Critic {
@@ -391,7 +386,7 @@ public class ValidatorDAG {
 
     /**
      *
-     * @return
+     * @return the last edge which has been processed during the treatment.
      */
     public E getLastEdge() {
         return lastEdge;

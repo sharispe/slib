@@ -67,16 +67,6 @@ public class RVF_DAG extends RVF {
      * @param g the Semantic Graph to consider
      * @param wc the walk constraint defining the way to reach the vertices
      * which must be returned by the object
-     * @param acceptIncoherences define if an error must be thrown if an
-     * incoherence is detected. An incoherence can be detected if no topological
-     * order can be obtained with regard to the specified walk constraints, i.e.
-     * if the subgraph defined by the walk constraints is not a Directed Acyclic
-     * Graph (DAG). Indeed, this class take advantage of optimizations which can
-     * only be applied to DAG. If you accept incoherences only a warning will be
-     * logged, if you don't, an exception will be thrown if any incoherence is
-     * detected. Accepting incoherences can lead to highly incoherent results,
-     * special cares must be taken. DO NOT set this parameter to true if you
-     * don't understand the implications.
      */
     public RVF_DAG(G g, WalkConstraint wc) {
         super(g, wc);
@@ -201,8 +191,6 @@ public class RVF_DAG extends RVF {
     /**
      * Return the set of terminal vertices (leaves) reachable for all vertices
      * composing the loaded graph
-     *
-     * @TODO Precise if the process is exclusive or inclusive
      *
      * @return an HashMap key V, value the set of terminal vertices reachable
      * from the key Set<V>

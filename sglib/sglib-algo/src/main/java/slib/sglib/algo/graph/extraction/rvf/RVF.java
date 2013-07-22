@@ -116,7 +116,6 @@ public class RVF {
      * vertices.
      *
      * @param queryVertices 
-     * @TODO optimize
      * @return an Map key V value the set of vertices reachable from the key
      */
     public Map<URI, Set<URI>> getRV(Set<URI> queryVertices) {

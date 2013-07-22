@@ -80,9 +80,10 @@ public class Dijkstra {
 
     /**
      * Edge weights set to 1
+     *
      * @param g
      * @param walconstraints
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     public Dijkstra(G g, WalkConstraint walconstraints) throws SLIB_Ex_Critic {
         this.g = g;
@@ -95,7 +96,7 @@ public class Dijkstra {
      * considering a given non negative weighting scheme
      *
      * @param g the graph on which the shortest path has to be computed
-     * @param setEdgeTypes the set of edge types to consider
+     * @param walconstraints the constraint associated to the search
      * @param weightingScheme a
      * @throws SLIB_Ex_Critic
      */
@@ -175,9 +176,10 @@ public class Dijkstra {
     /**
      *
      * @param source
-     * @return
+     * @return a Map containing the shortest path from the given source to the
+     * other vertices of the graph.
      */
-    public ConcurrentHashMap<URI, Double> shortestPath(URI source) {
+    public Map<URI, Double> shortestPath(URI source) {
 
         logger.debug("\tComputing Shortest path... from " + source + "  " + ws);
 
@@ -240,10 +242,10 @@ public class Dijkstra {
         Double x = Double.MAX_VALUE;
 
         URI next = null;   // graph not connected, or no unvisited vertices
-        
+
         for (URI v : dist.keySet()) {
 
-            
+
             if (!visited.get(v) && dist.get(v) != null && dist.get(v) < x) {
                 next = v;
                 x = dist.get(v);
