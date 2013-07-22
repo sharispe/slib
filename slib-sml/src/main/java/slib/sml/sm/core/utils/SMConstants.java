@@ -124,7 +124,7 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
 /**
  * Class used to defined Semantic Measures constants such as measures flags.
  *
- * @todo requires to be split in a smart way.
+ * TODO requires to be split in a smart way.
  *
  * @author Sebastien Harispe
  *

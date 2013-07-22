@@ -63,7 +63,7 @@ public class ICi_probOccurence_propagatted implements ICtopo {
     /**
      *
      * @param allNbPathLeadingToAllVertex
-     * @return
+     * @return the IC of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> allNbPathLeadingToAllVertex) throws SLIB_Ex_Critic {

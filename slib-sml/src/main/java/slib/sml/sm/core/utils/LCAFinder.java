@@ -33,7 +33,6 @@ package slib.sml.sm.core.utils;
 
 import java.util.Set;
 import org.openrdf.model.URI;
-import slib.sglib.model.graph.G;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -46,9 +45,6 @@ public interface LCAFinder {
      * Compute the set of Disjoint Common Ancestors of a pair of concepts The
      * processed graph do not require to be transitively reduced.
      *
-     * @param graph the graph in which the search requires to be performed An
-     * exception is thrown if the queried vertices are not expressed in the
-     * graph
      * @param a the first query vertex
      * @param b the second query vertex
      * @return the set of vertices corresponding to the DCA of vertices a and b.

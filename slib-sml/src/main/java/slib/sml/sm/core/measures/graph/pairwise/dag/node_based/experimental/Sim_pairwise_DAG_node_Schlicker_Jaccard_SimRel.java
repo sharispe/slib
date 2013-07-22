@@ -50,15 +50,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Schlicker_Jaccard_SimRel implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -83,7 +75,7 @@ public class Sim_pairwise_DAG_node_Schlicker_Jaccard_SimRel implements Sim_DAG_n
      * @param ic_b
      * @param ic_mica
      * @param p_mica
-     * @return
+     * @return the similarity
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica) {
 

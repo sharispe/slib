@@ -54,15 +54,7 @@ import slib.utils.ex.SLIB_Ex_Warning;
  */
 public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+    
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 

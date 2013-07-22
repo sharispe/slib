@@ -43,7 +43,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public interface ICcorpus {
 
@@ -51,7 +51,7 @@ public interface ICcorpus {
      *
      * @param conf
      * @param manager
-     * @return
+     * @return The IC of all the URI associated to classes defined in the graph linked to the engine.
      * @throws SLIB_Exception
      */
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception;

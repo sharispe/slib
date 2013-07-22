@@ -55,11 +55,11 @@ import slib.utils.impl.MatrixDouble;
 public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {
 
     /**
-     * @see Sim_groupwise_Max to compute max values
+     * See Sim_groupwise_Max to compute max values
      * @param maxScore_sA_vs_sB
      * @param maxScore_sA_vs_sA
      * @param maxScore_sB_vs_sB
-     * @return
+     * @return the similarity
      */
     public double sim(double maxScore_sA_vs_sB, double maxScore_sA_vs_sA, double maxScore_sB_vs_sB) {
 

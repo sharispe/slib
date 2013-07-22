@@ -64,7 +64,7 @@ public class ICi_sanchez_2011_b_adapted extends LogBasedMetric implements ICtopo
     /**
      *
      * @param allNbOfReachableLeaves
-     * @return
+     * @return the IC of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> allNbOfReachableLeaves) throws SLIB_Ex_Critic {

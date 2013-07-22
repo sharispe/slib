@@ -55,15 +55,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
     public static final String beta_param_name = "beta";
     private double beta = 0.;
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+ 
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -98,7 +90,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
      * @param ic_mica
      * @param p_mica
      * @param beta
-     * @return
+     * @return the similarity
      * @throws SLIB_Ex_Critic
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {

@@ -49,14 +49,14 @@ import slib.sml.sm.core.engine.SM_Engine;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class VectorWeight_Chabalier_Propaggated {
 
     /**
      *
-     * @param g
-     * @return
+     * @param engine
+     * @return the vector weights (propagated)
      */
     public static Map<URI, Double> compute(SM_Engine engine) {
 

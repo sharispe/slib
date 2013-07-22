@@ -71,7 +71,7 @@ public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
      * @param ancestors_A
      * @param ancestors_B
      * @param maxDepths
-     * @return
+     * @return the similarity
      * @throws SLIB_Exception
      */
     public double sim(
@@ -117,7 +117,7 @@ public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
      * @param d_b
      * @param d_mrca
      * @param sameHierarchy
-     * @return
+     * @return penalization factor
      */
     private double computePF(double d_a, double d_b, double d_mrca, boolean sameHierarchy) {
 

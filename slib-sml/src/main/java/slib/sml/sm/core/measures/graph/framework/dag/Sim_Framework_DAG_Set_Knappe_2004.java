@@ -76,7 +76,7 @@ public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abs
 
     /**
      *
-     * @return
+     * @return k parameter
      */
     public double getK() {
         return k;

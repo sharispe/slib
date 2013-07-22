@@ -84,7 +84,7 @@ public class Sim_pairwise_DAG_edge_Li_2003 extends Sim_DAG_edge_abstract {
      * @param ancestors_A
      * @param ancestors_B
      * @param maxDepths
-     * @return
+     * @return the similarity
      * @throws SLIB_Exception
      */
     public double sim(double sp_AtoB,

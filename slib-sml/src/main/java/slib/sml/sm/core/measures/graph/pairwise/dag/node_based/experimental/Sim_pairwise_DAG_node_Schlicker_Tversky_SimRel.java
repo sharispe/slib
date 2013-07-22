@@ -61,15 +61,7 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
     private double alpha = 0.5;
     private double beta = 0.5;
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
@@ -109,7 +101,7 @@ public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_n
      * @param p_mica
      * @param alpha
      * @param beta
-     * @return
+     * @return the similaritys
      * @throws SLIB_Ex_Critic
      */
     public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double alpha, double beta) throws SLIB_Ex_Critic {

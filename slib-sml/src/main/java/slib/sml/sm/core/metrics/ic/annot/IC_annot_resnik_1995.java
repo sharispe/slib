@@ -59,7 +59,7 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
     /**
      *
      * @param nbOccurences
-     * @return
+     * @return the IC of all URIs specified in the given map. 
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> nbOccurences) throws SLIB_Ex_Critic {
@@ -91,7 +91,7 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
      *
      * @param conf
      * @param manager
-     * @return
+     * @return The IC of the classes composing the graph associated to the engine.
      * @throws SLIB_Exception
      */
     @Override

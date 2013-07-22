@@ -60,13 +60,13 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo {
      * Compute the Information contents of the vertices specified in the given
      * stack.
      *
-     * @param allNbOfDescendants a result stack containing the number of
-     * inclusive descendants for all the vertices contained in the graph. The
-     * information content will be computed for each vertices composing the
-     * stack considering the number of vertices in the graph equaling the number
-     * of vertices in the stack. Note that the number of descendant is
-     * considered to be inclusive i.e. the count of descendants of a concepts x
-     * must also count x.
+     * @param allDescendantsInc a map containing the set of inclusive
+     * descendants for all the vertices contained in the graph. The information
+     * content will be computed for each vertices composing the stack
+     * considering the number of vertices in the graph equaling the number of
+     * vertices in the stack. Note that the number of descendant is considered
+     * to be inclusive i.e. the count of descendants of a concepts x must also
+     * count x.
      * @return a result stack storing the information for each concepts
      * specified in the result stack specified in parameter.
      * @throws SLIB_Ex_Critic

@@ -55,8 +55,8 @@ public class VectorWeight_Chabalier_2007 {
 
     /**
      *
-     * @param g
-     * @return
+     * @param engine
+     * @return the vector weights
      */
     public static Map<URI, Double> compute(SM_Engine engine) {
 

@@ -44,14 +44,14 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class ProbOccurence implements ICtopo {
 
     /**
      * @param nbOccurrence
      * @param addToOccurrence
-     * @return
+     * @return the probability of occurrence of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public static Map<URI, Double> compute(Map<URI, Integer> nbOccurrence, int addToOccurrence) throws SLIB_Ex_Critic {

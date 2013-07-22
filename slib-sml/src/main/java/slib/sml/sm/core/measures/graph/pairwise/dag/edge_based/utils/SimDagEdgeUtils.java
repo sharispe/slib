@@ -56,7 +56,7 @@ public class SimDagEdgeUtils {
      * formula to minimize i.e. common ancestor minimizing score(c) =
      * minDist_edge(A,c) + minDist_edge(B,c) + minDist_edge(ROOT,c)
      *
-     * @see Pekar V, Staab S: Taxonomy learning: factoring the structure of a
+     * Pekar V, Staab S: Taxonomy learning: factoring the structure of a
      * taxonomy into a semantic classification decision. In COLING ’02
      * Proceedings of the 19th international conference on Computational
      * linguistics. Association for Computational Linguistics; 2002, 2:1-7.

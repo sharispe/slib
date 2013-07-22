@@ -78,7 +78,7 @@ public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
      *
      * @param allNbOfReachableLeaves
      * @param allNbAncestors
-     * @return
+     * @return the IC of all URIs specified in the given maps.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> allNbOfReachableLeaves,
@@ -106,7 +106,7 @@ public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
      * @param nbLeaves
      * @param nbAncestors
      * @param maxLeaves
-     * @return
+     * @return the IC considering the parameters.
      */
     public double compute(double nbLeaves, double nbAncestors, double maxLeaves) {
 

@@ -52,15 +52,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     * @throws SLIB_Exception
-     */
+    @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double ic_a = c.getIC(conf.getICconf(), a);
@@ -83,7 +75,7 @@ public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstra
      * @param ic_a
      * @param ic_b
      * @param ic_mica
-     * @return
+     * @return the similarity
      */
     public double sim(double ic_a, double ic_b, double ic_mica) {
 

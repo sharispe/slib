@@ -51,7 +51,7 @@ public interface IC {
      *
      * @param conf
      * @param manager
-     * @return
+     * @return the IC of all URIs associated to classes in the graph linked to the given engine.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(ICconf conf, SM_Engine manager) throws SLIB_Ex_Critic;

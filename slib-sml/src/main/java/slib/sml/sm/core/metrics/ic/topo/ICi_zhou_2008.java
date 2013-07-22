@@ -62,8 +62,7 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
     double k = 0.5;
 
     /**
-     * Builder of an instance of IC computer. 
-     * The parameter k is set to 0.5
+     * Builder of an instance of IC computer. The parameter k is set to 0.5
      */
     public ICi_zhou_2008() {
     }
@@ -83,7 +82,7 @@ public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {
      * vertices.
      *
      * @param alldepths a result stack containing the depth for each vertices
-     * @param allNbDescendants a result stack containing the number of
+     * @param allDescendantsIncs a map containing the set of inclusive
      * descendants for each vertices
      * @return a result stack containing the IC for each vertices.
      * @throws SLIB_Ex_Critic

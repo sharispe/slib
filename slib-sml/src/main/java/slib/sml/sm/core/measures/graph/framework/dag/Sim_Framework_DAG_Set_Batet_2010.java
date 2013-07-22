@@ -102,7 +102,7 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
      * @param nbVertices
      * @param a
      * @param b
-     * @return
+     * @return the similarity
      */
     public double sim(int nbVertices, Set<URI> a, Set<URI> b) {
 

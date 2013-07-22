@@ -54,7 +54,7 @@ public class ICi_depth_max_nonlinear extends LogBasedMetric implements ICtopo {
     /**
      *
      * @param alldepths
-     * @return
+     * @return the IC of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> alldepths) throws SLIB_Ex_Critic {

@@ -52,7 +52,7 @@ public class IC_probOccurence_propagatted extends LogBasedMetric implements ICco
     /**
      *
      * @param NbOccurrenceAnnotPropagatted
-     * @return
+     * @return the IC of the URI specified in the given map.
      * @throws SLIB_Exception
      */
     public Map<URI, Double> compute(Map<URI, Integer> NbOccurrenceAnnotPropagatted) throws SLIB_Exception {
@@ -60,13 +60,6 @@ public class IC_probOccurence_propagatted extends LogBasedMetric implements ICco
         return ProbOccurence.compute(NbOccurrenceAnnotPropagatted, 0);
     }
 
-    /**
-     *
-     * @param conf
-     * @param manager
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);

@@ -167,7 +167,7 @@ public class SM_Engine {
      * computed at engine creation which could lead to performance issues
      * dealing with large graph.
      *
-     * @param graph the graph associated to the engine.
+     * @param g the graph associated to the engine.
      * @throws SLIB_Ex_Critic
      */
     public SM_Engine(G g) throws SLIB_Ex_Critic {
@@ -524,7 +524,7 @@ public class SM_Engine {
         logger.info("---------------------------------------------------------------");
         logger.info("computing IC " + icConf.getId());
         logger.info("---------------------------------------------------------------");
-        
+
         Class<?> cl;
         Map<URI, Double> results;
 
@@ -588,7 +588,7 @@ public class SM_Engine {
         }
         return Collections.unmodifiableMap(cache.reachableLeaves);
     }
-    
+
     /**
      * Compute for each class x the classes which are leaves which are subsumed
      * by x. Inclusive i.e. a leaf will contain itself in it set of reachable
@@ -641,7 +641,7 @@ public class SM_Engine {
     /**
      * Inclusive process
      *
-     * @return
+     * @return the number of inclusive ancestors for each class
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Integer> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
@@ -863,7 +863,9 @@ public class SM_Engine {
 
     /**
      *
-     * @return
+     * @return for each class, the number of instances of the class (propagated,
+     * i.e. if iA is of class B and B is a subclass of A the iA is an instance
+     * of A)
      */
     public Map<URI, Integer> getNbInstancesInferredPropFromCorpus() {
 
@@ -921,7 +923,8 @@ public class SM_Engine {
     /**
      * Topological propagation considering one occurrence per term
      *
-     * @return
+     * @return the number of occurrences (propagated considering a single
+     * occurrence per class)
      * @throws SLIB_Exception
      */
     public Map<URI, Integer> getNbOccurrenceProp() throws SLIB_Exception {
@@ -1008,7 +1011,7 @@ public class SM_Engine {
      *
      * @param set
      * @param groupwiseconf
-     * @return
+     * @return the vector associated to the given configuration.
      */
     public Map<URI, Double> getVector(Set<URI> set, SMconf groupwiseconf) {
 
@@ -1066,7 +1069,7 @@ public class SM_Engine {
      *
      * @param param the key corresponding to the id of the weighting scheme to
      * retrieve
-     * @return
+     * @return the weighting scheme associated to the string.
      */
     public GWS getWeightingScheme(String param) {
         throw new UnsupportedOperationException("Not yet implemented");
@@ -1108,7 +1111,7 @@ public class SM_Engine {
     public Set<URI> getInstances() {
         return instances;
     }
-    
+
     private void throwErrorIfNotClass(URI c) {
         if (!classes.contains(c)) {
             throw new IllegalArgumentException("The given URI " + c + " cannot be associated to a class");
@@ -1119,13 +1122,13 @@ public class SM_Engine {
         if (!classes.containsAll(c)) {
             // Search a example of URI which cannnot be associated to a class
             String ex = null;
-            for(URI ce  : c){
-                if(!c.contains(ce)){
+            for (URI ce : c) {
+                if (!c.contains(ce)) {
                     ex = ce.toString();
                     break;
                 }
             }
-            throw new IllegalArgumentException("The given set of URIs " + c + " cannot be associated to a class, e.g. "+ex);
+            throw new IllegalArgumentException("The given set of URIs " + c + " cannot be associated to a class, e.g. " + ex);
         }
     }
 
@@ -1134,7 +1137,8 @@ public class SM_Engine {
      *
      * @param a
      * @param b
-     * @return
+     * @return the shortest path between the two classes considering the given
+     * weighting scheme.
      * @throws SLIB_Ex_Critic
      */
     public double getShortestPath(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
@@ -1156,7 +1160,7 @@ public class SM_Engine {
      *
      * @param a
      * @param b
-     * @return
+     * @return the URI associated to the Most Specific Ancestor.
      * @throws SLIB_Ex_Critic
      * @throws IllegalAccessException if the given URI cannot be associated to a
      * class
@@ -1199,7 +1203,7 @@ public class SM_Engine {
      * @param conf
      * @param a
      * @param b
-     * @return
+     * @return the probability of occurrence associated to the MICA.
      * @throws SLIB_Exception
      * @throws IllegalAccessException if the given URI cannot be associated to a
      * class
@@ -1215,7 +1219,8 @@ public class SM_Engine {
      *
      * @param a
      * @param b
-     * @return
+     * @return all subclasses of the superclass, of the given classes, which are
+     * not shared.
      * @throws IllegalAccessException if the given URI cannot be associated to a
      * class
      */

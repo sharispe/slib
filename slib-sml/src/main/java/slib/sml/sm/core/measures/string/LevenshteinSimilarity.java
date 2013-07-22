@@ -37,7 +37,7 @@ public class LevenshteinSimilarity extends LevenshteinDistance{
      *
      * @param a
      * @param b
-     * @return
+     * @return the similarity
      */
     public double sim(String a, String b){
         

@@ -53,7 +53,7 @@ public class LevenshteinDistance {
      *
      * @param a
      * @param b
-     * @return
+     * @return the distance
      */
     public double distance(String a, String b) {
 

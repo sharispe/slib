@@ -45,19 +45,11 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class VectorSpaceModel implements Sim_Groupwise_Direct {
 
-    /**
-     *
-     * @param setA
-     * @param setB
-     * @param rc
-     * @param groupwiseconf
-     * @return
-     * @throws SLIB_Exception
-     */
+
     @Override
     public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
 
@@ -68,8 +60,7 @@ public class VectorSpaceModel implements Sim_Groupwise_Direct {
         double denum_w1 = 0;
         double denum_w2 = 0;
 
-        double w1 = 0;
-        double w2 = 0;
+        double w1,w2;
 
         for (URI v : v1.keySet()) {
 
@@ -91,7 +82,5 @@ public class VectorSpaceModel implements Sim_Groupwise_Direct {
         sim = Math.round(sim * 10000) / 10000.0d;
 
         return sim;
-
-//		throw new UnsupportedOperationException();
     }
 }

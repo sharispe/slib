@@ -70,7 +70,7 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
     /**
      *
      * @param nbOccurences
-     * @return
+     * @return the IC of the URI specified in the given map.
      * @throws SLIB_Exception
      */
     public Map<URI, Double> compute(Map<URI, Integer> nbOccurences) throws SLIB_Exception {
@@ -104,13 +104,6 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
         return results;
     }
 
-    /**
-     *
-     * @param conf
-     * @param manager
-     * @return
-     * @throws SLIB_Exception
-     */
     @Override
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);

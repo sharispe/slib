@@ -51,14 +51,7 @@ import slib.utils.impl.SetUtils;
  */
 public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
 
-    /**
-     *
-     * @param a
-     * @param b
-     * @param c
-     * @param conf
-     * @return
-     */
+
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
 
@@ -74,7 +67,7 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
      * @param distMin_a
      * @param distMin_b
      * @param maxDepths
-     * @return
+     * @return the similarity
      * @throws SLIB_Exception
      */
     public double sim(

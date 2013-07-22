@@ -67,7 +67,7 @@ public class ICi_resnik_unpropagatted_1995 extends LogBasedMetric implements ICt
     /**
      *
      * @param nbDescendants
-     * @return
+     * @return the IC of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> nbDescendants) throws SLIB_Ex_Critic {

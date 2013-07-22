@@ -59,7 +59,7 @@ public class SimDagHybridUtils {
      * Compute the Semantic contribution for all ancestors of a node Semantic
      * Contribution was defined by Wang et al. 2007
      *
-     * @see ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
+     * Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
      * @param v
@@ -67,7 +67,7 @@ public class SimDagHybridUtils {
      *
      * @param g
      * @param setEdgeTypes
-     * @return
+     * @return map containing the semantic contribution for each URI
      */
     public HashMap<URI, Double> computeSemanticContribution_Wang_2007(
             URI v,
@@ -165,7 +165,7 @@ public class SimDagHybridUtils {
      * contribution Semantic Value (SV) was defined by Wang et al. 2007 page
      * 1276
      *
-     * @see ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
+     * Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to
      * measure the semantic similarity of GO terms. Bioinformatics (Oxford,
      * England) 2007, 23:1274-81.
      *

@@ -51,14 +51,14 @@ public class ICi_depth_max_linear extends LogBasedMetric implements ICtopo {
     /**
      *
      * @param alldepths
-     * @return
+     * @return the IC of all URIs specified in the given map.s
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> alldepths) throws SLIB_Ex_Critic {
 
         Map<URI, Double> results = new HashMap<URI, Double>();
 
-       
+
         for (URI v : alldepths.keySet()) {
             results.put(v, new Double(alldepths.get(v)));
         }

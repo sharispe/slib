@@ -275,7 +275,7 @@ public class ResultsMerger {
      *
      * @param isFile_A
      * @param file_index
-     * @return
+     * @return the line
      * @throws SLIB_Ex_Critic
      */
     public String getLine(boolean isFile_A, Long file_index) throws SLIB_Ex_Critic {
@@ -318,7 +318,7 @@ public class ResultsMerger {
     /**
      *
      * @param inputArray
-     * @return
+     * @return a string corresponding to the imploded array
      */
     private static String implodeArray(String[] inputArray) {
 
@@ -340,9 +340,7 @@ public class ResultsMerger {
 
     private static String implodeArrayList(ArrayList<String> inputArray) {
 
-        String output = "";
-
-
+       
         StringBuilder sb = new StringBuilder();
         sb.append(inputArray.get(0));
 
@@ -351,8 +349,7 @@ public class ResultsMerger {
             sb.append(inputArray.get(i));
         }
 
-        output = sb.toString();
-        return output;
+        return sb.toString();
     }
 
     private HashMap<String, String> mergeValues() throws SLIB_Ex_Critic {
