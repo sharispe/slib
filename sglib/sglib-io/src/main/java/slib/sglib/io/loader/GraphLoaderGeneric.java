@@ -120,8 +120,6 @@ public class GraphLoaderGeneric {
     /**
      * Build the graph considering the given configuration.
      *
-     * Add the loaded graph to the {@link DataRepository}.
-     *
      * @param graphConf the graph configuration
      * @return the graph which as been build form the configuration
      *
@@ -231,7 +229,7 @@ public class GraphLoaderGeneric {
     /**
      * Access to the set of supported format.
      *
-     * @return
+     * @return the list of format which are supported by the generic loader.
      */
     public static GFormat[] getSupportedFormat() {
         return supportedFormat;

@@ -39,7 +39,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public abstract class Filter {
 
@@ -87,7 +87,7 @@ public abstract class Filter {
 
     /**
      *
-     * @return
+     * @return the ID associated to the filter
      */
     public String getId() {
         return id;
@@ -103,7 +103,7 @@ public abstract class Filter {
 
     /**
      *
-     * @return
+     * @return the Type associated to the filter
      */
     public String getType() {
         return type;

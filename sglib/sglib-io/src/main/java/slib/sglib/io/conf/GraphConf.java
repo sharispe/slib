@@ -11,118 +11,118 @@ import slib.utils.impl.ParametrableImpl;
  *
  * @author seb
  */
-public class GraphConf extends ParametrableImpl implements CheckableValidity, Comparable<Object>{
+public class GraphConf extends ParametrableImpl implements CheckableValidity, Comparable<Object> {
 
-	URI uri;
-	
-	List<GDataConf> data;
-	List<GAction> actions;
+    URI uri;
+    List<GDataConf> data;
+    List<GAction> actions;
 
-	/**
+    /**
      *
      */
-    public GraphConf(){
-		data    = new LinkedList<GDataConf>();
-		actions = new LinkedList<GAction>();
-	}
-	
-	/**
+    public GraphConf() {
+        data = new LinkedList<GDataConf>();
+        actions = new LinkedList<GAction>();
+    }
+
+    /**
      *
      * @param uri
      */
-    public GraphConf(URI uri){
-		this();
-		this.uri = uri;
-	}
-	
+    public GraphConf(URI uri) {
+        this();
+        this.uri = uri;
+    }
 
-
-	/**
-     *
-     * @return
-     */
+    @Override
     public boolean isValid() {
-		
-		if(uri == null) return false;
 
-		for(GDataConf dataFile : data){
-			if(!dataFile.isValid()) return false;
-		}
+        if (uri == null) {
+            return false;
+        }
 
-		for(GAction action : actions){
-			if(!action.isValid()) return false;
-		}
-		return true;
-	}
-	
-	/**
+        for (GDataConf dataFile : data) {
+            if (!dataFile.isValid()) {
+                return false;
+            }
+        }
+
+        for (GAction action : actions) {
+            if (!action.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      *
      * @param conf
      */
-    public void addGDataConf(GDataConf conf){
-		data.add(conf);
-	}
-	
-	/**
+    public void addGDataConf(GDataConf conf) {
+        data.add(conf);
+    }
+
+    /**
      *
      * @param conf
      */
-    public void addGAction(GAction conf){
-		actions.add(conf);
-	}
+    public void addGAction(GAction conf) {
+        actions.add(conf);
+    }
 
-	/**
+    /**
      *
-     * @return
+     * @return the URI associated to the graph the configuration is associated
+     * to.
      */
     public URI getUri() {
-		return uri;
-	}
+        return uri;
+    }
 
-	/**
+    /**
      *
      * @param uri
      */
     public void setUri(URI uri) {
-		this.uri = uri;
-	}
+        this.uri = uri;
+    }
 
-	/**
+    /**
      *
-     * @return
+     * @return the list of data configuration associated to the graph
+     * configuration.
      */
     public List<GDataConf> getData() {
-		return data;
-	}
+        return data;
+    }
 
-	/**
+    /**
      *
      * @param data
      */
     public void setData(List<GDataConf> data) {
-		this.data = data;
-	}
+        this.data = data;
+    }
 
-	/**
+    /**
      *
-     * @return
+     * @return the list of actions associated to the configuration.
      */
     public List<GAction> getActions() {
-		return actions;
-	}
+        return actions;
+    }
 
-	/**
+    /**
      *
      * @param actions
      */
     public void setActions(List<GAction> actions) {
-		this.actions = actions;
-	}
+        this.actions = actions;
+    }
 
     @Override
     public int compareTo(Object o) {
         return 1;
     }
-
-
 }

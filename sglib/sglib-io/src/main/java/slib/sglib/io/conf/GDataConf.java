@@ -7,7 +7,7 @@ import slib.utils.impl.ParametrableImpl;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class GDataConf extends ParametrableImpl implements CheckableValidity {
 
@@ -34,7 +34,7 @@ public class GDataConf extends ParametrableImpl implements CheckableValidity {
 
     /**
      *
-     * @return
+     * @return the format associated to the configuration
      */
     public GFormat getFormat() {
         return format;
@@ -42,7 +42,7 @@ public class GDataConf extends ParametrableImpl implements CheckableValidity {
 
     /**
      *
-     * @param format
+     * @param format the format to consider
      */
     public void setFormat(GFormat format) {
         this.format = format;
@@ -50,7 +50,7 @@ public class GDataConf extends ParametrableImpl implements CheckableValidity {
 
     /**
      *
-     * @return
+     * @return the location of the file associated to the configuration
      */
     public String getLoc() {
         return loc;
@@ -66,7 +66,7 @@ public class GDataConf extends ParametrableImpl implements CheckableValidity {
 
     /**
      *
-     * @return
+     * @return true if the configuration is valid.
      */
     @Override
     public boolean isValid() {

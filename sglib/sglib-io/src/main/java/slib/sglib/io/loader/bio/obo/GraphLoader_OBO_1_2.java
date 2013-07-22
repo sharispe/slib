@@ -52,7 +52,6 @@ import org.slf4j.LoggerFactory;
 
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
-import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.loader.bio.obo.utils.OboRelationship;
 import slib.sglib.io.loader.bio.obo.utils.OboTerm;
@@ -65,9 +64,7 @@ import slib.utils.ex.SLIB_Ex_Warning;
 import slib.utils.impl.OBOconstants;
 
 /**
- * TODO update doc Graph Loader used to map an OBO 1.2 specification as a Graph
- * loaded in RAM <br/> <a
- * href="http://www.geneontology.org/GO.format.obo-1_2.shtml">OBO
+ * <a href="http://www.geneontology.org/GO.format.obo-1_2.shtml">OBO
  * specification</a> <br/>
  *
  * Compatibility with other format-version than 1.2 is not supported. <br/>
@@ -177,14 +174,13 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
-        
+
         String defaultNamespaceVal = (String) conf.getParameter("default-namespace");
 
         if (defaultNamespaceVal == null) {
             defaultNamespace = g.getURI().getNamespace();
             logger.info("OBO loader set default-namespace " + defaultNamespace);
-        }
-        else{
+        } else {
             defaultNamespace = defaultNamespaceVal;
         }
 
@@ -194,7 +190,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         logger.info("Loading OBO specification from:" + filepath);
         logger.info("-------------------------------------");
 
-        
+
         loadOboSpec();
 
         logger.info("OBO specification loaded.");
@@ -535,7 +531,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
     /**
      *
-     * @return
+     * @return true if all GAF version are supported.
      */
     public boolean isAllow_all_gafVersion() {
         return allow_all_gafVersion;

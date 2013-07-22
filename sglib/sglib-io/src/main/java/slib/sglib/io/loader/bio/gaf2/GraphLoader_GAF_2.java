@@ -92,14 +92,12 @@ public class GraphLoader_GAF_2 implements GraphLoader {
     /**
      * Method used to load an annotation repository considering a specific
      * configuration and a potential mapping restriction i.e. a {@link G}
-     * containing the concepts to consider. A {@link FilterKB_GAF2} can be
-     * associated to the {@link KBConf} / {@link KBConf_GAF2} object in order to
-     * define restrictions to consider during the parsing (e.g. taxons, Evidence
-     * Code, origin knowledge base)
+     * containing the concepts to consider. A {@link FilterGraph_GAF2} can be
+     * associated to a configuration in order to define restrictions to consider
+     * during the parsing (e.g. taxons, Evidence Code, origin knowledge base)
      *
-     * @param conf a {@link KBConf} object defining a configuration. If the
-     * configuration file define a {@link Filter} of class
-     * {@link FilterKB_GAF2}, it will be evaluated during the parsing.
+     * @param conf object defining a configuration. If the
+     * configuration file define a {@link Filter} {@link FilterGraph_GAF2}, it will be evaluated during the parsing.
      * @param graph a graph defining the concepts to consider, can be set to
      * null if no mapping restriction have to be take into account If a graph is
      * specified only annotation corresponding a graph Node will be loaded.
@@ -158,8 +156,8 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
 
         FilterGraph_GAF2 filter = null;
-        HashSet<String> taxons = null;
-        HashSet<String> excludedEC = null;
+        Set<String> taxons = null;
+        Set<String> excludedEC = null;
 
         if (!filters.isEmpty()) {
 

@@ -42,12 +42,8 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 
 /**
- * TODO modification shape utilser rectangle changer la couleur des noeuds
- * ajoutes en blanc ajouter label aux ids de la GO coloration des liens
- * http://www.ensembl.org/Homo_sapiens/Transcript/Ontology/Image?db=core;g=ENSG00000139618;r=13:32889611-32973805;t=ENST00000380152
- * subclass of -> isa; part-of en bleu
- *
- * @author seb
+ * Class used to plot graph using Graphviz.
+ * @author Sébastien Harispe 
  *
  */
 public class GraphPlotter_Graphviz {
@@ -57,7 +53,7 @@ public class GraphPlotter_Graphviz {
      * @param graph
      * @param VertexUriColored
      * @param showLabels
-     * @return
+     * @return a DOT String representation of the graph.
      */
     public static String plot(G graph, Set<URI> VertexUriColored, boolean showLabels) {
         return plot(graph, VertexUriColored, showLabels, null);
@@ -69,7 +65,7 @@ public class GraphPlotter_Graphviz {
      * @param VertexColored
      * @param showLabels
      * @param index
-     * @return
+     * @return a DOT String representation of the graph
      */
     public static String plot(G graph, Set<URI> VertexColored, boolean showLabels, IndexHash index) {
 
@@ -155,7 +151,7 @@ public class GraphPlotter_Graphviz {
      *
      * @param in
      * @param max_num_per_string
-     * @return
+     * @return a String associated to the String which has been processed.
      */
     public static String splitString(String in, int max_num_per_string) {
 

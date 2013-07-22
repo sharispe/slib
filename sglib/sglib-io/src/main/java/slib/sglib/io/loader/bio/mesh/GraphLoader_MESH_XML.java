@@ -83,7 +83,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
      * Return parent ID i.e. giving C10.228.140.300.275.500 will return
      * C10.228.140.300.275
      *
-     * @return
+     * @return a String associated to the parent ID.
      */
     private String getParentId(String id) {
 

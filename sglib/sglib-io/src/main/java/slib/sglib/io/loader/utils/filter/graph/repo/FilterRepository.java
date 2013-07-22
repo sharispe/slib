@@ -13,8 +13,8 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class FilterRepository {
 
-    private static  FilterRepository instance;
-    public Map<String,Filter> filters;
+    private static FilterRepository instance;
+    public Map<String, Filter> filters;
 
     public static FilterRepository getInstance() {
         if (instance == null) {
@@ -30,7 +30,7 @@ public class FilterRepository {
     /**
      *
      * @param name
-     * @return
+     * @return the filter associated to the given name.
      */
     public Filter getFilter(String name) {
         return filters.get(name);
@@ -38,27 +38,26 @@ public class FilterRepository {
 
     /**
      *
-     * @return
+     * @return the filter loaded in the repository.
      */
     public Set<Filter> getFilters() {
         return new HashSet<Filter>(filters.values());
     }
 
-    
     public void addFilter(Filter f) throws SLIB_Ex_Critic {
-        if(filters.containsKey(f.getId())){
-            throw new SLIB_Ex_Critic("Duplicate filter "+f.getId());
+        if (filters.containsKey(f.getId())) {
+            throw new SLIB_Ex_Critic("Duplicate filter " + f.getId());
         }
         filters.put(f.getId(), f);
     }
-    
-     public Filter containsFilter(String fname) throws SLIB_Ex_Critic {
+
+    public Filter containsFilter(String fname) throws SLIB_Ex_Critic {
         return filters.get(fname);
     }
 
-     /**
-      * Remove loaded filters
-      */
+    /**
+     * Remove loaded filters
+     */
     public void clear() {
         filters.clear();
     }

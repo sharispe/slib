@@ -26,7 +26,7 @@ public class MeshConcept{
 
     /**
      *
-     * @return
+     * @return the descriptor
      */
     public String getDescriptorUI() {
         return descriptorUI;
@@ -42,7 +42,7 @@ public class MeshConcept{
 
     /**
      *
-     * @return
+     * @return the name of the descriptor.
      */
     public String getDescriptorName() {
         return descriptorName;

@@ -4,19 +4,18 @@ import slib.sglib.io.conf.GDataConf;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class GDataValidator {
 
-	/**
+    /**
      *
      * @param gDataConf
-     * @return
+     * @return return true if the configuration is valid.
      */
     public static boolean valid(GDataConf gDataConf) {
-		// TODO Auto-generated method stub Sep 11, 2012
-		throw new UnsupportedOperationException("Not supported yet.");
-		
-	}
+        // TODO Auto-generated method stub Sep 11, 2012
+        throw new UnsupportedOperationException("Not supported yet.");
 
+    }
 }
