@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.7-beta</version>
+        <version>0.7</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-indexer</artifactId>
@@ -11,12 +11,12 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model</artifactId>
-            <version>0.7-beta</version>
+            <version>0.7</version>
         </dependency>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.7-beta</version>
+            <version>0.7</version>
             <type>jar</type>
         </dependency>
     </dependencies>
