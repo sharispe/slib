@@ -1,12 +1,17 @@
 package slib.sglib.io.loader.rdf;
 
 import java.io.FileReader;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
+import org.openrdf.rio.ParserConfig;
 
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
 import org.openrdf.rio.RDFParser;
+import org.openrdf.rio.RioSetting;
+import org.openrdf.rio.helpers.BasicParserSettings;
 import org.openrdf.rio.ntriples.NTriplesParser;
 import org.openrdf.rio.rdfxml.RDFXMLParser;
 import org.openrdf.rio.turtle.TurtleParser;
@@ -43,10 +48,9 @@ public class RDFLoader implements GraphLoader {
      */
     public RDFLoader(RDFFormat format) throws SLIB_Ex_Critic {
 
-        loadFormat(format);
+        buildRDFparser(format);
 
     }
-
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
@@ -56,7 +60,7 @@ public class RDFLoader implements GraphLoader {
         logger.info("-------------------------------------");
         logger.info(" RDF Loader");
         logger.info("-------------------------------------");
-        logger.info("Populate graph " + g.getURI()+" from "+conf.getLoc());
+        logger.info("Populate graph " + g.getURI() + " from " + conf.getLoc());
         load(g, conf.getLoc());
         logger.info("Graph " + g.getURI() + " populated by RDF data ");
         logger.info("-------------------------------------");
@@ -67,32 +71,35 @@ public class RDFLoader implements GraphLoader {
 
         GFormat format = conf.getFormat();
         if (format == GFormat.RDF_XML) {
-            loadFormat(RDFFormat.RDFXML);
+            buildRDFparser(RDFFormat.RDFXML);
         } else if (format == GFormat.NTRIPLES) {
-            loadFormat(RDFFormat.NTRIPLES);
-        } 
-        else if (format == GFormat.TURTLE) {
-            loadFormat(RDFFormat.TURTLE);
-        }
-        else {
+            buildRDFparser(RDFFormat.NTRIPLES);
+        } else if (format == GFormat.TURTLE) {
+            buildRDFparser(RDFFormat.TURTLE);
+        } else {
             throw new SLIB_Ex_Critic("Unsupported RDF format " + format);
         }
     }
 
-    private void loadFormat(RDFFormat format) throws SLIB_Ex_Critic {
+    private void buildRDFparser(RDFFormat format) throws SLIB_Ex_Critic {
         if (format.equals(RDFFormat.NTRIPLES)) {
             parser = new NTriplesParser(new MemValueFactory());
         } else if (format.equals(RDFFormat.RDFXML)) {
             parser = new RDFXMLParser(new MemValueFactory());
-            parser.setStopAtFirstError(false);
-        } 
-        else if (format.equals(RDFFormat.TURTLE)) {
+        } else if (format.equals(RDFFormat.TURTLE)) {
             parser = new TurtleParser(new MemValueFactory());
-            //parser.setStopAtFirstError(false);
-        }
-        else {
+        } else {
             throw new SLIB_Ex_Critic("Unsupported RDF format " + format);
         }
+
+        ParserConfig config = new ParserConfig();
+
+//        Set<RioSetting<?>> set = new HashSet();
+//        set.add(BasicParserSettings.VERIFY_DATATYPE_VALUES);
+//        set.add(BasicParserSettings.VERIFY_RELATIVE_URIS);
+//        config.setNonFatalErrors(set);
+
+        parser.setParserConfig(config);
     }
 
     /**
@@ -106,6 +113,7 @@ public class RDFLoader implements GraphLoader {
 
         RDFHandler rdfHandler = new SlibRdfHandler(g);
         try {
+            logger.info("Parser loaded for: "+parser.getRDFFormat());
             parser.setRDFHandler(rdfHandler);
             FileReader reader = new FileReader(file);
             //BufferedReader br = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
@@ -126,7 +134,7 @@ public class RDFLoader implements GraphLoader {
      */
     public void load(G g, String file, RDFFormat format) throws SLIB_Ex_Critic {
 
-        loadFormat(format);
+        buildRDFparser(format);
         load(g, file);
     }
 
