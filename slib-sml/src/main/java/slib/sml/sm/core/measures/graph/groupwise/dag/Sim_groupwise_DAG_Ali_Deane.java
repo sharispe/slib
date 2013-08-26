@@ -65,7 +65,7 @@ public class Sim_groupwise_DAG_Ali_Deane extends Sim_groupwise_DAG_abstract {
         double funsim = 0;
         double funsim_tmp = 0;
 
-        Map<URI, Integer> nbOcc = rc.getNbInstancesInferredPropFromCorpus();
+        Map<URI, Integer> nbOcc = rc.getNbInstancesInferredPropFromCorpus(true);
         double maxOcc = rc.getInstances().size();
 
         for (URI v : intersection) {

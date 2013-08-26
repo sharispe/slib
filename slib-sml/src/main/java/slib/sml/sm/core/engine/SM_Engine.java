@@ -45,6 +45,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
@@ -866,8 +867,10 @@ public class SM_Engine {
      * @return for each class, the number of instances of the class (propagated,
      * i.e. if iA is of class B and B is a subclass of A the iA is an instance
      * of A)
+     * @param addAnInstanceToEachLeafConcept if true, each class which doesn't subsumes any other classes is assumed to have an instance which is only an instance of this class (without considering inference).
+     * This is to ensure that the number of instances increases according to the partial ordering (this is required to ensure coherency of Resnik's Information Content)
      */
-    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus() {
+    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachLeafConcept) {
 
         Map<URI, Set<URI>> linkedEntities = new HashMap<URI, Set<URI>>();
 
@@ -894,26 +897,32 @@ public class SM_Engine {
 
         Map<URI, Integer> rStack = new HashMap<URI, Integer>();
 
-        // initialize data structure
+        // initialize data structure && add virtual instance if required
+        URI c;
         for (int i = 0; i < topoOrdering.size(); i++) {
-            if (linkedEntities.get(topoOrdering.get(i)) == null) {
-                linkedEntities.put(topoOrdering.get(i), new HashSet<URI>());
+            c = topoOrdering.get(i);
+            if (linkedEntities.get(c) == null) {
+                linkedEntities.put(c, new HashSet<URI>());
+            }
+            // this is a trick is an instance must be added to each leaf (terminal class) we add the corresponding as instance
+            if(addAnInstanceToEachLeafConcept && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()){
+                linkedEntities.get(c).add(c);
             }
         }
 
         for (int i = 0; i < topoOrdering.size(); i++) {
 
-            URI currentV = topoOrdering.get(i);
-            Set<URI> entities = linkedEntities.get(currentV);
+            c = topoOrdering.get(i);
+            Set<URI> entities = linkedEntities.get(c);
 
             // propagate Linked Entities in a bottom up fashion according the topological order
-            for (E e : graph.getE(currentV, ancGetter.getWalkConstraint())) {
+            for (E e : graph.getE(c, ancGetter.getWalkConstraint())) {
                 if (!entities.isEmpty()) {
                     linkedEntities.get(e.getTarget()).addAll(entities);
                 }
             }
 
-            rStack.put(currentV, entities.size());
+            rStack.put(c, entities.size());
         }
         cache.nbOccurrencePropagatted = rStack;
 

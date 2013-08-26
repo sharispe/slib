@@ -107,6 +107,6 @@ public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements I
     @Override
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);
-        return compute(manager.getNbInstancesInferredPropFromCorpus());
+        return compute(manager.getNbInstancesInferredPropFromCorpus(true));
     }
 }

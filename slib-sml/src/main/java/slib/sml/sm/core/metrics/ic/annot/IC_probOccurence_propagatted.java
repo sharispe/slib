@@ -63,6 +63,6 @@ public class IC_probOccurence_propagatted extends LogBasedMetric implements ICco
     @Override
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
         setLogBase(conf);
-        return compute(manager.getNbInstancesInferredPropFromCorpus());
+        return compute(manager.getNbInstancesInferredPropFromCorpus(true));
     }
 }
