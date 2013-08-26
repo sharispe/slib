@@ -867,10 +867,10 @@ public class SM_Engine {
      * @return for each class, the number of instances of the class (propagated,
      * i.e. if iA is of class B and B is a subclass of A the iA is an instance
      * of A)
-     * @param addAnInstanceToEachLeafConcept if true, each class which doesn't subsumes any other classes is assumed to have an instance which is only an instance of this class (without considering inference).
+     * @param addAnInstanceToEachTerminalClass if true, each class which doesn't subsumes any other classes is assumed to have an instance which is only an instance of this class (without considering inference).
      * This is to ensure that the number of instances increases according to the partial ordering (this is required to ensure coherency of Resnik's Information Content)
      */
-    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachLeafConcept) {
+    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) {
 
         Map<URI, Set<URI>> linkedEntities = new HashMap<URI, Set<URI>>();
 
@@ -904,8 +904,8 @@ public class SM_Engine {
             if (linkedEntities.get(c) == null) {
                 linkedEntities.put(c, new HashSet<URI>());
             }
-            // this is a trick is an instance must be added to each leaf (terminal class) we add the corresponding as instance
-            if(addAnInstanceToEachLeafConcept && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()){
+            // this is a trick is an instance must be added to each terminal class we add the corresponding class as instance
+            if(addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()){
                 linkedEntities.get(c).add(c);
             }
         }
