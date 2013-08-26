@@ -33,7 +33,6 @@ package slib.sglib.io.loader.annot;
 
 import au.com.bytecode.opencsv.CSVReader;
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
@@ -74,13 +73,13 @@ public class GraphLoader_TSVannot implements GraphLoader {
     public final static String PARAM_PREFIX_OBJECT = "prefixObject";
     public final static String PARAM_PREDICATE = "predicate";
     boolean skipHeader = false;
-    URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
+    URIFactoryMemory uriRepo = URIFactoryMemory.getSingleton();
     Character pattern = '\t'; // the one used
     G g;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     URI predicate = RDF.TYPE;
-    String prefixSubject = "";
-    String prefixObject = "";
+    String prefixSubject = null;
+    String prefixObject = null;
     Pattern colon = Pattern.compile(":");
 
     @Override
@@ -89,7 +88,7 @@ public class GraphLoader_TSVannot implements GraphLoader {
         logger.info("-------------------------------------");
         logger.info("Loading Annotations using TSV loader.");
         logger.info("-------------------------------------");
-        
+
         this.g = g;
 
         loadConf(conf);
@@ -113,7 +112,7 @@ public class GraphLoader_TSVannot implements GraphLoader {
 
         if (predicateParam != null) {
             try {
-                predicate = dataRepo.createURI(predicateParam);
+                predicate = uriRepo.createURI(predicateParam);
             } catch (IllegalArgumentException e) {
                 throw new SLIB_Ex_Critic("Error in data loader, parameter " + PARAM_PREDICATE + ", cannot create an URI from " + predicateParam + "\n" + e.getMessage());
             }
@@ -127,10 +126,15 @@ public class GraphLoader_TSVannot implements GraphLoader {
             prefixObject = prefixObjectParam;
         }
 
+        logger.info("file            " + conf.getLoc());
         logger.info("Skipping header " + skipHeader);
         logger.info("predicate       '" + predicate + "'");
-        logger.info("prefix subject  '" + prefixSubject + "'");
-        logger.info("prefix object   '" + prefixObject + "'");
+        if (prefixSubject != null) {
+            logger.info("prefix subject  '" + prefixSubject + "'");
+        }
+        if (prefixObject != null) {
+            logger.info("prefix object   '" + prefixObject + "'");
+        }
 
     }
 
@@ -154,38 +158,32 @@ public class GraphLoader_TSVannot implements GraphLoader {
                 }
                 if (row.length == 2) {
 
-//                    logger.info("---------->"+Arrays.toString(row));
-
                     subjectLocalName = row[0];
                     data = row[1].split(";");
 
-                    s = dataRepo.createURI(prefixSubject + subjectLocalName);
+                    if (prefixSubject == null) {
+                        s = uriRepo.createURI(subjectLocalName);
+                    } else {
+                        s = uriRepo.createURI(prefixSubject + subjectLocalName);
+                    }
 
                     for (String os : data) {
 
-                        if (prefixObject.isEmpty()) {
-                            o = dataRepo.createURI(buildURIString(os));
+                        if (prefixObject == null) {
+                            o = uriRepo.createURI(buildURIString(os));
                         } else {
-                            o = dataRepo.createURI(prefixObject + os);
+                            o = uriRepo.createURI(prefixObject + os);
                         }
 
-//                        logger.info("---------->"+o);
-
-                        if (g.containsVertex(o)) {
-                            E edge = new Edge(s, predicate, o);
-                            g.addE(edge);
-
-                            logger.info(edge.toString());
-
-                            statementsLoaded++;
-                        }
+                        E edge = new Edge(s, predicate, o);
+                        g.addE(edge);
+                        statementsLoaded++;
                     }
                     processed++;
 
                 } else {
                     skipped++;
                 }
-
             }
             csvReader.close();
 
@@ -206,7 +204,7 @@ public class GraphLoader_TSVannot implements GraphLoader {
 
         if (info != null && info.length == 2) {
 
-            String ns = dataRepo.getNamespace(info[0]);
+            String ns = uriRepo.getNamespace(info[0]);
             if (ns == null) {
                 throw new SLIB_Ex_Critic("No namespace associated to prefix " + info[0] + ". Cannot load " + value + ", please load required namespace prefix");
             }
