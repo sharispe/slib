@@ -42,7 +42,7 @@ import slib.tools.module.ToolCmdHandlerCst;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class SmlToolKitCliCst extends ToolCmdHandlerCst {
 
@@ -83,13 +83,6 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
      *
      */
     public static boolean _debugMode = false;
-
-    /**
-     *
-     */
-    public SmlToolKitCliCst() {
-        super(_appCmdName, _debugMode, _optionsOrder);
-    }
     /*
      * Error messages  
      */
@@ -112,10 +105,10 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
      *
      */
     @SuppressWarnings("static-access")
-    public static Option tool = OptionBuilder.withArgName("value")
+    public static final Option tool = OptionBuilder.withArgName("toolname")
             .hasArg()
             .withDescription("\nTool name:\n"
-            + "- 'sm' module used to compute semantic measures score\nAccepted tools " + Arrays.toString(SmlToolKitCliCst.acceptedTools))
+            + "- 'sm' tool used to compute semantic measures score\nAccepted tools " + Arrays.toString(SmlToolKitCliCst.acceptedTools))
             .create(toolArg);
     /*
      * Use this data structure to define order of options in help message
@@ -126,9 +119,15 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
     public final static HashMap<Option, Integer> _optionsOrder = new HashMap<Option, Integer>();
 
     static {
-        _optionsOrder.put(tool, _optionsOrder.size());
-        _optionsOrder.put(version, _optionsOrder.size());
-        _optionsOrder.put(help, _optionsOrder.size());
+        _optionsOrder.put(SmlToolKitCliCst.tool,     0);
+        _optionsOrder.put(SmlToolKitCliCst.version, 10);
+        _optionsOrder.put(SmlToolKitCliCst.help,    20);
+    }
 
+    /**
+     *
+     */
+    public SmlToolKitCliCst() {
+        super(SmlToolKitCliCst._appCmdName, SmlToolKitCliCst._debugMode, SmlToolKitCliCst._optionsOrder);
     }
 }

@@ -62,7 +62,8 @@ public class SmProfile_GO implements SmlModuleCLI {
      */
     @Override
     public void execute(String[] args) throws SLIB_Exception {
-        SmProfileGOHandler c = new SmProfileGOHandler(args);
+        SmProfileGOHandler c = new SmProfileGOHandler();
+        c.processArgs(args);
         try {
 
             SML_SM_module_XML_block_conf smconf = c.getSmconf();

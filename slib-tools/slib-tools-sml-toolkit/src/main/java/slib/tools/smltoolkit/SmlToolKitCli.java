@@ -47,16 +47,13 @@ import slib.tools.smltoolkit.sm.cli.core.SmCli;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Semantic Measures Library Command Line Interface
- *
+ * Semantic Measures Library Toolkit Command Line Interface
  * @author Sebastien Harispe
  *
  */
 public class SmlToolKitCli extends CmdHandler {
 
-    /**
-     *
-     */
+
     public String tool = null;
     static Logger logger = LoggerFactory.getLogger(SmlToolKitCli.class);
     String[] argsTool;
@@ -68,9 +65,9 @@ public class SmlToolKitCli extends CmdHandler {
      * @param args
      * @throws SLIB_Exception
      */
-    public SmlToolKitCli(String[] args) throws SLIB_Exception {
+    public SmlToolKitCli() throws SLIB_Exception {
 
-        super(new SmlToolKitCst(), new SmlToolKitCliCst(), args);
+        super(new SmlToolKitCst(), new SmlToolKitCliCst());
     }
 
     @Override
@@ -202,7 +199,8 @@ public class SmlToolKitCli extends CmdHandler {
 //        args = a.split("\\s+");
 
         try {
-            SmlToolKitCli c = new SmlToolKitCli(args);
+            SmlToolKitCli c = new SmlToolKitCli();
+            c.processArgs(args);
 
         } catch (Exception e) {
             logger.error("\n\n[Error] " + e.getMessage() + "\n");

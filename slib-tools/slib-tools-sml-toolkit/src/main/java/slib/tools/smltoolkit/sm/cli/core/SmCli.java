@@ -108,7 +108,9 @@ public class SmCli implements SmlModuleCLI {
      */
     @Override
     public void execute(String[] args) throws SLIB_Exception {
-        SmCmdHandler c = new SmCmdHandler(args);
+        SmCmdHandler c = new SmCmdHandler();
+        c.processArgs(args);
+        
         if (c.xmlConfFile != null) {
             execute(c.xmlConfFile);
         } else {

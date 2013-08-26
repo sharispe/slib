@@ -35,6 +35,7 @@
 package slib.tools.smltoolkit.sm.cli.core.utils;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import slib.tools.module.ToolCmdHandlerCst;
@@ -75,14 +76,13 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
      *
      */
     public static final Option _help = new Option("help", "\nPrint this message");
-    /**
-     *
-     */
+    
     @SuppressWarnings("static-access")
     private static final Option _xmlconf = OptionBuilder.withArgName("xmlconf")
             .hasArg()
             .withDescription("\nXML configuration file (optional)")
             .create("xmlconf");
+    
     @SuppressWarnings("static-access")
     private static final Option _profile = OptionBuilder.withArgName("profile")
             .hasArg()
@@ -97,12 +97,12 @@ public class SmCmdHandlerCst extends ToolCmdHandlerCst {
     /**
      *
      */
-    private final static HashMap<Option, Integer> _optionsOrder = new HashMap<Option, Integer>();
+    private final static Map<Option, Integer> _optionsOrder = new HashMap<Option, Integer>();
 
     static {
-        _optionsOrder.put(_xmlconf, _optionsOrder.size());
-        _optionsOrder.put(_profile, _optionsOrder.size());
-        _optionsOrder.put(_help, _optionsOrder.size());
+        _optionsOrder.put(_xmlconf, 0);
+        _optionsOrder.put(_profile, 10);
+        _optionsOrder.put(_help, 20);
     }
 
     /**

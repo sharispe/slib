@@ -165,17 +165,17 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
     @SuppressWarnings("static-access")
     private static final Option _pm = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("\nPairwise measure see the list of available measures below (required for pairwise measures or indirect groupwise measures)")
+            .withDescription("\nPairwise measure [ 'resnik', 'lin', 'schlicker', 'jc' ] (required for pairwise measures or indirect groupwise measures). See the complete list of measures at http://www.semantic-measures-library.org")
             .create("pm");
     @SuppressWarnings("static-access")
     private static final Option _gm = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("\nDirect groupwise measure or aggregation method if an indirect groupwise measure must be used (require a pairwise measure to be set). see the list of available measures below (required for groupwise measures).")
+            .withDescription("\nDirect groupwise measure [ 'to', 'nto', 'gic', 'ui', ... ] or aggregation method (mixing strategy) [ 'min', 'max', 'bma', 'bmm', ... ] if an indirect groupwise measure is be used (require a pairwise measure to be set). See the complete list of measures at http://www.semantic-measures-library.org.")
             .create("gm");
     @SuppressWarnings("static-access")
     private static final Option _ic = OptionBuilder.withArgName("flag")
             .hasArg()
-            .withDescription("\nInformation content method see the list of IC available below")
+            .withDescription("\nInformation content method. Extrinsic (require annotation file): [ 'resnik' ], Intrinsic : [ 'sanchez', 'zhou', 'seco' ]. See the complete list of IC at http://www.semantic-measures-library.org")
             .create("ic");
     @SuppressWarnings("static-access")
     private static final Option _quiet = OptionBuilder.withArgName("quiet")

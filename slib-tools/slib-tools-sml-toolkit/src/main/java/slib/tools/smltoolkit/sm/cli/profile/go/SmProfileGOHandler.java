@@ -58,9 +58,8 @@ public class SmProfileGOHandler extends CmdHandler {
      * @param args
      * @throws SLIB_Exception
      */
-    public SmProfileGOHandler(String[] args) throws SLIB_Exception {
-        super(new SmToolkitGOCst(), new SmProfileGOCst(), args);
-
+    public SmProfileGOHandler() throws SLIB_Exception {
+        super(new SmToolkitGOCst(), new SmProfileGOCst());
     }
 
     @Override
