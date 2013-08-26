@@ -98,7 +98,7 @@ public class SmCli implements SmlModuleCLI {
     private final double NOT_FOUND_SCORE = 0;
     public boolean QUIET = false;
     private final boolean OUTPUT_BASE_NAME = true;
-    private int SIZE_BENCH = 2000;
+    private int SIZE_BENCH = 5000;
     private boolean CACHE_PAIRWISE_RESULTS = false;
 
     /**
@@ -321,8 +321,11 @@ public class SmCli implements SmlModuleCLI {
         try {
 
 
-            long queries_number = qloader.getNumberQueries();
-            logger.info("Number of query " + queries_number);
+            long queryNumber = qloader.getNumberQueries();
+            logger.info("Number of query " + queryNumber);
+
+            long queryNumberLogStep = queryNumber / 10; // we log 10 times
+            int nbLogStep = 0;
 
             FileWriter fstream = new FileWriter(queryParam.getOutfile());
             BufferedWriter file = new BufferedWriter(fstream);
@@ -349,6 +352,7 @@ public class SmCli implements SmlModuleCLI {
 
             List<Future<ThreadResultsQueryLoader>> results = new ArrayList<Future<ThreadResultsQueryLoader>>();
 
+            logger.info("processing queries...");
 
             while (qloader.hasNext()) {
 
@@ -382,7 +386,10 @@ public class SmCli implements SmlModuleCLI {
                         setValue += rez.getSetValue();
 
                         count += rez.getJobSize();
-                        logger.info("- " + count + " / " + queries_number + "\tskipped " + skipped + "\tsetted results " + setValue);
+                        if (!QUIET && count > nbLogStep * queryNumberLogStep) {
+                            logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                            nbLogStep++;
+                        }
 
                         it.remove();
                     }
@@ -407,15 +414,17 @@ public class SmCli implements SmlModuleCLI {
                     setValue += rez.getSetValue();
 
                     count += rez.getJobSize();
-                    logger.info("- " + count + " / " + queries_number + "\tskipped " + skipped + "\tsetted results " + setValue);
+                    if (!QUIET) {
+                        logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                    }
 
                     it.remove();
                 }
             }
 
             file.close();
-            logger.info("skipped:" + skipped + "/" + queries_number + "(" + skipped * 100 / queries_number + "%)");
-            logger.info("setted :" + setValue + "/" + queries_number + "(" + setValue * 100 / queries_number + "%)");
+            logger.info("skipped:" + skipped + "/" + queryNumber + "(" + skipped * 100 / queryNumber + "%)");
+            logger.info("setted :" + setValue + "/" + queryNumber + "(" + setValue * 100 / queryNumber + "%)");
             logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {
@@ -442,8 +451,11 @@ public class SmCli implements SmlModuleCLI {
         try {
 
 
-            long queries_number = qloader.getNumberQueries();
-            logger.info("Number of query " + queries_number);
+            long queryNumber = qloader.getNumberQueries();
+            logger.info("Number of query " + queryNumber);
+
+            long queryNumberLogStep = queryNumber / 10; // we log 10 times
+            int nbLogStep = 0;
 
 
 
@@ -471,6 +483,7 @@ public class SmCli implements SmlModuleCLI {
 
             List<Future<ThreadResultsQueryLoader>> results = new ArrayList<Future<ThreadResultsQueryLoader>>();
 
+            logger.info("processing queries...");
 
             while (qloader.hasNext()) {
 
@@ -506,8 +519,10 @@ public class SmCli implements SmlModuleCLI {
                         setValue += rez.getSetValue();
 
                         count += rez.getJobSize();
-                        logger.info("- " + count + " / " + queries_number + "\tskipped " + skipped + "\tsetted results " + setValue);
-
+                        if (!QUIET && count > nbLogStep * queryNumberLogStep) {
+                            logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                            nbLogStep++;
+                        }
                         it.remove();
                     }
                 }
@@ -531,15 +546,16 @@ public class SmCli implements SmlModuleCLI {
                     setValue += rez.getSetValue();
 
                     count += rez.getJobSize();
-                    logger.info("- " + count + " / " + queries_number + "\tskipped " + skipped + "\tsetted results " + setValue);
-
+                    if (!QUIET) {
+                        logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                    }
                     it.remove();
                 }
             }
 
             file.close();
-            logger.info("skipped:" + skipped + "/" + queries_number + " (" + skipped * 100 / queries_number + "%)");
-            logger.info("setted :" + setValue + "/" + queries_number + " (" + setValue * 100 / queries_number + "%)");
+            logger.info("skipped:" + skipped + "/" + queryNumber + " (" + skipped * 100 / queryNumber + "%)");
+            logger.info("setted :" + setValue + "/" + queryNumber + " (" + setValue * 100 / queryNumber + "%)");
             logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {

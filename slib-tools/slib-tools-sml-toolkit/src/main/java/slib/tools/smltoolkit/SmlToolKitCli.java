@@ -177,27 +177,27 @@ public class SmlToolKitCli extends CmdHandler {
     public static void main(String[] args) {
 
         //DEBUG
-//        String a =  ""
+        String a =  ""
 //                + " -t sm -xmlconf /data/tmp/testsml.xml ";
 //                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
                 
 //                +"-t sm "
 //                + " -profile GO "
 //                + " -quiet "
-//                + " -mtype g "
-//                + " -ic sanchez "
-////                + " -pm lin "
-//                + " -gm gic "
-//                + " -go /data/go/eval/gene_ontology.1_2.obo "
-//                + " -queries /data/tmp/comparison_valid.tsv"
-////                + " -annots /data/go/eval/gene_association.goa_human"
+//                + " -mtype p "
+//                + " -ic resnik "
+//                + " -pm lin "
+////                + " -gm gic "
+//                + " -go /data/go/eval/go_20130302-termdb.owl  "
+//                + " -goformat OWL  "
+//                + " -queries /data/go/eval/benchmark_1000_0.tsv"
+//                + " -annots /data/go/eval/dump_orgHsegGO_sml.tsv"
 //                + " -annotsFormat TSV "
-//                + " -annots /data/tmp/annots.tsv"
 //                + " -output /tmp/testsmltoolkitgo.tsv"
 ////                + " -filter noEC=IEA:Taxon=9696,5454"
 //                + " -noannots set=0"
 //                + " -notfound stop"
-//                ;
+                ;
 
 //        args = a.split("\\s+");
 

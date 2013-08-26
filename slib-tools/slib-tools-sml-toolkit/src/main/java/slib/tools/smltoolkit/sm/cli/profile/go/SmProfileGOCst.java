@@ -34,10 +34,12 @@
  */
 package slib.tools.smltoolkit.sm.cli.profile.go;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
+import slib.sglib.io.util.GFormat;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 
@@ -60,6 +62,9 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
      */
     private static boolean _debugMode = false;
     static String ANNOTSFORMAT_DEFAULT = "GAF2";
+    static String GOFORMAT_DEFAULT = "OBO";
+    static String GOFORMAT_OWL = "OWL";
+    static String[] GOFORMAT_VALID = {GFormat.OBO.name(),GOFORMAT_OWL, GFormat.RDF_XML.name()};
     static String MTYPE_PAIRWISE = "p";
     static String MTYPE_GROUPWISE = "g";
     static String MTYPE_DEFAULT = "p";
@@ -82,6 +87,11 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
             .hasArg()
             .withDescription("\nThe path to the GO in OBO 1.2 format (required)\n")
             .create("go");
+    @SuppressWarnings("static-access")
+    private static final Option _go_format = OptionBuilder.withArgName("format")
+            .hasArg()
+            .withDescription("\nThe ontology file format "+Arrays.toString(GOFORMAT_VALID)+", default "+GOFORMAT_DEFAULT+"\n")
+            .create("goformat");
     @SuppressWarnings("static-access")
     private static final Option _annots = OptionBuilder.withArgName("file path")
             .hasArg()
@@ -191,6 +201,7 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
 
     static {
         _optionsOrder.put(_go, _optionsOrder.size());
+        _optionsOrder.put(_go_format, _optionsOrder.size());
         _optionsOrder.put(_annots, _optionsOrder.size());
         _optionsOrder.put(_annotsFormat, _optionsOrder.size());
         _optionsOrder.put(_queries, _optionsOrder.size());

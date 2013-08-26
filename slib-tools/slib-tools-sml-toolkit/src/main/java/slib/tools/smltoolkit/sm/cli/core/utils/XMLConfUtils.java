@@ -229,7 +229,7 @@ public class XMLConfUtils {
         // We just prefix the URIs by the URI associated to the graph and
         // we just output the local name in the result file
         if (c.mtype != null && c.mtype.equals("g")) {
-            queryXML += "\t\t\t" + XmlTags.URI_PREFIX_ATTR + " = \"" + c.graphURI + "\"\n";
+            queryXML += "\t\t\t" + XmlTags.URI_PREFIX_ATTR + " = \"" + c.prefixURI_Attr + "\"\n";
             queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"false\" \n";
         } else {
             // Pairwise context: users will specify GO:xxxx 

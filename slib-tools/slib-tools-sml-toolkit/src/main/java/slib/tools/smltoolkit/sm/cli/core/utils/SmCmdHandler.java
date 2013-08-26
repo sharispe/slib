@@ -119,6 +119,7 @@ public class SmCmdHandler extends CmdHandler {
                     
                     if(profile.equals("GO")){
                         SmProfile_GO goprofile = new SmProfile_GO();
+                        // We generate the XML configuration file
                         goprofile.execute(argSMProfile);
                         xmlConfAsString = goprofile.xmlconf;
                     }

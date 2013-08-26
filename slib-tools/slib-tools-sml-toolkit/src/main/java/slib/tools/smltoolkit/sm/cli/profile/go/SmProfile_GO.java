@@ -34,6 +34,7 @@
  */
 package slib.tools.smltoolkit.sm.cli.profile.go;
 
+import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.utils.GraphActionExecutor;
@@ -71,11 +72,12 @@ public class SmProfile_GO implements SmlModuleCLI {
             logger.info("---------------------------------------------------------------");
             logger.info("mType        : " + smconf.mtype);
             logger.info("Ontology     : " + smconf.ontologyPath);
+            logger.info("Onto format  : " + smconf.ontologyFormat);
             logger.info("Aspect       : " + smconf.aspect);
-            
+            logger.info("Annots       : " + smconf.annotsPath);
+            logger.info("Annot Format : " + smconf.annotsFormat);
+
             if (performGroupwise) {
-                logger.info("Annots       : " + smconf.annotsPath);
-                logger.info("Annot Format : " + smconf.annotsFormat);
                 logger.info("notfound     : " + smconf.notFound);
                 logger.info("noannots     : " + smconf.noAnnots);
                 logger.info("filter       : " + smconf.filter);
@@ -100,6 +102,13 @@ public class SmProfile_GO implements SmlModuleCLI {
             if (smconf.ontologyPath == null) {
                 throw new SLIB_Ex_Critic("Please precise the location of the ontology");
             }
+            if (smconf.ontologyFormat == null) {
+                smconf.setOntologyFormat(SmProfileGOCst.GOFORMAT_DEFAULT);
+            } else if (!Arrays.asList(SmProfileGOCst.GOFORMAT_VALID).contains(smconf.ontologyFormat)) {
+                throw new SLIB_Ex_Critic("Please precise a valid ontology format, current '" + smconf.ontologyFormat + "' valid= " + Arrays.toString(SmProfileGOCst.GOFORMAT_VALID));
+            } else if (smconf.ontologyFormat.equals(SmProfileGOCst.GOFORMAT_OWL)) {
+                smconf.setOntologyFormat(GFormat.RDF_XML.name());
+            }
             if (smconf.queries == null) {
                 throw new SLIB_Ex_Critic("Please precise the location of the queries");
             }
@@ -115,7 +124,16 @@ public class SmProfile_GO implements SmlModuleCLI {
                 throw new SLIB_Ex_Critic("Please correct the number of threads allocated");
             }
 
-            smconf.setGraphURI("http://g/");
+
+            String GO_PREFIX_OWL = "http://purl.org/obo/owl/GO#GO_";
+
+
+
+            String GRAPH_URI = "http://bio/";
+            String GENE_ID_PREFIX = GRAPH_URI + "geneid/";
+            smconf.setGraphURI(GRAPH_URI);
+            smconf.setPrefixURIAttribut(GENE_ID_PREFIX);
+
 
             //Build XML File
             // Ontology TAG
@@ -123,11 +141,11 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             xmlconf += "\t<opt  threads = \"" + smconf.threads + "\"  />\n\n";
 
-            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + smconf.graphURI + "\" />\n\t</namespaces>\n\n";
+            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + GO_PREFIX_OWL + "\" />\n\t</namespaces>\n\n";
             xmlconf += "\t<graphs>    \n";
             xmlconf += "\t\t<graph uri=\"" + smconf.graphURI + "\"  >    \n";
             xmlconf += "\t\t\t<data>\n";
-            xmlconf += "\t\t\t\t<file format=\"OBO\"   path=\"" + smconf.ontologyPath + "\"/>    \n";
+            xmlconf += "\t\t\t\t<file format=\"" + smconf.ontologyFormat + "\"   path=\"" + smconf.ontologyPath + "\"/>    \n";
 
             if (smconf.annotsPath != null) {
 
@@ -136,7 +154,7 @@ public class SmProfile_GO implements SmlModuleCLI {
                     xmlconf += "\t\t\t\t<file format=\"" + smconf.annotsFormat + "\"   path=\"" + smconf.annotsPath + "\"/>    \n";
                 } else if (smconf.annotsFormat.equals("TSV")) {
                     // no prefixObject because the string will contain a PREFIX, e.g. GO:XXXXXX
-                    xmlconf += "\t\t\t\t<file format=\"TSV_ANNOT\"   path=\"" + smconf.annotsPath + "\" prefixSubject=\"" + smconf.graphURI + "\" header=\"false\"/>    \n";
+                    xmlconf += "\t\t\t\t<file format=\"TSV_ANNOT\"   path=\"" + smconf.annotsPath + "\" prefixSubject=\"" + GENE_ID_PREFIX + "\" header=\"false\"/>    \n";
                 } else {
                     throw new SLIB_Ex_Critic("Unsupported file format " + smconf.annotsFormat);
                 }
@@ -148,16 +166,25 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             String goAspectValue;
             String actionValue = "VERTICES_REDUCTION";
+
+            String GO_LOCAL_NAME_PREFIX = "";
+            /*
+             * OBO Format = GO:0008150 -> namespace + 0008150
+             * OWL Format = http://purl.org/obo/owl/GO#GO_0008150 -> namespace + OWL_PREFIX + 0008150
+             */
+//            if (smconf.ontologyFormat.equals(GFormat.RDF_XML)) {
+//                GO_LOCAL_NAME_PREFIX = "GO_";
+//            }
             if (smconf.aspect == null || smconf.aspect.equals("BP")) {
-                goAspectValue = smconf.graphURI + "0008150";
+                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0008150";
 
             } else if (smconf.aspect.equals("MF")) {
 
-                goAspectValue = smconf.graphURI + "0003674";
+                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0003674";
 
             } else if (smconf.aspect.equals("CC")) {
 
-                goAspectValue = smconf.graphURI + "0005575";
+                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0005575";
             } else if (smconf.aspect.equals("GLOBAL")) {
 
                 goAspectValue = GraphActionExecutor.REROOT_UNIVERSAL_ROOT_FLAG;
@@ -188,7 +215,7 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             if (smconf.filter != null) {
                 if (!smconf.annotsFormat.equals(GFormat.GAF2.toString())) {
-                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type "+GFormat.GAF2.toString());
+                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type " + GFormat.GAF2.toString());
                 }
                 xmlconf += "\t<filters>\n" + XMLConfUtils.buildSML_FilterGAF2_XML_block(smconf.filter) + "\t</filters>\n";
             }

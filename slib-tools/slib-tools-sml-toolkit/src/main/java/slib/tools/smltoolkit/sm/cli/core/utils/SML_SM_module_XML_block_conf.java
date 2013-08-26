@@ -38,6 +38,7 @@ package slib.tools.smltoolkit.sm.cli.core.utils;
 public class SML_SM_module_XML_block_conf {
 
     public String ontologyPath;
+    public String ontologyFormat;
     public String annotsPath;
     public String annotsFormat;
     public String aspect;
@@ -55,6 +56,7 @@ public class SML_SM_module_XML_block_conf {
     public String quiet;
     public String noAnnots;
     public String notFound;
+    public String prefixURI_Attr;
 
     public SML_SM_module_XML_block_conf setGraphURI(String graphURI) {
         this.graphURI = graphURI;
@@ -115,6 +117,11 @@ public class SML_SM_module_XML_block_conf {
         this.ontologyPath = ontologyPath;
         return this;
     }
+    
+    public SML_SM_module_XML_block_conf setOntologyFormat(String ontologyFormat) {
+        this.ontologyFormat = ontologyFormat;
+        return this;
+    }
 
     public SML_SM_module_XML_block_conf setAnnotsPath(String annotsPath) {
         this.annotsPath = annotsPath;
@@ -143,6 +150,11 @@ public class SML_SM_module_XML_block_conf {
 
     public SML_SM_module_XML_block_conf setNotrannots(String notrannots) {
         this.notrannots = notrannots;
+        return this;
+    }
+    
+     public SML_SM_module_XML_block_conf setPrefixURIAttribut(String p) {
+        this.prefixURI_Attr = p;
         return this;
     }
 

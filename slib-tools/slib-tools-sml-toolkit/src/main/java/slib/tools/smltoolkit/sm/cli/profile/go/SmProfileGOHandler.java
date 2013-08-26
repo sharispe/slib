@@ -81,6 +81,9 @@ public class SmProfileGOHandler extends CmdHandler {
                 if (line.hasOption("go")) {
                     smconf.setOntologyPath(line.getOptionValue("go"));
                 }
+                if (line.hasOption("goformat")) {
+                    smconf.setOntologyFormat(line.getOptionValue("goformat"));
+                }
                 if (line.hasOption("annots")) {
                     smconf.setAnnotsPath( line.getOptionValue("annots") );
                 }
