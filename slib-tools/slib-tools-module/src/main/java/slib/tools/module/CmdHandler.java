@@ -34,9 +34,11 @@
  */
 package slib.tools.module;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -57,21 +59,11 @@ public abstract class CmdHandler {
     public ToolCmdHandlerCst cstCmd;
     public Options options;
     public HelpFormatter helpFormatter;
-    public Map<Option, Integer> optionsOrder;
     private String USAGE;
     private final String HEADER = "----------------------------------------------------------------------";
     private String FOOTER = HEADER;
     static Logger logger = LoggerFactory.getLogger(CmdHandler.class);
-    Comparator<Option> comparator = new Comparator<Option>() {
-        @Override
-        public int compare(Option o1, Option o2) {
-            if (optionsOrder.get(o1).intValue() > optionsOrder.get(o2).intValue()) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    };
+    Comparator<Option> comparator;
 
     /**
      *
@@ -80,13 +72,13 @@ public abstract class CmdHandler {
      * @param args
      * @throws SLIB_Exception
      */
-    public CmdHandler(ModuleCst cst, ToolCmdHandlerCst cstCmd, String[] args) throws SLIB_Exception {
+    public CmdHandler(ModuleCst cst, ToolCmdHandlerCst cstCmd) throws SLIB_Exception {
         this.cst = cst;
         this.cstCmd = cstCmd;
 
         USAGE = "java -jar " + this.cstCmd.getAppCmdName() + " [arguments]";
 
-        this.optionsOrder = cstCmd.getOptionOrder();
+        this.comparator = new OptionComparator(cstCmd.getOptionOrder());
 
         logger.info(HEADER);
         logger.info("\t" + cst.getAppName() + " " + cst.getVersion());
@@ -97,12 +89,16 @@ public abstract class CmdHandler {
             logger.info(HEADER);
         }
 
-        buildOptions();
+        options = new Options();
+
+        for (Option o : cstCmd.getOptionOrder().keySet()) {
+            options.addOption(o);
+        }
+
 
         helpFormatter = new HelpFormatter();
         helpFormatter.setOptionComparator(comparator);
 
-        processArgs(args);
     }
 
     /**
@@ -201,14 +197,5 @@ public abstract class CmdHandler {
 
         System.exit(0);
 
-    }
-
-    private void buildOptions() {
-
-        options = new Options();
-
-        for (Option o : optionsOrder.keySet()) {
-            options.addOption(o);
-        }
     }
 }
