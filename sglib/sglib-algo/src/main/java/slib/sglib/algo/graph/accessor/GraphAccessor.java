@@ -34,6 +34,7 @@ package slib.sglib.algo.graph.accessor;
 import java.util.HashSet;
 import java.util.Set;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
@@ -83,12 +84,11 @@ public class GraphAccessor {
 
     /**
      * Return a set of URI corresponding to the instances of the graph, note
-     * that instance definition is here different from RDF the definition of an
-     * instance. A vertex v of the graph is considered as an instance if the
-     * graph contains a statement of the form :
+     * that instance. A vertex v of the graph is considered as an instance if the
+     * graph do not contains a statement of the form :
      * <ul>
      * <li> v RFD.TYPE ? with ? not equals to
-     * RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL
+     * RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL or OWL.CLASS
      * </li>
      * Those restrictions do not cover all cases e.g. RDF instance of
      * RDFS.CONTAINER will be considered as instance...
@@ -98,22 +98,19 @@ public class GraphAccessor {
      * @return a set of URI corresponding to the classes of the graph
      */
     public static Set<URI> getInstances(G graph) {
-        Set<URI> instances = new HashSet<URI>();
-        URI o;
-        for (E e : graph.getE(RDF.TYPE)) {
+        Set<URI> instances = new HashSet<URI>(graph.getV());
 
-            o = e.getURI();
-            if (!o.equals(RDFS.RESOURCE)
-                    && !o.equals(RDFS.CLASS)
-                    && !o.equals(RDFS.LITERAL)
-                    && !o.equals(RDFS.DATATYPE)
-                    && !o.equals(RDF.PROPERTY)
-                    && !o.equals(RDF.XMLLITERAL)) {
-                instances.add(e.getSource());
+        URI o;
+        for (E e : graph.getE(RDFS.SUBCLASSOF)) {
+            instances.remove(e.getTarget());
+            instances.remove(e.getSource());
+        }
+        for (E e : graph.getE(RDF.TYPE)) {
+            o = e.getTarget();
+            if (o.equals(RDFS.CLASS) || o.equals(OWL.CLASS) || o.equals(RDFS.LITERAL) || o.equals(RDFS.DATATYPE) || o.equals(RDF.PROPERTY) || o.equals(RDF.XMLLITERAL)) {
+                instances.remove(e.getSource());
             }
         }
-
-
         return instances;
     }
 
