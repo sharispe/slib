@@ -156,8 +156,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
         this.filepath = file;
 
-
-
         this.defaultNamespace = defaultNamespace;
 
         format_version = "undefined";
@@ -273,7 +271,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
                             if (flag.equals(OBOconstants.TERM_ID_FLAG)) { // id
 
                                 oboTermCurrent = new OboTerm();
-
                                 oboTermCurrent.setURIstring(buildURI(value));
                             } else if (flag.equals(OBOconstants.ISA_FLAG)) { // is_a
                                 oboTermCurrent.addRel(subClassOfURI, buildURI(value));
