@@ -108,6 +108,10 @@ public class GraphActionExecutor {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
         Set<URI> instances = GraphAccessor.getInstances(g);
+        
+        logger.info("Classes  : "+classes.size());
+        logger.info("instances: "+instances.size());
+        logger.info("vertices : "+g.getV().size());
 
 
         Set<URI> toRemove = new HashSet<URI>();
@@ -119,7 +123,7 @@ public class GraphActionExecutor {
              * Instances annotated by those classes are also conserved into the graph, others are removed.
              */
 
-            logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by the taxonomic graph built from: " + rootURIs);
+            logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by " + rootURIs+" (only the classes subsumed by the given root are considered)");
 
             try {
                 URI rootURI = factory.createURI(rootURIs);
@@ -130,6 +134,8 @@ public class GraphActionExecutor {
 
                 DescendantEngine descEngine = new DescendantEngine(g);
                 Set<URI> descsInclusive = descEngine.getDescendantsInc(rootURI);
+                
+                logger.info(descsInclusive.size()+" subclasses of " + rootURI +" detected");
 
                 int classesNb = classes.size();
 
@@ -148,7 +154,8 @@ public class GraphActionExecutor {
                 for (URI v : instances) {
 
                     // No links to taxonomic graph anymore 
-                    if (g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()) {
+                    // we check the URI as is not considered as both instance and class
+                    if (!descsInclusive.contains(v) && g.getV(v, RDF.TYPE, Direction.OUT).isEmpty()) {
                         instancesToRemove.add(v);
                     }
                 }
