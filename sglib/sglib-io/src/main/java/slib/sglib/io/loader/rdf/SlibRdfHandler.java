@@ -35,14 +35,14 @@ public class SlibRdfHandler implements RDFHandler {
     @Override
     public void startRDF() throws RDFHandlerException {
 
-        logger.info("Starting Processing");
+        logger.info("Start Process");
         count = 0;
     }
 
     @Override
     public void endRDF() throws RDFHandlerException {
 
-        logger.info("Ending Processing " + count + " statements loaded ");
+        logger.info("Ending Process " + count + " statements loaded ");
         logger.info("vertices: " + g.getV().size());
         logger.info("edges   : " + g.getE().size());
         logger.info("Skipped (statement involving non URI ressources) : " + countSkipped);
@@ -77,6 +77,5 @@ public class SlibRdfHandler implements RDFHandler {
     }
 
     @Override
-    public void handleComment(String comment) throws RDFHandlerException {
-    }
+    public void handleComment(String comment) throws RDFHandlerException {}
 }
