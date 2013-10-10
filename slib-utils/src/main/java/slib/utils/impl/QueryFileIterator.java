@@ -174,6 +174,6 @@ public class QueryFileIterator implements QueryIterator {
         lnr = new LineNumberReader(new FileReader(new File(filepath)));
         lnr.skip(Long.MAX_VALUE);
 
-        return lnr.getLineNumber();
+        return lnr.getLineNumber()+1; // line numbering starts at 0
     }
 }
