@@ -34,11 +34,7 @@
  */
 package slib.tools.module;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
@@ -139,7 +135,7 @@ public abstract class CmdHandler {
      */
     public final void showRef() {
         if (cst.getReference() != null) {
-            logger.info("Please cite: " + cst.getReference());
+            logger.info("Please cite: \n" + cst.getReference());
         }
     }
 
