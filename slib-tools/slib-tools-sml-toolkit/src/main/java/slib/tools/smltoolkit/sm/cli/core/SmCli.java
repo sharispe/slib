@@ -191,7 +191,7 @@ public class SmCli implements SmlModuleCLI {
         logger.info("---------------------------------------------------------------");
 
 
-        // check if measure evaluated require DAG structure
+        // check if the evaluated measure requires the graph to be a DAG
         if (requireDAG()) {
             logger.info("checking DAG property");
             ValidatorDAG dagVal = new ValidatorDAG();
@@ -324,7 +324,7 @@ public class SmCli implements SmlModuleCLI {
 
 
             long queryNumber = qloader.getNumberQueries();
-            logger.info("Number of query " + queryNumber);
+            logger.info("Number of query ~" + queryNumber);
 
             long queryNumberLogStep = queryNumber / 10; // we log 10 times
             int nbLogStep = 0;
@@ -389,7 +389,7 @@ public class SmCli implements SmlModuleCLI {
 
                         count += rez.getJobSize();
                         if (!QUIET && count > nbLogStep * queryNumberLogStep) {
-                            logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                            logger.info("- " + count + " / ~" + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
                             nbLogStep++;
                         }
 
@@ -417,7 +417,7 @@ public class SmCli implements SmlModuleCLI {
 
                     count += rez.getJobSize();
                     if (!QUIET) {
-                        logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                        logger.info("- " + count + " / ~" + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
                     }
 
                     it.remove();
@@ -425,8 +425,9 @@ public class SmCli implements SmlModuleCLI {
             }
 
             file.close();
-            logger.info("skipped:" + skipped + "/" + queryNumber + "(" + skipped * 100 / queryNumber + "%)");
-            logger.info("setted :" + setValue + "/" + queryNumber + "(" + setValue * 100 / queryNumber + "%)");
+            logger.info(count+" queries considered");
+            logger.info("skipped:" + skipped + "/" + count + "(" + skipped * 100 / count + "%)");
+            logger.info("setted :" + setValue + "/" + count + "(" + setValue * 100 / count + "%)");
             logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {
@@ -454,7 +455,7 @@ public class SmCli implements SmlModuleCLI {
 
 
             long queryNumber = qloader.getNumberQueries();
-            logger.info("Number of query " + queryNumber);
+            logger.info("Number of query ~" + queryNumber);
 
             long queryNumberLogStep = queryNumber / 10; // we log 10 times
             int nbLogStep = 0;
@@ -522,7 +523,7 @@ public class SmCli implements SmlModuleCLI {
 
                         count += rez.getJobSize();
                         if (!QUIET && count > nbLogStep * queryNumberLogStep) {
-                            logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                            logger.info("- " + count + " / ~" + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
                             nbLogStep++;
                         }
                         it.remove();
@@ -549,15 +550,16 @@ public class SmCli implements SmlModuleCLI {
 
                     count += rez.getJobSize();
                     if (!QUIET) {
-                        logger.info("- " + count + " / " + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
+                        logger.info("- " + count + " / ~" + queryNumber + "\tskipped " + skipped + "\tsetted results " + setValue);
                     }
                     it.remove();
                 }
             }
 
             file.close();
-            logger.info("skipped:" + skipped + "/" + queryNumber + " (" + skipped * 100 / queryNumber + "%)");
-            logger.info("setted :" + setValue + "/" + queryNumber + " (" + setValue * 100 / queryNumber + "%)");
+            logger.info(count+" queries considered");
+            logger.info("skipped:" + skipped + "/" + count + " (" + skipped * 100 / count + "%)");
+            logger.info("setted :" + setValue + "/" + count + " (" + setValue * 100 / count + "%)");
             logger.info("consult:" + queryParam.getOutfile());
 
         } catch (Exception e) {

@@ -48,11 +48,11 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  * Semantic Measures Library Toolkit Command Line Interface
+ *
  * @author Sebastien Harispe
  *
  */
 public class SmlToolKitCli extends CmdHandler {
-
 
     public String tool = null;
     static Logger logger = LoggerFactory.getLogger(SmlToolKitCli.class);
@@ -61,8 +61,6 @@ public class SmlToolKitCli extends CmdHandler {
     CommandLine argsGeneralCMD;
 
     /**
-     *
-     * @param args
      * @throws SLIB_Exception
      */
     public SmlToolKitCli() throws SLIB_Exception {
@@ -109,8 +107,7 @@ public class SmlToolKitCli extends CmdHandler {
 
         if (tool == null) {
             ending("", true);
-        }
-        else if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
+        } else if (!Arrays.asList(SmlToolKitCliCst.acceptedTools).contains(tool)) {
             ending(SmlToolKitCliCst.errorTool, true);
         } else if (tool.equals(SmlToolKitCliCst.ToolName_SM)) {
             logger.info("Loading SM Tool");
@@ -174,26 +171,24 @@ public class SmlToolKitCli extends CmdHandler {
     public static void main(String[] args) {
 
         //DEBUG
-        String a =  ""
-//                + " -t sm -xmlconf /data/tmp/testsml.xml ";
-//                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
-                
-//                +"-t sm "
-//                + " -profile GO "
-//                + " -quiet "
-//                + " -mtype p "
-//                + " -ic resnik "
-//                + " -pm lin "
-////                + " -gm gic "
-//                + " -go /data/go/eval/go_20130302-termdb.owl  "
-//                + " -goformat OWL  "
-//                + " -queries /data/go/eval/benchmark_1000_0.tsv"
-//                + " -annots /data/go/eval/dump_orgHsegGO_sml.tsv"
-//                + " -annotsFormat TSV "
-//                + " -output /tmp/testsmltoolkitgo.tsv"
-////                + " -filter noEC=IEA:Taxon=9696,5454"
-//                + " -noannots set=0"
-//                + " -notfound stop"
+        String a = "" //                + " -t sm -xmlconf /data/tmp/testsml.xml ";
+                //                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
+                //                +"-t sm "
+                //                + " -profile GO "
+                //                + " -quiet "
+                //                + " -mtype p "
+                //                + " -ic resnik "
+                //                + " -pm lin "
+                ////                + " -gm gic "
+                //                + " -go /data/go/eval/go_20130302-termdb.owl  "
+                //                + " -goformat OWL  "
+                //                + " -queries /data/go/eval/benchmark_1000_0.tsv"
+                //                + " -annots /data/go/eval/dump_orgHsegGO_sml.tsv"
+                //                + " -annotsFormat TSV "
+                //                + " -output /tmp/testsmltoolkitgo.tsv"
+                ////                + " -filter noEC=IEA:Taxon=9696,5454"
+                //                + " -noannots set=0"
+                //                + " -notfound stop"
                 ;
 
 //        args = a.split("\\s+");

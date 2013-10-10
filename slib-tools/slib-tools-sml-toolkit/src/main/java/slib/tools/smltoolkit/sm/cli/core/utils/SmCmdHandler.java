@@ -61,7 +61,6 @@ public class SmCmdHandler extends CmdHandler {
 
     /**
      *
-     * @param args
      * @throws SLIB_Exception
      */
     public SmCmdHandler() throws SLIB_Exception {

@@ -55,7 +55,6 @@ public class SmProfileGOHandler extends CmdHandler {
 
     /**
      *
-     * @param args
      * @throws SLIB_Exception
      */
     public SmProfileGOHandler() throws SLIB_Exception {

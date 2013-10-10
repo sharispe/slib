@@ -85,7 +85,7 @@ public class SmProfileGOCst extends ToolCmdHandlerCst {
     @SuppressWarnings("static-access")
     private static final Option _go = OptionBuilder.withArgName("file path")
             .hasArg()
-            .withDescription("\nThe path to the GO in OBO 1.2 format (required)\n")
+            .withDescription("\nThe path to the GO (required)\n")
             .create("go");
     @SuppressWarnings("static-access")
     private static final Option _go_format = OptionBuilder.withArgName("format")

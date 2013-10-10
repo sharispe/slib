@@ -119,9 +119,9 @@ public class SmlToolKitCliCst extends ToolCmdHandlerCst {
     public final static HashMap<Option, Integer> _optionsOrder = new HashMap<Option, Integer>();
 
     static {
-        _optionsOrder.put(SmlToolKitCliCst.tool,     0);
+        _optionsOrder.put(SmlToolKitCliCst.tool, 0);
         _optionsOrder.put(SmlToolKitCliCst.version, 10);
-        _optionsOrder.put(SmlToolKitCliCst.help,    20);
+        _optionsOrder.put(SmlToolKitCliCst.help, 30);
     }
 
     /**
