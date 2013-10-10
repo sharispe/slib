@@ -99,7 +99,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
             URIFactory factory = URIFactoryMemory.getSingleton();
 
-            String uriE1s, uriE2s;
+            String uriE1s, uriE2s, ids_pairs;
             StringBuilder tmp_buffer = new StringBuilder();
 
             boolean printBaseName = queryParam.isOutputBaseName();
@@ -109,7 +109,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             URI e1, e2;
             Set<URI> setE1, setE2;
             double sim;
-
+            
 
             for (QueryEntry q : queriesBench) {
 
@@ -122,6 +122,8 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
 
+
+
                 try {
                     e1 = factory.createURI(uriE1s, useLoadedPrefixes);
                     e2 = factory.createURI(uriE2s, useLoadedPrefixes);
@@ -131,29 +133,23 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 }
 
                 if (printBaseName) {
-                    if(useLoadedPrefixesOutput){
-                        tmp_buffer.append(factory.shortURIasString(e1));
-                        tmp_buffer.append("\t");
-                        tmp_buffer.append(factory.shortURIasString(e2));
-                    }
-                    else{
-                        tmp_buffer.append(uriE1s);
-                        tmp_buffer.append("\t");
-                        tmp_buffer.append(uriE2s);
+                    if (useLoadedPrefixesOutput) {
+                        ids_pairs = factory.shortURIasString(e1) + "\t" + factory.shortURIasString(e2);
+                    } else {
+                        ids_pairs = uriE1s + "\t" + uriE2s;
                     }
                 } else {
-                    tmp_buffer.append(e1.getLocalName());
-                    tmp_buffer.append("\t");
-                    tmp_buffer.append(e2.getLocalName());
+                    ids_pairs = e1.getLocalName() + "\t" + e2.getLocalName();
                 }
 
 
                 if (!g.containsVertex(e1) || !g.containsVertex(e2)) {
 
+
                     if (queryParam.getNoFoundAction() == ActionsParams.SET) {
 
                         setValue++;
-
+                        tmp_buffer.append(ids_pairs);
                         for (int i = 0; i < nbMeasures; i++) {
                             tmp_buffer.append("\t").append(queryParam.getNoFoundScore());
                         }
@@ -189,6 +185,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                     if (queryParam.getNoAnnotAction() == ActionsParams.SET) {
                         setValue++;
 
+                        tmp_buffer.append(ids_pairs);
                         for (int i = 0; i < nbMeasures; i++) {
                             tmp_buffer.append("\t").append(queryParam.getNoAnnotationScore());
                         }
@@ -211,6 +208,8 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                     }
                     continue;
                 }
+                
+                tmp_buffer.append(ids_pairs);
 
                 for (SMconf m : sspM.conf.gConfGroupwise) {
 
@@ -253,7 +252,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             results.buffer.append(tmp_buffer);
             results.setSetValue(setValue);
             results.setSkipped(skipped);
-            
+
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
