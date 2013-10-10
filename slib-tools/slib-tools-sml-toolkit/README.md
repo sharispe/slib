@@ -120,6 +120,8 @@ Below the parameters which can be used, command-line examples are also provided:
 * `-go <file path>` the path to the GO in OBO 1.2 format, other format are not supported (required).
 This file can be downloaded at http://www.geneontology.org/
 
+* `-goformat <format>` The ontology file format, , accepted values [OBO, OWL, RDF_XML], default OBO
+
 * `-annots <file path>` the path to the annotation file. 
 Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content)
 This file can be downloaded at http://www.geneontology.org/
