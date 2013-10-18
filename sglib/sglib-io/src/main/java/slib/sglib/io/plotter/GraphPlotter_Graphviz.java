@@ -56,7 +56,7 @@ public class GraphPlotter_Graphviz {
      * @return a DOT String representation of the graph.
      */
     public static String plot(G graph, Set<URI> VertexUriColored, boolean showLabels) {
-        return plot(graph, VertexUriColored, showLabels, null);
+        return plot(graph, VertexUriColored, showLabels,true, null);
     }
 
     /**
@@ -67,7 +67,7 @@ public class GraphPlotter_Graphviz {
      * @param index
      * @return a DOT String representation of the graph
      */
-    public static String plot(G graph, Set<URI> VertexColored, boolean showLabels, IndexHash index) {
+    public static String plot(G graph, Set<URI> VertexColored, boolean showLabels,boolean showSubSlassOfLabels, IndexHash index) {
 
         HashMap<URI, String> relColor = new HashMap<URI, String>();
 
@@ -112,17 +112,17 @@ public class GraphPlotter_Graphviz {
 
         for (E e : graph.getE()) {
 
-            URI eType = e.getURI();
+            URI predicate = e.getURI();
             color = defColor_e;
 
-            if (relColor.containsKey(eType)) {
-                color = relColor.get(eType);
+            if (relColor.containsKey(predicate)) {
+                color = relColor.get(predicate);
             }
 
             String info = "";
 
-            if (showLabels) {
-                info = "[label=\"" + eType.getLocalName() + "\",color=" + color + "]";
+            if (showLabels && !(showSubSlassOfLabels == false && predicate.equals(RDFS.SUBCLASSOF))) {
+                info = "[label=\"" + predicate.getLocalName() + "\",color=" + color + "]";
             }
             
             URI s = e.getSource();
