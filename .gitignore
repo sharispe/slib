@@ -13,3 +13,4 @@ releases/
 slib.quicktest.zip
 *.jar
 
+/sglib/sglib-algo/
