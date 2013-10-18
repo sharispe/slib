@@ -219,7 +219,7 @@ public class GraphMemory implements G {
     }
 
     @Override
-    public void addEdges(Set<E> edges) {
+    public void addE(Set<E> edges) {
         if (edges == null) {
             return;
         }
