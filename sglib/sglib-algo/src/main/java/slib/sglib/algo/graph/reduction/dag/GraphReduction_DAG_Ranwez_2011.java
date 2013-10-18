@@ -39,18 +39,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.traversal.classical.DFS;
 import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraint;
-import slib.sglib.model.repo.URIFactory;
 import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Ex_Warning;
@@ -66,158 +67,115 @@ import slib.utils.impl.SetUtils;
  * Hypernym Closure on is-a Directed Acyclic Graphs. IEEE Transactions on
  * Knowledge and Data Engineering 2011, 99:1-14.
  *
- * @author Sebastien Harispe
+ * @author Harispe Sébastien
  */
 public class GraphReduction_DAG_Ranwez_2011 {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
     G graph_reduction;
-    Set<URI> selectedURI;
-    URI rootVertex;
+    Set<URI> selectedURIs;
     Set<URI> verticesRed;
     List<URI> traversalOrder;
-    Set<URI> edgesTypes;
-    Set<URI> roots;
-    private Set<URI> edgesTypesDirect;
+    Set<URI> predicatesTC;
+    private Set<URI> predicatesToAdd;
 
-    /**
-     * Taxonomic reduction
-     *
-     * @param factory
-     * @param graph
-     * @param rootURI
-     * @throws SLIB_Exception
-     */
-    public GraphReduction_DAG_Ranwez_2011(
-            URIFactory factory,
-            G graph,
-            URI rootURI) throws SLIB_Exception {
-
-        this(graph, rootURI, SetUtils.buildSet(RDFS.SUBCLASSOF), SetUtils.buildSet(RDFS.SUBCLASSOF), true);
+    public GraphReduction_DAG_Ranwez_2011(G graph) throws SLIB_Exception {
+        this(graph, SetUtils.buildSet(RDFS.SUBCLASSOF), SetUtils.buildSet(RDFS.SUBCLASSOF), true);
     }
 
     /**
-     * Method used to perform the subGraph extraction.The graph reduction is
-     * performed considering: <br/> <ul> <li> a collection of URI corresponding
-     * to the vertices to consider for the reduction (Query) </li> <li> a
-     * collection of edge types (Collection). An inverse collection
-     * (Collection_Inverse) will be build based on edge types inverse of the
-     * Collection. Inverse are retrieved from graph's edge types inverse mapping
-     * The transitive edge types of the collection_Inverse are used to perform
-     * the topological sort which define the set of vertices evaluated during
-     * the reduction. The reduction is the based on the transive closure
-     * considering a top-down extension of the Query using Collection_Inverse
-     * and a bottom-up query extension using Collection. Edges corresponding to
-     * the closure are added. All directed edges of an edge type of
-     * Collection/Colloection_Inverse between a couple of vertex present in the
-     * reduction are added to the graph. </li> <ul/> considering a , edge type
-     * to consider,
+     * Method used to perform the subGraph extraction of an acyclic graph based
+     * on top-down and bottom-up transitive closures.
+     *
+     * The reduction is performed considering: <br/>
+     * <ul>
+     * <li>
+     * A set of URIs corresponding to the vertices on which must be based the
+     * reduction.
+     * </li>
+     * <li>
+     * A collection of predicate (edge type). The reduction is based on the
+     * transitive closure considering a top-down and a bottom-up query
+     * extensions considering the given predicates to consider as taxonomic
+     * predicates.
+     * </li>
+     * </ul>
+     *
+     * All directed relationships between of other types of predicates can also
+     * be added between the nodes which compose the reduction (in a
+     * post-treatment).
      *
      *
      * @param graph	the graph
-     * @param rootURI	the node to consider as root of the graph
-     * @param edgesTypes	Collection of edge type corresponding to edge types of
-     * interest
-     * @param edgesTypesDirect
+     * @param predicatesTC set of predicates to consider as taxonomic predicate
+     * for the transitive closures
+     *
+     * @param predicateToAdd defines which predicate relationships must be
+     * considered in the post treatment. if nodes x and y compose the reduction
+     * and x,y are linked by a relationship of type p, p must be specified in
+     * the predicateToAdd set in order to specified that the relationship x,p,y
+     * must be expressed in the reduction.
+     *
      * @param validateDAGproperty boolean if true DAG property of the graph
-     * induce by the given parameters is checked
+     * induced by the given parameters is checked
      * @throws SLIB_Exception
      */
     public GraphReduction_DAG_Ranwez_2011(
             G graph,
-            URI rootURI,
-            Set<URI> edgesTypes,
-            Set<URI> edgesTypesDirect,
+            Set<URI> predicatesTC,
+            Set<URI> predicateToAdd,
             boolean validateDAGproperty) throws SLIB_Exception {
 
-        this.edgesTypes = edgesTypes;
-        this.edgesTypesDirect = edgesTypesDirect;
-
-        rootVertex = rootURI;
         this.graph = graph;
+        this.predicatesTC = predicatesTC;
+        this.predicatesToAdd = predicateToAdd;
 
-        if (!graph.containsVertex(rootURI)) {    
-            graph.addV(rootURI);
-        }
-
-        logger.debug("Selected Etypes: " + edgesTypes);
+        logger.debug("Selected predicate(s): " + predicatesTC);
 
         if (validateDAGproperty) {
-
-            logger.debug("Checking DAG property");
-
-            ValidatorDAG vdag = new ValidatorDAG();
-
-            WalkConstraint wc = new WalkConstraintGeneric();
-            for (URI edgeType : edgesTypes) {
-                wc.addAcceptedTraversal(edgeType, Direction.IN);
-            }
-
-            boolean isDag = vdag.isDag(graph, wc);// (graph, rootURI , edgesTypeInverse);
-
-            if (!isDag) {
-                throw new SLIB_Ex_Critic(
-                        "Treatment can only be performed on a DAG, traversal "
-                        + "respecting your parameters define a cyclic graph.");
-            }
-
-
-            // TODO REDUCE the graph
-
-            logger.debug("DAG : " + isDag);
-
-            ValidatorDAG validator = new ValidatorDAG();
-
-            boolean uniqueRoot = validator.isUniqueRootedTaxonomicDag(graph, rootVertex);
-
-            if (!uniqueRoot) {
-                logger.info("Specified root is not a unique Root: " + rootVertex);
-                logger.info("Roots : " + validator.getTaxonomicDAGRoots(graph));
-            }
+            checkGraphProperties();
         }
     }
 
     /**
-     *
-     * @param selectedURI
+     * @param selectedURIs
      * @param g_reduction
      * @throws SLIB_Ex_Critic
      * @throws SLIB_Ex_Warning
      */
-    public void exec(Set<URI> selectedURI, G g_reduction) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
+    public void exec(Set<URI> selectedURIs, G g_reduction) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
+
+        logger.debug("###########################################################################");
+        logger.debug(selectedURIs.toString());
 
         this.graph_reduction = g_reduction;
-        this.selectedURI = selectedURI;
+        this.selectedURIs = selectedURIs;
 
         verticesRed = new HashSet<URI>();
 
-
-        logger.debug("Query composed of  " + selectedURI.size() + " elements");
-        logger.debug("Edges types   " + edgesTypes.size() + " elements");
+        logger.debug("Query composed of  " + selectedURIs.size() + " elements");
+        logger.debug("Edges types   " + predicatesTC.size() + " elements");
 
         checkQueryValidity();
         computeTraversalRestriction();
 
         // Selection of the vertices part of the reduction
 
-        for (URI type : edgesTypes) {
-
+        for (URI type : predicatesTC) {
             Set<URI> types = SetUtils.buildSet(type);
-
-//			Top Down (considering subClassOf as originally admitted eType)
             verticesRed.addAll(reduce(traversalOrder, types, Direction.OUT));
+            logger.debug("Reduction: "+verticesRed);
             logger.debug("Reduction Vertices : " + verticesRed.size());
         }
 
         Collections.reverse(traversalOrder);
 
-        for (URI type : edgesTypes) {
+        for (URI type : predicatesTC) {
 
             Set<URI> types = SetUtils.buildSet(type);
-
-//			Top Down (considering subClassOf as originally admitted eType)
             verticesRed.addAll(reduce(traversalOrder, types, Direction.IN));
+            logger.debug("Reduction: "+verticesRed);
             logger.debug("Reduction Vertices : " + verticesRed.size());
         }
 
@@ -231,28 +189,27 @@ public class GraphReduction_DAG_Ranwez_2011 {
         graph_reduction.addV(verticesRed);
 
         Collections.reverse(traversalOrder);
-        for (URI e : edgesTypes) {
-//			if(e.isTransitive())		
+
+        logger.debug(traversalOrder.toString());
+
+        for (URI e : predicatesTC) {
             addEdges(traversalOrder, e);
         }
 
 
-
-        logger.debug("Adding direct edges considering " + edgesTypesDirect.size() + " eType(s)");
-        logger.debug("" + edgesTypesDirect);
+        logger.debug("Adding direct edges considering " + predicatesToAdd);
+        logger.debug("Adding direct edges considering " + predicatesToAdd.size() + " eType(s)");
+        logger.debug("" + predicatesToAdd);
 
         // Add Direct edges 
         for (URI v : verticesRed) {
 
-            Collection<E> outEdges = graph.getE(v, Direction.OUT);
+            Collection<E> edgesV = graph.getE(v, Direction.BOTH);
 
-            for (E e : outEdges) {
 
-                if (edgesTypesDirect.contains(e.getURI())
-                        && verticesRed.contains(e.getTarget())
-                        && !graph_reduction.containsEdge(v, e.getURI(), e.getTarget())) {
-
-                    graph_reduction.addE(e.getSource(), e.getTarget(), e.getURI());
+            for (E e : edgesV) {
+                if (verticesRed.contains(e.getSource()) && verticesRed.contains(e.getTarget()) && predicatesToAdd.contains(e.getURI())) {
+                    graph_reduction.addE(e);
                 }
             }
         }
@@ -263,19 +220,41 @@ public class GraphReduction_DAG_Ranwez_2011 {
         logger.info("Reduction performed");
     }
 
-    private void computeTraversalRestriction() {
+    private void computeTraversalRestriction() throws SLIB_Ex_Critic {
         WalkConstraint wc = new WalkConstraintGeneric();
-        for (URI edgesType : edgesTypes) {
+        for (URI edgesType : predicatesTC) {
             wc.addAcceptedTraversal(edgesType, Direction.IN);
         }
 
-        System.out.println(rootVertex);
-        DFS dfs = new DFS(graph, rootVertex, wc);
+        Set<URI> roots = new HashSet<URI>();
+
+        for (URI uri : GraphAccessor.getClasses(graph)) {
+
+            boolean valid = true;
+
+            for (URI p : predicatesTC) {
+                if (!graph.getE(p, uri, Direction.OUT).isEmpty()) { // the URI doesn't refer to a root
+                    valid = false;
+                }
+            }
+
+            if (valid) {
+                roots.add(uri);
+            }
+        }
+
+        if (roots.isEmpty()) {
+            throw new SLIB_Ex_Critic("Cannot identify any root...");
+        }
+
+        DFS dfs = new DFS(graph, roots, wc);
         traversalOrder = dfs.getTraversalOrder(); // rootID as last element
     }
 
     private void addEdges(List<URI> traversalOrder, URI edgeType) {
 
+        logger.debug("-------------------------------------------------");
+        logger.debug("-------------------------------------------------");
         logger.debug("Adding Edges of transitive type : " + edgeType);
         logger.debug("verticesRed : " + verticesRed);
         logger.debug("Starting from  : " + traversalOrder.get(0));
@@ -288,20 +267,17 @@ public class GraphReduction_DAG_Ranwez_2011 {
 
             URI u = traversalOrder.get(i);
 
-//			logger.debug("Processing  : "+u);
+//            logger.debug("**************** Processing  : " + u);
 
 
-            if (!vrra.containsKey(u)) // leaf or root init
-            {
+            // leaf or root init
+            if (!vrra.containsKey(u)) {
                 vrra.put(u, new HashSet<URI>());
             }
 
-//			logger.debug("Set : "+vrra.get(u));
+//            logger.debug("Set : " + vrra.get(u));
 
             if (verticesRed.contains(u)) {
-
-//				logger.debug(""+u.getURI().getFragment());
-//				logger.debug("nb "+vrra.get(u).size());
 
                 for (URI r : vrra.get(u)) {
 
@@ -309,9 +285,8 @@ public class GraphReduction_DAG_Ranwez_2011 {
                     URI source = u;
                     URI target = r;
 
-                    graph_reduction.addE(target,edgeType,source);
-
-//					logger.debug("\tAdding edge... "+target.getURI().getFragment()+" "+edgeType.getURI().getFragment()+" "+source.getURI().getFragment());
+                    graph_reduction.addE(target, edgeType, source);
+//                    logger.debug("\tAdding edge... " + target + " " + edgeType + " " + source);
                 }
                 vrra.put(u, new HashSet<URI>());
                 vrra.get(u).add(u);
@@ -349,11 +324,14 @@ public class GraphReduction_DAG_Ranwez_2011 {
      */
     private Set<URI> reduce(List<URI> order, Set<URI> edgeTypes, Direction dir) {
 
+        logger.debug("-----------------------------------------------------------");
         logger.debug("'Transitive Closure' considering EdgeTypes : " + edgeTypes);
+        logger.debug("Direction: " + dir);
         logger.debug("Propogation started from : " + order.get(0));
+        logger.debug("Size traversal ordering: "+order.size());
 
-        HashMap<URI, HashSet<URI>> sd = new HashMap<URI, HashSet<URI>>(traversalOrder.size());
-        HashMap<URI, Integer> maxSd = new HashMap<URI, Integer>();
+        Map<URI, Set<URI>> sd = new HashMap<URI, Set<URI>>(order.size());
+        Map<URI, Integer> maxSd = new HashMap<URI, Integer>();
 
 
         Set<URI> verticesReduction = new HashSet<URI>();
@@ -364,62 +342,96 @@ public class GraphReduction_DAG_Ranwez_2011 {
         }
 
         for (URI v : order) {
+            
+            
 
-//			System.out.println("---> "+v);
-
-            if (selectedURI.contains(v)) {
+            if (selectedURIs.contains(v)) {
                 sd.get(v).add(v);
-//				System.out.println("---> Adding (QUERY) "+v);
             }
+            
+//            logger.debug("* "+v+" max single gain: "+maxSd.get(v)+" total gain: "+sd.get(v).size());
+            
             if (sd.get(v).size() > maxSd.get(v)) {
 
-
                 verticesReduction.add(v);
+//                logger.debug("- Add "+v);
                 sd.get(v).add(v);
-//				System.out.println("---> Adding "+v+"  max "+maxSd.get(v)+"  "+sd.get(v).size());
             }
 
             for (E e : graph.getE(edgeTypes, v, dir)) {
 
-                URI t = e.getTarget();
+                URI t;
+                if(dir == Direction.OUT){
+                    t = e.getTarget();
+                }
+                else{
+                    t = e.getSource();
+                }
+                
 
                 // check that the vertex is contained in the traversal 
                 // restriction defined by the root selected 
 
-//				System.out.println("\t"+e.getSource().getURI().getFragment()+"\t"+e.getType().getURI().getFragment()+"\t"+t);
-
                 if (sd.containsKey(t)) {
 
-                    HashSet<URI> union = new HashSet<URI>(SetUtils.union(sd.get(t), sd.get(v)));
-//					System.out.println("Union "+union);
+                    Set<URI> union = new HashSet<URI>(SetUtils.union(sd.get(t), sd.get(v)));
                     sd.put(t, union);
                     maxSd.put(t, Math.max(sd.get(v).size(), maxSd.get(t)));
                 }
             }
-
-
-
         }
+        logger.debug(" "+verticesReduction.toString());
+        logger.debug("-reduction contains "+verticesReduction.size());
         return verticesReduction;
     }
 
     /**
      * Check the parameters of the current configuration
+     *
      * @throws SLIB_Ex_Critic
-     * @throws SLIB_Ex_Warning 
+     * @throws SLIB_Ex_Warning
      */
     private void checkQueryValidity() throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
 
-        if (selectedURI == null || selectedURI.size() < 2) {
+        if (selectedURIs == null || selectedURIs.size() < 2) {
             throw new SLIB_Ex_Warning("Warning: Query skipped, a minimim of two URI have to be specified to build a query");
         }
 
-        for (URI uri : selectedURI) {
+        for (URI uri : selectedURIs) {
 
             if (!graph.containsVertex(uri)) {
                 throw new SLIB_Ex_Warning("No vertex associated to URI: " + uri);
             }
         }
+    }
+
+    private void checkGraphProperties() throws SLIB_Ex_Critic {
+        logger.debug("Checking DAG property");
+
+        ValidatorDAG vdag = new ValidatorDAG();
+
+        WalkConstraint wc = new WalkConstraintGeneric();
+        for (URI edgeType : predicatesTC) {
+            wc.addAcceptedTraversal(edgeType, Direction.IN);
+        }
+
+        boolean isDag = vdag.isDag(graph, wc);
+        logger.debug("is DAG: " + isDag);
+
+        if (!isDag) {
+            throw new SLIB_Ex_Critic(
+                    "Treatment can only be performed on a DAG, traversal "
+                    + "respecting your parameters define a cyclic graph.");
+        }
+
+//        ValidatorDAG validator = new ValidatorDAG();
+//
+//        boolean uniqueRoot = validator.isUniqueRootedTaxonomicDag(graph, rootURI);
+//
+//        if (!uniqueRoot) {
+//            logger.info("Specified root is not a unique Root: " + rootVertex);
+//            logger.info("Roots : " + validator.getTaxonomicDAGRoots(graph));
+//        }
     }
 }
