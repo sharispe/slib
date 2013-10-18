@@ -1,0 +1,134 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>slib-tools</artifactId>
+        <groupId>fr.lgi2p.kid</groupId>
+        <version>0.7.1</version>
+        <relativePath>..</relativePath>
+    </parent>
+    <artifactId>slib-tools-ontofocus</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-model</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-io</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>slib-tools-module</artifactId>
+            <version>0.7.1</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <type>jar</type>
+            <scope>test</scope>
+        </dependency>
+        
+    </dependencies>
+  
+    <properties>
+        <ontofocus.version>0.2</ontofocus.version>
+    </properties>
+  
+    <build>
+        <finalName>ontofocus-${ontofocus.version}-${maven.build.timestamp}-lib</finalName>
+
+        <filters>
+            <filter>src/main/resources/ontofocus-constants.properties</filter>
+        </filters>
+    
+        <resources>
+            <!-- include main.properties -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>ontofocus-constants.properties</include>
+                </includes>
+            </resource>
+
+            <!-- exclude everything else -->
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes>
+                    <exclude>**/*.xml</exclude>
+                    <exclude>ontofocus-constants.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+
+                <configuration>
+                    <finalName>ontofocus-${ontofocus.version}-${maven.build.timestamp}</finalName>
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>slib.tools.ontofocus.cli.OntoFocusCmdHandler</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly-ontofocus</id><!-- this is used for inheritance merges -->
+                        <phase>package</phase><!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>attached</goal><!-- goals == mojos -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- Copy jars -->
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <configuration>
+                            <tasks>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-latest.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-${ontofocus.version}.jar"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+
+        </plugins>
+
+    </build>
+    
+</project>
