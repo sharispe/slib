@@ -36,7 +36,7 @@ package slib.sglib.io.util;
 
 /**
  *
- * @author seb
+ * @author Harispe Sébastien
  */
 public enum GFormat {
 
