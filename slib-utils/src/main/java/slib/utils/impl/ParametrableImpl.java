@@ -5,16 +5,13 @@ import java.util.Map;
 import slib.utils.i.Parametrable;
 
 /**
- *
- * @author seb
+ * @author Harispe Sébastien
  */
 public class ParametrableImpl implements Parametrable {
 
     private Map<String, Object> params;
 
-    /**
-     *
-     */
+    
     public ParametrableImpl() {
     }
 
