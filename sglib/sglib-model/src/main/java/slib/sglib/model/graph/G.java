@@ -209,7 +209,7 @@ public interface G {
      *
      * @param e a set of edges
      */
-    public void addEdges(Set<E> e);
+    public void addE(Set<E> e);
 
     /**
      * Used to remove an Edge of the graph
