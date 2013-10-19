@@ -396,7 +396,7 @@ public class SM_Engine {
      */
     public synchronized URI getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
-            URI rooturi = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
+            URI rooturi = new ValidatorDAG().getUniqueTaxonomicRoot(graph);
             root = rooturi;
         }
         return root;
