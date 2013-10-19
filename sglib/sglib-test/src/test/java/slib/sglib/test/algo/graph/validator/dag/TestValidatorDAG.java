@@ -86,7 +86,7 @@ public class TestValidatorDAG {
 
         System.out.println(g.toString());
 
-        Set<URI> roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+        Set<URI> roots = new ValidatorDAG().getTaxonomicRoots(g);
 
         System.out.println("Roots: " + roots);
         assertTrue(roots.size() == 1);
@@ -96,7 +96,7 @@ public class TestValidatorDAG {
         URI newRoot = URIFactoryMemory.getSingleton().createURI("http://newRoot");
         g.addE(testValues.G_BASIC_ANIMAL,RDFS.SUBCLASSOF,newRoot);
 
-        roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+        roots = new ValidatorDAG().getTaxonomicRoots(g);
         System.out.println("Roots "+roots);
         assertTrue(roots.size() == 2);
     }
@@ -151,14 +151,14 @@ public class TestValidatorDAG {
     @Test
     public void test_true_tax_dag_unique_root() throws SLIB_Ex_Critic {
 
-        boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+        boolean isDag = new ValidatorDAG().containsTaxonomicDagWithUniqueRoot(g);
 
         assertTrue(isDag == true);
 
         // We create another root
         g.addE(testValues.G_BASIC_HUMAN,RDFS.SUBCLASSOF,URIFactoryMemory.getSingleton().createURI("http://newURI"));
 
-        isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+        isDag = new ValidatorDAG().containsTaxonomicDagWithUniqueRoot(g);
         assertTrue(isDag == false);
     }
 
@@ -169,7 +169,7 @@ public class TestValidatorDAG {
     @Test
     public void test_false_tax_dag_unique_root() throws SLIB_Ex_Critic {
 
-        boolean isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+        boolean isDag = new ValidatorDAG().containsTaxonomicDagWithUniqueRoot(g);
 
         assertTrue(isDag == true);
 
@@ -186,7 +186,7 @@ public class TestValidatorDAG {
         isDag = new ValidatorDAG().containsTaxonomicDag(g);
         assertTrue(isDag == false);
 
-        isDag = new ValidatorDAG().containsRootedTaxonomicDag(g);
+        isDag = new ValidatorDAG().containsTaxonomicDagWithUniqueRoot(g);
         assertTrue(isDag == false);
     }
 
