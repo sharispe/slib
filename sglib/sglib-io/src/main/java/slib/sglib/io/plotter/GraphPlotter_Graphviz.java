@@ -33,20 +33,27 @@
 
  */
 package slib.sglib.io.plotter;
+
 import java.util.HashMap;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
+import slib.sglib.model.repo.URIFactory;
 
 /**
  * Class used to plot graph using Graphviz.
- * @author Sébastien Harispe 
+ *
+ * @author Sébastien Harispe
  *
  */
 public class GraphPlotter_Graphviz {
+
+    static Logger logger = LoggerFactory.getLogger(GraphPlotter_Graphviz.class);
 
     /**
      *
@@ -55,8 +62,8 @@ public class GraphPlotter_Graphviz {
      * @param showLabels
      * @return a DOT String representation of the graph.
      */
-    public static String plot(G graph, Set<URI> VertexUriColored, boolean showLabels) {
-        return plot(graph, VertexUriColored, showLabels,true, null);
+    public static String plot(URIFactory factory, G graph, Set<URI> VertexUriColored, boolean showLabels) {
+        return plot(factory, graph, VertexUriColored, showLabels, true, null);
     }
 
     /**
@@ -67,17 +74,14 @@ public class GraphPlotter_Graphviz {
      * @param index
      * @return a DOT String representation of the graph
      */
-    public static String plot(G graph, Set<URI> VertexColored, boolean showLabels,boolean showSubSlassOfLabels, IndexHash index) {
+    public static String plot(URIFactory factory, G graph, Set<URI> VertexColored, boolean showLabels, boolean showSubSlassOfLabels, IndexHash index) {
+
+        logger.debug("Plot: " + graph.getURI());
+        logger.debug("prefixes: " + factory.getURIPrefixes());
 
         HashMap<URI, String> relColor = new HashMap<URI, String>();
 
         relColor.put(RDFS.SUBCLASSOF, "black");
-
-//		relColor.put(new URI("part_of"), "red");
-//		relColor.put(new URI("http://purl.org/obo/owl/OBO_REL#part_of"), "red");
-//
-//		relColor.put(new URI("part_of_opposite"), "orange");
-//		relColor.put(new URI("http://purl.org/obo/owl/OBO_REL#part_of_opposite"), "orange");
 
         String defColor_v = "\"white\"";//"\"#6583DC\""; // added node  blue
         String defColor_q_v = "\"#FAAB9F\""; // query node  white
@@ -90,29 +94,30 @@ public class GraphPlotter_Graphviz {
 
         String color;
 
-        for (URI v : graph.getV()) {
+        for (URI uri : graph.getV()) {
 
             color = defColor_v;
 
-            if (VertexColored != null && VertexColored.contains(v)) {
+            if (VertexColored != null && VertexColored.contains(uri)) {
                 color = defColor_q_v;
             }
 
-            if (index != null && index.containsIndexFor(v)) {
-                
-                String indexVal = index.valuesOf(v).getPreferredDescription()+" ["+v.stringValue()+"]";
-                
+            if (index != null && index.containsIndexFor(uri)) {
+
+                String indexVal = index.valuesOf(uri).getPreferredDescription() + " [" + factory.shortURIasString(uri) + "]";
+
                 String splittedLabel = splitString(indexVal, 20);
                 out += "\t\"" + splittedLabel + "\"[fillcolor=" + color + "];\n";
 
             } else {
-                out += "\t\"" + v.stringValue() + "\"[color=" + color + "];\n";
+                out += "\t\"" + factory.shortURIasString(uri) + "\"[color=" + color + "];\n";
             }
         }
 
         for (E e : graph.getE()) {
 
             URI predicate = e.getURI();
+
             color = defColor_e;
 
             if (relColor.containsKey(predicate)) {
@@ -122,22 +127,28 @@ public class GraphPlotter_Graphviz {
             String info = "";
 
             if (showLabels && !(showSubSlassOfLabels == false && predicate.equals(RDFS.SUBCLASSOF))) {
-                info = "[label=\"" + predicate.getLocalName() + "\",color=" + color + "]";
+
+                String predicateLabel = factory.shortURIasString(predicate);
+                if (index != null && index.containsIndexFor(predicate)) {
+                    predicateLabel = index.valuesOf(predicate).getPreferredDescription();
+                }
+
+                info = "[label=\"" + predicateLabel + "\",color=" + color + "]";
             }
-            
+
             URI s = e.getSource();
             URI t = e.getTarget();
-            
-            String source = s.stringValue();
-            String target = t.stringValue();
+
+            String source = factory.shortURIasString(s);
+            String target = factory.shortURIasString(t);
 
             if (index != null) {
 
                 if (index.containsIndexFor(s)) {
-                    source = splitString(index.valuesOf(s).getPreferredDescription()+" ["+s.stringValue()+"]", 20);
+                    source = splitString(index.valuesOf(s).getPreferredDescription() + " [" + factory.shortURIasString(s) + "]", 20);
                 }
                 if (index.containsIndexFor(e.getTarget())) {
-                    target = splitString(index.valuesOf(t).getPreferredDescription()+" ["+t.stringValue()+"]", 20);
+                    target = splitString(index.valuesOf(t).getPreferredDescription() + " [" + factory.shortURIasString(t) + "]", 20);
                 }
             }
             out += "\t\"" + source + "\" -> \"" + target + "\" " + info + ";\n";
@@ -184,5 +195,4 @@ public class GraphPlotter_Graphviz {
         return newLabel;
 
     }
-
 }
