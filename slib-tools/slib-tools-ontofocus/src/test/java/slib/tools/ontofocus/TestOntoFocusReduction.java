@@ -11,6 +11,9 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDFS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import slib.sglib.io.plotter.GraphPlotter_Graphviz;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
@@ -26,6 +29,7 @@ public class TestOntoFocusReduction {
 
     G graph;
     URIFactory factory = URIFactoryMemory.getSingleton();
+    Logger logger = LoggerFactory.getLogger(TestOntoFocusReduction.class);
 
     public TestOntoFocusReduction() {
     }
@@ -42,9 +46,13 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(RDFS.SUBCLASSOF);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A22"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A22");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
 
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
         assertTrue(g.getV().size() == 3);
         assertTrue(g.getE().size() == 2);
@@ -62,8 +70,13 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(RDFS.SUBCLASSOF);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A12"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A22");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 3);
@@ -71,7 +84,7 @@ public class TestOntoFocusReduction {
     }
 
     /**
-     * Basic test (bottom up/top down is evaluated
+     * Basic test, bottom-up and top-down are evaluated
      *
      * @throws SLIB_Exception
      */
@@ -82,14 +95,45 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(RDFS.SUBCLASSOF);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 4);
         assertTrue(g.getE().size() == 4);
     }
     
+    /**
+     * Basic test (bottom-up and top-down are evaluated) + force a specific node to appear
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
+    public void testReduction2a() throws SLIB_Exception {
+
+        graph = buildGraph();
+        Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
+        taxonomicPredicates.add(RDFS.SUBCLASSOF);
+        predicatesToAdd.add(RDFS.SUBCLASSOF);
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
+        Set<URI> urisToInclude = buildSetOfURIs(graph, "A222", "A1");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd,urisToInclude);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info(" TEST 2A");
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
+
+
+        assertTrue(g.getV().size() == 7);
+        assertTrue(g.getE().size() == 7);
+    }
 
     /**
      * Test with inclusion of a non taxonomic relationship involving two nodes
@@ -104,8 +148,13 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(OWL.SAMEAS);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 4);
@@ -125,8 +174,13 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(OWL.SAMEAS);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21", "A221", "A222"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 9);
@@ -140,8 +194,14 @@ public class TestOntoFocusReduction {
         Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(OWL.SAMEAS);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, false);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21", "A221", "A222"));
+        boolean applyTR = false;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+         logger.info("# TEST 3b");
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 9);
@@ -162,8 +222,13 @@ public class TestOntoFocusReduction {
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(OWL.SAMEAS);
         predicatesToAdd.add(RDFS.SUBCLASSOF);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21", "A221", "A222"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 9);
@@ -171,8 +236,83 @@ public class TestOntoFocusReduction {
     }
 
     /**
+     * Test reduction which must return the whole graph All nodes are in the
+     * query, all types of relationships are included and no transitive
+     * reduction
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
+    public void testReduction3d() throws SLIB_Exception {
+
+        graph = buildGraph();
+        Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
+        taxonomicPredicates.add(RDFS.SUBCLASSOF);
+        predicatesToAdd.add(OWL.SAMEAS);
+        predicatesToAdd.add(RDFS.SUBCLASSOF);
+        boolean applyTR = false;
+        Set<URI> query = buildSetOfURIs(graph, "A1", "ROOT", "A2", "A11", "A12", "A21", "A2", "A22", "A221", "A222", "A3", "A4", "A5");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+
+        String gviz = GraphPlotter_Graphviz.plot(factory,g, query, true, false, null);
+
+        System.out.println(gviz);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
+
+
+        assertTrue(g.getV().size() == 12);
+        assertTrue(g.getE().size() == 15);
+    }
+
+    /**
+     * Test reduction which must return the whole graph All nodes are in the
+     * query, only specific types of relationships are included after the
+     * reduction and no transitive reduction applied
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
+    public void testReduction3e() throws SLIB_Exception {
+
+        graph = buildGraph();
+        Set<URI> taxonomicPredicates = new HashSet<URI>(), predicatesToAdd = new HashSet<URI>();
+        taxonomicPredicates.add(RDFS.SUBCLASSOF);
+        predicatesToAdd.add(OWL.SAMEAS);
+        boolean applyTR = false;
+        Set<URI> query = buildSetOfURIs(graph, "A1", "ROOT", "A2", "A11", "A12", "A21", "A2", "A22", "A221", "A222", "A3", "A4", "A5");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        String gviz = GraphPlotter_Graphviz.plot(factory,g, query, true, false, null);
+
+        System.out.println(gviz);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
+
+
+        assertTrue(g.getV().size() == 12);
+        assertTrue(g.getE().size() == 15);
+    }
+
+    /**
+     * Test reduction in which we force some nodes to appear
+     *
+     * @throws SLIB_Exception
+     */
+    @Test
+    public void testReduction3f() throws SLIB_Exception {
+        assertTrue(true == true);
+    }
+
+    /**
      * Test multiple roots
-     * @throws SLIB_Exception 
+     *
+     * @throws SLIB_Exception
      */
     @Test
     public void testReduction4() throws SLIB_Exception {
@@ -182,8 +322,13 @@ public class TestOntoFocusReduction {
         taxonomicPredicates.add(RDFS.SUBCLASSOF);
         predicatesToAdd.add(OWL.SAMEAS);
         predicatesToAdd.add(RDFS.SUBCLASSOF);
-        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd, null, true);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), buildSetOfURIs(graph, "A11", "A21", "A221", "A222"));
+        boolean applyTR = true;
+        Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
+        OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+
+        logger.info("#V=" + g.getV().size());
+        logger.info("#E=" + g.getE().size());
 
 
         assertTrue(g.getV().size() == 9);

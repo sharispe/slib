@@ -63,9 +63,9 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst {
      */
     public static final String incR_Separator = ",";
     
-    public static final String errorOntology = "[ERROR] Please specify an ontology, supported format are " + Arrays.toString(OntoFocusCmdHandlerCst.acceptedFormats);
-    public static final String errorOutput = "[ERROR] Please specify an output file prefix";
-    public static final String errorFocus = "[ERROR] Please specify a query file which specifies the concepts to consider for the reduction(s) to be performed";
+    public static final String errorNoOntology = "[ERROR] Please specify an ontology, supported format are " + Arrays.toString(OntoFocusCmdHandlerCst.acceptedFormats);
+    public static final String errorNoOutput = "[ERROR] Please specify an output file prefix";
+    public static final String errorNoQueries = "[ERROR] Please specify a query file which specifies the concepts to consider for the reduction(s) to be performed";
     
     /*
      * Options 
@@ -92,7 +92,7 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst {
     public static final Option queryFile = OptionBuilder.withArgName("file")
             .hasArg()
             .withDescription("Input file which defines the reduction(s) to perform (required). For each reduction a configuration is required, it must be specified in a dedicated line according to the following pattern [query_id][TAB][URI],[URI],...,[URI][newline] with [query_id] the identifier of the reduction process (must be unique), [TAB] a tabulation, [URI] an URI specified in the ontology which maps a concept defined in the taxonomy (at least two URIs must be specified, separator ',') ")
-            .create("focus");
+            .create("queries");
     
     @SuppressWarnings("static-access")
     public static final Option incR = OptionBuilder.withArgName("URI")
@@ -140,9 +140,13 @@ public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst {
         _optionsOrder.put(prefixes, _optionsOrder.size());
         
         _optionsOrder.put(forceInclude, _optionsOrder.size());
-        _optionsOrder.put(tr, _optionsOrder.size());
+        
+        
         _optionsOrder.put(addR, _optionsOrder.size());
+        _optionsOrder.put(tr, _optionsOrder.size());
+        
         _optionsOrder.put(incR, _optionsOrder.size());
+        
         
 
         _optionsOrder.put(help, _optionsOrder.size());

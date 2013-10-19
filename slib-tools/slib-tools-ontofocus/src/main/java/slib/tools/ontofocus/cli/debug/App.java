@@ -45,7 +45,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         
         String dir = "/home/seb/Desktop/ontoFocus/";
-        String cmd = " -onto "+dir+"gene_ontology_ext.obo  -focus "+dir+"go_infos_clean2.csv -outprefix  "+dir+"debug  -tr ";
+        String cmd = " -onto "+dir+"gene_ontology_ext.obo  -queries "+dir+"go_infos_clean2.csv -prefixes GO=http://go/ -outprefix "+dir+"debug  -tr ";
         System.out.println(cmd);
         
         OntoFocusCmdHandler.execCommandLine(cmd.split(" "));

@@ -37,13 +37,10 @@ package slib.tools.ontofocus.core;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,14 +49,10 @@ import slib.sglib.algo.graph.reduction.dag.GraphReduction_DAG_Ranwez_2011;
 import slib.sglib.algo.graph.utils.GAction;
 import slib.sglib.algo.graph.utils.GActionType;
 import slib.sglib.algo.graph.utils.GraphActionExecutor;
-import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.plotter.GraphPlotter_Graphviz;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.repo.URIFactory;
-import slib.sglib.model.voc.SLIBVOC;
-import slib.sglib.utils.WalkConstraintGeneric;
 import slib.tools.ontofocus.core.utils.QueryEntryURI;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -77,86 +70,49 @@ public class OntoFocus {
     URIFactory factory;
     G graph;
     Set<URI> taxonomicPredicates; // predicate which will be considered to extract the 'taxonomy' , e.g. rdfs:subclassof
-    Set<URI> relationshipsToAdd; // predicate of the relationships to add at post-processing
-    URI rootURI; // the URI of the root
-    boolean isVirtualRoot; // virtual roots are removed after the reduction
-    private boolean showLabels = true;
-    IndexHash index;
-    boolean applyTR = false;
+    Set<URI> predicatesToAdd; // predicates of the relationships to add at post-processing, i.e., all relationships of the specified types between pairs of nodes contained in the Cartesian product of the set of nodes which compose the reduction will be added
     GraphReduction_DAG_Ranwez_2011 gRed;
     GAction trClass;
-    Set<URI> urisToInclude = new HashSet<URI>();; // URIs which must be in all reductions
+    Set<URI> urisToInclude = new HashSet<URI>();
 
-    public OntoFocus(URIFactory factory, G graph, Set<URI> taxonomicPredicates, Set<URI> relationshipsToAdd, IndexHash index, boolean applyTR) throws SLIB_Ex_Critic, SLIB_Exception{
-        this(factory, graph, taxonomicPredicates, relationshipsToAdd, index, applyTR, null);
+    /**
+     *
+     * @param factory The factory used to generate the URIs
+     * @param graph The graph in which the reduction must be performed
+     * @param taxonomicPredicates the predicates to consider as taxonomic
+     * relationships
+     * @param predicateToAdd predicates of the relationships to add at
+     * post-processing, i.e., all relationships of the specified types which are
+     * specified between pairs of nodes contained in the Cartesian product of
+     * the set of nodes which compose the reduction will be added
+     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Exception
+     */
+    public OntoFocus(URIFactory factory, G graph, Set<URI> taxonomicPredicates, Set<URI> predicateToAdd) throws SLIB_Ex_Critic, SLIB_Exception {
+        this(factory, graph, taxonomicPredicates, predicateToAdd, null);
     }
-            
-    public OntoFocus(URIFactory factory, G graph, Set<URI> taxonomicPredicates, Set<URI> relationshipsToAdd, IndexHash index, boolean applyTR, Set<URI> urisToInclude) throws SLIB_Ex_Critic, SLIB_Exception {
+
+    public OntoFocus(URIFactory factory, G graph, Set<URI> taxonomicPredicates, Set<URI> predicatesToAdd, Set<URI> urisToInclude) throws SLIB_Ex_Critic, SLIB_Exception {
 
         this.factory = factory;
         this.graph = graph;
         this.taxonomicPredicates = taxonomicPredicates;
-        this.relationshipsToAdd = relationshipsToAdd;
-        this.index = index;
-        this.applyTR = applyTR;
-        
-        if(urisToInclude != null){
+        this.predicatesToAdd = predicatesToAdd;
+
+        if (urisToInclude != null) {
             this.urisToInclude.addAll(urisToInclude);
         }
 
-        rootIfRequired();
+//        rootIfRequired();
 
 
         trClass = new GAction(GActionType.TRANSITIVE_REDUCTION);
         trClass.addParameter("target", "CLASSES");
 
-        gRed = new GraphReduction_DAG_Ranwez_2011(graph, taxonomicPredicates, relationshipsToAdd, true);
-    }
-
-    /**
-     * Detect the root(s) of the graph according to the taxonomic predicate
-     * considered, throw an error if any found and create a virtual root if
-     * multiple roots have been detected.
-     *
-     * @throws SLIB_Ex_Critic
-     */
-    private void rootIfRequired() throws SLIB_Ex_Critic {
-
-        ValidatorDAG validator = new ValidatorDAG();
-
-        Map<URI, Direction> walkRulesTaxonomy = new HashMap<URI, Direction>();
-        for (URI p : taxonomicPredicates) {
-            // we consider that all specified predicates must be traversed using dir.out
-            walkRulesTaxonomy.put(p, Direction.OUT);
-        }
-
-        Set<URI> roots = validator.getDAGRoots(graph, new WalkConstraintGeneric(walkRulesTaxonomy));
-
-
-        if (roots.isEmpty()) {
-            throw new SLIB_Ex_Critic("Cannot detect a root, i.e. a node without outgoing taxonomical relationships... Are you sure the graph if acyclic considering the specified taxonomic relationship(s)?");
-        } else if (roots.size() == 1) {
-            rootURI = roots.iterator().next();
-            isVirtualRoot = false;
-        } else {
-
-            rootURI = SLIBVOC.THING_OWL;
-            int attempt = 0;
-            while (graph.containsVertex(rootURI)) {
-                if (attempt == 1000) {
-                    throw new SLIB_Ex_Critic("Cannot generate a root URI");
-                }// highly improbable
-                rootURI = factory.createURI(SLIBVOC.THING_OWL.toString() + "_" + ((int) Math.random() * 100000));
-            }
-            graph.addV(rootURI);
-            isVirtualRoot = true;
-
-            for (URI r : roots) { // we define the new root
-                graph.addE(r, RDFS.SUBCLASSOF, rootURI);
-            }
-            logger.info("Original roots: " + roots);
-            logger.info("virtual root created. (" + rootURI + ")");
-        }
+        logger.debug("Taxonomic Predicates: " + this.taxonomicPredicates);
+        logger.debug("Predicates to add: " + this.predicatesToAdd);
+        logger.debug("URIs to include (force): " + this.urisToInclude);
+        gRed = new GraphReduction_DAG_Ranwez_2011(graph, taxonomicPredicates, predicatesToAdd, true);
     }
 
     private void flushResultOnFile(String gviz, String outfile) throws IOException {
@@ -188,8 +144,10 @@ public class OntoFocus {
         return q;
     }
 
-    public void execQueryFromFile(String queryFile, String outPrefix) throws Exception {
+    public void execQueryFromFile(String queryFile, String outPrefix, IndexHash index, boolean applyTR, boolean showLabels) throws Exception {
 
+        logger.debug("Query file: "+queryFile);
+        logger.debug("output prefix: '"+outPrefix+"'");
         QueryFileIterator qloader = new QueryFileIterator(queryFile);
         int i = 0;
         QueryEntry e;
@@ -203,15 +161,11 @@ public class OntoFocus {
 
                 query = loadQueryURI(e);
 
-
-
                 if (query.isValid()) {
 
                     Set<URI> urisQuery = query.getValue();
 
-                    if (!urisToInclude.isEmpty()) {
-                        urisQuery.addAll(urisToInclude);
-                    }
+
 
 
                     try {
@@ -219,19 +173,18 @@ public class OntoFocus {
                         logger.info("Reduction " + i + " " + query.getKey());
 
                         URI guri_reduction = factory.createURI(graph.getURI() + "_reduction_" + i);
-                        G graph_reduction = performReduction(guri_reduction, urisQuery);
+                        G graph_reduction = performReduction(guri_reduction, urisQuery, applyTR);
 
                         logger.info(graph_reduction.toString());
 
                         // We remove the uris which have been artificially added to the query
-                        Set<URI> nurisQuery = urisQuery;
-                        
+                        Set<URI> nurisQuery = new HashSet<URI>(urisQuery);
+
                         if (!urisToInclude.isEmpty()) {
-                            nurisQuery = new HashSet<URI>(urisQuery);
                             nurisQuery.removeAll(urisToInclude);
                             nurisQuery.addAll(SetUtils.intersection(urisToInclude, urisQuery));
                         }
-                        String gviz = GraphPlotter_Graphviz.plot(graph_reduction, urisQuery, showLabels, false, index);
+                        String gviz = GraphPlotter_Graphviz.plot(factory,graph_reduction, nurisQuery, showLabels, false, index);
 
                         String out = e.getKey() + ".dot";
 
@@ -256,18 +209,20 @@ public class OntoFocus {
         qloader.close();
     }
 
-    public G performReduction(URI guri_reduction, Set<URI> urisQuery) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
+    public G performReduction(URI guri_reduction, Set<URI> urisQuery, boolean applyTR) throws SLIB_Ex_Critic, SLIB_Ex_Warning {
 
         G graph_reduction = new GraphMemory(guri_reduction);
-        gRed.exec(urisQuery, graph_reduction);
+        Set<URI> queries = new HashSet<URI>(urisQuery);
+        if (!urisToInclude.isEmpty()) {
+            queries.addAll(urisToInclude);
+        }
+        
+        gRed.exec(queries, graph_reduction);
 
         logger.debug("Apply transitive reduction: " + applyTR);
 
         if (applyTR) {
             GraphActionExecutor.applyAction(factory, trClass, graph_reduction);
-        }
-        if (isVirtualRoot) {
-            graph_reduction.removeV(rootURI);
         }
 
         return graph_reduction;

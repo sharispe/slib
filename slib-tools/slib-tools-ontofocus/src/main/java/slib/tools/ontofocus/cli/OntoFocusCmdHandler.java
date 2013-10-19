@@ -34,6 +34,7 @@
  */
 package slib.tools.ontofocus.cli;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -58,7 +59,6 @@ import slib.sglib.model.repo.URIFactory;
 import slib.tools.module.CmdHandler;
 import slib.tools.ontofocus.cli.utils.OntoFocusCmdHandlerCst;
 import slib.tools.ontofocus.core.OntoFocus;
-import slib.tools.ontofocus.core.utils.OntoFocusConf;
 import slib.tools.ontofocus.core.utils.OntoFocusCst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -75,11 +75,27 @@ public final class OntoFocusCmdHandler extends CmdHandler {
     public String incR = null;
     public boolean addR = false;
     public boolean transitiveReductionClass = false;
-    Set<URI> uriToInclude;
+    Set<URI> predicatesToAdd;
     public GFormat format = OntoFocusCmdHandlerCst.format_default;
     static Logger logger = LoggerFactory.getLogger(OntoFocusCmdHandler.class);
     static Pattern colon = Pattern.compile(":");
+    private HashMap<String, String> uriPrefixes;
 
+    @Override
+    public String toString(){
+        String out = "";
+        out += "onto        : '"+ontoFile+"'\n";
+        out += "onto format : '"+format+"'\n";
+        out += "query file  : '"+queryFile+"'\n";
+        out += "outprefix   : '"+outprefix+"'\n";
+        out += "URI prefixes: '"+uriPrefixes+"'\n";
+        out += "addR        : '"+addR+"'\n";
+        out += "tr          : '"+transitiveReductionClass+"'\n";
+        out += "incR        : '"+incR+"'\n";
+        
+        return out;
+    }
+    
     /**
      *
      * @param args
@@ -115,19 +131,19 @@ public final class OntoFocusCmdHandler extends CmdHandler {
                 if (line.hasOption("onto")) {
                     ontoFile = line.getOptionValue("onto");
                 } else {
-                    ending(OntoFocusCmdHandlerCst.errorOntology, true);
+                    ending(OntoFocusCmdHandlerCst.errorNoOntology, true);
                 }
 
-                //-- Output file
-                if (line.hasOption("out")) {
-                    outprefix = line.getOptionValue("out");
+                //-- Output file prefix
+                if (line.hasOption("outprefix")) {
+                    outprefix = line.getOptionValue("outprefix");
                 }
 
                 //-- focus file
-                if (line.hasOption("focus")) {
-                    queryFile = line.getOptionValue("focus");
+                if (line.hasOption("queries")) {
+                    queryFile = line.getOptionValue("queries");
                 } else {
-                    ending(OntoFocusCmdHandlerCst.errorFocus, true);
+                    ending(OntoFocusCmdHandlerCst.errorNoQueries, true);
                 }
 
 
@@ -144,6 +160,8 @@ public final class OntoFocusCmdHandler extends CmdHandler {
 
                 //-- prefixes
                 if (line.hasOption("prefixes")) { // expected value such as GO=http://graph1/,DO=http://graph2
+
+                    uriPrefixes = new HashMap<String,String>();
                     String prefixesAsString = line.getOptionValue("prefixes");
 
                     String[] prefixesKeyValue = prefixesAsString.split(",");
@@ -157,32 +175,34 @@ public final class OntoFocusCmdHandler extends CmdHandler {
 
                         String prefix = data[0];
                         String value = data[1];
+                        
+                        
 
-                        URIFactoryMemory.getSingleton().loadNamespacePrefix(prefix, value);
-
+                        boolean loaded = URIFactoryMemory.getSingleton().loadNamespacePrefix(prefix, value);
+                        if(loaded){
+                            uriPrefixes.put(prefix, value);
+                        }
                     }
                 }
             }
 
             //-- prefixes
-            uriToInclude = new HashSet<URI>();
+            predicatesToAdd = new HashSet<URI>();
             if (line.hasOption("finclude")) { // GO:XXXXX,GO:XXXXXX they must be loaded after prefixes
                 String fincludeAsString = line.getOptionValue("finclude");
 
                 String[] fincludeAsStringTab = fincludeAsString.split(",");
                 
                 for (String uri : fincludeAsStringTab) {
-                    uriToInclude.add(buildURIFromString(URIFactoryMemory.getSingleton(), uri));
+                    predicatesToAdd.add(buildURIFromString(URIFactoryMemory.getSingleton(), uri));
                 }
             }
 
         } catch (ParseException exp) {
             ending(OntoFocusCmdHandlerCst._appCmdName + " Parsing failed.  Reason: " + exp.getMessage(), true);
         }
-    }
-
-    public OntoFocusConf getLoadedConf() {
-        return new OntoFocusConf(ontoFile, format, incR, addR, transitiveReductionClass, outprefix, queryFile);
+        
+        logger.debug(toString());
     }
 
     public static URI buildURIFromString(URIFactory factory, String string) throws SLIB_Ex_Critic {
@@ -218,7 +238,8 @@ public final class OntoFocusCmdHandler extends CmdHandler {
     public static void execCommandLine(String[] args) throws SLIB_Ex_Critic, SLIB_Exception, Exception {
         // Parse conlfiguration from the command line
         OntoFocusCmdHandler c = new OntoFocusCmdHandler(args);
-        OntoFocusConf conf = c.getLoadedConf();
+        
+        logger.info("Configuration:\n"+c.toString());
 
         // Load the graph and map some parameters to elements of the graph
         URIFactory uriFactory = URIFactoryMemory.getSingleton();
@@ -226,7 +247,7 @@ public final class OntoFocusCmdHandler extends CmdHandler {
 
         URI uriGraph = uriFactory.createURI("http://graph/");
         GraphConf gconf = new GraphConf(uriGraph);
-        gconf.addGDataConf(new GDataConf(conf.format, conf.ontoFile));
+        gconf.addGDataConf(new GDataConf(c.format, c.ontoFile));
         G graph = GraphLoaderGeneric.load(gconf);
 
 
@@ -251,9 +272,9 @@ public final class OntoFocusCmdHandler extends CmdHandler {
             }
         }
 
-        if (conf.incR != null) {
+        if (c.incR != null) {
 
-            String[] uriS = conf.incR.split(OntoFocusCmdHandlerCst.incR_Separator);
+            String[] uriS = c.incR.split(OntoFocusCmdHandlerCst.incR_Separator);
 
             for (String predicateAsString : uriS) {
 
@@ -274,7 +295,7 @@ public final class OntoFocusCmdHandler extends CmdHandler {
 
         relationshipsToAdd.addAll(taxonomicPredicates);
 
-        if (conf.addR) {
+        if (c.addR) {
             relationshipsToAdd.addAll(existingPredicate);
         }
 
@@ -287,15 +308,15 @@ public final class OntoFocusCmdHandler extends CmdHandler {
 
         // Load Index if required
         IndexHash index = null;
-        if (conf.format.equals(GFormat.OBO)) {
+        if (c.format.equals(GFormat.OBO)) {
             logger.info("Loading index");
-            index = new IndexerOBO().buildIndex(uriFactory, conf.ontoFile, graph.getURI().stringValue());
+            index = new IndexerOBO().buildIndex(uriFactory, c.ontoFile, graph.getURI().stringValue());
         }
 
 
         // Create the ontofocus object
-        OntoFocus p = new OntoFocus(uriFactory, graph, taxonomicPredicates, relationshipsToAdd, index, conf.transitiveReductionClass,c.uriToInclude);
-        p.execQueryFromFile(c.queryFile, c.outprefix);
+        OntoFocus p = new OntoFocus(uriFactory, graph, taxonomicPredicates, relationshipsToAdd, c.predicatesToAdd);
+        p.execQueryFromFile(c.queryFile, c.outprefix,index,c.transitiveReductionClass,true);
     }
 
     public static void main(String[] args) {
