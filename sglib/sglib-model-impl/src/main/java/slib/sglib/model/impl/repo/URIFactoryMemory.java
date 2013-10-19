@@ -38,6 +38,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.DC;
+import org.openrdf.model.vocabulary.DCTERMS;
+import org.openrdf.model.vocabulary.FOAF;
+import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
+import org.openrdf.model.vocabulary.SKOS;
 import org.openrdf.sail.memory.model.MemValueFactory;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -55,7 +62,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * @author Sebastien Harispe
  *
  */
-public class URIFactoryMemory implements URIFactory {
+public final class URIFactoryMemory implements URIFactory {
 
     MemValueFactory internalUriFactory;
     private static URIFactoryMemory repository;
@@ -84,15 +91,30 @@ public class URIFactoryMemory implements URIFactory {
         internalUriFactory = new MemValueFactory();
         namespacePrefixes2namespaces = new HashMap<String, String>();
         namespaces2namespacePrefixes = new HashMap<String, String>();
+
+        try {
+            loadNamespacePrefix("rdf", RDF.NAMESPACE);
+            loadNamespacePrefix("rdfs", RDFS.NAMESPACE);
+            loadNamespacePrefix("owl", OWL.NAMESPACE);
+            loadNamespacePrefix("owl", SKOS.NAMESPACE);
+            loadNamespacePrefix("dc", DC.NAMESPACE);
+            loadNamespacePrefix("dcterm", DCTERMS.NAMESPACE);
+            loadNamespacePrefix("foaf", FOAF.NAMESPACE);
+        } catch (Exception e) {//cannot happen}
+        }
     }
 
     @Override
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic {
 
 
-        if (!namespacePrefixes2namespaces.containsKey(prefix)) {
+        if (!namespacePrefixes2namespaces.containsKey(prefix.toLowerCase())) {
+
             namespacePrefixes2namespaces.put(prefix, reference);
+            namespacePrefixes2namespaces.put(prefix.toLowerCase(), reference);
+            namespacePrefixes2namespaces.put(prefix.toUpperCase(), reference);
             namespaces2namespacePrefixes.put(reference, prefix);
+
             return true;
         } else if (namespacePrefixes2namespaces.containsKey(prefix) && !namespacePrefixes2namespaces.get(prefix).equals(reference)) {
             throw new SLIB_Ex_Critic("Cannot include namespace prefix " + prefix + " for namespace " + reference + ""
@@ -151,5 +173,10 @@ public class URIFactoryMemory implements URIFactory {
         } else {
             return uri.stringValue();
         }
+    }
+
+    @Override
+    public Map<String, String> getURIPrefixes() {
+        return namespacePrefixes2namespaces;
     }
 }
