@@ -71,7 +71,7 @@ public class SMComputationYago {
         
         // The taxonomy is now a rDAG, i.e. rooted Directed Acyclic Graph.
         // Check by yourself
-        Set<URI> roots = new ValidatorDAG().getTaxonomicDAGRoots(g);
+        Set<URI> roots = new ValidatorDAG().getTaxonomicRoots(g);
         System.out.println("Roots: "+roots);
         
         
