@@ -195,7 +195,7 @@ public class SmCli implements SmlModuleCLI {
         if (requireDAG()) {
             logger.info("checking DAG property");
             ValidatorDAG dagVal = new ValidatorDAG();
-            boolean rootedGraph = dagVal.containsRootedTaxonomicDag(graph);
+            boolean rootedGraph = dagVal.containsTaxonomicDagWithUniqueRoot(graph);
 
             if (!rootedGraph) {
                 logger.error("Multiple root detected please specify a root or use root=\"FICTIVE\"");
