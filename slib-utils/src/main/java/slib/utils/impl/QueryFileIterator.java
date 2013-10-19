@@ -83,7 +83,7 @@ public class QueryFileIterator implements QueryIterator {
     public QueryFileIterator(String filepath, String uriPrefix) throws IOException {
 
         logger.info("Loading Query file iterator: "+filepath);
-        logger.info("prefix : "+uriPrefix);
+        logger.info("prefix (query file iterator): "+uriPrefix);
         this.filepath = filepath;
         this.uriPrefix = uriPrefix;
 
