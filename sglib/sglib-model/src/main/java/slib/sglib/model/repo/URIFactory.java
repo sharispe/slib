@@ -34,6 +34,7 @@
  */
 package slib.sglib.model.repo;
 
+import java.util.Map;
 import org.openrdf.model.URI;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -86,5 +87,7 @@ public interface URIFactory{
      * @return  the URI as a string
      */
     public String shortURIasString(URI uri);
+    
+    public Map<String,String> getURIPrefixes();
 
 }
