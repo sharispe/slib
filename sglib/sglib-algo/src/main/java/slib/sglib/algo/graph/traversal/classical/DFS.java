@@ -92,7 +92,7 @@ public class DFS implements GraphTraversal {
         this.topoSort = new ArrayList<URI>();
 
         logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources);
-        logger.debug("Considering Walconstraint " + wc);
+        logger.debug("Considering Walkconstraint " + wc);
         logger.debug("Start DFS");
 
         for (URI r : sources) {

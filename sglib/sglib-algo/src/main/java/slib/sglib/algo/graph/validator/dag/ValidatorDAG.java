@@ -221,13 +221,15 @@ public class ValidatorDAG {
         Set<URI> startingNodes = getDAGRoots(graph, WalkConstraintUtils.getInverse(wc, false));
 
         logger.info("Starting process from " + startingNodes.size() + " vertices");
-
-        if (startingNodes.isEmpty()) // No root No Dag
+        if(graph.getE().isEmpty()){
+            logger.info("No edge");
+        }
+        else if (startingNodes.isEmpty() || !isDag(graph, startingNodes, wc)) // No root No Dag
         {
+            logger.debug("DAG = false");
             return false;
         }
-
-        return isDag(graph, startingNodes, wc);
+        return true;
     }
 
     /**
@@ -256,10 +258,8 @@ public class ValidatorDAG {
     }
 
     /**
-     * Check if the given graph contains a unique underlying rooted taxonomic
-     * graph Do not check if the graph is a DAG Shortcut of
-     * {@link ValidatorDAG#getDAGRoots(G, WalkConstraint)} == 1 only considering
-     * SUBCLASSOF relationships
+     * Check if the given graph contains a underlying taxonomic graph with a
+     * unique root.
      *
      * @param g the graph on which the test is performed
      * @return true if the graph contains a unique underlying rooted taxonomic
@@ -267,13 +267,14 @@ public class ValidatorDAG {
      *
      * @throws SLIB_Ex_Critic
      */
-    public boolean containsRootedTaxonomicDag(G g) throws SLIB_Ex_Critic {
+    public boolean containsTaxonomicDagWithUniqueRoot(G g) throws SLIB_Ex_Critic {
 
         WalkConstraintGeneric wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
 
         Set<URI> roots = getDAGRoots(g, wc);
 
         logger.info("Number of roots " + roots.size());
+        logger.debug("Root(s): " + roots);
 
         if (roots.size() == 1) {
             isDag(g, roots.iterator().next(), new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
@@ -287,44 +288,38 @@ public class ValidatorDAG {
     }
 
     /**
-     * Return the vertex rooting the unique underlying rooted taxonomic graph.
-     *
-     * Do not check if the graph is a DAG
-     *
-     * If the given graph does not contain a unique underlying rooted taxonomic
-     * graph an SGL_Exception_Critical exception is thrown.
-     *
-     * Calls {@link ValidatorDAG#getDAGRoots(G, WalkConstraint)} only
-     * considering SUBCLASSOF relationships
+     * Return the unique vertex rooting the underlying taxonomic graph. Do not
+     * check if the taxonomic graph is a DAG but throw an error if the taxonomic
+     * graph contains multiple roots.
      *
      * @param g the graph
-     * @return the root vertex
+     * @return the unique vertex which roots the taxonomic graph
      *
-     * @throws IllegalArgumentException if the underlying taxonomic graph of the
+     * @throws SLIB_Ex_Critic if the underlying taxonomic graph of the
      * given graph contains multiple roots.
      *
      */
-    public URI getRootedTaxonomicDAGRoot(G g) throws SLIB_Ex_Critic {
+    public URI getUniqueTaxonomicRoot(G g) throws SLIB_Ex_Critic {
 
-        WalkConstraintGeneric wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
-        Set<URI> roots = getDAGRoots(g, wc);
+        WalkConstraintGeneric wcTax = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT);
+        Set<URI> roots = getDAGRoots(g, wcTax);
 
         if (roots.size() != 1) {
-            throw new IllegalArgumentException("Multiple roots detected in the underlying taxonomic graph of graph " + g.getURI());
+            throw new SLIB_Ex_Critic("Multiple roots detected in the underlying taxonomic graph of graph " + g.getURI());
         }
 
         return roots.iterator().next();
     }
 
     /**
-     * Do not check if the graph is a DAG
+     * Return the vertices which root the taxonomic graph.
      *
      * @param g
      * @return the vertices which can be considered as a root, i.e. all the
      * vertices which are not subsumed by an other vertex through a taxonomic
      * relationship.
      */
-    public Set<URI> getTaxonomicDAGRoots(G g) {
+    public Set<URI> getTaxonomicRoots(G g) {
         return getDAGRoots(g, new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.OUT));
     }
 
@@ -377,6 +372,7 @@ public class ValidatorDAG {
 
             Set<URI> roots = getDAGRoots(g, WalkConstraintUtils.getInverse(wc, false));
 
+            logger.debug("roots: " + roots);
             if (roots.size() == 1 && roots.iterator().next().equals(root)) {
                 return true;
             }

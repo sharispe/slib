@@ -65,9 +65,9 @@ public class GraphReduction_Transitive {
     static Logger logger = LoggerFactory.getLogger(GraphReduction_Transitive.class);
 
     /**
-     * Performs a transitive reduction of the given graph only taxonomic
-     * relationships are considered i.e SUBCLASSOF. The rooted DAG property of
-     * the graph is checked considering SUBCLASSOF relationships.
+     * Performs a transitive reduction of the underlying taxonomic graph of the
+     * given graph. The underlying taxonomic graph is defined based on the
+     * rdfs:SubClassOf relationship.
      *
      * @param graph the graph on which the transitive reduction needs to be
      * performed
@@ -78,34 +78,37 @@ public class GraphReduction_Transitive {
 
         ValidatorDAG validator = new ValidatorDAG();
 
-        if (!validator.containsRootedTaxonomicDag(graph)) {
-            throw new SLIB_Ex_Critic("Transitive reduction require ROOTED DAG");
+        if (!validator.containsTaxonomicDag(graph)) {
+            throw new SLIB_Ex_Critic("Transitive reduction on taxonomic graph requires an underlying DAG to be defined");
         }
 
-        URI root = new ValidatorDAG().getRootedTaxonomicDAGRoot(graph);
+        Set<URI> roots = new ValidatorDAG().getTaxonomicRoots(graph);
 
-        logger.info("Transitive reduction considering root: " + root);
-        return process(graph, root);
+        logger.info("Transitive reduction considering " + roots.size() + " root(s)");
+        logger.debug("roots: " + roots);
+        return process(graph, roots);
     }
 
     /**
-     * Performs a transitive reduction of the given graph considering a given
-     * vertex as root only taxonomic relationships are considered i.e
-     * SUBCLASSOF, SUPERCLASSOF.
+     * Performs a transitive reduction of the given graph considering a set of
+     * vertices corresponding to the roots of the graph. Only taxonomic
+     * relationships are considered i.e SUBCLASSOF.
      *
      * @param g
-     * @param src
+     * @param srcs the vertex considered as roots
      * @return the set of edges removed.
      */
-    public static Set<E> process(G g, URI src) {
+    public static Set<E> process(G g, Set<URI> srcs) {
 
 
         Set<E> removableEdges = new HashSet<E>();
 
-        logger.info("Processing transitive reduction src: " + src);
+        logger.info("Processing transitive reduction: ");
+        logger.debug("Number of roots" + srcs.size() + " root(s)");
+        logger.debug("roots: " + srcs);
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
-        DFS dfs = new DFS(g, src, wc);
+        DFS dfs = new DFS(g, srcs, wc);
 
         List<URI> topoOrder = dfs.getTraversalOrder();
 

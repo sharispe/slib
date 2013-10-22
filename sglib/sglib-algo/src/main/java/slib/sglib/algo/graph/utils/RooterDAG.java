@@ -136,7 +136,7 @@ public class RooterDAG {
             
             
             logger.info("Rooting performed using " + rootURI_ + " as root " + c + " edges created");
-            logger.debug(" Contains Rooted taxonomic DAG " + validator.containsRootedTaxonomicDag(g));
+            logger.debug(" Contains Rooted taxonomic DAG " + validator.containsTaxonomicDagWithUniqueRoot(g));
         }
 
         return rootURI_;
@@ -157,10 +157,10 @@ public class RooterDAG {
         logger.info("Rooting taxonomic Graph using " + rootUri);
         ValidatorDAG validator = new ValidatorDAG();
 
-        if (!validator.containsRootedTaxonomicDag(g)) {
+        if (!validator.containsTaxonomicDagWithUniqueRoot(g)) {
             return rootUnderlyingDAG(g, rootUri, new WalkConstraintGeneric(RDFS.SUBCLASSOF,Direction.OUT),true);
         } else {
-            return validator.getRootedTaxonomicDAGRoot(g);
+            return validator.getUniqueTaxonomicRoot(g);
         }
     }
 }

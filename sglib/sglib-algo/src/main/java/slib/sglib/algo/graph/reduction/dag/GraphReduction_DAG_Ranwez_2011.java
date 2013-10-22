@@ -132,6 +132,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
         this.predicatesToAdd = predicateToAdd;
 
         logger.debug("Selected predicate(s): " + predicatesTC);
+        logger.debug("Predicate to add (post Treatment): " + predicateToAdd);
 
         if (validateDAGproperty) {
             checkGraphProperties();

@@ -78,7 +78,7 @@ public class GraphAccessor {
             classes.add(e.getTarget());
         }
 
-        logger.debug("Classes detected " + classes.size());
+        logger.debug("Classes detected " + classes.size()+"/"+graph.getV().size());
         return classes;
     }
 
