@@ -249,6 +249,8 @@ public final class OntoFocusCmdHandler extends CmdHandler {
         GraphConf gconf = new GraphConf(uriGraph);
         gconf.addGDataConf(new GDataConf(c.format, c.ontoFile));
         G graph = GraphLoaderGeneric.load(gconf);
+        
+        
 
 
         /*

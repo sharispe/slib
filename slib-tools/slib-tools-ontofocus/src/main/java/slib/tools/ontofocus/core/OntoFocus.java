@@ -124,7 +124,7 @@ public class OntoFocus {
 
     }
 
-    private QueryEntryURI loadQueryURI(QueryEntry queryEntry) throws SLIB_Ex_Critic {
+    private QueryEntryURI loadQueryURI(G graph, QueryEntry queryEntry) throws SLIB_Ex_Critic {
 
 
         QueryEntryURI q = new QueryEntryURI();
@@ -136,7 +136,12 @@ public class OntoFocus {
             String[] annot = queryEntry.getValue().split(",");
 
             for (String a : annot) {
-                uris.add(factory.createURI(a.trim(), true));
+                URI u = factory.createURI(a.trim(), true);
+                if (graph.containsVertex(u)) {
+                    uris.add(u);
+                } else {
+                    logger.info("!!! URI " + u + " cannot be found in the graph");
+                }
             }
 
             q = new QueryEntryURI(queryEntry.getKey(), uris);
@@ -146,31 +151,41 @@ public class OntoFocus {
 
     public void execQueryFromFile(String queryFile, String outPrefix, IndexHash index, boolean applyTR, boolean showLabels) throws Exception {
 
-        logger.debug("Query file: "+queryFile);
-        logger.debug("output prefix: '"+outPrefix+"'");
+        logger.debug("Query file: " + queryFile);
+        logger.debug("output prefix: '" + outPrefix + "'");
         QueryFileIterator qloader = new QueryFileIterator(queryFile);
         int i = 0;
         QueryEntry e;
         QueryEntryURI query;
+        
+        int entries_skipped = 0;
+        int entries_performed = 0;
+        int entries_total = 0;
 
         while (qloader.hasNext()) {
 
             e = qloader.next();
 
-            if (e.isValid()) {
+            if (e != null && e.isValid()) {
+                
+                entries_total++;
 
-                query = loadQueryURI(e);
+                query = loadQueryURI(graph, e);
 
                 if (query.isValid()) {
 
+                    i++;
+                    logger.info("Reduction " + i + " " + query.getKey() + "\tnb:" + query.getValue().size());
+
                     Set<URI> urisQuery = query.getValue();
 
-
-
-
                     try {
-                        i++;
-                        logger.info("Reduction " + i + " " + query.getKey());
+
+                        if (query.getValue().size() < 2) {
+                            entries_skipped++;
+                            throw new SLIB_Ex_Warning("!!! skipped, size of annotation set < 2 ... size="+query.getValue().size());
+                        }
+
 
                         URI guri_reduction = factory.createURI(graph.getURI() + "_reduction_" + i);
                         G graph_reduction = performReduction(guri_reduction, urisQuery, applyTR);
@@ -184,7 +199,7 @@ public class OntoFocus {
                             nurisQuery.removeAll(urisToInclude);
                             nurisQuery.addAll(SetUtils.intersection(urisToInclude, urisQuery));
                         }
-                        String gviz = GraphPlotter_Graphviz.plot(factory,graph_reduction, nurisQuery, showLabels, false, index);
+                        String gviz = GraphPlotter_Graphviz.plot(factory, graph_reduction, nurisQuery, showLabels, false, index);
 
                         String out = e.getKey() + ".dot";
 
@@ -195,6 +210,8 @@ public class OntoFocus {
                         flushResultOnFile(gviz, out);
                         logger.debug(gviz);
                         logger.info("Consult result : " + out);
+                        
+                        entries_performed++;
 
                     } catch (Exception ex) {
                         System.err.println("Error processing entry " + e.getKey() + " : " + ex.getMessage());
@@ -206,6 +223,8 @@ public class OntoFocus {
                 }
             }
         }
+        logger.info("skipped   : "+entries_skipped+"/"+entries_total);
+        logger.info("performed : "+entries_performed+"/"+entries_total);
         qloader.close();
     }
 
@@ -216,7 +235,7 @@ public class OntoFocus {
         if (!urisToInclude.isEmpty()) {
             queries.addAll(urisToInclude);
         }
-        
+
         gRed.exec(queries, graph_reduction);
 
         logger.debug("Apply transitive reduction: " + applyTR);

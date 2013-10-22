@@ -46,7 +46,7 @@
     </dependencies>
   
     <properties>
-        <ontofocus.version>0.2</ontofocus.version>
+        <ontofocus.version>0.2.2</ontofocus.version>
     </properties>
   
     <build>
