@@ -48,9 +48,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoader;
+import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.URIFactory;
@@ -73,6 +75,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
     URIFactory factory = URIFactoryMemory.getSingleton();
+    int conceptIgnored  = 0;
     /**
      *
      */
@@ -101,12 +104,19 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     }
 
     void addConcept(MeshConcept concept) {
-        for (String s : concept.treeNumberList) {
-            idToConcepts.put(s, concept);
-        }
-        concepts.add(concept);
-    }
 
+        if (!concept.treeNumberList.isEmpty()) {
+
+            for (String s : concept.treeNumberList) {
+                idToConcepts.put(s, concept);
+            }
+            concepts.add(concept);
+        }
+        else{
+            logger.info("Warning: no tree number associated to "+concept.descriptorUI+" concept ignored...");
+            conceptIgnored++;
+        }
+    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
@@ -123,7 +133,10 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             logger.info("-------------------------------------");
             logger.info("Loading Mesh XML");
             logger.info("-------------------------------------");
+
             idToConcepts = new HashMap<String, MeshConcept>();
+
+
             SAXParserFactory parserfactory = SAXParserFactory.newInstance();
             SAXParser saxParser;
 
@@ -131,7 +144,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             saxParser.parse(conf.getLoc(), new MeshXMLHandler(this));
 
 
-            logger.info("Number of descriptor loaded " + concepts.size());
+            logger.info("Number of descriptor loaded " + concepts.size()+" (ignored "+conceptIgnored+")");
             logger.info("Loading relationships ");
 
             // Create universal root if required
@@ -158,7 +171,9 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                         MeshConcept parent = idToConcepts.get(parentId);
 
                         if (parent == null) {
+
                             throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber);
+
                         } else {
 
                             //System.out.println("\t" + parentId + "\t" + parent.descriptorUI);
@@ -215,5 +230,16 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             graph.addV(uriConcept);
         }
         return uriConcept;
+    }
+    
+    
+    public static void main(String[] args) throws Exception{
+        
+        URIFactoryMemory factory = URIFactoryMemory.getSingleton();
+        G graph = new GraphMemory(factory.createURI("http://mesh"));
+        GraphLoader_MESH_XML loader = new GraphLoader_MESH_XML();
+        loader.populate(new GDataConf(GFormat.MESH_XML, "/data/mesh/desc2013.xml"), graph);
+        
+        
     }
 }
