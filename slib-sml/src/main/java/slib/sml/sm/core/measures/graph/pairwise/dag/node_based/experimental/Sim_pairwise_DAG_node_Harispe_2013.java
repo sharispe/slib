@@ -57,12 +57,12 @@ public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         if (!conf.containsParam(measure_param)) {
-            throw new SLIB_Ex_Critic("Measure " + conf.getPairwise_measure_id() + " requires a parameter '" + measure_param + "' to be defined");
+            throw new SLIB_Ex_Critic("Measure " + conf + " requires a parameter '" + measure_param + "' to be defined");
         }
         String underlyingMeasure = (String) conf.getParam(measure_param);
 
         if (!conf.containsParam(aggregation_lca)) {
-            throw new SLIB_Ex_Critic("Measure " + conf.getPairwise_measure_id() + " requires a parameter '" + aggregation_lca + "' to be defined");
+            throw new SLIB_Ex_Critic("Measure " + conf + " requires a parameter '" + aggregation_lca + "' to be defined");
         }
         String aggregationLCAstrat = (String) conf.getParam(aggregation_lca);
 
@@ -85,7 +85,7 @@ public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract
         } else if (underlyingMeasure.equals("Lin")) {
             sim = Sim_pairwise_DAG_node_Lin_1998.sim(ic_a, ic_b, ic_lca);
         } else {
-            throw new SLIB_Ex_Critic("Measure " + underlyingMeasure + " is not a valid argument for the parameter '" + measure_param + "' in " + conf.getPairwise_measure_id() + " pairwise measure configuration, accepted parameters are " + Arrays.toString(acceptedMeasures));
+            throw new SLIB_Ex_Critic("Measure " + underlyingMeasure + " is not a valid argument for the parameter '" + measure_param + "' in " + conf + " pairwise measure configuration, accepted parameters are " + Arrays.toString(acceptedMeasures));
         }
 
         return sim;

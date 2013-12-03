@@ -69,11 +69,12 @@ public class SMconf extends Conf {
      * measure.
      */
     public ICconf icConf;
+    
     /**
      * The id of the pairwise measure associated to the configuration (in case
      * of groupwise measures).
      */
-    public String pairwise_measure_id;
+//    public String pairwise_measure_id;
 
     /**
      * Build an instance of configuration considering the given flag, the id of
@@ -194,23 +195,6 @@ public class SMconf extends Conf {
         this.icConf = ic;
     }
 
-    /**
-     * Getter of the pairwise Id
-     *
-     * @return the pairwise id
-     */
-    public String getPairwise_measure_id() {
-        return pairwise_measure_id;
-    }
-
-    /**
-     * Mutator of the pairwise id.
-     *
-     * @param pairwise_measure_id the new id of the measure configuration
-     */
-    public void setPairwise_measure_id(String pairwise_measure_id) {
-        this.pairwise_measure_id = pairwise_measure_id;
-    }
 
     @Override
     public String toString() {
@@ -219,8 +203,6 @@ public class SMconf extends Conf {
         out += "className : " + className + "\n";
         out += "label : " + label + "\n";
         out += "icConf : \n" + icConf + "\n";
-        out += "Pairwise measure id : \n" + pairwise_measure_id + "\n";
-
         out += "Extra parameters : " + super.toString();
         return out;
     }

@@ -102,7 +102,6 @@ public class SMComputationGO_groupwise {
         smConfPairwise.setICconf(icConf);
 
         SMconf smConfGroupwise = new SMconf("BMA_LIN", SMConstants.FLAG_SIM_GROUPWISE_BMA);
-        smConfGroupwise.setPairwise_measure_id(smConfPairwise.id);
 
         SM_Engine engine = new SM_Engine(graph);
 

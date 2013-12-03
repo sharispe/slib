@@ -48,6 +48,7 @@ import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
+import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
 import slib.tools.smltoolkit.sm.cli.core.SmCli;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.QueryEntry;
@@ -215,7 +216,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
                     if (SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(m.flag)) {
 
-                        String pm_id = m.pairwise_measure_id;
+                        String pm_id = m.getParamAsString(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
                         SMconf pm_conf = null;
 
                         for (SMconf p : sspM.conf.gConfPairwise) {

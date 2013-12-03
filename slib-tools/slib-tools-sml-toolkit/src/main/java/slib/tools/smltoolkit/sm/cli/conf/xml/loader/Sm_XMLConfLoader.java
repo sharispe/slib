@@ -360,7 +360,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
             String id = m.id;
             String flag = m.flag;
             String label = m.label;
-            String pairwise_measure = m.pairwise_measure_id;
+            String pairwise_measure = m.getParamAsString(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
 
             if (SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)) {
 
@@ -727,7 +727,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         }
 
         SMconf pc = new SMconf(id, flag, label, icConf);
-        pc.setPairwise_measure_id(pairwise_measure);
+        pc.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,pairwise_measure);
 
         pc = addExtraAttributs(defaultAttributs, c, pc);
 
