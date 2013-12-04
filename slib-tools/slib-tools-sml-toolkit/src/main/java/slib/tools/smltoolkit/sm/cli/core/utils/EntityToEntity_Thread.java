@@ -214,13 +214,13 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
                 for (SMconf m : sspM.conf.gConfGroupwise) {
 
-                    if (SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(m.flag)) {
+                    if (SMConstants.SIM_GROUPWISE_ADD_ON.containsKey(m.getFlag())) {
 
                         String pm_id = m.getParamAsString(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
                         SMconf pm_conf = null;
 
                         for (SMconf p : sspM.conf.gConfPairwise) {
-                            if (pm_id.equals(p.id)) {
+                            if (pm_id.equals(p.getId())) {
                                 pm_conf = p;
                                 break;
                             }

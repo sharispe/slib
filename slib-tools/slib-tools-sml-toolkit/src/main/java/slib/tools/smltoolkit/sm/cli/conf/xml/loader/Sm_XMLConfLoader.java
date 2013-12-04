@@ -285,9 +285,9 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         for (SMconf m : gConfPairwise) {
 
-            String id = m.id;
-            String flag = m.flag;
-            String label = m.label;
+            String id = m.getId();
+            String flag = m.getFlag();
+            String label = m.getLabel();
 
             if (SMConstants.PAIRWISE_MEASURE_FLAGS.contains(flag)) {
 
@@ -299,7 +299,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 // Check for duplicate label
                 for (SMconf mm : gConfPairwise) {
-                    if (mm != m && id.equals(mm.id)) {
+                    if (mm != m && id.equals(mm.getId())) {
                         Util.error("Duplicate id value for pairwise measure:" + id);
                     }
                 }
@@ -307,14 +307,14 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                 // --- Check Label
 
                 if (label == null) {
-                    m.label = id;
+                    m.setLabel(id);
                 }
 
 
                 // Check for duplicate label
                 for (SMconf mm : gConfPairwise) {
-                    if (mm != m && m.label.equals(mm.label)) {
-                        Util.error("Duplicate label:" + m.label);
+                    if (mm != m && m.getLabel().equals(mm.getLabel())) {
+                        Util.error("Duplicate label:" + m.getLabel());
                     }
                 }
 
@@ -325,7 +325,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     ICconf ic = m.getICconf();
 
                     if (ic == null || ic.getId() == null) {
-                        Util.error("Please specify an IC to node based measure: " + m.id);
+                        Util.error("Please specify an IC to node based measure: " + m.getId());
                     }
 
                     // Search corresponding ic specification
@@ -357,9 +357,9 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         for (SMconf m : gConfGroupwise) {
 
-            String id = m.id;
-            String flag = m.flag;
-            String label = m.label;
+            String id = m.getId();
+            String flag = m.getFlag();
+            String label = m.getLabel();
             String pairwise_measure = m.getParamAsString(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
 
             if (SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)) {
@@ -378,7 +378,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     // Check pairwise measure exists
                     boolean valid = false;
                     for (SMconf mm : gConfPairwise) {
-                        if (mm.id.equals(pairwise_measure)) {
+                        if (mm.getId().equals(pairwise_measure)) {
                             valid = true;
                             break;
                         }
@@ -398,7 +398,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     ICconf ic = m.getICconf();
 
                     if (ic == null || ic.getId() == null) {
-                        Util.error("Please specify an IC to measure: " + m.id);
+                        Util.error("Please specify an IC to measure: " + m.getId());
                     }
 
                     // Search corresponding IC specification
@@ -418,20 +418,20 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 // Check for duplicate label
                 for (SMconf mm : gConfGroupwise) {
-                    if (mm != m && id.equals(mm.id)) {
+                    if (mm != m && id.equals(mm.getId())) {
                         Util.error("Duplicate id value for groupwise measure:" + id);
                     }
                 }
 
 
                 if (label == null) {
-                    m.label = id;
+                    m.setLabel(id);
                 }
 
                 // Check for duplicate label
                 for (SMconf mm : gConfGroupwise) {
-                    if (mm != m && m.label.equals(mm.label)) {
-                        Util.error("Duplicate label:" + m.label);
+                    if (mm != m && m.getLabel().equals(mm.getLabel())) {
+                        Util.error("Duplicate label:" + m.getLabel());
                     }
                 }
 
@@ -628,16 +628,16 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 for (SMconf pmConf : gConfPairwise) {
 
-                    String id_tmp = id + "_" + pmConf.id;
+                    String id_tmp = id + "_" + pmConf.getId();
                     String label_tmp = null;
 
                     if (label != null) {
-                        label_tmp = label + "_" + pmConf.id;
+                        label_tmp = label + "_" + pmConf.getId();
                     }
 
                     c.addParam(XmlTags.ID_ATTR, id_tmp);
                     c.addParam(XmlTags.LABEL_ATTR, label_tmp);
-                    c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.id);
+                    c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.getId());
 
 
 

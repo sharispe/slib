@@ -338,7 +338,7 @@ public class SmCli implements SmlModuleCLI {
             int nbMeasures = conf.gConfGroupwise.size();
 
             for (SMconf m : conf.gConfGroupwise) {
-                header += "\t" + m.label;
+                header += "\t" + m.getLabel();
             }
 
             file.write(header + "\n");
@@ -470,7 +470,7 @@ public class SmCli implements SmlModuleCLI {
 
 
             for (SMconf m : conf.gConfPairwise) {
-                header += "\t" + m.label;
+                header += "\t" + m.getLabel();
             }
 
             file.write(header + "\n");
@@ -593,7 +593,7 @@ public class SmCli implements SmlModuleCLI {
 
     private boolean requireDAG() {
         for (SMconf c : conf.gConfPairwise) {
-            int mApproach = SMConstants.getPairwiseApproach(c.flag);
+            int mApproach = SMConstants.getPairwiseApproach(c.getFlag());
 
             if (SMConstants.requireDAG(mApproach)) {
                 return true;

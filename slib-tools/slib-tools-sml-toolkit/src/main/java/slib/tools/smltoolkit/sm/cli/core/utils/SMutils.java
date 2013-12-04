@@ -55,8 +55,8 @@ public class SMutils {
     public static void throwArithmeticCriticalException(SMconf pairwiseConf, URI a, URI b, Object value) throws SLIB_Ex_Critic {
 
         throw new SLIB_Ex_Critic("Critical error. \n"
-                + "A result produced by the pairwise measure " + pairwiseConf.flag + " was not a number " + value + " (NaN/Infinity). \n"
-                + "Pairwise measure in use " + pairwiseConf.flag + " id=" + pairwiseConf.id + ". \n"
+                + "A result produced by the pairwise measure " + pairwiseConf.getFlag() + " was not a number " + value + " (NaN/Infinity). \n"
+                + "Pairwise measure in use " + pairwiseConf.getFlag() + " id=" + pairwiseConf.getId() + ". \n"
                 + "Classes compared " + a + " vs " + b + ". \n"
                 + "This issue can be encountred if an infinite value have been detected.\n"
                 + "Please report the bug to the developpers\n");
@@ -74,8 +74,8 @@ public class SMutils {
     public static void throwArithmeticCriticalException(SMconf m, SMconf p, URI e1,
             URI e2, Object value) throws SLIB_Ex_Critic {
         throw new SLIB_Ex_Critic("Critical error. \n"
-                + "A result produced by the measure " + m.flag + " was not a number " + value + " (NaN/infinity). \n"
-                + "Pairwise measure in use " + p.flag + " id=" + p.id + ". \n"
+                + "A result produced by the measure " + m.getFlag() + " was not a number " + value + " (NaN/infinity). \n"
+                + "Pairwise measure in use " + p.getFlag() + " id=" + p.getId() + ". \n"
                 + "Entities compared " + e1 + " vs " + e2 + ". \n"
                 + "This issue can be encountred if an infinite value have been detected.\n"
                 + "Please report the bug to the developpers\n");
