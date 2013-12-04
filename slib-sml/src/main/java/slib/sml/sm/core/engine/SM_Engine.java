@@ -696,7 +696,7 @@ public class SM_Engine {
                     } else {
 
                         Class<?> cl;
-                        cl = Class.forName(pairwiseConf.className);
+                        cl = Class.forName(pairwiseConf.getClassName());
                         Constructor<?> co = cl.getConstructor();
 
 
@@ -758,6 +758,9 @@ public class SM_Engine {
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
 
+        throwErrorIfNullOrEmpty(setA);
+        throwErrorIfNullOrEmpty(setB);
+
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
 
@@ -774,7 +777,7 @@ public class SM_Engine {
                     gMeasure = groupwiseStandaloneMeasures.get(confGroupwise);
                 } else {
                     Class<?> cl;
-                    String groupwiseClassName = confGroupwise.className;
+                    String groupwiseClassName = confGroupwise.getClassName();
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
@@ -812,6 +815,9 @@ public class SM_Engine {
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
 
+        throwErrorIfNullOrEmpty(setA);
+        throwErrorIfNullOrEmpty(setB);
+
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
 
@@ -826,7 +832,7 @@ public class SM_Engine {
                     gMeasure = groupwiseAddOnMeasures.get(confGroupwise);
                 } else {
                     Class<?> cl;
-                    String groupwiseClassName = confGroupwise.className;
+                    String groupwiseClassName = confGroupwise.getClassName();
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
@@ -867,8 +873,12 @@ public class SM_Engine {
      * @return for each class, the number of instances of the class (propagated,
      * i.e. if iA is of class B and B is a subclass of A the iA is an instance
      * of A)
-     * @param addAnInstanceToEachTerminalClass if true, each class which doesn't subsumes any other classes is assumed to have an instance which is only an instance of this class (without considering inference).
-     * This is to ensure that the number of instances increases according to the partial ordering (this is required to ensure coherency of Resnik's Information Content)
+     * @param addAnInstanceToEachTerminalClass if true, each class which doesn't
+     * subsumes any other classes is assumed to have an instance which is only
+     * an instance of this class (without considering inference). This is to
+     * ensure that the number of instances increases according to the partial
+     * ordering (this is required to ensure coherency of Resnik's Information
+     * Content)
      */
     public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) {
 
@@ -905,7 +915,7 @@ public class SM_Engine {
                 linkedEntities.put(c, new HashSet<URI>());
             }
             // this is a trick is an instance must be added to each terminal class we add the corresponding class as instance
-            if(addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()){
+            if (addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()) {
                 linkedEntities.get(c).add(c);
             }
         }
@@ -1138,6 +1148,14 @@ public class SM_Engine {
                 }
             }
             throw new IllegalArgumentException("The given set of URIs " + c + " cannot be associated to a class, e.g. " + ex);
+        }
+    }
+
+    private void throwErrorIfNullOrEmpty(Set<URI> set) {
+        if (set == null) {
+            throw new IllegalArgumentException("Error the given set equals nul...");
+        } else if (set.isEmpty()) {
+            throw new IllegalArgumentException("Error the given set is empty...");
         }
     }
 

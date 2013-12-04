@@ -49,32 +49,27 @@ public class SMconf extends Conf {
     /**
      * The unique id associated to the configuration.
      */
-    public String id;
+    private String id;
     /**
      * The flag corresponding to the type of measure associated to the
      * configuration.
      */
-    public String flag;
+    private String flag;
     /**
      * The name of the class associated to the semantic measures method the
      * configuration is linked to.
      */
-    public String className;
+    private String className;
     /**
      * The label of the configuration.
      */
-    public String label;
+    private String label;
     /**
      * The configuration of the Information Content metric associated to the
      * measure.
      */
-    public ICconf icConf;
+    private ICconf icConf;
     
-    /**
-     * The id of the pairwise measure associated to the configuration (in case
-     * of groupwise measures).
-     */
-//    public String pairwise_measure_id;
 
     /**
      * Build an instance of configuration considering the given flag, the id of
@@ -221,4 +216,30 @@ public class SMconf extends Conf {
         super.addParam(p, v);
         return this;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+    
+    public void setLabel(String label){
+        this.label = label;
+    }
+
+    public ICconf getIcConf() {
+        return icConf;
+    }
+    
+    
 }
