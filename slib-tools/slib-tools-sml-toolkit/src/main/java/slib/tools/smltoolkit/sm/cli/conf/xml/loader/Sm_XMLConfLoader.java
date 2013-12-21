@@ -641,7 +641,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
 
 
-                    if (ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
+                    if(ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
 
 
                         for (ICconf ic_conf : gConfICs) {

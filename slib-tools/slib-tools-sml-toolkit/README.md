@@ -198,7 +198,7 @@ Those GO terms come from the Molecular function aspect of the Gene Ontology `-as
 We use the measure proposed by Sclicker et al. and the Information content defined by Sanchez et al. (See the Semantic measures Library website for references).
 
 ```
--jar sml-toolkit-<version>.jar -t sm -profile GO -go /data/go/eval/gene_ontology.1_2.obo -mtype p -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm schlicker -ic sanchez -aspect MF
+java -jar sml-toolkit-<version>.jar -t sm -profile GO -go /data/go/eval/gene_ontology.1_2.obo -mtype p -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm schlicker -ic sanchez -aspect MF
 ```
 
 ###### Semantic similarity between Gene products.
