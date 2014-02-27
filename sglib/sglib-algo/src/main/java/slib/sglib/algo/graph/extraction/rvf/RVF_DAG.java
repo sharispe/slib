@@ -102,7 +102,15 @@ public class RVF_DAG extends RVF {
         for (URI v : g.getV()) {
 
             allVertices.put(v, new HashSet<URI>());
-            int sizeOpposite = g.getE(v, wc).size();
+            // avoid self-loop
+            int sizeOpposite = 0;
+            for (E e : g.getE(v, wc)) {
+                if (!e.getSource().equals(e.getTarget())) {
+                    sizeOpposite++;
+                }
+            }
+
+            
 
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
@@ -117,24 +125,19 @@ public class RVF_DAG extends RVF {
                     + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n" + wc + "\nNumber of vertices tested " + allVertices.size());
         }
 
-        
-
         logger.debug("Propagation started from " + queue.size() + " vertices");
-        if(queue.size() <= 10){
+        if (queue.size() <= 10) {
             logger.debug(queue.toString());
         }
-        
-        
+
         while (!queue.isEmpty()) {
 
             URI current = queue.get(0);
 
 //            logger.debug("Processing " + current);
-
             queue.remove(0);
 
             Set<E> edges = g.getE(current, oppositeWC);
-
 
             for (E e : edges) {
 
@@ -144,6 +147,8 @@ public class RVF_DAG extends RVF {
                 if (dir == Direction.IN) {
                     dest = e.getSource();
                 }
+                if(dest.equals(current)) continue;// avoid self-loop
+                
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
 
@@ -159,7 +164,6 @@ public class RVF_DAG extends RVF {
         }
 
         //TOREMOVE 
-
         logger.info("Checking Treatment coherency");
         long incoherencies = 0;
         for (URI c : inDegree.keySet()) {
@@ -182,7 +186,6 @@ public class RVF_DAG extends RVF {
                     + "Please check the processed graph is acyclic, i.e. is a Directed Acyclic Graph.";
             throw new SLIB_Ex_Critic("ERROR " + incoherenceMessage);
         }
-
 
         logger.debug("Get All reachable vertices : end");
         return allVertices;
@@ -224,7 +227,6 @@ public class RVF_DAG extends RVF {
         logger.info("Propagation of leave counts start from " + queue.size() + " leaves on " + g.getV().size() + " concepts");
 
 //        long c = 0;
-
         while (!queue.isEmpty()) {
 
             URI v = queue.get(0);
@@ -233,7 +235,6 @@ public class RVF_DAG extends RVF {
 
             //logger.info(c+"/"+g.getV().size()+" "+v.getValue().stringValue());
 //            c++;
-
             for (E e : edges) {
 
                 URI target = e.getTarget();
@@ -260,7 +261,7 @@ public class RVF_DAG extends RVF {
         Map<URI, Integer> allVertices = new HashMap<URI, Integer>();
 
         for (URI v : g.getV()) {
-            allVertices.put(v,1);
+            allVertices.put(v, 1);
         }
         return propagateNbOccurences(allVertices);
     }
@@ -310,9 +311,7 @@ public class RVF_DAG extends RVF {
             queue.remove(0);
             allVertices.get(current).add(current);
 
-
             Set<E> edges = g.getE(wc.getAcceptedPredicates(), current, Direction.IN);
-
 
             for (E e : edges) {
                 URI dest = e.getTarget();
