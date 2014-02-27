@@ -25,5 +25,10 @@ public enum GActionType {
     /**
      * Reduction of vertices.
      */
-    VERTICES_REDUCTION
+    VERTICES_REDUCTION,
+    
+    /**
+     * Predicate Substitute.
+     */
+    PREDICATE_SUBSTITUTE
 }

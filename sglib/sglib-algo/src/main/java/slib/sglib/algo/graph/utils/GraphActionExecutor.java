@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
+import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
@@ -36,7 +37,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 public class GraphActionExecutor {
 
     static Logger logger = LoggerFactory.getLogger(GraphActionExecutor.class);
-    
+
     public final static String REROOT_UNIVERSAL_ROOT_FLAG = "__FICTIVE__";
 
     /**
@@ -62,6 +63,8 @@ public class GraphActionExecutor {
         //        } 
         else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
+        } else if (actionType == GActionType.PREDICATE_SUBSTITUTE) {
+            predicateSubstitution(factory, action, g);
         } else {
             throw new SLIB_Ex_Critic("Unknow action " + action.type);
         }
@@ -108,11 +111,10 @@ public class GraphActionExecutor {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
         Set<URI> instances = GraphAccessor.getInstances(g);
-        
-        logger.info("Classes  : "+classes.size());
-        logger.info("instances: "+instances.size());
-        logger.info("vertices : "+g.getV().size());
 
+        logger.info("Classes  : " + classes.size());
+        logger.info("instances: " + instances.size());
+        logger.info("vertices : " + g.getV().size());
 
         Set<URI> toRemove = new HashSet<URI>();
 
@@ -122,8 +124,7 @@ public class GraphActionExecutor {
              * Reduce the Graph considering all classes subsumed by the given root vertex
              * Instances annotated by those classes are also conserved into the graph, others are removed.
              */
-
-            logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by " + rootURIs+" (only the classes subsumed by the given root are considered)");
+            logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by " + rootURIs + " (only the classes subsumed by the given root are considered)");
 
             try {
                 URI rootURI = factory.createURI(rootURIs);
@@ -134,8 +135,8 @@ public class GraphActionExecutor {
 
                 DescendantEngine descEngine = new DescendantEngine(g);
                 Set<URI> descsInclusive = descEngine.getDescendantsInc(rootURI);
-                
-                logger.info(descsInclusive.size()+" subclasses of " + rootURI +" detected");
+
+                logger.info(descsInclusive.size() + " subclasses of " + rootURI + " detected");
 
                 int classesNb = classes.size();
 
@@ -145,10 +146,9 @@ public class GraphActionExecutor {
                 logger.info("Removing " + classesToRemove.size() + "/" + classesNb + " classes of the graph");
 
                 g.removeV(classesToRemove);
-                
+
                 // We then remove the entities which are not 
                 // linked to the graph current underlying taxonomic graph
-
                 Set<URI> instancesToRemove = new HashSet<URI>();
 
                 for (URI v : instances) {
@@ -177,7 +177,6 @@ public class GraphActionExecutor {
                 throw new SLIB_Ex_Critic("The specified regex '" + regex + "' is invalid: " + e.getMessage());
             }
 
-
             Matcher matcher;
 
             for (URI v : g.getV()) {
@@ -190,7 +189,6 @@ public class GraphActionExecutor {
             }
 
             logger.info("Vertices to remove: " + toRemove.size() + "/" + g.getV().size());
-
 
             g.removeV(toRemove);
 
@@ -311,7 +309,6 @@ public class GraphActionExecutor {
 
     private static void rerooting(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
-
         logger.info("-------------------------------------");
         logger.info("Rerooting");
         logger.info("-------------------------------------");
@@ -349,7 +346,6 @@ public class GraphActionExecutor {
         logger.info("-------------------------------------");
         logger.info("Target: " + target);
 
-
         String[] admittedTarget = {"CLASSES", "INSTANCES"};
 
         if (!Arrays.asList(admittedTarget).contains(target)) {
@@ -360,18 +356,14 @@ public class GraphActionExecutor {
             transitive_reductionInstance(action, g);
         }
 
-
         logger.info("Transitive reduction performed");
         logger.info("-------------------------------------");
-
 
     }
 
     private static void transitive_reductionInstance(GAction action, G g) throws SLIB_Ex_Critic {
 
-
         // --------------- TO_SPLIT
-
         int invalidInstanceNb = 0;
         int annotNbBase = 0;
         int annotDeleted = 0;
@@ -385,7 +377,6 @@ public class GraphActionExecutor {
 
         // Retrieve descendants for all vertices
         Map<URI, Set<URI>> descs = rvf.getAllRVClass();
-
 
         for (URI instance : instances) {
 
@@ -429,7 +420,6 @@ public class GraphActionExecutor {
         logger.info("Number of instance containing abnormal annotation: " + invalidInstanceNb + "/" + instances.size() + "  i.e. (" + invalidInstanceP + "%)");
         logger.info("Number of annotations: " + annotNbBase + ", deleted: " + annotDeleted + " (" + (annotDelP) + "%), current annotation number " + (annotNbBase - annotDeleted));
 
-
     }
 
     /**
@@ -450,5 +440,48 @@ public class GraphActionExecutor {
         }
         logger.info("Actions performed");
         logger.info("-------------------------------------");
+    }
+    
+    /**
+     * Can be used to substitute all the triplets of a specific predicate
+     * @param factory
+     * @param action
+     * @param g
+     * @throws SLIB_Ex_Critic 
+     */
+    private static void predicateSubstitution(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
+
+        logger.info("-------------------------------------");
+        logger.info(" Predicate Substitution");
+        logger.info("-------------------------------------");
+        logger.info("Starting " + GActionType.PREDICATE_SUBSTITUTE);
+
+        String old_URI = (String) action.getParameter("old_uri");
+        String new_URI = (String) action.getParameter("new_uri");
+
+        if (old_URI == null || new_URI == null) {
+            throw new SLIB_Ex_Critic("Error - please specify a parameter old_uri and new_uri");
+        }
+
+        if (old_URI.toUpperCase().equals("RDFS.SUBCLASSOF")) {
+            old_URI = RDFS.SUBCLASSOF.toString();
+        }
+        if (new_URI.toUpperCase().equals("RDFS.SUBCLASSOF")) {
+            new_URI = RDFS.SUBCLASSOF.toString();
+        }
+
+        URI oldURI = factory.createURI(old_URI);
+        URI newURI = factory.createURI(new_URI);
+
+
+        Set<E> oldRel = g.getE(oldURI);
+        g.removeE(oldRel);
+
+        for (E e : oldRel) {
+            g.addE(e.getSource(), newURI, e.getTarget());
+        }
+
+
+        logger.info(oldRel.size() + " relations modified");
     }
 }
