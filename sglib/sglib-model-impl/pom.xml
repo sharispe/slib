@@ -3,7 +3,7 @@
     <parent>
         <artifactId>sglib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.7.1</version>
+        <version>0.7.2</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>sglib-model-impl</artifactId>
@@ -13,7 +13,7 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>sglib-model</artifactId>
-            <version>0.7.1</version>
+            <version>0.7.2</version>
             <type>jar</type>
         </dependency>
     </dependencies>
