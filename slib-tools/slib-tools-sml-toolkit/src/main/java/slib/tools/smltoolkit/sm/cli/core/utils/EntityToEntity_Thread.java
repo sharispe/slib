@@ -157,7 +157,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
 
                         tmp_buffer.append("\n");
 
-                        results.buffer.append(tmp_buffer);
+                        //results.buffer.append(tmp_buffer);
 
                     } else if (queryParam.getNoFoundAction() == ActionsParams.EXCLUDE) {
 

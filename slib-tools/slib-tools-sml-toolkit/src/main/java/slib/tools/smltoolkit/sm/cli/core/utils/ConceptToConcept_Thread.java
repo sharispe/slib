@@ -140,7 +140,6 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
 
                         tmp_buffer.append("\n");
 
-                        results.buffer.append(tmp_buffer);
 
                     } else if (queryParam.getNoFoundAction() == ActionsParams.EXCLUDE) {
 
