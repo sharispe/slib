@@ -110,8 +110,6 @@ public class RVF_DAG extends RVF {
                 }
             }
 
-            
-
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
 
