@@ -61,6 +61,7 @@ public class Dijkstra {
     G g;
     WalkConstraint walkConstraints;
     GWS ws = null;
+    public final static Double NOT_COMPUTED = -1.;
 
     /**
      * Check the weighting scheme only contains non negative weights
@@ -125,12 +126,11 @@ public class Dijkstra {
 
         // initialize data structures
         for (URI v : g.getV()) {
-            dists.put(v, null);
+            dists.put(v, NOT_COMPUTED);
             visited.put(v, false);
         }
 
         dists.put(source, 0.);
-
 
         for (int i = 0; i < dists.size(); i++) {
 
@@ -152,18 +152,17 @@ public class Dijkstra {
 
             for (E e : edges) {
 
-
                 Double d = dists.get(next) + (ws == null ? 1 : ws.getWeight(e));
 
                 URI target = e.getTarget();
 
                 if (!target.equals(next)) { // outEdge
-                    if (dists.get(target) == null || dists.get(target) > d) {
+                    if (dists.get(target) == NOT_COMPUTED || dists.get(target) > d) {
                         dists.put(target, d);
                     }
                 } else { // in Edges
                     URI src = e.getSource();
-                    if (dists.get(src) == null || dists.get(src) > d) {
+                    if (dists.get(src) == NOT_COMPUTED || dists.get(src) > d) {
                         dists.put(src, d);
                     }
                 }
@@ -188,12 +187,11 @@ public class Dijkstra {
 
         // initialize data structures
         for (URI v : g.getV()) {
-            dists.put(v, null);
+            dists.put(v, NOT_COMPUTED);
             visited.put(v, false);
         }
 
         dists.put(source, new Double(0));
-
 
         for (int i = 0; i < dists.size(); i++) {
 
@@ -218,22 +216,17 @@ public class Dijkstra {
                 URI target = e.getTarget();
 
                 if (!target.equals(next)) { // outEdge
-                    if (dists.get(target) == null || dists.get(target) > d) {
+                    if (dists.get(target) == NOT_COMPUTED || dists.get(target) > d) {
                         dists.put(target, d);
                     }
                 } else { // in Edges
                     URI src = e.getSource();
-                    if (dists.get(src) == null || dists.get(src) > d) {
+                    if (dists.get(src) == NOT_COMPUTED || dists.get(src) > d) {
                         dists.put(src, d);
                     }
                 }
             }
         }
-
-//		for(V v: g.getVertices())
-//			System.out.println("#"+v+"   "+dists.get(v));
-
-
         return dists;
     }
 
@@ -245,8 +238,7 @@ public class Dijkstra {
 
         for (URI v : dist.keySet()) {
 
-
-            if (!visited.get(v) && dist.get(v) != null && dist.get(v) < x) {
+            if (!visited.get(v) && dist.get(v) != NOT_COMPUTED && dist.get(v) < x) {
                 next = v;
                 x = dist.get(v);
             }

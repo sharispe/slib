@@ -36,6 +36,7 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
 import org.openrdf.model.URI;
 import slib.sglib.model.graph.weight.GWS;
+import slib.sglib.model.impl.graph.weight.GWS_impl;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -46,20 +47,30 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * metric on semantic nets. Ieee Transactions On Systems Man And Cybernetics
  * 1989, 19:17-30.
  *
- * In this implementation no restriction is made on the shortest path, i.e. if the underlying data structure
- * is a DAG the shortest path can in some case not contain a common ancestor of the compared concepts.
+ * In this implementation no restriction is made on the shortest path, i.e. if
+ * the underlying data structure is a DAG the shortest path can in some case not
+ * contain a common ancestor of the compared concepts.
  */
 public class Sim_pairwise_DAG_edge_Rada_1989 extends Sim_DAG_edge_abstract {
 
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
-        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
-        double sp = c.getShortestPath(a, b,weightingScheme);
+
+        GWS weightingScheme;
+        if (conf.getParamAsString("WEIGHTING_SCHEME") == null) {
+            weightingScheme = new GWS_impl(1);
+        } else {
+            weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
+        }
+
+        double sp = c.getShortestPath(a, b, weightingScheme);
         return sim(sp);
     }
 
     /**
-     * Compute the Rada similarity given the distance of the shortest path linking the two concepts.
+     * Compute the Rada similarity given the distance of the shortest path
+     * linking the two concepts.
+     *
      * @param distSourceTarget
      * @return the similarity
      */

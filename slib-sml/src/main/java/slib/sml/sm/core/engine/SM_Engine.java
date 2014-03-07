@@ -63,6 +63,7 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.graph.weight.GWS;
+import slib.sglib.model.impl.graph.weight.GWS_impl;
 import slib.sglib.utils.WalkConstraintUtils;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
@@ -498,7 +499,6 @@ public class SM_Engine {
      */
     public Map<URI, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
 
-
         if (!cache.metrics_results.containsKey(icConf)) {
             cache.metrics_results.put(icConf, computeIC(icConf));
         }
@@ -520,7 +520,6 @@ public class SM_Engine {
         } else if (cache.metrics_results.get(icConf) != null) {
             return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
         }
-
 
         logger.info("---------------------------------------------------------------");
         logger.info("computing IC " + icConf.getId());
@@ -563,7 +562,6 @@ public class SM_Engine {
                     throw new SLIB_Ex_Critic("Incoherency found in IC " + icConf.getClassName() + "\nIC of vertex " + e.getKey() + " is set to " + e.getValue());
                 }
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -633,7 +631,6 @@ public class SM_Engine {
             }
         }
 
-
         logger.info("Computing Nb Reachable Leaves : end");
 
         return Collections.unmodifiableMap(cache.allNbReachableLeaves);
@@ -666,9 +663,6 @@ public class SM_Engine {
      * @return the pairwise semantic measure score
      *
      * @throws SLIB_Ex_Critic
-     *
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * classes defined in the graph
      */
     public double computePairwiseSim(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
 
@@ -699,21 +693,17 @@ public class SM_Engine {
                         cl = Class.forName(pairwiseConf.getClassName());
                         Constructor<?> co = cl.getConstructor();
 
-
                         pMeasure = (Sim_Pairwise) co.newInstance();
                         pairwiseMeasures.put(pairwiseConf, pMeasure);
                     }
                 }
                 sim = pMeasure.sim(a, b, this, pairwiseConf);
 
-
-
                 if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                     SMutils.throwArithmeticCriticalException(pairwiseConf, a, b, sim);
                 }
 
                 // Caching 
-
                 if (cachePairwiseResults) {
 
                     if (cache.pairwise_results.get(pairwiseConf) == null) {
@@ -765,7 +755,6 @@ public class SM_Engine {
         throwErrorIfNotClass(setB);
 
         double sim = -Double.MAX_VALUE;
-
 
         try {
 
@@ -841,7 +830,6 @@ public class SM_Engine {
                 }
             }
 
-
             sim = gMeasure.sim(setA, setB, this, confGroupwise, confPairwise);
 
         } catch (Exception e) {
@@ -903,7 +891,6 @@ public class SM_Engine {
 
         DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(ancGetter.getWalkConstraint(), (false)));
         List<URI> topoOrdering = dfs.getTraversalOrder();
-
 
         Map<URI, Integer> rStack = new HashMap<URI, Integer>();
 
@@ -1091,7 +1078,7 @@ public class SM_Engine {
      * @return the weighting scheme associated to the string.
      */
     public GWS getWeightingScheme(String param) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return new GWS_impl(1);
     }
 
     public AncestorEngine getAncestorEngine() {
@@ -1164,20 +1151,25 @@ public class SM_Engine {
      *
      * @param a
      * @param b
+     * @param weightingScheme
      * @return the shortest path between the two classes considering the given
      * weighting scheme.
      * @throws SLIB_Ex_Critic
      */
     public double getShortestPath(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
-        if (cache.shortestPath.get(a) == null) {
+        if (cache.shortestPath.get(a) == null || cache.shortestPath.get(a).get(b) == null) {
 
+            if(cache.shortestPath.get(a) == null){
+                cache.shortestPath.put(a, new ConcurrentHashMap<URI, Double>());
+            }
+            
             WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
             wc.addWalkconstraints(descGetter.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
-            ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
-            cache.shortestPath.put(a, minDists_cA);
+            double sp = dijkstra.shortestPath(a, b);
+            cache.shortestPath.get(a).put(b,sp);
         }
         return cache.shortestPath.get(a).get(b);
     }
@@ -1187,10 +1179,9 @@ public class SM_Engine {
      *
      * @param a
      * @param b
+     * @param weightingScheme
      * @return the URI associated to the Most Specific Ancestor.
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public URI getMSA(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
