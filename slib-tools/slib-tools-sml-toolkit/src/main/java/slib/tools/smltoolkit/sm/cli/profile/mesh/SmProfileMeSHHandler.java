@@ -76,11 +76,11 @@ public class SmProfileMeSHHandler extends CmdHandler {
             CommandLine line = parser.parse(options, args);
 
             if (args == null || args.length == 0 || line.hasOption("help")) {
+                String mess = null;
                 if(args == null || args.length == 0){
-                    logger.info("No arguments...");
+                    mess = "No arguments...";
                 }
-                logger.info(this.cst.description);
-                ending(null, true, false, true);
+                ending(mess, true, false, true);
             } else {
                 
                 

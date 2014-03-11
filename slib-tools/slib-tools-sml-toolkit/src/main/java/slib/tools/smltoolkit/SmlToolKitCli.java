@@ -167,39 +167,39 @@ public class SmlToolKitCli extends CmdHandler {
     @SuppressWarnings("unused")
     public static void main(String[] args) {
 
-        //DEBUG
-        String a = "-t sm -profile MESH "
-                + "-mesh /data/mesh/2014/desc2014.xml "
-//                + "-queries /home/seb/Desktop/tmp/mesh/q.tmp "
-//                + "-output /tmp/testMesH.tmp "
-////                + "-pm lin "
-////                + "-ic zhou "
-//                + "-mtype g  "
-//                + "-queries /home/seb/Desktop/tmp/mesh/q2.tmp "
-//                + "-annots /home/seb/Desktop/tmp/mesh/annot.tmp "
-//                + "-gm to ";
-
-//                + " -t sm -xmlconf /data/tmp/testsml.xml ";
-                //                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
-                //                +"-t sm "
-                //                + " -profile GO "
-                //                + " -quiet "
-                //                + " -mtype p "
-                //                + " -ic resnik "
-                //                + " -pm lin "
-                ////                + " -gm gic "
-                //                + " -go /data/go/eval/go_20130302-termdb.owl  "
-                //                + " -goformat OWL  "
-                //                + " -queries /data/go/eval/benchmark_1000_0.tsv"
-                //                + " -annots /data/go/eval/dump_orgHsegGO_sml.tsv"
-                //                + " -annotsFormat TSV "
-                //                + " -output /tmp/testsmltoolkitgo.tsv"
-                ////                + " -filter noEC=IEA:Taxon=9696,5454"
-                //                + " -noannots set=0"
-                //                + " -notfound stop"
-                ;
-
-        args = a.split("\\s+");
+//        //DEBUG
+//        String a = "-t sm -profile MESH "
+//                + "-mesh /data/mesh/2014/desc2014.xml "
+////                + "-queries /home/seb/Desktop/tmp/mesh/q.tmp "
+////                + "-output /tmp/testMesH.tmp "
+//////                + "-pm lin "
+//////                + "-ic zhou "
+////                + "-mtype g  "
+////                + "-queries /home/seb/Desktop/tmp/mesh/q2.tmp "
+////                + "-annots /home/seb/Desktop/tmp/mesh/annot.tmp "
+////                + "-gm to ";
+//
+////                + " -t sm -xmlconf /data/tmp/testsml.xml ";
+//                //                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
+//                //                +"-t sm "
+//                //                + " -profile GO "
+//                //                + " -quiet "
+//                //                + " -mtype p "
+//                //                + " -ic resnik "
+//                //                + " -pm lin "
+//                ////                + " -gm gic "
+//                //                + " -go /data/go/eval/go_20130302-termdb.owl  "
+//                //                + " -goformat OWL  "
+//                //                + " -queries /data/go/eval/benchmark_1000_0.tsv"
+//                //                + " -annots /data/go/eval/dump_orgHsegGO_sml.tsv"
+//                //                + " -annotsFormat TSV "
+//                //                + " -output /tmp/testsmltoolkitgo.tsv"
+//                ////                + " -filter noEC=IEA:Taxon=9696,5454"
+//                //                + " -noannots set=0"
+//                //                + " -notfound stop"
+//                ;
+//
+//        args = a.split("\\s+");
 
         try {
             SmlToolKitCli c = new SmlToolKitCli();
