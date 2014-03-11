@@ -34,6 +34,7 @@ package slib.tools.smltoolkit.sm.cli.core.utils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -57,7 +58,7 @@ public class FileWriterUtil {
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(content);
             bw.close();
-        } catch (Exception e) {//Catch exception if any
+        } catch (IOException e) {//Catch exception if any
             throw new SLIB_Ex_Critic("Error writing content to file " + filepath + "\n" + e.getMessage());
         }
     }

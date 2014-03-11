@@ -32,8 +32,9 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.profile.go;
+package slib.tools.smltoolkit.sm.cli.profile.mesh;
 
+import slib.tools.smltoolkit.sm.cli.profile.go.*;
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -48,21 +49,24 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe
  */
-public class SmProfileGOHandler extends CmdHandler {
+public class SmProfileMeSHHandler extends CmdHandler {
 
     SML_SM_module_XML_block_conf smconf;
     static Logger logger = LoggerFactory.getLogger(SmProfileGOHandler.class);
 
     /**
      *
+     * @param args
      * @throws SLIB_Exception
      */
-    public SmProfileGOHandler() throws SLIB_Exception {
-        super(new SmToolkitGOCst(), new SmProfileGOCst());
+    public SmProfileMeSHHandler(String[] args) throws SLIB_Exception {
+        super(new SmToolkitMeSHCst(), new SmProfileMeSHCst());
     }
 
     @Override
     public void processArgs(String[] args) {
+        
+        
 
         smconf = new SML_SM_module_XML_block_conf();
 
@@ -71,61 +75,47 @@ public class SmProfileGOHandler extends CmdHandler {
         try {
             CommandLine line = parser.parse(options, args);
 
-
             if (args == null || args.length == 0 || line.hasOption("help")) {
+                if(args == null || args.length == 0){
+                    logger.info("No arguments...");
+                }
                 logger.info(this.cst.description);
                 ending(null, true, false, true);
             } else {
-                if (line.hasOption("go")) {
-                    smconf.setOntologyPath(line.getOptionValue("go"));
-                }
-                if (line.hasOption("goformat")) {
-                    smconf.setOntologyFormat(line.getOptionValue("goformat"));
+                
+                
+                if (line.hasOption("mesh")) {
+                    smconf.setOntologyPath(line.getOptionValue("mesh"));
                 }
                 if (line.hasOption("annots")) {
-                    smconf.setAnnotsPath( line.getOptionValue("annots") );
+                    smconf.setAnnotsPath(line.getOptionValue("annots"));
                 }
-                if (line.hasOption("annotsFormat")) {
-                    smconf.setAnnotsFormat( line.getOptionValue("annotsFormat") );
-                }
-                else{
-                    smconf.setAnnotsFormat(SmProfileGOCst.ANNOTSFORMAT_DEFAULT);
-                }
+
+                smconf.setAnnotsFormat(SmProfileMeSHCst.ANNOTSFORMAT_DEFAULT);
+
                 if (line.hasOption("queries")) {
-                    smconf.setQueries( line.getOptionValue("queries") );
+                    smconf.setQueries(line.getOptionValue("queries"));
                 }
                 if (line.hasOption("output")) {
                     smconf.setOutput(line.getOptionValue("output"));
                 }
                 if (line.hasOption("mtype")) {
                     smconf.setMtype(line.getOptionValue("mtype"));
+                } else {
+                    smconf.setMtype(SmProfileMeSHCst.MTYPE_DEFAULT);
                 }
-                else{
-                    smconf.setMtype(SmProfileGOCst.MTYPE_DEFAULT);
-                }
-                if (line.hasOption("aspect")) {
-                    smconf.setAspect(line.getOptionValue("aspect"));
-                }
-                else{
-                    smconf.setAspect(SmProfileGOCst.ASPECT_DEFAULT);
-                }
-                
+
                 if (line.hasOption("notfound")) {
                     smconf.setNotFound(line.getOptionValue("notfound"));
-                }
-                else{
-                    smconf.setNotFound(SmProfileGOCst.NOTFOUND_DEFAULT);
+                } else {
+                    smconf.setNotFound(SmProfileMeSHCst.NOTFOUND_DEFAULT);
                 }
                 if (line.hasOption("noannots")) {
                     smconf.setNoAnnots(line.getOptionValue("noannots"));
+                } else {
+                    smconf.setNoAnnots(SmProfileMeSHCst.NOANNOTS_DEFAULT);
                 }
-                else{
-                    smconf.setNoAnnots(SmProfileGOCst.NOANNOTS_DEFAULT);
-                }
-                
-                if (line.hasOption("filter")) {
-                    smconf.setFilter(line.getOptionValue("filter"));
-                }
+
                 if (line.hasOption("pm")) {
                     smconf.setPmShortFlag(line.getOptionValue("pm"));
                 }
@@ -138,10 +128,10 @@ public class SmProfileGOHandler extends CmdHandler {
                 if (line.hasOption("threads")) {
                     smconf.setThreads(line.getOptionValue("threads"));
                 } else {
-                    smconf.setThreads(SmProfileGOCst.THREADS_DEFAULT);
+                    smconf.setThreads(SmProfileMeSHCst.THREADS_DEFAULT);
                 }
 
-                if (line.hasOption("notrgo")) {
+                if (line.hasOption("notrmesh")) {
                     smconf.setNoTR_KR("true");
                 }
                 if (line.hasOption("notrannots")) {
@@ -160,8 +150,5 @@ public class SmProfileGOHandler extends CmdHandler {
     public SML_SM_module_XML_block_conf getSmconf() {
         return smconf;
     }
-    
-    
-    
-    
+
 }

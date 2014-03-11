@@ -131,24 +131,21 @@ public class SmlToolKitCli extends CmdHandler {
      * Method used to split arguments which are general from those which are
      * specific for a tool.
      *
-     * @param in the array containing the all set of parameters.
+     * @param args the array containing the all set of parameters.
      */
-    private void preProcessArgs(String[] in) {
+    private void preProcessArgs(String[] args) {
 
         ArrayList<String> argsModule_ = new ArrayList<String>();
         ArrayList<String> argsGeneral_ = new ArrayList<String>();
 
         boolean moduleArgs = false;
         boolean prefmoduleArgs = false;
-
-        for (int i = 0; i < in.length; i++) {
-
+        for (String arg : args) {
             if (moduleArgs) {
-                argsModule_.add(in[i]);
+                argsModule_.add(arg);
             } else {
-                argsGeneral_.add(in[i]);
-
-                if (in[i].equals("-" + SmlToolKitCliCst.toolArg)) {
+                argsGeneral_.add(arg);
+                if (arg.equals("-" + SmlToolKitCliCst.toolArg)) {
                     prefmoduleArgs = true;
                 } else if (prefmoduleArgs) {
                     moduleArgs = true;
@@ -171,7 +168,18 @@ public class SmlToolKitCli extends CmdHandler {
     public static void main(String[] args) {
 
         //DEBUG
-        String a = "" //                + " -t sm -xmlconf /data/tmp/testsml.xml ";
+        String a = "-t sm -profile MESH "
+                + "-mesh /data/mesh/2014/desc2014.xml "
+//                + "-queries /home/seb/Desktop/tmp/mesh/q.tmp "
+//                + "-output /tmp/testMesH.tmp "
+////                + "-pm lin "
+////                + "-ic zhou "
+//                + "-mtype g  "
+//                + "-queries /home/seb/Desktop/tmp/mesh/q2.tmp "
+//                + "-annots /home/seb/Desktop/tmp/mesh/annot.tmp "
+//                + "-gm to ";
+
+//                + " -t sm -xmlconf /data/tmp/testsml.xml ";
                 //                + " -t sm -xmlconf /tmp/sml-xmlconf.xml ";
                 //                +"-t sm "
                 //                + " -profile GO "
@@ -191,13 +199,13 @@ public class SmlToolKitCli extends CmdHandler {
                 //                + " -notfound stop"
                 ;
 
-//        args = a.split("\\s+");
+        args = a.split("\\s+");
 
         try {
             SmlToolKitCli c = new SmlToolKitCli();
             c.processArgs(args);
 
-        } catch (Exception e) {
+        } catch (SLIB_Exception e) {
             logger.error("\n\n[Error] " + e.getMessage() + "\n");
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();

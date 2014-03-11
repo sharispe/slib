@@ -108,7 +108,7 @@ public class XMLConfUtils {
      * corresponding to the given configuration
      * @throws SLIB_Ex_Critic
      */
-    public static String buildSML_SM_module_XML_block(SML_SM_module_XML_block_conf c) throws SLIB_Ex_Critic {
+    public static String buildSML_SM_module_XML_block_GO_PROFILE(SML_SM_module_XML_block_conf c) throws SLIB_Ex_Critic {
 
 
         String optModuleXML = "";
@@ -238,6 +238,150 @@ public class XMLConfUtils {
             queryXML += "\t\t\t" + Sm_XML_Cst.USE_URI_PREFIX_ATTR + " = \"true\"\n";
             queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"true\" \n";
             queryXML += "\t\t\t" + Sm_XML_Cst.USE_URI_PREFIX_OUTPUT_ATTR + " = \"true\"\n";
+        }
+        queryXML += "\t\t/>\n";
+
+
+        String xmlconf = "\t<sml module=\"sm\" graph=\"" + c.graphURI + "\" >\n\n";
+        xmlconf += optModuleXML;
+        xmlconf += icXML;
+        xmlconf += pmXML;
+        xmlconf += gmXML;
+        xmlconf += queryXML;
+
+        xmlconf += "\t</sml>\n";
+        return xmlconf;
+    }
+    
+    
+    
+    public static String buildSML_SM_module_XML_block_MESH_PROFILE(SML_SM_module_XML_block_conf c) throws SLIB_Ex_Critic {
+
+
+        String optModuleXML = "";
+        String icXML = "";
+        String pmXML = "";
+        String gmXML = "";
+        String queryXML = "";
+
+        String icflag = null;
+        String pmflag = null;
+        String gmflag = null;
+
+        optModuleXML += "\t\t<opt_module threads=\"" + c.threads + "\" ";
+
+        if (c.quiet != null) {
+            optModuleXML += "\tquiet = \"" + c.quiet + "\"\n";
+        }
+        optModuleXML += "/>\n\n";
+
+        //Create the XML part corresponding to the semantic measures
+
+        if (c.icShortFlag != null) {
+            if (SMConstants.IC_SHORT_FLAG.containsKey(c.icShortFlag)) {
+
+                icflag = SMConstants.IC_SHORT_FLAG.get(c.icShortFlag);
+
+                icXML += "\n\t\t<ics>\n"
+                        + "\t\t\t<ic id   = \"" + c.icShortFlag + "\" flag = \"" + icflag + "\"  />\n";
+
+            } else {
+                throw new SLIB_Ex_Critic("The flag of the information content you selected '" + c.icShortFlag + "' cannot be associated to a measure, supported are " + SMConstants.IC_SHORT_FLAG.keySet());
+            }
+        }
+
+        if (c.pmShortFlag != null) {
+
+            if (SMConstants.SIM_PAIRWISE_SHORT_FLAG.containsKey(c.pmShortFlag)) {
+
+                pmflag = SMConstants.SIM_PAIRWISE_SHORT_FLAG.get(c.pmShortFlag);
+                String icAtt = "";
+                if (icflag != null) {
+                    icAtt = "ic = \"" + c.icShortFlag + "\" ";
+                }
+
+                if (c.pmShortFlag.equals(SMConstants.SHORT_FLAG_PM_SCHLICKER)) {
+                    icXML += "\t\t\t<ic id   = \"ic_prob_propagatted\" flag = \"" + SMConstants.FLAG_ICI_PROB_OCCURENCE_PROPAGATED + "\"  />\n";
+                    icAtt += " ic_prob = \"ic_prob_propagatted\"";
+                }
+
+
+                pmXML += "\t\t<measures type = \"pairwise\">\n"
+                        + "\t\t\t<measure   id   = \"" + c.pmShortFlag + "\" flag = \"" + pmflag + "\"  " + icAtt + " />\n"
+                        + "\t\t</measures>\n\n";
+            } else {
+                throw new SLIB_Ex_Critic("The flag of the pairwise semantic measure you selected '" + c.pmShortFlag + "' cannot be associated to a measure, supported are " + SMConstants.SIM_PAIRWISE_SHORT_FLAG.keySet());
+            }
+        }
+        if (c.gmShortFlag != null) {
+            if (SMConstants.SIM_GROUPWISE_SHORT_FLAG.containsKey(c.gmShortFlag)) {
+
+
+                gmflag = SMConstants.SIM_GROUPWISE_SHORT_FLAG.get(c.gmShortFlag);
+
+                String pmAtt = "";
+                if (pmflag != null) {
+                    pmAtt = "pairwise_measure = \"" + c.pmShortFlag + "\"";
+                }
+
+                String icAtt = "";
+                if (icflag != null && pmflag == null) {
+                    icAtt = "ic = \"" + c.icShortFlag + "\"";
+                }
+
+                gmXML += "\t\t<measures type = \"groupwise\">\n"
+                        + "\t\t\t<measure   id   = \"" + c.gmShortFlag + "\" flag = \"" + gmflag + "\"  " + pmAtt + " " + icAtt + " />\n"
+                        + "\t\t</measures>\n\n";
+            } else {
+                throw new SLIB_Ex_Critic("The flag of the groupwise semantic measure you selected '" + c.gmShortFlag + "' cannot be associated to a measure, supported are " + SMConstants.SIM_GROUPWISE_SHORT_FLAG.keySet());
+            }
+        }
+
+
+        if (!icXML.isEmpty()) {
+            icXML += "\t\t</ics>\n\n";
+        }
+
+        // Query
+
+
+
+        String mType = "cTOc"; // pairwise measures
+
+        if (c.mtype != null && c.mtype.equals("g")) {
+            mType = "oTOo"; // groupwise measures
+
+            if (c.gmShortFlag == null) {
+                throw new SLIB_Ex_Critic("Please precise a groupwise measure -gm (also using -pm if you want to use an indirect groupwise measure)");
+            }
+        } else if (c.pmShortFlag == null) {
+            throw new SLIB_Ex_Critic("Please precise a pairwise measure -pm");
+        }
+
+        queryXML += "\t\t<queries id= \"query\" \n"
+                + "\t\t\t" + XmlTags.TYPE_ATTR + "    = \"" + mType + "\" \n"
+                + "\t\t\t" + XmlTags.FILE_ATTR + "    = \"" + c.queries + "\" \n"
+                + "\t\t\t" + XmlTags.OUTPUT_ATTR + "  = \"" + c.output + "\" \n";
+
+
+        if (c.noAnnots != null) {
+            queryXML += "\t\t\t" + Sm_XML_Cst.OPT_NO_ANNOTS_ATTR + " = \"" + c.noAnnots + "\"\n";
+
+        }
+        if (c.notFound != null) {
+            queryXML += "\t\t\t" + Sm_XML_Cst.OPT_NOT_FOUND_ATTR + " = \"" + c.notFound + "\"\n";
+
+        }
+
+        // We just prefix the URIs by the URI associated to the graph and
+        // we just output the local name in the result file
+        if (c.mtype != null && c.mtype.equals("g")) {
+            queryXML += "\t\t\t" + XmlTags.URI_PREFIX_ATTR + " = \"" + c.prefixURI_Attr + "\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"false\" \n";
+        } else {
+            // In this profile this is the same
+            queryXML += "\t\t\t" + XmlTags.URI_PREFIX_ATTR + " = \"" + c.prefixURI_Attr + "\"\n";
+            queryXML += "\t\t\t" + Sm_XML_Cst.OUTPUT_BASENAME_ATT + " = \"false\" \n";
         }
         queryXML += "\t\t/>\n";
 

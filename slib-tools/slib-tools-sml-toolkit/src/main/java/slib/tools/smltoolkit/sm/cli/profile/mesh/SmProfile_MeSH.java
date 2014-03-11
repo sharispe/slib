@@ -32,9 +32,9 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.profile.go;
+package slib.tools.smltoolkit.sm.cli.profile.mesh;
 
-import java.util.Arrays;
+import slib.tools.smltoolkit.sm.cli.profile.go.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sglib.algo.graph.utils.GraphActionExecutor;
@@ -50,9 +50,9 @@ import slib.utils.impl.Util;
  *
  * @author Sébastien Harispe
  */
-public class SmProfile_GO implements SmlModuleCLI {
+public class SmProfile_MeSH implements SmlModuleCLI {
 
-    Logger logger = LoggerFactory.getLogger(SmProfile_GO.class);
+    Logger logger = LoggerFactory.getLogger(SmProfile_MeSH.class);
     public String xmlconf;
 
     /**
@@ -62,23 +62,27 @@ public class SmProfile_GO implements SmlModuleCLI {
      */
     @Override
     public void execute(String[] args) throws SLIB_Exception {
-        SmProfileGOHandler c = new SmProfileGOHandler();
+
+        logger.info("Init command-line parser...");
+        SmProfileMeSHHandler c = new SmProfileMeSHHandler(args);
         c.processArgs(args);
+        
         try {
 
+            logger.info("Parsing command-line...");
             SML_SM_module_XML_block_conf smconf = c.getSmconf();
-            boolean performGroupwise = smconf.mtype.equals(SmProfileGOCst.MTYPE_GROUPWISE);
+            
 
             logger.info("Parameters");
             logger.info("---------------------------------------------------------------");
             logger.info("mType        : " + smconf.mtype);
             logger.info("Ontology     : " + smconf.ontologyPath);
-            logger.info("Onto format  : " + smconf.ontologyFormat);
-            logger.info("Aspect       : " + smconf.aspect);
-            logger.info("Annots       : " + smconf.annotsPath);
-            logger.info("Annot Format : " + smconf.annotsFormat);
+            
+            boolean performGroupwise = smconf.mtype.equals(SmProfileMeSHCst.MTYPE_GROUPWISE);
 
             if (performGroupwise) {
+                logger.info("Annots       : " + smconf.annotsPath);
+                logger.info("Annot Format : " + smconf.annotsFormat);
                 logger.info("notfound     : " + smconf.notFound);
                 logger.info("noannots     : " + smconf.noAnnots);
                 logger.info("filter       : " + smconf.filter);
@@ -94,21 +98,12 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             logger.info("quiet        : " + Util.stringToBoolean(smconf.quiet));
             logger.info("threads      : " + smconf.threads);
-            logger.info("notrgo       : " + Util.stringToBoolean(smconf.notrkr));
+            logger.info("notrkr       : " + Util.stringToBoolean(smconf.notrkr));
             logger.info("nonotrannots : " + Util.stringToBoolean(smconf.notrannots));
             logger.info("---------------------------------------------------------------");
 
-
-
             if (smconf.ontologyPath == null) {
                 throw new SLIB_Ex_Critic("Please precise the location of the ontology");
-            }
-            if (smconf.ontologyFormat == null) {
-                smconf.setOntologyFormat(SmProfileGOCst.GOFORMAT_DEFAULT);
-            } else if (!Arrays.asList(SmProfileGOCst.GOFORMAT_VALID).contains(smconf.ontologyFormat)) {
-                throw new SLIB_Ex_Critic("Please precise a valid ontology format, current '" + smconf.ontologyFormat + "' valid= " + Arrays.toString(SmProfileGOCst.GOFORMAT_VALID));
-            } else if (smconf.ontologyFormat.equals(SmProfileGOCst.GOFORMAT_OWL)) {
-                smconf.setOntologyFormat(GFormat.RDF_XML.name());
             }
             if (smconf.queries == null) {
                 throw new SLIB_Ex_Critic("Please precise the location of the queries");
@@ -125,16 +120,7 @@ public class SmProfile_GO implements SmlModuleCLI {
                 throw new SLIB_Ex_Critic("Please correct the number of threads allocated");
             }
 
-
-            String GO_PREFIX_OWL = "http://purl.org/obo/owl/GO#GO_";
-
-
-
-            String GRAPH_URI = "http://bio/";
-            String GENE_ID_PREFIX = GRAPH_URI + "geneid/";
-            smconf.setGraphURI(GRAPH_URI);
-            smconf.setPrefixURIAttribut(GENE_ID_PREFIX);
-
+            smconf.setGraphURI("http://g/");
 
             //Build XML File
             // Ontology TAG
@@ -142,20 +128,16 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             xmlconf += "\t<opt  threads = \"" + smconf.threads + "\"  />\n\n";
 
-            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + GO_PREFIX_OWL + "\" />\n\t</namespaces>\n\n";
             xmlconf += "\t<graphs>    \n";
             xmlconf += "\t\t<graph uri=\"" + smconf.graphURI + "\"  >    \n";
             xmlconf += "\t\t\t<data>\n";
-            xmlconf += "\t\t\t\t<file format=\"" + smconf.ontologyFormat + "\"   path=\"" + smconf.ontologyPath + "\"/>    \n";
+            xmlconf += "\t\t\t\t<file format=\"MESH_XML\"   path=\"" + smconf.ontologyPath + "\"/>    \n";
 
             if (smconf.annotsPath != null) {
 
-                if (smconf.annotsFormat == null || smconf.annotsFormat.equals("GAF2")) {
-                    smconf.setAnnotsFormat("GAF2");
-                    xmlconf += "\t\t\t\t<file format=\"" + smconf.annotsFormat + "\"   path=\"" + smconf.annotsPath + "\"/>    \n";
-                } else if (smconf.annotsFormat.equals("TSV")) {
-                    // no prefixObject because the string will contain a PREFIX, e.g. GO:XXXXXX
-                    xmlconf += "\t\t\t\t<file format=\"TSV_ANNOT\"   path=\"" + smconf.annotsPath + "\" prefixSubject=\"" + GENE_ID_PREFIX + "\" header=\"false\"/>    \n";
+                if (smconf.annotsFormat.equals("TSV")) {
+                    
+                    xmlconf += "\t\t\t\t<file format=\"TSV_ANNOT\"   path=\"" + smconf.annotsPath + "\" prefixSubject=\"" + smconf.graphURI + "\"  prefixObject=\"" + smconf.graphURI + "\" header=\"false\"/>    \n";
                 } else {
                     throw new SLIB_Ex_Critic("Unsupported file format " + smconf.annotsFormat);
                 }
@@ -163,66 +145,12 @@ public class SmProfile_GO implements SmlModuleCLI {
             }
             xmlconf += "\t\t\t</data>\n\n";
 
-            String actions = "";
-
-            String goAspectValue;
-            String actionValue = "VERTICES_REDUCTION";
-
-            String GO_LOCAL_NAME_PREFIX = "";
-            /*
-             * OBO Format = GO:0008150 -> namespace + 0008150
-             * OWL Format = http://purl.org/obo/owl/GO#GO_0008150 -> namespace + OWL_PREFIX + 0008150
-             */
-//            if (smconf.ontologyFormat.equals(GFormat.RDF_XML)) {
-//                GO_LOCAL_NAME_PREFIX = "GO_";
-//            }
-            if (smconf.aspect == null || smconf.aspect.equals("BP")) {
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0008150";
-
-            } else if (smconf.aspect.equals("MF")) {
-
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0003674";
-
-            } else if (smconf.aspect.equals("CC")) {
-
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0005575";
-            } else if (smconf.aspect.equals("GLOBAL")) {
-
-                goAspectValue = GraphActionExecutor.REROOT_UNIVERSAL_ROOT_FLAG;
-                actionValue = "REROOTING";
-
-            } else { // expect custom=<GO term id>
-                String[] data = smconf.aspect.split("=");
-                if (data.length != 2) {
-                    throw new SLIB_Ex_Critic("Cannot process the value " + smconf.aspect + " as a valid aspect for the GO");
-                }
-                goAspectValue = data[1];
-                goAspectValue = goAspectValue.trim();
-            }
-            actions += "\t\t\t\t<action type=\"" + actionValue + "\" root_uri=\"" + goAspectValue + "\" />\n";
-
-            if (!Util.stringToBoolean(smconf.notrkr)) {
-                actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"CLASSES\" />\n";
-            }
-            if (smconf.annotsPath != null && !Util.stringToBoolean(smconf.notrannots)) {
-                actions += "\t\t\t\t<action type=\"TRANSITIVE_REDUCTION\" target=\"INSTANCES\" />\n";
-            }
-
-            if (!actions.isEmpty()) {
-                xmlconf += "\t\t\t<actions>\n" + actions + "\t\t\t</actions>\n";
-            }
+            
             xmlconf += "\t\t</graph>    \n";
             xmlconf += "\t</graphs>\n\n";
 
-            if (smconf.filter != null) {
-                if (!smconf.annotsFormat.equals(GFormat.GAF2.toString())) {
-                    throw new SLIB_Ex_Critic("Filtering can only be performed on annotation file of type " + GFormat.GAF2.toString());
-                }
-                xmlconf += "\t<filters>\n" + XMLConfUtils.buildSML_FilterGAF2_XML_block(smconf.filter) + "\t</filters>\n";
-            }
-
-
-            xmlconf += XMLConfUtils.buildSML_SM_module_XML_block_GO_PROFILE(smconf);
+            smconf.setPrefixURIAttribut(smconf.graphURI);
+            xmlconf += XMLConfUtils.buildSML_SM_module_XML_block_MESH_PROFILE(smconf);
 
             xmlconf += "</sglib>\n";
 
@@ -230,8 +158,8 @@ public class SmProfile_GO implements SmlModuleCLI {
             logger.info(xmlconf);
             logger.info("---------------------------------------------------------------");
 
-        } catch (Exception e) {
-            c.ending(e.getMessage(), true, false, true);
+        } catch (SLIB_Ex_Critic e) {
+            c.ending("Error processing configuration: "+e.getMessage(), true, false, true);
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }

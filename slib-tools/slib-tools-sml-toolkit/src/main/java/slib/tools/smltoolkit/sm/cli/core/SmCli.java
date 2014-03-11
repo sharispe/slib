@@ -62,13 +62,13 @@ import slib.tools.smltoolkit.sm.cli.conf.xml.loader.Sm_XMLConfLoader;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;
 import slib.tools.smltoolkit.sm.cli.core.utils.ActionParamsUtils;
 import slib.tools.smltoolkit.sm.cli.core.utils.ActionsParams;
-import slib.tools.smltoolkit.sm.cli.core.utils.ConceptToConcept_Thread;
-import slib.tools.smltoolkit.sm.cli.core.utils.EntityToEntity_Thread;
+import slib.tools.smltoolkit.sm.cli.core.utils.calc.ConceptToConcept_Thread;
+import slib.tools.smltoolkit.sm.cli.core.utils.calc.EntityToEntity_Thread;
 import slib.tools.smltoolkit.sm.cli.core.utils.FileWriterUtil;
 import slib.tools.smltoolkit.sm.cli.core.utils.QueryConceptsIterator;
 import slib.tools.smltoolkit.sm.cli.core.utils.SMQueryParam;
-import slib.tools.smltoolkit.sm.cli.core.utils.SmCmdHandler;
-import slib.tools.smltoolkit.sm.cli.core.utils.ThreadResultsQueryLoader;
+import slib.tools.smltoolkit.sm.cli.core.cmd.SmCmdHandler;
+import slib.tools.smltoolkit.sm.cli.core.utils.calc.ThreadResultsQueryLoader;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.i.Conf;
@@ -108,12 +108,15 @@ public class SmCli implements SmlModuleCLI {
      */
     @Override
     public void execute(String[] args) throws SLIB_Exception {
+        
         SmCmdHandler c = new SmCmdHandler();
+        
         c.processArgs(args);
         
         if (c.xmlConfFile != null) {
             execute(c.xmlConfFile);
         } else {
+            
             String profileconf = System.getProperty("user.dir") + "/sml-xmlconf.xml";
             logger.info("Writing profile configuration to " + profileconf);
             FileWriterUtil.writeToFile(profileconf, c.xmlConfAsString);

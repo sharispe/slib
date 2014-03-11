@@ -43,7 +43,7 @@ public class SML_SM_module_XML_block_conf {
     public String annotsFormat;
     public String aspect;
     public String filter;
-    public String notrgo;
+    public String notrkr;
     public String notrannots;
     public String graphURI;
     public String threads;
@@ -117,7 +117,7 @@ public class SML_SM_module_XML_block_conf {
         this.ontologyPath = ontologyPath;
         return this;
     }
-    
+
     public SML_SM_module_XML_block_conf setOntologyFormat(String ontologyFormat) {
         this.ontologyFormat = ontologyFormat;
         return this;
@@ -143,17 +143,17 @@ public class SML_SM_module_XML_block_conf {
         return this;
     }
 
-    public SML_SM_module_XML_block_conf setNotrgo(String notrgo) {
-        this.notrgo = notrgo;
+    public SML_SM_module_XML_block_conf setNoTR_KR(String notr) {
+        this.notrkr = notr;
         return this;
     }
 
-    public SML_SM_module_XML_block_conf setNotrannots(String notrannots) {
+    public SML_SM_module_XML_block_conf setNoTR_Annots(String notrannots) {
         this.notrannots = notrannots;
         return this;
     }
-    
-     public SML_SM_module_XML_block_conf setPrefixURIAttribut(String p) {
+
+    public SML_SM_module_XML_block_conf setPrefixURIAttribut(String p) {
         this.prefixURI_Attr = p;
         return this;
     }

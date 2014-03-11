@@ -32,7 +32,7 @@
  knowledge of the CeCILL license and that you accept its terms.
 
  */
-package slib.tools.smltoolkit.sm.cli.profile.mesh.utils;
+package slib.tools.smltoolkit.sm.cli.profile.mesh;
 
 import slib.tools.module.ModuleCst;
 import slib.tools.smltoolkit.SmlToolKitCst;
