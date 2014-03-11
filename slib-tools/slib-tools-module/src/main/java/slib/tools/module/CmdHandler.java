@@ -57,7 +57,7 @@ public abstract class CmdHandler {
     public HelpFormatter helpFormatter;
     private String USAGE;
     private final String HEADER = "----------------------------------------------------------------------";
-    private String FOOTER = HEADER;
+    private final String FOOTER = HEADER;
     static Logger logger = LoggerFactory.getLogger(CmdHandler.class);
     Comparator<Option> comparator;
 
@@ -65,7 +65,6 @@ public abstract class CmdHandler {
      *
      * @param cst
      * @param cstCmd
-     * @param args
      * @throws SLIB_Exception
      */
     public CmdHandler(ModuleCst cst, ToolCmdHandlerCst cstCmd) throws SLIB_Exception {
@@ -80,6 +79,7 @@ public abstract class CmdHandler {
         logger.info("\t" + cst.getAppName() + " " + cst.getVersion());
         logger.info(HEADER);
 
+        showDescription();
         showRef();
         if (cst.reference != null) {
             logger.info(HEADER);
@@ -113,9 +113,9 @@ public abstract class CmdHandler {
     }
 
     /**
-     *
+     * Show the description of the module if any
      */
-    public void showDescription() {
+    public final void showDescription() {
         if (cst.getDescription() != null) {
             logger.info(cst.getDescription());
         }
@@ -135,7 +135,7 @@ public abstract class CmdHandler {
      */
     public final void showRef() {
         if (cst.getReference() != null) {
-            logger.info("Please cite: \n" + cst.getReference());
+            logger.info("\nPlease cite: \n" + cst.getReference());
         }
     }
 
