@@ -49,8 +49,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
 /**
- * Class used to load annotation file:
- * <code>
+ * Class used to load annotation file:  <code>
  * XXXX1[TAB]c1;c2;c3
  * XXXX2[TAB]c2;c3
  * ...
@@ -108,8 +107,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
             skipHeader = true;
         }
 
-
-
         if (predicateParam != null) {
             try {
                 predicate = uriRepo.createURI(predicateParam);
@@ -154,9 +151,7 @@ public class GraphLoader_TSVannot implements GraphLoader {
             while ((row = csvReader.readNext()) != null) {
                 if (skipHeader) {
                     skipHeader = false;
-                    continue;
-                }
-                if (row.length == 2) {
+                } else if (row.length == 2) {
 
                     subjectLocalName = row[0];
                     data = row[1].split(";");
@@ -191,7 +186,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
             logger.info("Number of lines processed " + processed);
             logger.info("Number of statements loaded " + statementsLoaded);
 
-
         } catch (Exception e) {
             throw new SLIB_Ex_Critic("Error processing file " + fileLoc + "\n" + e.getMessage());
         }
@@ -200,7 +194,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
     private String buildURIString(String value) throws SLIB_Ex_Critic {
 
         String info[] = getDataColonSplit(value);
-
 
         if (info != null && info.length == 2) {
 
@@ -216,7 +209,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
     }
 
     private String[] getDataColonSplit(String value) {
-
 
         String data[] = colon.split(value);
         data[0] = data[0].trim();
