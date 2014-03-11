@@ -178,8 +178,6 @@ public class MeSHExample_XML_2013 {
             
             System.out.println(meshGraph.toString());
             
-            System.out.println(" "+meshGraph.containsVertex(factory.createURI("http://www.nlm.nih.gov/mesh/D063545")));
-
             /* 
              * The computation of the first similarity is not very fast because   
              * the engine compute extra informations which are cached for next computations.
