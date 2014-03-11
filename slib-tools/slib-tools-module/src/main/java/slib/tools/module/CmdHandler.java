@@ -166,32 +166,18 @@ public abstract class CmdHandler {
             helpFormatter.printHelp(USAGE, HEADER, options, FOOTER);
         }
 
-        System.exit(-1);
+        System.exit(0);
 
     }
 
     /**
-     *
+     * Ends the program (without error).
      * @param message the message to show set to null if not message
      * @param showHelp
      */
     public void ending(String message, boolean showHelp) {
 
-
-        logger.info(HEADER);
-        showDescription();
-        showContact();
-
-        if (message != null) {
-            logger.info("\n" + message + "\n");
-        }
-
-
-        if (showHelp) {
-            helpFormatter.printHelp(USAGE, HEADER, options, FOOTER);
-        }
-
-        System.exit(0);
-
+        ending(message, showHelp, false, true);
+        
     }
 }
