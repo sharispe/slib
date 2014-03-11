@@ -57,7 +57,6 @@ import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -66,10 +65,6 @@ import slib.utils.impl.UtilDebug;
 public class MeSHExample_XML {
 
     /**
-     * Remove the cycles from the MeSH Graph see
-     * http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh 
-     * for more information
-     *
      * @param meshGraph the graph associated to the MeSH
      *
      * @throws SLIB_Ex_Critic
@@ -99,7 +94,6 @@ public class MeSHExample_XML {
 
         // We remove the edges creating cycles
         // see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
-
         URI hydroxybutyratesURI = factory.createURI("http://www.nlm.nih.gov/mesh/D006885");
         URI hydroxybutyricAcidURI = factory.createURI("http://www.nlm.nih.gov/mesh/D020155");
 
@@ -119,7 +113,7 @@ public class MeSHExample_XML {
     public static void main(String[] args) {
 
         try {
-            
+
             Timer t = new Timer();
             t.start();
 
@@ -128,7 +122,7 @@ public class MeSHExample_XML {
 
             G meshGraph = new GraphMemory(meshURI);
 
-            GDataConf dataMeshXML = new GDataConf(GFormat.MESH_XML, "/data/mesh/desc2013.xml"); // the DTD must be located in the same directory
+            GDataConf dataMeshXML = new GDataConf(GFormat.MESH_XML, "/data/mesh/2014/desc2014.xml"); // the DTD must be located in the same directory
             GraphLoaderGeneric.populate(dataMeshXML, meshGraph);
 
             System.out.println(meshGraph);
@@ -139,7 +133,6 @@ public class MeSHExample_XML {
              * use most of semantic similarity measures.
              * see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
              */
-
             // We check the graph is a DAG: answer NO
             ValidatorDAG validatorDAG = new ValidatorDAG();
             boolean isDAG = validatorDAG.containsTaxonomicDag(meshGraph);
@@ -157,11 +150,9 @@ public class MeSHExample_XML {
             /* 
              * Now we can compute Semantic Similarities between pairs vertices
              */
-
             // we first configure a pairwise measure
             ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011);
             SMconf measureConf = new SMconf(SMConstants.FLAG_SIM_PAIRWISE_DAG_NODE_LIN_1998, icConf);
-
 
             // We define the semantic measure engine to use 
             SM_Engine engine = new SM_Engine(meshGraph);
@@ -171,16 +162,11 @@ public class MeSHExample_XML {
             URI c1 = factory.createURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
             URI c2 = factory.createURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
 
-
             // We compute the similarity
             double sim = engine.computePairwiseSim(measureConf, c1, c2);
             System.out.println("Sim " + c1 + "\t" + c2 + "\t" + sim);
-            
+
             System.out.println(meshGraph.toString());
-            
-            System.out.println(" "+meshGraph.containsVertex(factory.createURI("http://www.nlm.nih.gov/mesh/D063545")));
-            
-            UtilDebug.exit();
 
             /* 
              * The computation of the first similarity is not very fast because   
@@ -189,8 +175,8 @@ public class MeSHExample_XML {
              */
             int totalComparison = 10000000;
             List<URI> concepts = new ArrayList<URI>(meshGraph.getV());
-            int id1,id2;
-            String idC1,idC2;
+            int id1, id2;
+            String idC1, idC2;
             Random r = new Random();
 
             for (int i = 0; i < totalComparison; i++) {
@@ -211,10 +197,6 @@ public class MeSHExample_XML {
             }
             t.stop();
             t.elapsedTime();
-
-
-
-
         } catch (SLIB_Exception ex) {
             Logger.getLogger(MeSHExample_XML.class.getName()).log(Level.SEVERE, null, ex);
         }
