@@ -31,7 +31,6 @@
  */
 package slib.tools.smltoolkit.sm.cli.core.utils;
 
-import java.util.Collections;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
