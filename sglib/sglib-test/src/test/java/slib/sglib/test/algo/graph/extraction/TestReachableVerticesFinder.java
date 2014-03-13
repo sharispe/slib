@@ -55,17 +55,11 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe
  */
 public class TestReachableVerticesFinder {
 
-    /**
-     *
-     */
     public G g;
-    /**
-     *
-     */
     public RVF_DAG rvf;
     SLIB_UnitTestValues testValues;
 
@@ -76,8 +70,6 @@ public class TestReachableVerticesFinder {
     public TestReachableVerticesFinder() throws SLIB_Exception {
 
         testValues = new SLIB_UnitTestValues();
-
-
         g = TestUtils.loadTestGraph(GFormat.NTRIPLES, SLIB_UnitTestValues.G_DAG_BASIC);
     }
 
@@ -91,13 +83,12 @@ public class TestReachableVerticesFinder {
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
 
-
         Set<URI> desc = rvf.getRV(testValues.G_BASIC_THING);
         int sizeInter = SetUtils.intersection(desc, g.getV()).size();
 
         System.out.println(sizeInter + "/" + g.getV().size());
 
-        assertTrue(sizeInter == g.getV().size()-1);
+        assertTrue(sizeInter == g.getV().size() - 1);
     }
 
     /**
@@ -109,7 +100,6 @@ public class TestReachableVerticesFinder {
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
-
 
         Set<URI> desc = rvf.getRV(testValues.G_BASIC_SPIDER);
         System.out.println(desc);
@@ -126,7 +116,6 @@ public class TestReachableVerticesFinder {
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         rvf = new RVF_DAG(g, wc);
-        
 
         Set<URI> desc = rvf.getRV(testValues.G_BASIC_OBJECT);
         assertTrue(desc.size() == 6);
@@ -168,10 +157,11 @@ public class TestReachableVerticesFinder {
     @Test
     public void test_dag_ancestors_1b() throws SLIB_Ex_Critic {
 
-        RVF_TAX rvf = new RVF_TAX(g, Direction.OUT);
-        Map<URI, Set<URI>> ancestorsMap = rvf.getAllRVClass();
+        RVF_TAX rvf_loc = new RVF_TAX(g, Direction.OUT);
+        Map<URI, Set<URI>> ancestorsMap = rvf_loc.getAllRVClass();
 
         Set<URI> anc = ancestorsMap.get(testValues.G_BASIC_OBJECT);
+        System.out.println(anc.size() + "\t" + anc);
 
         assertTrue(anc.size() == 1);
     }
@@ -229,7 +219,7 @@ public class TestReachableVerticesFinder {
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.BOTH);
         rvf = new RVF_DAG(g, wc);
-        
+
         Set<URI> all = rvf.getRV(testValues.G_BASIC_TABLE);
 
         assertTrue(all.size() == g.getV().size());
