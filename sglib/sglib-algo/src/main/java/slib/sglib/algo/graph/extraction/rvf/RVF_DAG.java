@@ -102,10 +102,10 @@ public class RVF_DAG extends RVF {
         for (URI v : g.getV()) {
 
             allVertices.put(v, new HashSet<URI>());
-            // avoid self-loop
+
             int sizeOpposite = 0;
             for (E e : g.getE(v, wc)) {
-                if (!e.getSource().equals(e.getTarget())) {
+                if (!e.getSource().equals(e.getTarget())) { // avoid self-loop
                     sizeOpposite++;
                 }
             }
@@ -145,8 +145,9 @@ public class RVF_DAG extends RVF {
                 if (dir == Direction.IN) {
                     dest = e.getSource();
                 }
-                if(dest.equals(current)) continue;// avoid self-loop
-                
+                if (dest.equals(current)) {
+                    continue;// avoid self-loop
+                }
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
 
@@ -171,7 +172,6 @@ public class RVF_DAG extends RVF {
                 if (incoherencies == 0) {
                     logger.debug("\tURI\tIndegree\tInDegreeDone");
                 }
-
                 logger.debug("\t" + c + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
                 incoherencies++;
             }
