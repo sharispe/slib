@@ -25,7 +25,6 @@ import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -133,7 +132,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
 
                     } else {
-                        logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
+                       //logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
                     }
                 }
             }
@@ -229,6 +228,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
             this.pos = pos;
         }
 
+        @Override
         public String toString() {
             return "symbol: " + this.pointerSymbol + "  "
                     + "synsetOffset: " + this.synsetOffset + "  "
@@ -249,7 +249,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
         public E createEdge(URI srcPointer, URI targetPointer) {
 
-            E e = null;
+            E e;
             if (fromSourceToTarget) {
                 e = new Edge(srcPointer, rel, targetPointer);
             } else {
@@ -257,35 +257,5 @@ public class GraphLoader_Wordnet implements GraphLoader {
             }
             return e;
         }
-    }
-
-    /**
-     *
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-
-
-        URI guri = URIFactoryMemory.getSingleton().createURI("http://graph/wordnet/");
-        G g = new GraphMemory(guri);
-
-        GraphLoader_Wordnet loader = new GraphLoader_Wordnet();
-
-        String dataloc = "/data/WordNet-3.0/dict/";
-        String data_noun = dataloc + "data.noun";
-        String data_verb = dataloc + "data.verb";
-        String data_adj = dataloc + "data.adj";
-        String data_adv = dataloc + "data.adv";
-
-        GDataConf dataNoun = new GDataConf(GFormat.WORDNET_DATA, data_noun);
-//        GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, data_verb);
-//        GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, data_adj);
-//        GDataConf dataAdv = new GDataConf(GFormat.WORDNET_DATA, data_adv);
-
-        loader.populate(dataNoun, g);
-//        loader.populate(dataVerb, g);
-//        loader.populate(dataAdj, g);
-//        loader.populate(dataAdv, g);
     }
 }
