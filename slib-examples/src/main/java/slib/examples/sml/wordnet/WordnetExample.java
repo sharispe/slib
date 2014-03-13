@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  * Simple example which how to take advantage of the Semantic Measures Library
- * to compute the semantic similarity of two nouns defined in WordNet
+ * to compute the semantic similarity of two nouns defined in WordNet 3.1
  * 
  * Documentation: http://www.semantic-measures-library.org
  * 
