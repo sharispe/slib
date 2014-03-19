@@ -3,7 +3,7 @@
     <parent>
         <artifactId>sglib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.7.3</version>
+        <version>0.7.4</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>sglib-model</artifactId>
