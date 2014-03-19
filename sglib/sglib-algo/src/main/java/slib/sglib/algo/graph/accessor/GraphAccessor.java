@@ -76,6 +76,9 @@ public class GraphAccessor {
         }
         for (E e : graph.getE(RDF.TYPE)) {
             classes.add(e.getTarget());
+            if(e.getTarget().equals(OWL.CLASS) || e.getTarget().equals(RDFS.CLASS)){
+                classes.add(e.getSource());
+            }
         }
 
         logger.debug("Classes detected " + classes.size()+"/"+graph.getV().size());
