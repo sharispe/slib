@@ -1,6 +1,10 @@
 package slib.sglib.io.loader.rdf;
 
+import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,6 +13,8 @@ import org.openrdf.rio.ParserConfig;
 
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.RioSetting;
 import org.openrdf.rio.helpers.BasicParserSettings;
@@ -98,7 +104,6 @@ public class RDFLoader implements GraphLoader {
 //        set.add(BasicParserSettings.VERIFY_DATATYPE_VALUES);
 //        set.add(BasicParserSettings.VERIFY_RELATIVE_URIS);
 //        config.setNonFatalErrors(set);
-
         parser.setParserConfig(config);
     }
 
@@ -110,30 +115,36 @@ public class RDFLoader implements GraphLoader {
      */
     public void load(G g, String file) throws SLIB_Ex_Critic {
 
+        try {
+            load(g, new FileInputStream(file));
+        } catch (Exception e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        }
+    }
+
+    
+    public void load(G g, InputStream inputStream) throws SLIB_Ex_Critic {
 
         RDFHandler rdfHandler = new SlibRdfHandler(g);
+        
         try {
-            logger.info("Parser loaded for: "+parser.getRDFFormat());
+            logger.info("Parser loaded for: " + parser.getRDFFormat());
             parser.setRDFHandler(rdfHandler);
-            FileReader reader = new FileReader(file);
-            //BufferedReader br = new BufferedReader(new InputStreamReader(new DataInputStream(new FileInputStream(file))));
             logger.info("Parsing RDF file...");
-            parser.parse(reader, "");
+            parser.parse(inputStream, "");
+
         } catch (Exception e) {
-            e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
 
     /**
-     *
      * @param g
      * @param file
      * @param format
      * @throws SLIB_Ex_Critic
      */
     public void load(G g, String file, RDFFormat format) throws SLIB_Ex_Critic {
-
         buildRDFparser(format);
         load(g, file);
     }
