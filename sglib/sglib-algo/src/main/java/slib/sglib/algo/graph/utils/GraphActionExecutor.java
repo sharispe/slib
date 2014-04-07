@@ -326,6 +326,10 @@ public class GraphActionExecutor {
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
         } else {
             rootURI = factory.createURI(rootURIstring);
+            if (!g.containsVertex(rootURI)) {
+                logger.info("Create class "+rootURI);
+                g.addV(rootURI);
+            }
         }
 
         if (!g.containsVertex(rootURI)) {
@@ -441,13 +445,14 @@ public class GraphActionExecutor {
         logger.info("Actions performed");
         logger.info("-------------------------------------");
     }
-    
+
     /**
      * Can be used to substitute all the triplets of a specific predicate
+     *
      * @param factory
      * @param action
      * @param g
-     * @throws SLIB_Ex_Critic 
+     * @throws SLIB_Ex_Critic
      */
     private static void predicateSubstitution(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
@@ -473,14 +478,12 @@ public class GraphActionExecutor {
         URI oldURI = factory.createURI(old_URI);
         URI newURI = factory.createURI(new_URI);
 
-
         Set<E> oldRel = g.getE(oldURI);
         g.removeE(oldRel);
 
         for (E e : oldRel) {
             g.addE(e.getSource(), newURI, e.getTarget());
         }
-
 
         logger.info(oldRel.size() + " relations modified");
     }
