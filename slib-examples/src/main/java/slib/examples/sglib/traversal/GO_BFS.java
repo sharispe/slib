@@ -29,6 +29,7 @@ public class GO_BFS {
     public static void main(String[] params) throws SLIB_Exception {
 
         // - The Gene Ontology (OBO format) 
+        // refer to http://www.geneontology.org
         String goOBO = "/data/go/gene_ontology_ext.obo";
 
         URIFactory factory = URIFactoryMemory.getSingleton();
