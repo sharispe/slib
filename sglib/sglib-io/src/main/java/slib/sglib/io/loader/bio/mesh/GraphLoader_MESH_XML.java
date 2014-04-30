@@ -171,9 +171,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                         MeshConcept parent = idToConcepts.get(parentId);
 
                         if (parent == null) {
-
-                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber);
-
+                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber + "\nError occured processing\n"+c);
                         } else {
 
                             //System.out.println("\t" + parentId + "\t" + parent.descriptorUI);

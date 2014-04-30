@@ -20,6 +20,10 @@ public class MeshXMLHandler extends DefaultHandler {
     final String DESCRIPTOR_NAME = "DescriptorName";
     final String TREE_NUMBER = "TreeNumber";
 
+    private StringBuffer currentTreeNumber;
+    private StringBuffer currentDescriptorName;
+    private StringBuffer currentDescriptorUI;
+
     /**
      * Create a XML handler for MeSH.
      *
@@ -27,6 +31,10 @@ public class MeshXMLHandler extends DefaultHandler {
      */
     public MeshXMLHandler(GraphLoader_MESH_XML loader) {
         this.loader = loader;
+
+        currentTreeNumber = new StringBuffer();
+        currentDescriptorName = new StringBuffer();
+        currentDescriptorUI = new StringBuffer();
     }
 
     @Override
@@ -55,10 +63,16 @@ public class MeshXMLHandler extends DefaultHandler {
 
         if (descriptorUI) {
             descriptorUI = false;
+            concept.descriptorUI = currentDescriptorUI.toString();
+            currentDescriptorUI = new StringBuffer();
         } else if (descriptorName) {
             descriptorName = false;
+            concept.descriptorName = currentDescriptorName.toString();
+            currentDescriptorName = new StringBuffer();
         } else if (treeNumber) {
             treeNumber = false;
+            concept.addTreeNumber(currentTreeNumber.toString());
+            currentTreeNumber = new StringBuffer();
         }
 
         if (qName.equals(DESCRIPTOR_RECORD)) {
@@ -70,11 +84,11 @@ public class MeshXMLHandler extends DefaultHandler {
     public void characters(char ch[], int start, int length) throws SAXException {
 
         if (descriptorUI) {
-            concept.descriptorUI = new String(ch, start, length);
+            currentDescriptorUI.append(new String(ch, start, length));
         } else if (descriptorName) {
-            concept.descriptorName = new String(ch, start, length);
+            currentDescriptorName.append(new String(ch, start, length));
         } else if (treeNumber) {
-            concept.addTreeNumber(new String(ch, start, length));
+            currentTreeNumber.append(new String(ch, start, length));
         }
     }
 }
