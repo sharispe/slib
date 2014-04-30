@@ -34,18 +34,13 @@ package slib.examples.sml.mesh;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDFS;
-import slib.sglib.algo.graph.validator.dag.ValidatorDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoaderGeneric;
 import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
@@ -54,61 +49,14 @@ import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class MeSHExample_XML {
-
-    /**
-     * @param meshGraph the graph associated to the MeSH
-     *
-     * @throws SLIB_Ex_Critic
-     */
-    public static void removeMeshCycles(G meshGraph) throws SLIB_Ex_Critic {
-        URIFactory factory = URIFactoryMemory.getSingleton();
-
-        // We remove the edges creating cycles
-        URI ethicsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D004989");
-        URI moralsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D009014");
-
-        // We retrieve the direct subsumers of the concept (D009014)
-        Set<E> moralsEdges = meshGraph.getE(RDFS.SUBCLASSOF, moralsURI, Direction.OUT);
-        for (E e : moralsEdges) {
-
-            System.out.println("\t" + e);
-            if (e.getTarget().equals(ethicsURI)) {
-                System.out.println("\t*** Removing edge " + e);
-                meshGraph.removeE(e);
-            }
-        }
-
-        ValidatorDAG validatorDAG = new ValidatorDAG();
-        boolean isDAG = validatorDAG.containsTaxonomicDag(meshGraph);
-
-        System.out.println("MeSH Graph is a DAG: " + isDAG);
-
-        // We remove the edges creating cycles
-        // see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
-        URI hydroxybutyratesURI = factory.createURI("http://www.nlm.nih.gov/mesh/D006885");
-        URI hydroxybutyricAcidURI = factory.createURI("http://www.nlm.nih.gov/mesh/D020155");
-
-        // We retrieve the direct subsumers of the concept (D009014)
-        Set<E> hydroxybutyricAcidEdges = meshGraph.getE(RDFS.SUBCLASSOF, hydroxybutyricAcidURI, Direction.OUT);
-        for (E e : hydroxybutyricAcidEdges) {
-
-            System.out.println("\t" + e);
-            if (e.getTarget().equals(hydroxybutyratesURI)) {
-                System.out.println("\t*** Removing edge " + e);
-                meshGraph.removeE(e);
-            }
-        }
-
-    }
 
     public static void main(String[] args) {
 
@@ -127,28 +75,8 @@ public class MeSHExample_XML {
 
             System.out.println(meshGraph);
 
-            /*
-             * We remove the cycles of the graph in order to obtain 
-             * a rooted directed acyclic graph (DAG) and therefore be able to 
-             * use most of semantic similarity measures.
-             * see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
-             */
-            // We check the graph is a DAG: answer NO
-            ValidatorDAG validatorDAG = new ValidatorDAG();
-            boolean isDAG = validatorDAG.containsTaxonomicDag(meshGraph);
-
-            System.out.println("MeSH Graph is a DAG: " + isDAG);
-
-            // We remove the cycles
-            MeSHExample_XML.removeMeshCycles(meshGraph);
-
-            isDAG = validatorDAG.containsTaxonomicDag(meshGraph);
-
-            // We check the graph is a DAG: answer Yes
-            System.out.println("MeSH Graph is a DAG: " + isDAG);
-
             /* 
-             * Now we can compute Semantic Similarities between pairs vertices
+             * Now we compute Semantic Similarities between pairs vertices
              */
             // we first configure a pairwise measure
             ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SANCHEZ_2011);
