@@ -34,13 +34,12 @@
 package slib.sglib.test.algo.graph;
 
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SLIB_UnitTestValues {
 

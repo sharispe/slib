@@ -124,6 +124,7 @@ import slib.utils.impl.OBOconstants;
  * <li> transitive_over/XREF...: These information are not loaded. </li> </ul>
  * TODO : load instances
  *
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_OBO_1_2 implements GraphLoader {
 
@@ -159,7 +160,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
         format_version = "undefined";
 
-
         oboTerms = new HashMap<String, OboTerm>();
         oboTypes = new HashMap<String, OboType>();
 
@@ -187,7 +187,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         logger.info("Loading OBO specification from:" + filepath);
         logger.info("-------------------------------------");
 
-
         loadOboSpec();
 
         logger.info("OBO specification loaded.");
@@ -201,7 +200,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
             FileInputStream fstream = new FileInputStream(filepath);
             DataInputStream in = new DataInputStream(fstream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
 
             boolean metadataLoaded = false;
 
@@ -354,7 +352,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
         String info[] = getDataColonSplit(value);
 
-
         if (info != null && info.length == 2) {
 
             String ns = data.getNamespace(info[0]);
@@ -394,7 +391,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
         // Check if opposite have already been specified
         // and that is opposite is not the one we try to specify
-
         if (inverseRel.containsKey(uri)
                 && !inverseRel.get(uri).equals(oppositeURI)) {
 
@@ -458,12 +454,10 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
     private void loadGraph() throws SLIB_Exception {
 
         // - create vertices -----------------------------------------------
-
         int nbObsolete = 0;
         int nbObsoleteTypeDef = 0;
 
         for (Entry<String, OboTerm> e : oboTerms.entrySet()) {
-
 
             if (!e.getValue().isObsolete()) {
 
@@ -481,7 +475,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
             String eTypeUriString;
 
-
             eTypeUriString = e.getKey();
             OboType type = e.getValue();
 
@@ -491,8 +484,6 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
                 continue;
             }
         }
-
-
 
         // create  Edge Type and inverse only for non obsolete relationships
         for (Entry<String, OboTerm> entry : oboTerms.entrySet()) {

@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
  * proposed by Blanchard E, Harzallah M, Kuntz P: A generic framework for
  * comparing semantic similarities on a subsumption hierarchy. 2008:20–24.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
 

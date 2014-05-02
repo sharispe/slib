@@ -38,7 +38,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public abstract class Filter {
 

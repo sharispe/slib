@@ -40,7 +40,7 @@ import slib.utils.i.Conf;
  *
  * Configuration of an Operator
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OperatorConf extends Conf {
 

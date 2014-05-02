@@ -125,7 +125,7 @@ import slib.sml.sm.core.metrics.ic.topo.ICi_zhou_2008;
  *
  * TODO requires to be split in a smart way.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public final class SMConstants {

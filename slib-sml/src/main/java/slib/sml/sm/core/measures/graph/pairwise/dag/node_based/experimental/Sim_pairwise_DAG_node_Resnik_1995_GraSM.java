@@ -47,7 +47,7 @@ import slib.utils.ex.SLIB_Exception;
  * Artificial Intelligence IJCAI. 1995, 1:448-453.
  *
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Resnik_1995_GraSM implements Sim_DAG_node_abstract {

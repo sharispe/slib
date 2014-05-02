@@ -38,7 +38,7 @@ import org.openrdf.model.URI;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexHash {
 

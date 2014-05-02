@@ -44,7 +44,7 @@ import slib.utils.impl.SetUtils;
  * A concept is represented as its sets of inclusive subsumers.
  * Note that the commonality is assessed based on the size of the intersection of the inclusive subsumers of the two compared concepts (which is, in some cases, not the same as the inclusive ancestors of a single common subsumer of the two concepts, i.e. feature-like definition of the MICA/LCA ).
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model {

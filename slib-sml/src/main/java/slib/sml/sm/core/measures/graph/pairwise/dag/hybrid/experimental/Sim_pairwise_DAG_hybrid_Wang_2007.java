@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
  * ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to measure the semantic similarity of GO terms. 
  * Bioinformatics (Oxford, England) 2007, 23:1274-81.
  * 
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{

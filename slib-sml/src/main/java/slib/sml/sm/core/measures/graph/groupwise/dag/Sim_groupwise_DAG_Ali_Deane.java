@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
  *
  * Measures also know through the name Funsim.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_groupwise_DAG_Ali_Deane extends Sim_groupwise_DAG_abstract {

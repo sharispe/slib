@@ -61,6 +61,8 @@ import slib.utils.impl.BigFileReader;
  * http://www.geneontology.org/GO.format.gaf-2_0.shtml
  *
  * TODO - Manage multiple organism specification : taxon:1|taxon:1000
+ *
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_GAF_2 implements GraphLoader {
 
@@ -95,8 +97,9 @@ public class GraphLoader_GAF_2 implements GraphLoader {
      * associated to a configuration in order to define restrictions to consider
      * during the parsing (e.g. taxons, Evidence Code, origin knowledge base)
      *
-     * @param conf object defining a configuration. If the
-     * configuration file define a {@link Filter} {@link FilterGraph_GAF2}, it will be evaluated during the parsing.
+     * @param conf object defining a configuration. If the configuration file
+     * define a {@link Filter} {@link FilterGraph_GAF2}, it will be evaluated
+     * during the parsing.
      * @param graph a graph defining the concepts to consider, can be set to
      * null if no mapping restriction have to be take into account If a graph is
      * specified only annotation corresponding a graph Node will be loaded.
@@ -133,8 +136,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
         defaultURIprefix = prefixUriInstance;
         logger.info("Default URI prefix is set to: " + prefixUriInstance);
 
-
-
         Set<Filter> filters = new HashSet<Filter>();
 
         String filtersAsStrings = (String) conf.getParameter("filters");
@@ -153,7 +154,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
             }
         }
 
-
         FilterGraph_GAF2 filter = null;
         Set<String> taxons = null;
         Set<String> excludedEC = null;
@@ -171,14 +171,12 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                         filter = (FilterGraph_GAF2) f;
                         logger.info("Filtering according to filter " + filter.getId() + "\ttype" + filter.getType());
 
-
                         taxons = filter.getTaxons();
                         excludedEC = filter.getExcludedEC();
                     }
                 }
             }
         }
-
 
         Pattern p_tab = Pattern.compile("\t");
         Pattern p_taxid = null;
@@ -189,25 +187,17 @@ public class GraphLoader_GAF_2 implements GraphLoader {
             p_taxid = Pattern.compile(".?taxon:(\\d+).?");
         }
 
-
         int countEntities = 0;
         int countAnnotsLoaded = 0;
 
         logger.info("file location : " + fileLocation);
-
-
-
-
 
         int existsQualifier = 0; // a qualifier exists for the annotation
         int not_found = 0; // the annotation is not found on the loaded graph
         int eC_restriction = 0; // excluded due to evidence code restriction
         int taxonsRestriction = 0;
 
-
         logger.info("Loading...");
-
-
 
         URIFactory uriManager = URIFactoryMemory.getSingleton();
 
@@ -241,18 +231,14 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
                     data = p_tab.split(line);
 
-
-
                     entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
                     gotermURIstring = buildURI(data[GOID]);
                     qualifier = data[QUALIFIER];
                     evidenceCode = data[EVIDENCE_CODE];
                     taxon_ids = data[TAXON];
 
-
                     // check if Evidence Code is valid
                     if (excludedEC == null || EvidenceCodeRules.areValid(excludedEC, evidenceCode)) {
-
 
                         // We do not consider go term associated with a qualifier 
                         // e.g. NOT, contributes_to ...
@@ -263,11 +249,9 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
                             if (graph.containsVertex(uriGOterm)) { // if the annotation is in the graph
 
-
                                 boolean valid = true;
 
                                 if (p_taxid != null) {
-
 
                                     Matcher m = p_taxid.matcher(taxon_ids);
                                     valid = false;
@@ -330,7 +314,6 @@ public class GraphLoader_GAF_2 implements GraphLoader {
     private String buildURI(String value) throws SLIB_Ex_Critic {
 
         String info[] = getDataColonSplit(value);
-
 
         if (info != null && info.length == 2) {
 

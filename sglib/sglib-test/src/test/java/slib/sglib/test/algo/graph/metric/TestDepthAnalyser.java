@@ -52,7 +52,7 @@ import slib.sglib.utils.WalkConstraintGeneric;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class TestDepthAnalyser {
 

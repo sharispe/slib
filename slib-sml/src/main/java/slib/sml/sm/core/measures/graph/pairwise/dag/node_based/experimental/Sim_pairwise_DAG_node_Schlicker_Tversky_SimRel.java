@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_pairwise_DAG_node_Schlicker_Tversky_SimRel implements Sim_DAG_node_abstract {
 

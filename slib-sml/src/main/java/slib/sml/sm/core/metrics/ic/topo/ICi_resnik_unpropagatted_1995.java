@@ -58,7 +58,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * tool for protein semantic similarity. 2007.
  *
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class ICi_resnik_unpropagatted_1995 extends LogBasedMetric implements ICtopo {

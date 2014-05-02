@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Object of this class can be used to retrieve the vertices reachable from a
  * particular vertex of an acyclic graph considering taxonomic relationships.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class RVF_TAX extends RVF_DAG {

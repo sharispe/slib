@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
  * Lin D: An Information-Theoretic Definition of Similarity. In 15th
  * International Conference of Machine Learning. Madison,WI: 1998:296-304.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Lin_1998_GraSM implements Sim_DAG_node_abstract {

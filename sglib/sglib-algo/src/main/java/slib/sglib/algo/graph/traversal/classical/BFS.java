@@ -55,7 +55,7 @@ import slib.utils.impl.SetUtils;
  * <a href="http://en.wikipedia.org/wiki/Breadth-first_search">more about
  * BFS</a>
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class BFS implements GraphTraversal {

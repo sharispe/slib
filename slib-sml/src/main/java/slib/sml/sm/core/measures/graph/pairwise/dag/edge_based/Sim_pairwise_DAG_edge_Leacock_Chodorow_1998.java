@@ -47,7 +47,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * The Log base used in this implementation is 10.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_abstract {

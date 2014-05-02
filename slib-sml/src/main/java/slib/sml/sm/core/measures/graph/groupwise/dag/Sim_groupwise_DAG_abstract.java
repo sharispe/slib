@@ -39,7 +39,7 @@ import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
  * Abstract class used to represent a semantic measure which can be applied
  * between two sets of concepts expressed in a Directed Acyclic Graph (DAG).
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public abstract class Sim_groupwise_DAG_abstract implements Sim_Groupwise_Direct {
 }

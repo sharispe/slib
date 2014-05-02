@@ -57,7 +57,7 @@ import slib.utils.ex.SLIB_Exception;
  * The normalization makes sens only if IC of compared concepts are normalized
  * [0;1]
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Jiang_Conrath_1997_Norm implements Sim_DAG_node_abstract {

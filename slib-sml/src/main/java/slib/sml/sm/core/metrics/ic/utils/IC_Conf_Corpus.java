@@ -39,7 +39,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * Class used to represent configurations dedicated to Corpus-based IC.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IC_Conf_Corpus extends ICconf {
 

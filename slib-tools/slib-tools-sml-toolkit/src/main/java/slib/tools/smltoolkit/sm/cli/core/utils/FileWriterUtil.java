@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Dummy class used to write a String into a file
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class FileWriterUtil {
 

@@ -33,7 +33,6 @@
  */
 package slib.indexer.mesh;
 
-import java.util.HashSet;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;

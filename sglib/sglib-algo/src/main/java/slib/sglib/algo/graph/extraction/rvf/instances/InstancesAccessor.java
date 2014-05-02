@@ -40,7 +40,7 @@ import org.openrdf.model.URI;
  *
  * Interface defining a access to the instances of the classes
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface InstancesAccessor {
 

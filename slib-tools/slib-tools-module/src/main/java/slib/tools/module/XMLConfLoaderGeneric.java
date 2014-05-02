@@ -74,7 +74,7 @@ import slib.utils.threads.ThreadManager;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class XMLConfLoaderGeneric {
 

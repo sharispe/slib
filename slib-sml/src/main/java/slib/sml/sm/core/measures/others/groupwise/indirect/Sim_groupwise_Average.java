@@ -44,7 +44,7 @@ import slib.utils.impl.MatrixDouble;
 /**
  * Classic Average Measure Assumes score symmetry
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_groupwise_Average extends Sim_groupwise_general_abstract {

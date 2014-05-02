@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
  * inclusive ancestors of a single common subsumer of the two concepts, i.e.
  * feature-like definition of the MICA/LCA ).
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model extends Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model {

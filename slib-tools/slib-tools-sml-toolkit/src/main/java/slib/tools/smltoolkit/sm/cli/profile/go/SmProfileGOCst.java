@@ -44,7 +44,7 @@ import slib.tools.smltoolkit.SmlToolKitCliCst;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SmProfileGOCst extends ToolCmdHandlerCst {
 

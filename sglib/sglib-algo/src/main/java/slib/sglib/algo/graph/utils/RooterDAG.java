@@ -49,7 +49,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Object used to root a graph taking into consideration edge types defining
  * roots.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class RooterDAG {

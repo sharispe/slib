@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
  * Lin D: An Information-Theoretic Definition of Similarity. In 15th
  * International Conference of Machine Learning. Madison,WI: 1998:296-304.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  *
  */

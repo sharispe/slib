@@ -47,7 +47,7 @@ import slib.sglib.model.repo.URIFactory;
 /**
  * Class used to plot graph using Graphviz.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class GraphPlotter_Graphviz {

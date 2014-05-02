@@ -37,7 +37,7 @@ import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_Indirect{
 	

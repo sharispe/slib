@@ -40,7 +40,7 @@ import slib.sglib.model.graph.elements.E;
  * Implementation of the {@link E} interface.
  * @see E
  * 
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Edge implements E {
 

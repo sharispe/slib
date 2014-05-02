@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
  *
  * The maximum of the cardinality of the denominator is used in this version.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_groupwise_DAG_NTO_MAX extends Sim_groupwise_DAG_abstract {

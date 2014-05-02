@@ -36,7 +36,7 @@ package slib.tools.module;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class XmlTags {
 	

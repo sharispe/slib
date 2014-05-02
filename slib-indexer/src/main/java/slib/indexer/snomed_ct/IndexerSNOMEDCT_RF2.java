@@ -36,6 +36,7 @@ package slib.indexer.snomed_ct;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
@@ -56,10 +57,10 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class IndexerSNOMEDCT_RF2 {
 
-    private int DESCRIPTION_CONCEPT_ID = 4;
-    private int DESCRIPTION_ACTIVE = 2;
-    private int DESCRIPTION_TERM = 7;
-    private int DESCRIPTION_DATE = 1;
+    private final int DESCRIPTION_CONCEPT_ID = 4;
+    private final int DESCRIPTION_ACTIVE = 2;
+    private final int DESCRIPTION_TERM = 7;
+    private final int DESCRIPTION_DATE = 1;
     Logger logger = LoggerFactory.getLogger(this.getClass());
     Pattern p_tab = Pattern.compile("\\t");
     URIFactory repo;
@@ -68,6 +69,7 @@ public class IndexerSNOMEDCT_RF2 {
      * Only load an index for the URI already loaded
      *
      * @param factory
+     * @param graph
      * @param description_file
      * @param defaultNamespace
      * @param EXCLUDE_INACTIVE_DESCRIPTIONS
@@ -127,7 +129,7 @@ public class IndexerSNOMEDCT_RF2 {
 
             logger.info("Process Done");
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
 

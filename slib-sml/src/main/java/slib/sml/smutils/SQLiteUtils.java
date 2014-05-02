@@ -79,7 +79,7 @@ import slib.utils.ex.SLIB_Exception;
  * databases containing tables with more than 500 columns. If such big table are
  * processed a SQL_Exception will be throw.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class SQLiteUtils {

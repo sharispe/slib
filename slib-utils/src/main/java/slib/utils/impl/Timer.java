@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Timer {
 

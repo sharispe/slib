@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * flag of the parameter and the value is an {@link Object} corresponding to the
  * value associated to the related key.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Conf {

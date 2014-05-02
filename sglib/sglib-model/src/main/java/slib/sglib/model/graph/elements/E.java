@@ -45,7 +45,7 @@ import org.openrdf.model.URI;
  * source, the target and the predicate of the edge. Moreover the source, the
  * target and the predicate must not be null.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface E {
 

@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * Query Iterator implementing the {@link QueryIterator} interface used to
  * iterate through the queries defined in a tabular delimited file i.e. e1\te2
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class QueryFileIterator implements QueryIterator {

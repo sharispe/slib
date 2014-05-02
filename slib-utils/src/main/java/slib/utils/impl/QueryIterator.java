@@ -41,7 +41,7 @@ import java.util.List;
  * The Query iterator thus enables to iterate through the full set of queries
  * contained in a particular repository (in file, in memory collection).
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface QueryIterator {
 

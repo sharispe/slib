@@ -43,7 +43,7 @@ import slib.tools.module.ToolCmdHandlerCst;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OntoFocusCmdHandlerCst extends ToolCmdHandlerCst {
 

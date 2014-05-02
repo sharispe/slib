@@ -47,7 +47,7 @@ import slib.sglib.model.graph.elements.E;
  * <li>the direction of the edges</li>
  * </ul>
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public interface WalkConstraint {

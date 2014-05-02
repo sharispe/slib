@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Class representing Topological Information Content
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface ICtopo {
 

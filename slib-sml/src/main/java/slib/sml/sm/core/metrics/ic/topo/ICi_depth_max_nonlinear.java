@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class ICi_depth_max_nonlinear extends LogBasedMetric implements ICtopo {

@@ -38,7 +38,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OntoFocusCst extends ModuleCst {
 

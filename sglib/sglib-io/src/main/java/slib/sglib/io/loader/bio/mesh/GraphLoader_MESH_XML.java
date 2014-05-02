@@ -68,7 +68,7 @@ import slib.utils.ex.SLIB_Exception;
  * The loader was designed for the 2013 XML version of the MeSH, coherency with
  * prior or older version hasn't been tested.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_MESH_XML implements GraphLoader {
 

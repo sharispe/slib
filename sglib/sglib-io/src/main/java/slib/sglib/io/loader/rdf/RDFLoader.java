@@ -34,23 +34,14 @@
 package slib.sglib.io.loader.rdf;
 
 import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import org.openrdf.rio.ParserConfig;
 
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
-import org.openrdf.rio.RDFHandlerException;
-import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
-import org.openrdf.rio.RioSetting;
-import org.openrdf.rio.helpers.BasicParserSettings;
 import org.openrdf.rio.ntriples.NTriplesParser;
 import org.openrdf.rio.rdfxml.RDFXMLParser;
 import org.openrdf.rio.turtle.TurtleParser;
@@ -67,7 +58,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class RDFLoader implements GraphLoader {
 

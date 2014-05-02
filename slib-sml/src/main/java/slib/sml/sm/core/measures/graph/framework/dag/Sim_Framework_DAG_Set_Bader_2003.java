@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
  * in protein-protein interaction network. in Knowledge Discovery in
  * Bioinformatics: Techniques, Methods and Application 2006.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_Framework_DAG_Set_Bader_2003 extends Sim_Framework_DAG_Set_abstract {

@@ -37,7 +37,7 @@ import slib.sglib.algo.graph.utils.GAction;
 
 /**
  *
- * @author S2bastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GActionValidator {
 

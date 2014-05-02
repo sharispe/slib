@@ -44,7 +44,7 @@ import slib.utils.impl.SetUtils;
  * its neighbouring regions. Bulletin of the Japanese Society of Scientific
  * Fischeries 1957, 22:526-530.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_Framework_DAG_Set_Ochiai_1957 extends Sim_Framework_DAG_Set_abstract {
 

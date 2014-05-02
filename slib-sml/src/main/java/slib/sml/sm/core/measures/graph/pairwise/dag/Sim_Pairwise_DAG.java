@@ -40,7 +40,7 @@ import slib.sml.sm.core.measures.Sim_Pairwise;
  * semantic similarity of two classes/concepts structured in a Directed Acyclic
  * Graph (DAG).
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface Sim_Pairwise_DAG extends Sim_Pairwise {
 }

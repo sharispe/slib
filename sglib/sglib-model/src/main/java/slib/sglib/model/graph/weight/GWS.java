@@ -52,7 +52,7 @@ import slib.sglib.model.graph.elements.E;
  *
  *
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public interface GWS {

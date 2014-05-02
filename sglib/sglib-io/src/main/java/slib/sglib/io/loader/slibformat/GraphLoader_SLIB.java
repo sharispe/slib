@@ -55,7 +55,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * TODO Comment DO not Support transitivity and inverse definitions anymore
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class GraphLoader_SLIB implements GraphLoader {

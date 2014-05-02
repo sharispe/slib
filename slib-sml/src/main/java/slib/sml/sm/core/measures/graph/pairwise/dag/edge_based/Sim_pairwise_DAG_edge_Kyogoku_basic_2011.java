@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * Basic because Kyogoku propose a method to estimate edge weight
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstract {

@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class TestSetUtils {
 

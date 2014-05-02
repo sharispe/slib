@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Abstract class used to facilitate implementation of set based measures.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG, Sim_Groupwise_Direct {
 

@@ -43,7 +43,7 @@ import slib.utils.ex.SLIB_Exception;
  * Interface used to represent direct groupwise measures. Those measures do not
  * rely on a pairwise measure to compute the likeness of two group of concepts.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface Sim_Groupwise_Direct extends Sim_Groupwise {
 

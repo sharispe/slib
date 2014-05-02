@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * @param <C> Object to index Columns
  * @param <R> Object to index Rows
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class MatrixDouble<C, R> {
 

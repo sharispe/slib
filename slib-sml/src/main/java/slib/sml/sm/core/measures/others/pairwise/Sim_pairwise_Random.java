@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Random measure for tests
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_pairwise_Random implements Sim_Pairwise {
 

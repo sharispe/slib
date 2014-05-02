@@ -41,7 +41,7 @@ import slib.tools.module.ToolCmdHandlerCst;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SmlToolKitCliCst extends ToolCmdHandlerCst {
 

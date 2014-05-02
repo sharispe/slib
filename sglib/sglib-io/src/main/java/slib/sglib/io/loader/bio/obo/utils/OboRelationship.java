@@ -35,7 +35,7 @@ package slib.sglib.io.loader.bio.obo.utils;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OboRelationship {
 

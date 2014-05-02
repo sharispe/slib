@@ -65,7 +65,7 @@ import slib.utils.impl.Util;
  * By default the semantic relationship is RDF.TYPE. Prefixes can also be
  * defined for the subjects and the objects of the statements created.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_TSVannot implements GraphLoader {
 

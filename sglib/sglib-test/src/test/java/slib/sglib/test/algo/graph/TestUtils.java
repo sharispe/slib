@@ -43,7 +43,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class TestUtils {
 

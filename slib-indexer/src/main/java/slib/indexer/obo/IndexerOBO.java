@@ -49,7 +49,7 @@ import slib.utils.impl.OBOconstants;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexerOBO {
 

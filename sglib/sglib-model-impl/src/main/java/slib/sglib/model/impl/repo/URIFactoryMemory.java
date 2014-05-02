@@ -58,7 +58,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * in a graph are linked to the corresponding storage element in the Data
  * repository. All change of the graph must be propagated on the Data Repository
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public final class URIFactoryMemory implements URIFactory {

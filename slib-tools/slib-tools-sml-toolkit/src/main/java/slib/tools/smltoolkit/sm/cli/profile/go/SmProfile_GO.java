@@ -47,7 +47,7 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SmProfile_GO implements SmlModuleCLI {
 

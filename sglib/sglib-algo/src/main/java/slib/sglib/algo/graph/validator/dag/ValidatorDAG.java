@@ -54,7 +54,7 @@ import slib.utils.impl.SetUtils;
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ValidatorDAG {
 

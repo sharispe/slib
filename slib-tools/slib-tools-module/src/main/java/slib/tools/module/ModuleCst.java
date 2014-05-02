@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Abstract class defining the constant expected to be specified for each module
  * configuration.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public abstract class ModuleCst {

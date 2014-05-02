@@ -48,7 +48,7 @@ import slib.sglib.model.graph.weight.GWS;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SimDagHybridUtils {
 

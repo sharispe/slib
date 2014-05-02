@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Semantic Measures Library Toolkit Command Line Interface
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class SmlToolKitCli extends CmdHandler {

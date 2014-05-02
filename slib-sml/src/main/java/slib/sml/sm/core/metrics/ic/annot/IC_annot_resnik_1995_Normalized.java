@@ -61,7 +61,7 @@ import slib.utils.ex.SLIB_Exception;
  * IC_norm(c) = IC(c)/ log(nbAnnot) Here nbAnnot = |V|
  *
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class IC_annot_resnik_1995_Normalized extends LogBasedMetric implements ICcorpus {

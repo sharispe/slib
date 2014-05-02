@@ -35,7 +35,7 @@ package slib.utils.threads;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class PoolLocker {
 

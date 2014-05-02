@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
  * Pesquita C, Faria D, Bastos H: Evaluating gobased semantic similarity
  * measures. Proc. 10th Annual Bio- 2007:1-4.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_groupwise_DAG_GIC extends Sim_groupwise_DAG_abstract {

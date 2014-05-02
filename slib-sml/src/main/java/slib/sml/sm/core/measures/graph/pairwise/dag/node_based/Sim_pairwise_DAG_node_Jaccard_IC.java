@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * sim(a,b) = ic_mica / (ic_a + ic_b - ic_mica)
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_Jaccard_IC implements Sim_DAG_node_abstract {

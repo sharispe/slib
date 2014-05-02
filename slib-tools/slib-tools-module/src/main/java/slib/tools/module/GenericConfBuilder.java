@@ -46,7 +46,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GenericConfBuilder {
 

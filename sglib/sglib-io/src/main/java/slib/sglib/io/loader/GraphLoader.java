@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Generic interface defining the methods a graph loader must implements
  * 
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public interface GraphLoader {

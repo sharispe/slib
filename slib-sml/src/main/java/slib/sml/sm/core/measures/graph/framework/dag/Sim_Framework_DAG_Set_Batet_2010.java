@@ -49,7 +49,7 @@ import slib.utils.impl.SetUtils;
  * order to produce results [0,1]. ﻿Faria D, Pesquita C, Couto FM, Falcão A:
  * Proteinon: A web tool for protein semantic similarity. 2007.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abstract {
 

@@ -35,7 +35,7 @@ package slib.tools.smltoolkit.sm.cli.core.utils.calc;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ThreadResultsQueryLoader {
 

@@ -36,7 +36,7 @@ package slib.sml.sm.core.measures;
 /**
  * Interface used to represent Semantic similarity used to process pairs of groups of vertices.
  * 
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface Sim_Groupwise {
     

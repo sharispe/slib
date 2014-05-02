@@ -39,7 +39,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
  * Class used to represent a semantic similarity measure which is based on a
  * hybrid approach.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public abstract class Sim_DAG_hybrid_abstract implements Sim_Pairwise_DAG {
 }

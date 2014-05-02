@@ -51,7 +51,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * IC range : [0,1]
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ICi_seco_2004 extends LogBasedMetric implements ICtopo {
 

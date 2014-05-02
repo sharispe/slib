@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  * @param <N>
  */
 public class MatrixDynamic<N extends Number> {

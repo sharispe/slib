@@ -49,7 +49,7 @@ import slib.utils.impl.SetUtils;
  * Wu Z, Palmer M: Verb semantics and lexical selection. In 32nd. Annual Meeting
  * of the Association for Computational Linguistics. 1994:133–138.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_edge_Wu_Palmer_1994 extends Sim_DAG_edge_abstract {

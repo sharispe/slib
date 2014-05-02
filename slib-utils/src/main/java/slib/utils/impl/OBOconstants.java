@@ -36,7 +36,7 @@ package slib.utils.impl;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OBOconstants {
 	

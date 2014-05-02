@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SmProfileMeSHHandler extends CmdHandler {
 

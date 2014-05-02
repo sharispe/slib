@@ -36,7 +36,7 @@ package slib.utils.impl;
 /**
  * TODO modify or remove
  * 
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class IO_RuntimeException extends RuntimeException {

@@ -38,7 +38,7 @@ import org.openrdf.model.URI;
 /**
  * GraphTraversal interface
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public interface GraphTraversal {

@@ -56,7 +56,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * IC inner expression range : ]0,1] IC value : [0,...[
  *
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ICi_sanchez_2011 extends LogBasedMetric implements ICtopo {
 

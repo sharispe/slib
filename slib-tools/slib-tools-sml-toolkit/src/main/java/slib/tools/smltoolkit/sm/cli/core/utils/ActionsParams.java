@@ -35,7 +35,7 @@ package slib.tools.smltoolkit.sm.cli.core.utils;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public enum ActionsParams {
     

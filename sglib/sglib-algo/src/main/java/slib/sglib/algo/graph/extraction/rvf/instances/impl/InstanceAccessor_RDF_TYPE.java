@@ -34,7 +34,6 @@
 package slib.sglib.algo.graph.extraction.rvf.instances.impl;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
@@ -45,7 +44,7 @@ import slib.sglib.model.graph.utils.Direction;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
@@ -54,6 +53,7 @@ public class InstanceAccessor_RDF_TYPE implements InstancesAccessor {
 
     /**
      * @param graph
+     * @param engine
      */
     public InstanceAccessor_RDF_TYPE(G graph, DescendantEngine engine) {
         this.graph = graph;

@@ -46,7 +46,7 @@ import slib.utils.impl.SetUtils;
 /**
  * TODO Check approximation using depth of concepts
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
 

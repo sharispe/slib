@@ -53,7 +53,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * IC range : [0,1]
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class ICi_zhou_2008 extends LogBasedMetric implements ICtopo {

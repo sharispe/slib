@@ -56,7 +56,7 @@ import slib.utils.impl.SetUtils;
  * Class used to perform a transitive reduction of a DAG see
  * http://en.wikipedia.org/wiki/Transitive_reduction
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class GraphReduction_Transitive {

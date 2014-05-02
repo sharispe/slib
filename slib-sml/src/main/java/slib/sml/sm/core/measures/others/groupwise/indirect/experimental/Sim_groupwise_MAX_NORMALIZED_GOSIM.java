@@ -48,7 +48,7 @@ import slib.utils.impl.MatrixDouble;
  * products. BMC bioinformatics 2007, 8:166. Implementation as defined in
  * equation 7 page 3/8
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_groupwise_MAX_NORMALIZED_GOSIM extends Sim_groupwise_general_abstract {

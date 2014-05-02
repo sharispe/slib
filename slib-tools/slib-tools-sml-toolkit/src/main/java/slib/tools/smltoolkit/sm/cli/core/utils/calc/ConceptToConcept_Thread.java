@@ -52,7 +52,7 @@ import slib.utils.threads.PoolWorker;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoader> {
 

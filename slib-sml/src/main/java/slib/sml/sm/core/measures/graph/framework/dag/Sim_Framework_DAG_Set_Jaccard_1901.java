@@ -44,7 +44,7 @@ import slib.utils.impl.SetUtils;
  * quelques regions voisines. Bulletin de la Societe Vaudoise des Sciences
  * Naturelles 1901, 37:241 - 272.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_Framework_DAG_Set_Jaccard_1901 extends Sim_Framework_DAG_Set_abstract {

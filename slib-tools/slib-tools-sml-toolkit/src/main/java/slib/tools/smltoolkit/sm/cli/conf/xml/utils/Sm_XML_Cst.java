@@ -35,7 +35,7 @@ package slib.tools.smltoolkit.sm.cli.conf.xml.utils;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sm_XML_Cst {
 

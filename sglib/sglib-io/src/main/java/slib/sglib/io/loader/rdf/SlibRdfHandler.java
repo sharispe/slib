@@ -46,7 +46,7 @@ import slib.sglib.model.repo.URIFactory;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SlibRdfHandler implements RDFHandler {
 

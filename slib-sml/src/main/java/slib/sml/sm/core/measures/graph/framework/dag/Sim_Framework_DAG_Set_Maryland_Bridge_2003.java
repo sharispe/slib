@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
  * Meetings on Bioconsensus: October 25-26, 2000 and October 2-5, 2001, DIMACS
  * Center. Amer Mathematical Society; 2003, 61:97.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_Framework_DAG_Set_Maryland_Bridge_2003 extends Sim_Framework_DAG_Set_abstract {

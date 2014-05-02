@@ -40,7 +40,7 @@ import slib.utils.impl.ParametrableImpl;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GDataConf extends ParametrableImpl implements CheckableValidity {
 

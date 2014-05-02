@@ -53,7 +53,7 @@ import slib.utils.impl.SetUtils;
  * particular vertex of an acyclic graph considering particular relationships
  * i.e. EdgeTypes
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class RVF_DAG extends RVF {

@@ -61,7 +61,7 @@ import slib.utils.impl.QueryFileIterator;
 import slib.utils.impl.SetUtils;
 
 /**
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OntoFocus {
 

@@ -38,92 +38,89 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Evidence codes are not statements of the quality of the annotation. 
- * Within each evidence code classification, some methods produce annotations 
- * of higher confidence or greater specificity than other methods, in addition 
- * the way in which a technique has been applied or interpreted in a paper will 
- * also affect the quality of the resulting annotation. Thus evidence codes 
- * cannot be used as a measure of the quality of the annotation.
- * 
- * The EXP code is the parent code for the IDA, IPI, IMP, IGI and IEP experimental codes.
- * Experimental Evidence Codes
- * 
- * 	EXP: Inferred from Experiment
- * 	-- IDA: Inferred from Direct Assay
- * 	-- IPI: Inferred from Physical Interaction
- * 	-- IMP: Inferred from Mutant Phenotype
- * 	-- IGI: Inferred from Genetic Interaction
- * 	-- IEP: Inferred from Expression Pattern
- * 
- * Computational Analysis Evidence Codes
- * 	ISS: Inferred from Sequence or Structural Similarity
- * 	-- ISO: Inferred from Sequence Orthology
- * 	-- ISA: Inferred from Sequence Alignment
- * 	-- ISM: Inferred from Sequence Model
- * 
- * 	IGC: Inferred from Genomic Context
- * 	IBA: Inferred from Biological aspect of Ancestor
- * 	IBD: Inferred from Biological aspect of Descendant
- * 	IKR: Inferred from Key Residues
- * 	IRD: Inferred from Rapid Divergence
- * 	RCA: inferred from Reviewed Computational Analysis
- * 
- * 	IEA: Inferred from Electronic Annotation
- * 
- * Author Statement Evidence Codes
- * 	TAS: Traceable Author Statement
- * 	NAS: Non-traceable Author Statement
- * 
- * Curator Statement Evidence Codes
- * 	IC: Inferred by Curator
- * 	ND: No biological Data available
+ * Evidence codes are not statements of the quality of the annotation. Within
+ * each evidence code classification, some methods produce annotations of higher
+ * confidence or greater specificity than other methods, in addition the way in
+ * which a technique has been applied or interpreted in a paper will also affect
+ * the quality of the resulting annotation. Thus evidence codes cannot be used
+ * as a measure of the quality of the annotation.
+ *
+ * The EXP code is the parent code for the IDA, IPI, IMP, IGI and IEP
+ * experimental codes. Experimental Evidence Codes
+ *
+ * EXP: Inferred from Experiment -- IDA: Inferred from Direct Assay -- IPI:
+ * Inferred from Physical Interaction -- IMP: Inferred from Mutant Phenotype --
+ * IGI: Inferred from Genetic Interaction -- IEP: Inferred from Expression
+ * Pattern
+ *
+ * Computational Analysis Evidence Codes ISS: Inferred from Sequence or
+ * Structural Similarity -- ISO: Inferred from Sequence Orthology -- ISA:
+ * Inferred from Sequence Alignment -- ISM: Inferred from Sequence Model
+ *
+ * IGC: Inferred from Genomic Context IBA: Inferred from Biological aspect of
+ * Ancestor IBD: Inferred from Biological aspect of Descendant IKR: Inferred
+ * from Key Residues IRD: Inferred from Rapid Divergence RCA: inferred from
+ * Reviewed Computational Analysis
+ *
+ * IEA: Inferred from Electronic Annotation
+ *
+ * Author Statement Evidence Codes TAS: Traceable Author Statement NAS:
+ * Non-traceable Author Statement
+ *
+ * Curator Statement Evidence Codes IC: Inferred by Curator ND: No biological
+ * Data available
+ *
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class EvidenceCodeRules {
-	
-	/**
+
+    /**
      *
      */
-    public final static Set<String> EXPchildren  = new HashSet<String>();
-	static{
-		EXPchildren.add("IDA");
-		EXPchildren.add("IPI");
-		EXPchildren.add("IMP");
-		EXPchildren.add("IGI");
-		EXPchildren.add("IEP");
-	} 
-	
-	/**
+    public final static Set<String> EXPchildren = new HashSet<String>();
+
+    static {
+        EXPchildren.add("IDA");
+        EXPchildren.add("IPI");
+        EXPchildren.add("IMP");
+        EXPchildren.add("IGI");
+        EXPchildren.add("IEP");
+    }
+
+    /**
      *
      */
-    public final static Set<String> ISSchildren  = new HashSet<String>();
-	static{
-		ISSchildren.add("ISO");
-		ISSchildren.add("ISA");
-		ISSchildren.add("ISM");
-	} 
-	
-	/**
-	 * Evaluate if a particular EC respect restrictions contains in a Collection of String defining invalid EC
-	 * EC hierarchy is considered during the evaluation
-	 * @param ecCodesRestriction a Collection of String defining EC restrictions
-	 * @param ec the EC evaluated
-	 * @return boolean true if the evaluated EC is valid considered given restrictions
-	 */
-	public static boolean areValid(Collection<String> ecCodesRestriction, String ec){
-		
-		for(String ecR : ecCodesRestriction){
-			
-			if(ecR.equals(ec)){
-				return false;
-			}
-			else if(ecR.equals("EXP") && EXPchildren.contains(ec)){
-				return false;
-			}
-			else if(ecR.equals("ISS") && ISSchildren.contains(ec)){
-				return false;
-			}
-		}
-		return true;
-	}
+    public final static Set<String> ISSchildren = new HashSet<String>();
+
+    static {
+        ISSchildren.add("ISO");
+        ISSchildren.add("ISA");
+        ISSchildren.add("ISM");
+    }
+
+    /**
+     * Evaluate if a particular EC respect restrictions contains in a Collection
+     * of String defining invalid EC EC hierarchy is considered during the
+     * evaluation
+     *
+     * @param ecCodesRestriction a Collection of String defining EC restrictions
+     * @param ec the EC evaluated
+     * @return boolean true if the evaluated EC is valid considered given
+     * restrictions
+     */
+    public static boolean areValid(Collection<String> ecCodesRestriction, String ec) {
+
+        for (String ecR : ecCodesRestriction) {
+
+            if (ecR.equals(ec)) {
+                return false;
+            } else if (ecR.equals("EXP") && EXPchildren.contains(ec)) {
+                return false;
+            } else if (ecR.equals("ISS") && ISSchildren.contains(ec)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

@@ -46,7 +46,7 @@ import slib.utils.impl.SetUtils;
  * Cited by ﻿1. Lin C, Cho Y-rae, Hwang W-chang, Pei P, Zhang A: Clustering
  * methods in protein-protein interaction network.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_Framework_DAG_Set_Korbel_2002 extends Sim_Framework_DAG_Set_abstract {

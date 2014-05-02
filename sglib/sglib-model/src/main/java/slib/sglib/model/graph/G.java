@@ -66,7 +66,7 @@ import slib.sglib.model.graph.utils.WalkConstraint;
  * @see Direction
  * @see WalkConstraint
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface G {
 

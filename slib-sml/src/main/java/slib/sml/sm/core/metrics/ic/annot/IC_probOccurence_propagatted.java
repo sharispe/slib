@@ -43,7 +43,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class IC_probOccurence_propagatted extends LogBasedMetric implements ICcorpus {

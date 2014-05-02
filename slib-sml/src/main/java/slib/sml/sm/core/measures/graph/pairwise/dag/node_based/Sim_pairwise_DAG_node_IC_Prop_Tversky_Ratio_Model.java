@@ -46,7 +46,7 @@ import slib.utils.impl.SetUtils;
 /**
  * IC formulation of Tversky Ratio Model
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model implements Sim_DAG_node_abstract {

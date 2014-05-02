@@ -50,7 +50,7 @@ import slib.utils.ex.SLIB_Exception;
  * Taxonomy. In Proceedings of the 14th International Joint Conference on
  * Artificial Intelligence IJCAI. Citeseer; 1995, 1:448–453.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {

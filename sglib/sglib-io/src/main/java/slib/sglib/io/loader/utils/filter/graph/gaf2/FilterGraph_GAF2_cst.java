@@ -38,7 +38,7 @@ package slib.sglib.io.loader.utils.filter.graph.gaf2;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class FilterGraph_GAF2_cst{
 

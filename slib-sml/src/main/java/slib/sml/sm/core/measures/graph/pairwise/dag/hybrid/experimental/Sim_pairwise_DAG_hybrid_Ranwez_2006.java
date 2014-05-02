@@ -49,7 +49,7 @@ import slib.utils.impl.SetUtils;
  *
  * distance converted as similarity using sim = - dist range ]-inf,0]
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  *
  */

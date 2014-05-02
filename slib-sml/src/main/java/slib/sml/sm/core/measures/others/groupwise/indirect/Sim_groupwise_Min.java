@@ -44,7 +44,7 @@ import slib.utils.impl.MatrixDouble;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_groupwise_Min extends Sim_groupwise_general_abstract {
 

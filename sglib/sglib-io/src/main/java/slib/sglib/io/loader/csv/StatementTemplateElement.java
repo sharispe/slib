@@ -35,7 +35,7 @@ package slib.sglib.io.loader.csv;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public enum StatementTemplateElement {
 	/**

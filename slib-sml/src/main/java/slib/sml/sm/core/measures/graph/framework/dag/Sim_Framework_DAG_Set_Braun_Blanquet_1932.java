@@ -43,7 +43,7 @@ import slib.utils.impl.SetUtils;
  * Braun-Blanquet J: Plant sociology: the study of plant communities.
  * McGraw-Hill; 1932:439.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_Framework_DAG_Set_Braun_Blanquet_1932 extends Sim_Framework_DAG_Set_abstract {
 

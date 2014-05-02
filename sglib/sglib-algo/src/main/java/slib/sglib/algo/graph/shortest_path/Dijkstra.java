@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * href="http://en.wikipedia.org/wiki/Dijkstra's_algorithm">more about</a> TODO
  * optimize i.e Fibonacci heap implementation
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Dijkstra {
 

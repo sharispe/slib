@@ -43,7 +43,7 @@ import slib.utils.impl.SetUtils;
  * Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
  * querying. International Journal of Intelligent Systems 2004, 22:739-761.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abstract {
 

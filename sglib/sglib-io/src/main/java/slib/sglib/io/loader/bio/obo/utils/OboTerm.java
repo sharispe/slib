@@ -38,7 +38,7 @@ import java.util.List;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class OboTerm {
 

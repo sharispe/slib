@@ -43,7 +43,7 @@ import slib.utils.impl.SetUtils;
  * Sokal RR, Sneath PHA: Principles of numerical taxonomy. San Francisco:
  * W. H. Freeman and Company; 1963:359.
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sim_Framework_DAG_Set_Sokal_Sneath_1963 extends Sim_Framework_DAG_Set_abstract {
 

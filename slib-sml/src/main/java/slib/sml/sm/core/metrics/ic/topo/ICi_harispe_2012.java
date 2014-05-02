@@ -67,7 +67,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * 24:297-303.
  *
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class ICi_harispe_2012 extends LogBasedMetric implements ICtopo {
 
