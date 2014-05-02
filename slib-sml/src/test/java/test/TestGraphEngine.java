@@ -2,7 +2,7 @@ package test;
 
 /*
  * 
- * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ * Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  * LGI2P research center
  * This software is governed by the CeCILL  license under French law and
  * abiding by the rules of distribution of free software.  You can  use, 
