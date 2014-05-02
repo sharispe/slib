@@ -40,7 +40,7 @@ import org.openrdf.model.impl.URIImpl;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class SLIBVOC {
 

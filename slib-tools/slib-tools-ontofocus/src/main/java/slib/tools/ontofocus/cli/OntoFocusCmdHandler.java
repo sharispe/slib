@@ -65,7 +65,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public final class OntoFocusCmdHandler extends CmdHandler {
 

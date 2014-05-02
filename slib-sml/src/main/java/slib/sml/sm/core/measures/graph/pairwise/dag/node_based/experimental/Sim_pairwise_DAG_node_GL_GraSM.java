@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
 

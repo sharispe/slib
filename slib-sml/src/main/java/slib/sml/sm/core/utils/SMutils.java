@@ -41,7 +41,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Class used to define utility methods.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class SMutils {
 

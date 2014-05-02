@@ -41,7 +41,7 @@ import slib.sglib.model.graph.elements.E;
  * Implementation of the {@link E} interface.
  * @see E
  * 
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Edge implements E {
 

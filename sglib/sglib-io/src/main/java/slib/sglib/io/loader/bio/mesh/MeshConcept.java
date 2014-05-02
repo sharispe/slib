@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * Dummy representation of a Mesh Concept
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class MeshConcept{
     

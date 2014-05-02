@@ -15,7 +15,7 @@ package slib.sml.sm.core.measures.string;
  * Normalized = distance(a,b) / (b.length() > a.length() ? b.length() : a.length());
  * i.e. distance divided by the length of the longer String
  * 
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class LevenshteinDistance {
 

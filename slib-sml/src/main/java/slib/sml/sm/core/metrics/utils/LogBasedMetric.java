@@ -37,7 +37,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class LogBasedMetric implements LogBasedMetricInterface{
     

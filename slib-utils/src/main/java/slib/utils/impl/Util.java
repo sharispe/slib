@@ -38,7 +38,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Util {
 

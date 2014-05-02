@@ -36,7 +36,7 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_node_Constants {
 

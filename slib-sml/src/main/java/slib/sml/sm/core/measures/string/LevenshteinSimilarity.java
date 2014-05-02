@@ -10,7 +10,7 @@ package slib.sml.sm.core.measures.string;
  *  not normalized =  length(longest string) - distance
  * 
  * @see LevenshteinDistance
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class LevenshteinSimilarity extends LevenshteinDistance{
     

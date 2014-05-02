@@ -32,7 +32,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Class managing the execution of {@link GAction} over a graph.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class GraphActionExecutor {
 

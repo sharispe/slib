@@ -25,7 +25,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * DUMMY INDEXER USED TO DEBUG. INPUT: index.*
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexerWordNetBasic {
 

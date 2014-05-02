@@ -3,7 +3,7 @@ package slib.sglib.algo.graph.utils;
 /**
  * Enumeration used to represent the various types of actions which can be applied to a graph.
  * 
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public enum GActionType {
 

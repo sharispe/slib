@@ -49,7 +49,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * 19th international conference on Computational linguistics. Association for
  * Computational Linguistics; 2002, 2:1–7.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_edge_Pekar_Staab_2002 extends Sim_DAG_edge_abstract {
 

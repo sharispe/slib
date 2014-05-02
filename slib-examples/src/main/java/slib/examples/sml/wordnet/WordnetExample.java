@@ -56,7 +56,7 @@ import slib.utils.ex.SLIB_Exception;
  * 
  * Documentation: http://www.semantic-measures-library.org
  * 
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class WordnetExample {
 

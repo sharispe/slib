@@ -37,7 +37,7 @@ import org.openrdf.model.Value;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface IndexedElement {
 

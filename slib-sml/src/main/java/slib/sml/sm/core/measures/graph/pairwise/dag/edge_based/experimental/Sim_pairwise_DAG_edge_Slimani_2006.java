@@ -50,7 +50,7 @@ import slib.utils.impl.SetUtils;
  * Edge Counting. In World academy of science, engineering and technology,.
  * 2006:34–38.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
 

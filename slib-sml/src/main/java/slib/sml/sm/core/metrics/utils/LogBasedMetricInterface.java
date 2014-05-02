@@ -37,7 +37,7 @@ import slib.utils.i.Conf;
 
 /**
  * Interface implemented by classes depending on a log base configuration.
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface LogBasedMetricInterface {
     

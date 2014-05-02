@@ -42,7 +42,7 @@ import slib.utils.i.Conf;
  * Basic class used to represent the configuration associated to a Semantic
  * Measures.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class SMconf extends Conf {
 

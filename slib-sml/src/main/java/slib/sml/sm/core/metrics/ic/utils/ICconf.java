@@ -40,7 +40,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public abstract class ICconf extends Conf {
 

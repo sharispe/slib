@@ -2,7 +2,7 @@ package slib.sglib.algo.graph.utils;
 
 /**
  * Class used to validate if the configuration associated to a {@link GAction} is valid.
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class GActionValidator {
 

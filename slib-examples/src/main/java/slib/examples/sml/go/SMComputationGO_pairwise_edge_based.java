@@ -27,7 +27,7 @@ import slib.utils.ex.SLIB_Exception;
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
  * element, change value="INFO" to value="DEBUG"
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SMComputationGO_pairwise_edge_based {
 

@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
  * the set of vertices composing the graph build from the intersection of the
  * graphs induced by the ancestors of the two given sets of concepts.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_groupwise_DAG_TO extends Sim_groupwise_DAG_abstract {
 

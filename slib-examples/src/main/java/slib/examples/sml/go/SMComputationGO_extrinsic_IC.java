@@ -31,7 +31,7 @@ import slib.utils.ex.SLIB_Exception;
  * More information at http://www.semantic-measures-library.org/
  *
  * 
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SMComputationGO_extrinsic_IC {
 

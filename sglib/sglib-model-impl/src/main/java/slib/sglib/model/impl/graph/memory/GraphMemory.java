@@ -50,7 +50,7 @@ import slib.sglib.model.impl.graph.elements.Edge;
 /**
  * In memory implementation of {@link G}
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class GraphMemory implements G {
 

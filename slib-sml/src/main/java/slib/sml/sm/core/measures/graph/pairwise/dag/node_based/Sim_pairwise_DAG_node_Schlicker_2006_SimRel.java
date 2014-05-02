@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
  * Schlicker, Andreas, et al. "A new measure for functional similarity of gene
  * products based on Gene Ontology." BMC bioinformatics 7.1 (2006): 302.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class Sim_pairwise_DAG_node_Schlicker_2006_SimRel implements Sim_DAG_node_abstract {
 

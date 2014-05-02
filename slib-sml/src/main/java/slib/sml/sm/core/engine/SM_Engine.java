@@ -133,7 +133,7 @@ import slib.utils.impl.SetUtils;
  * The engine stores commonly accessed results (e.g. ancestors of a class) which
  * can lead to high memory consumption dealing with large graphs.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class SM_Engine {
 

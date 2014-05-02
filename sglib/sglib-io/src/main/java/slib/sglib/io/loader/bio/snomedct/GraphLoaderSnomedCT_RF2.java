@@ -25,7 +25,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
@@ -52,16 +52,16 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     };
     
     // Concept file columns
-    private int CONCEPT_ID = 0;
-    private int CONCEPT_ACTIVE = 2;
-    private int CONCEPT_DATE = 1;
+    private final int CONCEPT_ID = 0;
+    private final int CONCEPT_ACTIVE = 2;
+    private final int CONCEPT_DATE = 1;
     // Relationships file columns
-    private int RELATIONSHIP_ID = 0;
-    private int RELATIONSHIP_DATE = 1;
-    private int RELATIONSHIP_ACTIVE = 2;
-    private int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
-    private int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
-    private int RELATIONSHIP_TYPE_ID = 7;
+    private final int RELATIONSHIP_ID = 0;
+    private final int RELATIONSHIP_DATE = 1;
+    private final int RELATIONSHIP_ACTIVE = 2;
+    private final int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
+    private final int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
+    private final int RELATIONSHIP_TYPE_ID = 7;
     private boolean LOAD_ONLY_ACTIVE_CONCEPTS = true;
     private boolean LOAD_ONLY_ACTIVE_RELATIONSHIPS = true;
 

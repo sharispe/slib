@@ -39,7 +39,7 @@ import slib.sglib.model.graph.utils.WalkConstraint;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class WalkConstraintUtils {
 

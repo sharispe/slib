@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
  * Interface used to represent groupwise measures based on a pairwise measures.
  * Those measures rely on the aggregation of the scores produced by pairwise measures and are therefore considered as indirect in the literature.
  * 
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public interface Sim_Groupwise_Indirect extends Sim_Groupwise {
 

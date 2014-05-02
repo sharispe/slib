@@ -39,7 +39,7 @@ import slib.sglib.model.graph.elements.E;
  *
  * Simple representation of a path in a graph.
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Path {
 

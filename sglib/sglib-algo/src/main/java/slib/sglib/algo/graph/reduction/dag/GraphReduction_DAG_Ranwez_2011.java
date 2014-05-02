@@ -67,7 +67,7 @@ import slib.utils.impl.SetUtils;
  * Hypernym Closure on is-a Directed Acyclic Graphs. IEEE Transactions on
  * Knowledge and Data Engineering 2011, 99:1-14.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class GraphReduction_DAG_Ranwez_2011 {
 

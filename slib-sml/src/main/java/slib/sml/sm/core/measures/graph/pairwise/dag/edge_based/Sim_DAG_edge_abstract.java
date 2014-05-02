@@ -40,7 +40,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
  * Class used to represent a {@link Sim_Pairwise_DAG} which relies on a
  * edge-based approach.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public abstract class Sim_DAG_edge_abstract implements Sim_Pairwise_DAG {
 }

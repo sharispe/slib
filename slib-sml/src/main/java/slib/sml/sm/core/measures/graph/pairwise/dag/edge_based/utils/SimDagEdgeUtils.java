@@ -47,7 +47,7 @@ import slib.utils.impl.SetUtils;
 /**
  * Utility class for edge-based measures.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class SimDagEdgeUtils {
 

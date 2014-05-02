@@ -37,7 +37,7 @@ import slib.sglib.model.graph.G;
 /**
  * Interface defining a repository for the graphs.
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public interface GraphRepository {
 

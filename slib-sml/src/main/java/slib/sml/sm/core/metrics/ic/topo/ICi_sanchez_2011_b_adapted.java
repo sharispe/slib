@@ -57,7 +57,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * produce results [0,1]. ﻿Faria D, Pesquita C, Couto FM, Falcão A: Proteinon: A
  * web tool for protein semantic similarity. 2007.
  *
- * @author Harispe Sébastien ﻿
+ * @author Sébastien Harispe ﻿
  */
 public class ICi_sanchez_2011_b_adapted extends LogBasedMetric implements ICtopo {
 

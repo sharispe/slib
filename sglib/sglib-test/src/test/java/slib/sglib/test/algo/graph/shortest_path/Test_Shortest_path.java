@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Test_Shortest_path {
 

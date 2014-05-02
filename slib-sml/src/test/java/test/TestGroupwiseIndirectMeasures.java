@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 /**
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class TestGroupwiseIndirectMeasures {
 

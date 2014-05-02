@@ -44,7 +44,7 @@ import slib.utils.impl.QueryIterator;
  * according to the set of concepts (CLASS) composing the graph. Considered as
  * Symmetric
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class QueryConceptsIterator implements QueryIterator {
 

@@ -33,7 +33,7 @@ package slib.indexer.mesh;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 import java.util.HashMap;
 import java.util.HashSet;

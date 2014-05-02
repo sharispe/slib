@@ -66,7 +66,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * Graph Loader is a class used to facilitate graph loading.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe
  */
 public class GraphLoaderGeneric {
 

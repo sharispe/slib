@@ -41,7 +41,7 @@ package slib.sglib.model.graph.utils;
  * <li>BOTH: both IN and OUT direction are considered</li>
  * </ul>
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public enum Direction {
 

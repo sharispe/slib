@@ -33,7 +33,7 @@ package slib.sml.sm.core.utils;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public enum SMParams {
     
