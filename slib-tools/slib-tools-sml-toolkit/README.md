@@ -6,7 +6,7 @@ Please visit the dedicated website for downloads or extra documentation http://w
 The SML-Toolkit is composed of various tools related to Semantic Similarity/Relatedness computation and analysis.
 Those tools are provided through a common command-line interface.
 
-The source code is written using Java 1.6 and the SML-Toolkit can therefore be used on any platform (Linux, Windows, Mac) in which Java is installed.
+The source code is written using Java 1.7 and the SML-Toolkit can therefore be used on any platform (Linux, Windows, Mac) in which Java is installed.
 
 The project currently focuses on Semantic measures related to semantic graphs, e.g. between terms or concepts structured in a graph (ontology), between groups of concepts...
 A package dedicated to String similarity measures is also provided but this is not currently the main concern of the project.
