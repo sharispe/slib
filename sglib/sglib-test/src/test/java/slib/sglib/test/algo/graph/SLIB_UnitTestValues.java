@@ -58,7 +58,7 @@ public class SLIB_UnitTestValues {
     /**
      *
      */
-    public static final URI uriGraph = URIFactoryMemory.getSingleton().createURI("http://g/");
+    public static final URI uriGraph = URIFactoryMemory.getSingleton().getURI("http://g/");
     /**
      *
      */
@@ -151,29 +151,29 @@ public class SLIB_UnitTestValues {
      */
     public SLIB_UnitTestValues() throws SLIB_Ex_Critic {
 
-        G_BASIC_THING = data.createURI(uriGraph + "thing");
-        G_BASIC_ANIMAL = data.createURI(uriGraph + "animal");
-        G_BASIC_MEN = data.createURI(uriGraph + "men");
-        G_BASIC_HUMAN = data.createURI(uriGraph + "human");
-        G_BASIC_SPIDER = data.createURI(uriGraph + "spider");
-        G_BASIC_SPIDERMAN = data.createURI(uriGraph + "spiderman");
-        G_BASIC_OBJECT = data.createURI(uriGraph + "object");
-        G_BASIC_MAMMAL = data.createURI(uriGraph + "mammal");
-        G_BASIC_TOOLS = data.createURI(uriGraph + "tools");
-        G_BASIC_TOMATO = data.createURI(uriGraph + "tomato");
+        G_BASIC_THING = data.getURI(uriGraph + "thing");
+        G_BASIC_ANIMAL = data.getURI(uriGraph + "animal");
+        G_BASIC_MEN = data.getURI(uriGraph + "men");
+        G_BASIC_HUMAN = data.getURI(uriGraph + "human");
+        G_BASIC_SPIDER = data.getURI(uriGraph + "spider");
+        G_BASIC_SPIDERMAN = data.getURI(uriGraph + "spiderman");
+        G_BASIC_OBJECT = data.getURI(uriGraph + "object");
+        G_BASIC_MAMMAL = data.getURI(uriGraph + "mammal");
+        G_BASIC_TOOLS = data.getURI(uriGraph + "tools");
+        G_BASIC_TOMATO = data.getURI(uriGraph + "tomato");
 
-        G_BASIC_ORGANISM = data.createURI(uriGraph + "organism");
-        G_BASIC_FICTIV_ORGANISM = data.createURI(uriGraph + "fictiv_organism");
-        G_BASIC_SWISS_KNIFE = data.createURI(uriGraph + "swiss_knife");
-        G_BASIC_KNIFE = data.createURI(uriGraph + "knife");
-        G_BASIC_TABLE = data.createURI(uriGraph + "table");
+        G_BASIC_ORGANISM = data.getURI(uriGraph + "organism");
+        G_BASIC_FICTIV_ORGANISM = data.getURI(uriGraph + "fictiv_organism");
+        G_BASIC_SWISS_KNIFE = data.getURI(uriGraph + "swiss_knife");
+        G_BASIC_KNIFE = data.getURI(uriGraph + "knife");
+        G_BASIC_TABLE = data.getURI(uriGraph + "table");
 
-        G_BASIC_REAL_ORGANISM = data.createURI(uriGraph + "real_organism");
-        G_BASIC_PLANT = data.createURI(uriGraph + "plant");
-        G_BASIC_WOMEN = data.createURI(uriGraph + "women");
+        G_BASIC_REAL_ORGANISM = data.getURI(uriGraph + "real_organism");
+        G_BASIC_PLANT = data.getURI(uriGraph + "plant");
+        G_BASIC_WOMEN = data.getURI(uriGraph + "women");
 
-        G_BASIC_STRANGE_ANIMAL = data.createURI(uriGraph + "strange_animal");
-        G_BASIC_STRANGE_ANIMAL_2 = data.createURI(uriGraph + "strange_animal_2");
+        G_BASIC_STRANGE_ANIMAL = data.getURI(uriGraph + "strange_animal");
+        G_BASIC_STRANGE_ANIMAL_2 = data.getURI(uriGraph + "strange_animal_2");
 
     }
     /*

@@ -59,7 +59,7 @@ public class TestUtils {
         System.out.println("Loading graph:::");
         
         GraphConf conf = new GraphConf();
-        conf.setUri(URIFactoryMemory.getSingleton().createURI("http://example/"));
+        conf.setUri(URIFactoryMemory.getSingleton().getURI("http://example/"));
         conf.addGDataConf(new GDataConf(gFormat, filePath));
         
         System.out.println("Loading :::");

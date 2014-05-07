@@ -74,7 +74,7 @@ public class SMComputationGO_pairwise {
         String goOBO = "/data/go/gene_ontology_ext.obo";
 
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI graph_uri = factory.createURI("http://go/");
+        URI graph_uri = factory.getURI("http://go/");
 
         // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
         // considering the configuration specified below the URI associated to GO:XXXXX will be http://go/XXXXX
@@ -98,7 +98,7 @@ public class SMComputationGO_pairwise {
         
         // We create a vertex corresponding to the virtual root
         // and we add it to the graph
-        URI virtualRoot = factory.createURI("http://go/virtualRoot");
+        URI virtualRoot = factory.getURI("http://go/virtualRoot");
         graph.addV(virtualRoot);
         
         // We root the graphs using the virtual root as root
@@ -114,7 +114,7 @@ public class SMComputationGO_pairwise {
 
 
         // We compute the similarity between http://go/0071869 and the collection of vertices
-        URI concept = factory.createURI("http://go/0071869");
+        URI concept = factory.getURI("http://go/0071869");
 
         ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011);
 

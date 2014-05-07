@@ -82,7 +82,7 @@ public class SMComputationYago {
         String yagoTaxonomyFile = "/data/yago/yagoTaxonomy.ttl";
         
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI yagoURI = factory.createURI("http://yago-knowledge.org/resource/");
+        URI yagoURI = factory.getURI("http://yago-knowledge.org/resource/");
         G g = new GraphMemory(yagoURI);
         
         // This is the configuration of the data 
@@ -109,8 +109,8 @@ public class SMComputationYago {
         
         
         // We compute the similarity between two concepts 
-        URI wikiRugbyFoorballerURI = factory.createURI(yagoURI.stringValue() + "wikicategory_Rugby_footballers"); 
-        URI WordnetSoccerPlayerURI = factory.createURI(yagoURI.stringValue() + "wordnet_soccer_player_110618342");
+        URI wikiRugbyFoorballerURI = factory.getURI(yagoURI.stringValue() + "wikicategory_Rugby_footballers"); 
+        URI WordnetSoccerPlayerURI = factory.getURI(yagoURI.stringValue() + "wordnet_soccer_player_110618342");
 
         // First we configure an intrincic IC 
         ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_DEPTH_MAX_NONLINEAR);

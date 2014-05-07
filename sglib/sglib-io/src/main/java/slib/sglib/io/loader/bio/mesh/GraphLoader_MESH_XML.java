@@ -233,7 +233,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
         String uriConceptAsString = default_namespace + descriptorUI;
 
-        URI uriConcept = factory.createURI(uriConceptAsString);
+        URI uriConcept = factory.getURI(uriConceptAsString);
 
         if (!graph.containsVertex(uriConcept)) {
             graph.addV(uriConcept);
@@ -246,10 +246,10 @@ public class GraphLoader_MESH_XML implements GraphLoader {
         
         
         URIFactoryMemory factory = URIFactoryMemory.getSingleton();
-        G graph = new GraphMemory(factory.createURI("http://mesh"));
+        G graph = new GraphMemory(factory.getURI("http://mesh"));
         GraphLoader_MESH_XML loader = new GraphLoader_MESH_XML();
         loader.populate(new GDataConf(GFormat.MESH_XML, "/data/mesh/desc2013.xml"), graph);
-        URI dna_barcoding = factory.createURI("http://D058893");
+        URI dna_barcoding = factory.getURI("http://D058893");
         System.out.println(graph);
         
         System.out.println(graph.containsVertex(dna_barcoding));

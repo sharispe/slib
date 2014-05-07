@@ -227,9 +227,9 @@ public final class OntoFocusCmdHandler extends CmdHandler {
                 throw new SLIB_Ex_Critic("No namespace associated to prefix " + data[0] + ". Cannot load " + string + ", please load required namespace prefix");
             }
 
-            uri = factory.createURI(ns + data[1]);
+            uri = factory.getURI(ns + data[1]);
         } else {
-            uri = factory.createURI(string);
+            uri = factory.getURI(string);
         }
         return uri;
     }
@@ -244,7 +244,7 @@ public final class OntoFocusCmdHandler extends CmdHandler {
         URIFactory uriFactory = URIFactoryMemory.getSingleton();
         //uriFactory.loadNamespacePrefix("GO", "http://go/");
 
-        URI uriGraph = uriFactory.createURI("http://graph/");
+        URI uriGraph = uriFactory.getURI("http://graph/");
         GraphConf gconf = new GraphConf(uriGraph);
         gconf.addGDataConf(new GDataConf(c.format, c.ontoFile));
         G graph = GraphLoaderGeneric.load(gconf);

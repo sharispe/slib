@@ -72,7 +72,7 @@ public class SMComputationOWL {
         String ontoFile = "/data/tmp/travel-domain-populated.owl";
 
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI graphURI = factory.createURI("http://graph/");
+        URI graphURI = factory.getURI("http://graph/");
         G g = new GraphMemory(graphURI);
 
         
@@ -96,8 +96,8 @@ public class SMComputationOWL {
 
 
         // We compute the similarity between two concepts 
-        URI countryURI = factory.createURI("https://sites.google.com/site/portdial2/downloads-area/Travel-Domain.owl#Country");
-        URI cityURI = factory.createURI("https://sites.google.com/site/portdial2/downloads-area/Travel-Domain.owl#City");
+        URI countryURI = factory.getURI("https://sites.google.com/site/portdial2/downloads-area/Travel-Domain.owl#Country");
+        URI cityURI = factory.getURI("https://sites.google.com/site/portdial2/downloads-area/Travel-Domain.owl#City");
 
         // First we configure an intrincic IC 
         ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_DEPTH_MAX_NONLINEAR);

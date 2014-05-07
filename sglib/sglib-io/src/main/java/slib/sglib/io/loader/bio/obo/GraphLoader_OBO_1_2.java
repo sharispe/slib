@@ -461,7 +461,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
             if (!e.getValue().isObsolete()) {
 
-                URI termURI = data.createURI(e.getKey());
+                URI termURI = data.getURI(e.getKey());
                 g.addV(termURI);
             } else {
                 nbObsolete++;
@@ -498,9 +498,9 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
                     if (!obsoletesETypes.contains(typeString)) {
 
-                        URI srcURI = data.createURI(t.getURIstring());
-                        URI targetURI = data.createURI(r.getTargetUriString());
-                        URI type = data.createURI(typeString);
+                        URI srcURI = data.getURI(t.getURIstring());
+                        URI targetURI = data.getURI(r.getTargetUriString());
+                        URI type = data.getURI(typeString);
 
                         g.addV(targetURI); // we ensure the target exists
                         g.addE(srcURI, type, targetURI);

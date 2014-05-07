@@ -254,6 +254,6 @@ public class GraphLoader_CSV implements GraphLoader {
             uriAsString = vmap.prefix + uriAsString;
         }
 
-        return dataRepo.createURI(uriAsString);
+        return dataRepo.getURI(uriAsString);
     }
 }

@@ -93,14 +93,14 @@ public class TestGroupwiseIndirectMeasures {
      */
     private void loadDATA() {
 
-        s1_A = factory.createURI("http://graph/s1_A");
-        s1_B = factory.createURI("http://graph/s1_B");
-        s1_C = factory.createURI("http://graph/s1_C");
-        s1_D = factory.createURI("http://graph/s1_D");
+        s1_A = factory.getURI("http://graph/s1_A");
+        s1_B = factory.getURI("http://graph/s1_B");
+        s1_C = factory.getURI("http://graph/s1_C");
+        s1_D = factory.getURI("http://graph/s1_D");
 
-        s2_A = factory.createURI("http://graph/s2_A");
-        s2_B = factory.createURI("http://graph/s2_B");
-        s2_C = factory.createURI("http://graph/s2_C");
+        s2_A = factory.getURI("http://graph/s2_A");
+        s2_B = factory.getURI("http://graph/s2_B");
+        s2_C = factory.getURI("http://graph/s2_C");
 
         setA = new HashSet<URI>();
         setB = new HashSet<URI>();

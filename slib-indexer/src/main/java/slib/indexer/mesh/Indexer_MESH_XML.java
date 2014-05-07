@@ -132,7 +132,7 @@ public class Indexer_MESH_XML {
                 MeshConcept c = e.getValue();
 
                 String uriConceptAsString = default_namespace + c.getDescriptorUI();
-                URI uriConcept = factory.createURI(uriConceptAsString);
+                URI uriConcept = factory.getURI(uriConceptAsString);
 
                 IndexElementBasic i = new IndexElementBasic(uriConcept, c.descriptorName);
                 i.addDescriptions(c.descriptions);

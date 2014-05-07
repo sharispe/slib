@@ -86,7 +86,7 @@ public class SMComputationSnomedCT {
         // Notice that Snomed-CT is quite large (e.g. version 20120731 contains 296433 concepts and872318 relationships ).
         // You will need to allocate extra memory to the JVM e.g add -Xmx3000m parameter to allocate 3Go.
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI snomedctURI = factory.createURI("http://snomedct/");
+        URI snomedctURI = factory.getURI("http://snomedct/");
         G g = new GraphMemory(snomedctURI);
 
         GDataConf conf = new GDataConf(GFormat.SNOMED_CT_RF2);
@@ -100,8 +100,8 @@ public class SMComputationSnomedCT {
         // We compute the similarity between the concepts 
         // associated to Heart	and Myocardium, i.e. 80891009 and 74281007 respectively
         // We first build URIs correspondind to those concepts
-        URI heartURI = factory.createURI(snomedctURI.stringValue() + "80891009"); // i.e http://snomedct/230690007
-        URI myocardiumURI = factory.createURI(snomedctURI.stringValue() + "74281007");
+        URI heartURI = factory.getURI(snomedctURI.stringValue() + "80891009"); // i.e http://snomedct/230690007
+        URI myocardiumURI = factory.getURI(snomedctURI.stringValue() + "74281007");
 
         // First we configure an intrincic IC 
         ICconf icConf = new IC_Conf_Topo(SMConstants.FLAG_ICI_SECO_2004);

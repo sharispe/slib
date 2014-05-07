@@ -15,12 +15,7 @@
             <layout>default</layout>
             <url>http://repo1.maven.org/maven2</url>
         </repository>
-		
-        <repository>
-            <id>aduna-repo</id>
-            <name>Aduna repository</name>
-            <url>http://repo.aduna-software.org/maven2/releases</url>
-        </repository>
+
     </repositories>
   
     <dependencies>

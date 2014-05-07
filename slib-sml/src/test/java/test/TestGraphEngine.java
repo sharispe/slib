@@ -88,7 +88,7 @@ public class TestGraphEngine {
 
 
             GraphLoader_SLIB loader = new GraphLoader_SLIB();
-            graph = new GraphMemory(factory.createURI(uriGraphTest));
+            graph = new GraphMemory(factory.getURI(uriGraphTest));
             loader.populate(new GDataConf(GFormat.SLIB, graphFile), graph);
             engine = new SM_Engine(graph);
 
@@ -134,7 +134,7 @@ public class TestGraphEngine {
             String[] data = l.split("\t");
             String nsConcept = data[COL_CONCEPT_NS];
 
-            URI cURI = factory.createURI(uriGraphTest + nsConcept);
+            URI cURI = factory.getURI(uriGraphTest + nsConcept);
 
             int ancCount = Integer.parseInt(data[COL_ANCESTORS_COUNT]);
             String[] ancNSStrings = data[COL_ANCESTORS].split(";");
@@ -145,7 +145,7 @@ public class TestGraphEngine {
 
             Set<URI> ancSet = new HashSet<URI>();
             for (String s : ancNSStrings) {
-                ancSet.add(factory.createURI(uriGraphTest + s));
+                ancSet.add(factory.getURI(uriGraphTest + s));
             }
             ancestors.put(cURI, ancSet);
 
@@ -158,7 +158,7 @@ public class TestGraphEngine {
 
             Set<URI> descSet = new HashSet<URI>();
             for (String s : descNSStrings) {
-                descSet.add(factory.createURI(uriGraphTest + s));
+                descSet.add(factory.getURI(uriGraphTest + s));
             }
             descendants.put(cURI, descSet);
 
@@ -167,7 +167,7 @@ public class TestGraphEngine {
 
             Set<URI> leavesSet = new HashSet<URI>();
             for (String s : leavesNSStrings) {
-                leavesSet.add(factory.createURI(uriGraphTest + s));
+                leavesSet.add(factory.getURI(uriGraphTest + s));
             }
             leaves.put(cURI, leavesSet);
 

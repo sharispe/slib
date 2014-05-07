@@ -113,8 +113,8 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 uriE2s = q.getValue();
 
                 try {
-                    e1 = factory.createURI(uriE1s, useLoadedPrefixes);
-                    e2 = factory.createURI(uriE2s, useLoadedPrefixes);
+                    e1 = factory.getURI(uriE1s, useLoadedPrefixes);
+                    e2 = factory.getURI(uriE2s, useLoadedPrefixes);
                 } catch (IllegalArgumentException e) {
 
                     throw new SLIB_Ex_Critic("Query file contains an invalid URI: " + e.getMessage());

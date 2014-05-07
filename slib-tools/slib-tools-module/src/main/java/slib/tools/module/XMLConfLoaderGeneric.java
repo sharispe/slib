@@ -244,7 +244,7 @@ public class XMLConfLoaderGeneric {
 
         logger.debug("uri: " + uris);
 
-        URI uri = factory.createURI(uris);
+        URI uri = factory.getURI(uris);
         gconf.setUri(uri);
 
 
@@ -423,7 +423,7 @@ public class XMLConfLoaderGeneric {
                 if (admittedPType.containsKey(p_string)) {
                     p = admittedPType.get(p_string);
                 } else {
-                    p = factory.createURI(p_string);
+                    p = factory.getURI(p_string);
                 }
 
 

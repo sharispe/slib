@@ -192,7 +192,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             for (ConceptSnomedCT concept : concepts.values()) {
 
                 if (!LOAD_ONLY_ACTIVE_CONCEPTS || concept.active) {
-                    URI cURI = repo.createURI(prefix,concept.id);
+                    URI cURI = repo.getURI(prefix,concept.id);
                     conceptMap.put(concept.id, cURI);
                     loaded++;
                 }
@@ -259,7 +259,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                         if (idMapping.containsKey(r.relationshipID)) {
                             pred = idMapping.get(r.relationshipID);
                         } else {
-                            pred = repo.createURI(prefix,r.relationshipID);
+                            pred = repo.getURI(prefix,r.relationshipID);
                         }
                         E e = new Edge(src, pred, tar);
 

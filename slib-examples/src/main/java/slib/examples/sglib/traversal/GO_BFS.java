@@ -66,7 +66,7 @@ public class GO_BFS {
         String goOBO = "/data/go/gene_ontology_ext.obo";
 
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI graph_uri = factory.createURI("http://go/");
+        URI graph_uri = factory.getURI("http://go/");
 
         // We define a prefix in order to build valid uris from ids such as GO:XXXXX, 
         // considering the configuration specified below the URI associated 

@@ -49,7 +49,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A22");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -73,7 +73,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A22");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -98,7 +98,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -124,7 +124,7 @@ public class TestOntoFocusReduction {
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
         Set<URI> urisToInclude = buildSetOfURIs(graph, "A222", "A1");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd,urisToInclude);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info(" TEST 2A");
         logger.info("#V=" + g.getV().size());
@@ -151,7 +151,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -177,7 +177,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -197,7 +197,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = false;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
          logger.info("# TEST 3b");
         logger.info("#V=" + g.getV().size());
@@ -225,7 +225,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -253,7 +253,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = false;
         Set<URI> query = buildSetOfURIs(graph, "A1", "ROOT", "A2", "A11", "A12", "A21", "A2", "A22", "A221", "A222", "A3", "A4", "A5");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
 
         String gviz = GraphPlotter_Graphviz.plot(factory,g, query, true, false, null);
@@ -285,7 +285,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = false;
         Set<URI> query = buildSetOfURIs(graph, "A1", "ROOT", "A2", "A11", "A12", "A21", "A2", "A22", "A221", "A222", "A3", "A4", "A5");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         String gviz = GraphPlotter_Graphviz.plot(factory,g, query, true, false, null);
 
@@ -325,7 +325,7 @@ public class TestOntoFocusReduction {
         boolean applyTR = true;
         Set<URI> query = buildSetOfURIs(graph, "A11", "A21", "A221", "A222");
         OntoFocus ontofocus = new OntoFocus(factory, graph, taxonomicPredicates, predicatesToAdd);
-        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().createURI("http://reduction"), query, applyTR);
+        G g = ontofocus.performReduction(URIFactoryMemory.getSingleton().getURI("http://reduction"), query, applyTR);
 
         logger.info("#V=" + g.getV().size());
         logger.info("#E=" + g.getE().size());
@@ -337,7 +337,7 @@ public class TestOntoFocusReduction {
 
     public static G buildGraph() {
         URIFactory factory = URIFactoryMemory.getSingleton();
-        G g = new GraphMemory(factory.createURI("http://graph"));
+        G g = new GraphMemory(factory.getURI("http://graph"));
 
         addE(g, "A1", RDFS.SUBCLASSOF, "ROOT");
         addE(g, "A2", RDFS.SUBCLASSOF, "ROOT");
@@ -367,16 +367,16 @@ public class TestOntoFocusReduction {
 
     private static void addE(G g, String s, URI p, String o) {
         g.addE(
-                URIFactoryMemory.getSingleton().createURI(g.getURI() + "/" + s),
+                URIFactoryMemory.getSingleton().getURI(g.getURI() + "/" + s),
                 p,
-                URIFactoryMemory.getSingleton().createURI(g.getURI() + "/" + o));
+                URIFactoryMemory.getSingleton().getURI(g.getURI() + "/" + o));
     }
 
     private Set<URI> buildSetOfURIs(G graph, String... uriAsStrings) {
         Set<URI> uris = new HashSet<URI>();
 
         for (String s : uriAsStrings) {
-            uris.add(factory.createURI(graph.getURI() + "/" + s));
+            uris.add(factory.getURI(graph.getURI() + "/" + s));
         }
         return uris;
 

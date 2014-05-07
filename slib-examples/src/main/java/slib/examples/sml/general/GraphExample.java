@@ -61,13 +61,13 @@ public class GraphExample {
         // We use a datafactory to create some elements such as URIs
         URIFactory factory = URIFactoryMemory.getSingleton();
         
-        URI uriGraph = factory.createURI("http://graph/");
-        URI vA    = factory.createURI("http://graph/vA");
-        URI vB    = factory.createURI("http://graph/vB");
-        URI vC    = factory.createURI("http://graph/vC");
-        URI vD    = factory.createURI("http://graph/vD");
+        URI uriGraph = factory.getURI("http://graph/");
+        URI vA    = factory.getURI("http://graph/vA");
+        URI vB    = factory.getURI("http://graph/vB");
+        URI vC    = factory.getURI("http://graph/vC");
+        URI vD    = factory.getURI("http://graph/vD");
         
-        URI relA    = factory.createURI("http://graph/interact");
+        URI relA    = factory.getURI("http://graph/interact");
         
         // We create a graph which is loaded in memory
         G graph = new GraphMemory(uriGraph);

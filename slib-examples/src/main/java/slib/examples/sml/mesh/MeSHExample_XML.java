@@ -68,7 +68,7 @@ public class MeSHExample_XML {
             t.start();
 
             URIFactory factory = URIFactoryMemory.getSingleton();
-            URI meshURI = factory.createURI("http://www.nlm.nih.gov/mesh/");
+            URI meshURI = factory.getURI("http://www.nlm.nih.gov/mesh/");
 
             G meshGraph = new GraphMemory(meshURI);
 
@@ -89,8 +89,8 @@ public class MeSHExample_XML {
 
             // We compute semantic similarities between concepts
             // e.g. between Paranoid Disorders (D010259) and Schizophrenia, Paranoid (D012563)
-            URI c1 = factory.createURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
-            URI c2 = factory.createURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
+            URI c1 = factory.getURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
+            URI c2 = factory.getURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
 
             // We compute the similarity
             double sim = engine.computePairwiseSim(measureConf, c1, c2);

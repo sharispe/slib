@@ -62,10 +62,10 @@ public interface URIFactory{
      */
     public String getNamespace(String ns_prefix);
     
-    public URI createURI(String sURI);
+    public URI getURI(String sURI);
     
     /**
-     * Loaded prefixes will be used, use {@link URIFactory#createURI(java.lang.String) } if loaded prefixes are not used.
+     * Loaded prefixes will be used, use {@link URIFactory#getURI(java.lang.String) } if loaded prefixes are not used.
      * An URI with a prefix is for instance GO:xxxxx.
      * Considering that GO is defined as PREFIX for http://go/ the URI will be http://go/xxxxx.
      * 
@@ -74,9 +74,9 @@ public interface URIFactory{
      * @throws IllegalArgumentException if the URI is not well formed no error if the prefix do not exists
      * @return the URI
      */
-    public URI createURI(String sURI,boolean useLoadedPrefix);
+    public URI getURI(String sURI,boolean useLoadedPrefix);
     
-    public URI createURI(String snamespace, String localName);
+    public URI getURI(String snamespace, String localName);
     
     public void clear();
     

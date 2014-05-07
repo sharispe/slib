@@ -111,7 +111,7 @@ public class IndexerSNOMEDCT_RF2 {
 
                 if (active || !EXCLUDE_INACTIVE_DESCRIPTIONS) {
 
-                    URI cURI = repo.createURI(defaultNamespace + split[DESCRIPTION_CONCEPT_ID]);
+                    URI cURI = repo.getURI(defaultNamespace + split[DESCRIPTION_CONCEPT_ID]);
 
                     if (graph.containsVertex(cURI)) { // the concept is loaded in the repository
 

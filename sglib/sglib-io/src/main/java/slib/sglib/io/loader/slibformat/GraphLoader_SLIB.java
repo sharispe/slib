@@ -110,12 +110,12 @@ public class GraphLoader_SLIB implements GraphLoader {
 
                 dataTMP = line.split("\t");
                 if (dataTMP.length == 1) { // vertex
-                    URI vURI = factory.createURI(dataTMP[0]);
+                    URI vURI = factory.getURI(dataTMP[0]);
                     g.addV(vURI);
                 } else if (dataTMP.length == 3) {
-                    URI sURI = factory.createURI(dataTMP[0]);
-                    URI pURI = factory.createURI(dataTMP[1]);
-                    URI oURI = factory.createURI(dataTMP[2]);
+                    URI sURI = factory.getURI(dataTMP[0]);
+                    URI pURI = factory.getURI(dataTMP[1]);
+                    URI oURI = factory.getURI(dataTMP[2]);
 
                     g.addV(sURI);
                     g.addV(oURI);

@@ -40,10 +40,10 @@ import org.openrdf.model.URI;
  * Otherwise stated, an edge can be viewed as a statement subject, predicate,
  * object considering that all elements are URIs.
  *
- * Note that edges are not expected to be modifiable i.e. there source, target
+ * Note that edges are not expected to be modifiable i.e. their source, target
  * and type must be final. Therefore no setters must be specified for the
- * source, the target and the predicate of the edge. Moreover the source, the
- * target and the predicate must not be null.
+ * source, the target and the predicate of the edge. Moreover the aforementioned 
+ * elements must not be null.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */

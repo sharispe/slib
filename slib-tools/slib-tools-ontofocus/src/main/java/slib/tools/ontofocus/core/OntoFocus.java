@@ -135,7 +135,7 @@ public class OntoFocus {
             String[] annot = queryEntry.getValue().split(",");
 
             for (String a : annot) {
-                URI u = factory.createURI(a.trim(), true);
+                URI u = factory.getURI(a.trim(), true);
                 if (graph.containsVertex(u)) {
                     uris.add(u);
                 } else {
@@ -186,7 +186,7 @@ public class OntoFocus {
                         }
 
 
-                        URI guri_reduction = factory.createURI(graph.getURI() + "_reduction_" + i);
+                        URI guri_reduction = factory.getURI(graph.getURI() + "_reduction_" + i);
                         G graph_reduction = performReduction(guri_reduction, urisQuery, applyTR);
 
                         logger.info(graph_reduction.toString());

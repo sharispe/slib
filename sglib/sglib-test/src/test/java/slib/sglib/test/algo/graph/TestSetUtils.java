@@ -57,12 +57,12 @@ public class TestSetUtils {
     URIFactoryMemory data = URIFactoryMemory.getSingleton();
     G g1;
     G g2;
-    URI a = data.createURI("http://#a");
-    URI b = data.createURI("http://#b");
-    URI c = data.createURI("http://#c");
-    URI d = data.createURI("http://#d");
-    URI e = data.createURI("http://#e");
-    URI f = data.createURI("http://#f");
+    URI a = data.getURI("http://#a");
+    URI b = data.getURI("http://#b");
+    URI c = data.getURI("http://#c");
+    URI d = data.getURI("http://#d");
+    URI e = data.getURI("http://#e");
+    URI f = data.getURI("http://#f");
     int c1_intersection = 0;
     int c1_union = 1;
     int c2_intersection = 0;

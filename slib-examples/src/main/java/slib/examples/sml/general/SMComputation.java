@@ -69,7 +69,7 @@ public class SMComputation {
         
         URIFactory factory = URIFactoryMemory.getSingleton();
         
-        URI graph_uri = factory.createURI("http://graph/");
+        URI graph_uri = factory.getURI("http://graph/");
         
         G graph = new GraphMemory(graph_uri);
         
@@ -84,7 +84,7 @@ public class SMComputation {
         SM_Engine engine = new SM_Engine(graph);
         
         // Retrieve the inclusive ancestors of a vertex
-        URI whale = factory.createURI("http://graph/class/Whale");
+        URI whale = factory.getURI("http://graph/class/Whale");
         Set<URI> whaleAncs = engine.getAncestorsInc(whale);
         
         System.out.println("Whale ancestors:");
@@ -115,7 +115,7 @@ public class SMComputation {
         smConf.setICconf(icConf);
         
         // Finally, we compute the similarity between the concepts Horse and Whale
-        URI horse = factory.createURI("http://graph/class/Horse");
+        URI horse = factory.getURI("http://graph/class/Horse");
         
         double sim = engine.computePairwiseSim(smConf, whale, horse);
         System.out.println("Sim Whale/Horse: "+sim);

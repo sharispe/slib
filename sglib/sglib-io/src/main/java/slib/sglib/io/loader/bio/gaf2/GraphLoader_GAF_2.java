@@ -231,7 +231,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
 
                     data = p_tab.split(line);
 
-                    entityID = uriManager.createURI(prefixUriInstance + data[DB_OBJECT_ID]);
+                    entityID = uriManager.getURI(prefixUriInstance + data[DB_OBJECT_ID]);
                     gotermURIstring = buildURI(data[GOID]);
                     qualifier = data[QUALIFIER];
                     evidenceCode = data[EVIDENCE_CODE];
@@ -245,7 +245,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                         // TODO take into consideration this information !
                         if (qualifier.isEmpty()) {
 
-                            uriGOterm = uriManager.createURI(gotermURIstring);
+                            uriGOterm = uriManager.getURI(gotermURIstring);
 
                             if (graph.containsVertex(uriGOterm)) { // if the annotation is in the graph
 

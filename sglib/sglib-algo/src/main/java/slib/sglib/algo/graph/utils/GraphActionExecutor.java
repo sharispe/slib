@@ -160,7 +160,7 @@ public class GraphActionExecutor {
             logger.info("Applying reduction of the part of the graph " + g.getURI() + " which is not contained in the graph induced by " + rootURIs + " (only the classes subsumed by the given root are considered)");
 
             try {
-                URI rootURI = factory.createURI(rootURIs);
+                URI rootURI = factory.getURI(rootURIs);
 
                 if (!g.containsVertex(rootURI)) {
                     throw new SLIB_Ex_Critic("Error cannot state vertex associated to URI " + rootURI + " in graph " + g.getURI());
@@ -263,7 +263,7 @@ public class GraphActionExecutor {
 
                         line = line.trim();
 
-                        g.removeV(factory.createURI(line));
+                        g.removeV(factory.getURI(line));
                     }
                     in.close();
                 } catch (IOException e) {
@@ -336,7 +336,7 @@ public class GraphActionExecutor {
     private static void removeVocURIs(URIFactory factory, String[] toRemove, G g) {
 
         for (String s : toRemove) {
-            g.removeV(factory.createURI(s));
+            g.removeV(factory.getURI(s));
         }
     }
 
@@ -358,7 +358,7 @@ public class GraphActionExecutor {
             g.addV(rootURI);
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
         } else {
-            rootURI = factory.createURI(rootURIstring);
+            rootURI = factory.getURI(rootURIstring);
             if (!g.containsVertex(rootURI)) {
                 logger.info("Create class "+rootURI);
                 g.addV(rootURI);
@@ -508,8 +508,8 @@ public class GraphActionExecutor {
             new_URI = RDFS.SUBCLASSOF.toString();
         }
 
-        URI oldURI = factory.createURI(old_URI);
-        URI newURI = factory.createURI(new_URI);
+        URI oldURI = factory.getURI(old_URI);
+        URI newURI = factory.getURI(new_URI);
 
         Set<E> oldRel = g.getE(oldURI);
         g.removeE(oldRel);

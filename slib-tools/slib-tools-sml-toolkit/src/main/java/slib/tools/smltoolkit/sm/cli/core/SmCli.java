@@ -145,7 +145,7 @@ public class SmCli implements SmlModuleCLI {
 
         logger.info("Retrieving the graph " + conf.graphURI);
 
-        URI graphURI = factory.createURI(conf.graphURI);
+        URI graphURI = factory.getURI(conf.graphURI);
 
         GraphRepository graphRepo = GraphRepositoryMemory.getSingleton();
 

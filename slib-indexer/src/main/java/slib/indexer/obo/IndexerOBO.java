@@ -224,7 +224,7 @@ public class IndexerOBO {
 
         if (onTermSpec) {
 
-            URI uri = factory.createURI(currentURI);
+            URI uri = factory.getURI(currentURI);
             
             IndexElementBasic i = new IndexElementBasic(uri,currentName);
             index.addValue(uri, i);

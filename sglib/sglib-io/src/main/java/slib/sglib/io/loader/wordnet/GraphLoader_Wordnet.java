@@ -121,7 +121,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
                 String lex_filenum = data[1];
                 String ss_type = data[2];
 
-                URI synset = dataRepo.createURI(uriPrefix + synset_offset);
+                URI synset = dataRepo.getURI(uriPrefix + synset_offset);
                 graph.addV(synset);
                 
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
@@ -147,8 +147,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
 //                        logger.info("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
 
-                        URI s = dataRepo.createURI(uriPrefix + synset_offset);
-                        URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
+                        URI s = dataRepo.getURI(uriPrefix + synset_offset);
+                        URI o = dataRepo.getURI(uriPrefix + p.synsetOffset);
 
                         graph.addV(s);
                         graph.addV(o);

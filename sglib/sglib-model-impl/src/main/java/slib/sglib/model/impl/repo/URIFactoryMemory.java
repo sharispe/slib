@@ -99,7 +99,7 @@ public final class URIFactoryMemory implements URIFactory {
             loadNamespacePrefix("dc", DC.NAMESPACE);
             loadNamespacePrefix("dcterm", DCTERMS.NAMESPACE);
             loadNamespacePrefix("foaf", FOAF.NAMESPACE);
-        } catch (Exception e) {//cannot happen}
+        } catch (SLIB_Ex_Critic e) {//cannot happen}
         }
     }
 
@@ -136,31 +136,31 @@ public final class URIFactoryMemory implements URIFactory {
     }
 
     @Override
-    public URI createURI(String sURI) {
+    public URI getURI(String sURI) {
         return internalUriFactory.createURI(sURI);
 
     }
 
     @Override
-    public URI createURI(String snamespace, String sURI) {
+    public URI getURI(String snamespace, String sURI) {
         return internalUriFactory.createURI(snamespace, sURI);
     }
 
     @Override
-    public URI createURI(String sURI, boolean useLoadedPrefix) {
+    public URI getURI(String sURI, boolean useLoadedPrefix) {
         if (!useLoadedPrefix) {
-            return createURI(sURI);
+            return getURI(sURI);
         } else {
             int idx = sURI.indexOf(":");
             if (idx != -1) {
                 String prefix = sURI.substring(0, idx);
                 if (namespacePrefixes2namespaces.containsKey(prefix)) {
-                    return createURI(namespacePrefixes2namespaces.get(prefix), sURI.substring(idx + 1));
+                    return getURI(namespacePrefixes2namespaces.get(prefix), sURI.substring(idx + 1));
                 } else {
-                    return createURI(sURI);
+                    return getURI(sURI);
                 }
             } else {
-                return createURI(sURI);
+                return getURI(sURI);
             }
         }
     }

@@ -92,7 +92,7 @@ public class TestValidatorDAG {
         assertTrue(roots.iterator().next().equals(testValues.G_BASIC_THING));
 
 
-        URI newRoot = URIFactoryMemory.getSingleton().createURI("http://newRoot");
+        URI newRoot = URIFactoryMemory.getSingleton().getURI("http://newRoot");
         g.addE(testValues.G_BASIC_ANIMAL,RDFS.SUBCLASSOF,newRoot);
 
         roots = new ValidatorDAG().getTaxonomicRoots(g);
@@ -155,7 +155,7 @@ public class TestValidatorDAG {
         assertTrue(isDag == true);
 
         // We create another root
-        g.addE(testValues.G_BASIC_HUMAN,RDFS.SUBCLASSOF,URIFactoryMemory.getSingleton().createURI("http://newURI"));
+        g.addE(testValues.G_BASIC_HUMAN,RDFS.SUBCLASSOF,URIFactoryMemory.getSingleton().getURI("http://newURI"));
 
         isDag = new ValidatorDAG().containsTaxonomicDagWithUniqueRoot(g);
         assertTrue(isDag == false);
@@ -172,7 +172,7 @@ public class TestValidatorDAG {
 
         assertTrue(isDag == true);
 
-        URI newRootURI = URIFactoryMemory.getSingleton().createURI(SLIB_UnitTestValues.uriGraph + "new_Root");
+        URI newRootURI = URIFactoryMemory.getSingleton().getURI(SLIB_UnitTestValues.uriGraph + "new_Root");
 
         g.addV(newRootURI);
 

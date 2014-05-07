@@ -79,8 +79,8 @@ public class MeSHExample_XML_2013 {
         URIFactory factory = URIFactoryMemory.getSingleton();
 
         // We remove the edges creating cycles
-        URI ethicsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D004989");
-        URI moralsURI = factory.createURI("http://www.nlm.nih.gov/mesh/D009014");
+        URI ethicsURI = factory.getURI("http://www.nlm.nih.gov/mesh/D004989");
+        URI moralsURI = factory.getURI("http://www.nlm.nih.gov/mesh/D009014");
 
         // We retrieve the direct subsumers of the concept (D009014)
         Set<E> moralsEdges = meshGraph.getE(RDFS.SUBCLASSOF, moralsURI, Direction.OUT);
@@ -101,8 +101,8 @@ public class MeSHExample_XML_2013 {
         // We remove the edges creating cycles
         // see http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh
 
-        URI hydroxybutyratesURI = factory.createURI("http://www.nlm.nih.gov/mesh/D006885");
-        URI hydroxybutyricAcidURI = factory.createURI("http://www.nlm.nih.gov/mesh/D020155");
+        URI hydroxybutyratesURI = factory.getURI("http://www.nlm.nih.gov/mesh/D006885");
+        URI hydroxybutyricAcidURI = factory.getURI("http://www.nlm.nih.gov/mesh/D020155");
 
         // We retrieve the direct subsumers of the concept (D009014)
         Set<E> hydroxybutyricAcidEdges = meshGraph.getE(RDFS.SUBCLASSOF, hydroxybutyricAcidURI, Direction.OUT);
@@ -125,7 +125,7 @@ public class MeSHExample_XML_2013 {
             t.start();
 
             URIFactory factory = URIFactoryMemory.getSingleton();
-            URI meshURI = factory.createURI("http://www.nlm.nih.gov/mesh/");
+            URI meshURI = factory.getURI("http://www.nlm.nih.gov/mesh/");
 
             G meshGraph = new GraphMemory(meshURI);
 
@@ -169,8 +169,8 @@ public class MeSHExample_XML_2013 {
 
             // We compute semantic similarities between concepts
             // e.g. between Paranoid Disorders (D010259) and Schizophrenia, Paranoid (D012563)
-            URI c1 = factory.createURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
-            URI c2 = factory.createURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
+            URI c1 = factory.getURI("http://www.nlm.nih.gov/mesh/D010259"); // Paranoid Disorders
+            URI c2 = factory.getURI("http://www.nlm.nih.gov/mesh/D012563"); // Schizophrenia, Paranoid
 
 
             // We compute the similarity

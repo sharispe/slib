@@ -121,7 +121,7 @@ public class IndexerWordNetBasic {
                 Set<URI> synsets = new HashSet<URI>();
 
                 for (int i = 0; i < sense_cnt; i++) {
-                    URI u = factory.createURI(graph.getURI().getNamespace() + "" + data[c + i]);
+                    URI u = factory.getURI(graph.getURI().getNamespace() + "" + data[c + i]);
 //                    System.out.println(u);
 
                     if (!graph.containsVertex(u)) {

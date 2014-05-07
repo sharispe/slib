@@ -111,7 +111,7 @@ public class GraphLoader_TSVannot implements GraphLoader {
 
         if (predicateParam != null) {
             try {
-                predicate = uriRepo.createURI(predicateParam);
+                predicate = uriRepo.getURI(predicateParam);
             } catch (IllegalArgumentException e) {
                 throw new SLIB_Ex_Critic("Error in data loader, parameter " + PARAM_PREDICATE + ", cannot create an URI from " + predicateParam + "\n" + e.getMessage());
             }
@@ -159,17 +159,17 @@ public class GraphLoader_TSVannot implements GraphLoader {
                     data = row[1].split(";");
 
                     if (prefixSubject == null) {
-                        s = uriRepo.createURI(subjectLocalName);
+                        s = uriRepo.getURI(subjectLocalName);
                     } else {
-                        s = uriRepo.createURI(prefixSubject + subjectLocalName);
+                        s = uriRepo.getURI(prefixSubject + subjectLocalName);
                     }
 
                     for (String os : data) {
 
                         if (prefixObject == null) {
-                            o = uriRepo.createURI(buildURIString(os));
+                            o = uriRepo.getURI(buildURIString(os));
                         } else {
-                            o = uriRepo.createURI(prefixObject + os);
+                            o = uriRepo.getURI(prefixObject + os);
                         }
 
                         E edge = new Edge(s, predicate, o);

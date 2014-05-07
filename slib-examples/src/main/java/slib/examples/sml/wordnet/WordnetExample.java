@@ -69,7 +69,7 @@ public class WordnetExample {
 
         // We create the graph
         URIFactory factory = URIFactoryMemory.getSingleton();
-        URI guri = factory.createURI("http://graph/wordnet/");
+        URI guri = factory.getURI("http://graph/wordnet/");
         G wordnet = new GraphMemory(guri);
 
         // We load the data into the graph
