@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -58,6 +59,8 @@ import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
+import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -73,6 +76,17 @@ public class GraphActionExecutor {
 
     public final static String REROOT_UNIVERSAL_ROOT_FLAG = "__FICTIVE__";
 
+    
+    /**
+     * Apply the given action to the graph.
+     *
+     * @param action the action to perform
+     * @param g the graph on which the action must be performed
+     * @throws SLIB_Ex_Critic
+     */
+    public static void applyAction(GAction action, G g) throws SLIB_Ex_Critic {
+        applyAction(URIFactoryMemory.getSingleton(), action, g);
+    }
     /**
      * Apply an action to the graph.
      *
@@ -386,7 +400,7 @@ public class GraphActionExecutor {
         String[] admittedTarget = {"CLASSES", "INSTANCES"};
 
         if (!Arrays.asList(admittedTarget).contains(target)) {
-            throw new SLIB_Ex_Critic("Unknow target " + target + ", Please precise a target parameter " + Arrays.asList(admittedTarget));
+            throw new SLIB_Ex_Critic("Unknow target '" + target + "', please precise a valid 'target parameter', accepted values " + Arrays.asList(admittedTarget));
         } else if (target.equals("CLASSES")) {
             GraphReduction_Transitive.process(g);
         } else if (target.equals("INSTANCES")) {
@@ -407,7 +421,7 @@ public class GraphActionExecutor {
 
         Set<URI> instances = GraphAccessor.getInstances(g);
 
-        logger.info("Cleaning RDF.TYPE of " + g.getURI());
+        logger.info("Cleaning "+RDF.TYPE+" triplets of " + g.getURI());
         System.out.println(g);
 
         RVF_TAX rvf = new RVF_TAX(g, Direction.IN);
@@ -417,28 +431,32 @@ public class GraphActionExecutor {
 
         for (URI instance : instances) {
 
-            HashSet<E> redundants = new HashSet<E>();
-            Set<E> eToclasses = g.getE(RDF.TYPE, instance, Direction.OUT);
+            Set<URI> redundants = new HashSet<URI>();
+            Set<URI> classes = g.getV(instance, RDF.TYPE, Direction.OUT);
+            
+            annotNbBase += classes.size();
 
-            annotNbBase += eToclasses.size();
-
-            for (E e : eToclasses) {
-
-                if (!redundants.contains(e)) {
-
-                    for (E e2 : eToclasses) {
-                        // TODO optimize Transitive reduction or for(i ... for(j=i+1
-                        if (e != e2
-                                && !redundants.contains(e2)
-                                && descs.get(e.getTarget()).contains(e2.getTarget())) {
-                            redundants.add(e2);
-                        }
+            Iterator<URI> it = classes.iterator();
+            while(it.hasNext()){
+                
+                URI c = it.next();
+                Set<URI> descC = descs.get(c);
+                
+                for(URI c2 : classes){
+                    
+                    if(c != c2 && descC.contains(c2)){
+                        redundants.add(c);
+                        it.remove();
+                        break;        
                     }
                 }
             }
-
+            
             if (!redundants.isEmpty()) {
-                g.removeE(redundants);
+                
+                for(URI r : redundants){
+                    g.removeE(new Edge(instance, RDF.TYPE, r));
+                }
                 invalidInstanceNb++;
                 annotDeleted += redundants.size();
             }
