@@ -37,17 +37,20 @@ package slib.sglib.io.loader.bio.mesh;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoader;
 import slib.sglib.io.util.GFormat;
@@ -212,7 +215,13 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                 }
             }
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (ParserConfigurationException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SAXException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SLIB_Ex_Critic ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
 
