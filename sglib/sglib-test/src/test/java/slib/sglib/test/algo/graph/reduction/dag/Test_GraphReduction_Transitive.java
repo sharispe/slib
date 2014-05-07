@@ -38,11 +38,15 @@ import java.util.Set;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
+import slib.sglib.algo.graph.utils.GAction;
+import slib.sglib.algo.graph.utils.GActionType;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
@@ -51,6 +55,7 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
+import slib.sglib.model.repo.URIFactory;
 import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
@@ -63,6 +68,7 @@ import slib.utils.ex.SLIB_Exception;
 public class Test_GraphReduction_Transitive {
 
     G g;
+    URIFactory f = URIFactoryMemory.getSingleton();
     SLIB_UnitTestValues test = new SLIB_UnitTestValues();
 
     /**
@@ -110,7 +116,83 @@ public class Test_GraphReduction_Transitive {
         System.out.println(removedEdges);
         assertTrue(removedEdges.isEmpty());// duplicate edge note allowed
     }
+    
+    
+    @Test
+    public void transitiveReduction_Classes_2() throws SLIB_Exception {
 
+        System.out.println("Checking Transitive Reduction of "+RDFS.SUBCLASSOF);
+        Set<E> removedEdges;
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        assertTrue(removedEdges.isEmpty());
+
+        g.addE(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING);
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        System.out.println("Removed Edges " + removedEdges);
+        assertTrue(removedEdges.size() == 1);
+
+        E er =removedEdges.iterator().next();
+
+        assertTrue(er.getSource().equals(test.G_BASIC_HUMAN) && er.getTarget().equals(test.G_BASIC_THING));
+
+
+        g.addE(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING);
+        
+        GAction actionTR = new GAction(GActionType.TRANSITIVE_REDUCTION);
+        actionTR.addParameter("target", "CLASSES");
+        
+        int nbEdges = g.getNumberEdges();
+        assertTrue(g.containsEdge(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING));
+        
+        GraphActionExecutor.applyAction(actionTR, g);
+        
+        assertTrue(!g.containsEdge(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING));
+        assertTrue(g.getNumberEdges() == nbEdges-1);        
+    }
+    
+
+    @Test
+    public void transitiveReduction_Instances() throws SLIB_Exception {
+
+        System.out.println("Checking Transitive Reduction of "+RDF.TYPE);
+        Set<E> removedEdges;
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        assertTrue(removedEdges.isEmpty());
+
+        URI instanceHuman = f.getURI("http://test/darwin");
+        
+        
+        g.addE(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN);
+        
+        GAction actionTR = new GAction(GActionType.TRANSITIVE_REDUCTION);
+        actionTR.addParameter("target", "INSTANCES");
+        
+        // 1 - without redundancy
+        int nbEdges = g.getNumberEdges();
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN));
+        
+        GraphActionExecutor.applyAction(actionTR, g);
+        
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN));
+        assertTrue(g.getNumberEdges() == nbEdges);        
+        
+        
+        // 2 - with a redundancy
+        g.addE(instanceHuman, RDF.TYPE, test.G_BASIC_THING);
+        nbEdges = g.getNumberEdges();
+        
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_THING));
+        GraphActionExecutor.applyAction(actionTR, g);
+        assertTrue(!g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_THING));
+        assertTrue(g.getNumberEdges() == nbEdges-1);      
+    }
+    
     /**
      *
      * @throws SLIB_Exception
