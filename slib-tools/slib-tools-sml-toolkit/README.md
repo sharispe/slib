@@ -255,8 +255,8 @@ WORK IN PROGRESS. Coming soon (Already available through the generic XML interfa
 
 This profile is dedicated to the Medical Subject Headings (MeSH).
 It can be used to compute semantic measures scores between MeSH Descriptors or sets of MeSH Descriptors (e.g. documents annotated by MeSH descriptors).
-The MeSH must be in XML (2013 version supported), the sets of MeSH Descriptors must be in TSV format (Tabulated Separated Values, an example is provided below).
-The MeSH can be downloaded at http://changeme.com/
+The MeSH must be in XML (2014 version supported), the sets of MeSH Descriptors must be in TSV format (Tabulated Separated Values, an example is provided below).
+The MeSH can be downloaded at [http://www.nlm.nih.gov/mesh](http://www.nlm.nih.gov/mesh).
 
 ```
 Discuss MeSH modifications
@@ -270,7 +270,7 @@ Below the parameters which can be used, command-line examples are also provided:
 ##### Parameters
 
 * `-mesh <file path>` the path to the MeSH in XML format, other format are not supported (required).
-This file can be downloaded at http://www.changeme.com/
+This file can be downloaded at [http://www.nlm.nih.gov/mesh](http://www.nlm.nih.gov/mesh)
 
 * `-annots <file path>` the path to the annotation file. 
 Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content).
