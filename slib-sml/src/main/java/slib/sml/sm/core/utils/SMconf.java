@@ -38,44 +38,44 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 /**
- * Basic class used to represent the configuration associated to a Semantic
- * Measures.
+ * Representation of the configuration of a semantic measure.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SMconf extends Conf {
 
     /**
-     * The unique id associated to the configuration.
+     * The id which refers to the configuration (expected to be unique).
      */
     private String id;
+
     /**
-     * The flag corresponding to the type of measure associated to the
-     * configuration.
+     * The flag which specifies the measure associated to the configuration.
      */
     private String flag;
+
     /**
-     * The name of the class associated to the semantic measures method the
-     * configuration is linked to.
+     * The name of the class which refers to the measure implementation.
      */
     private String className;
+
     /**
      * The label of the configuration.
      */
     private String label;
-    /**
-     * The configuration of the Information Content metric associated to the
-     * measure.
-     */
-    private ICconf icConf;
-    
 
     /**
-     * Build an instance of configuration considering the given flag, the id of
-     * the configuration (which must be unique) will be set to the value of the flag.
+     * The information content associated to the measure (if any).
+     */
+    private ICconf icConf;
+
+    /**
+     * Build an instance of configuration considering the given flag. The id of
+     * the configuration (which must be unique) will be set to the value of the
+     * flag.
      *
-     * @param flag the flag defining the semantic measure method associated to
-     * the configuration.
+     * @param flag the string which defines the measure associated to the
+     * configuration.
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String flag) throws SLIB_Ex_Critic {
@@ -83,11 +83,11 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Build an instance of configuration considering the given id and flag
+     * Build an instance of configuration considering the given id and flag.
      *
-     * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to
-     * the configuration.
+     * @param id the id of the configuration (expected to be unique).
+     * @param flag the string which defines the measure associated to the
+     * configuration.
      * @throws SLIB_Ex_Critic
      */
     public SMconf(String id, String flag) throws SLIB_Ex_Critic {
@@ -98,9 +98,9 @@ public class SMconf extends Conf {
      * Build an instance of configuration considering the given id, flag and
      * label.
      *
-     * @param id the id of the configuration (must be unique).
-     * @param flag the flag defining the semantic measure method associated to
-     * the configuration.
+     * @param id the id of the configuration (expected to be unique).
+     * @param flag the string which defines the measure associated to the
+     * configuration.
      * @param label the label associated to the configuration.
      *
      * @throws SLIB_Ex_Critic
@@ -189,7 +189,6 @@ public class SMconf extends Conf {
         this.icConf = ic;
     }
 
-
     @Override
     public String toString() {
         String out = "id : " + id + "\n";
@@ -202,10 +201,10 @@ public class SMconf extends Conf {
     }
 
     /**
-     * Add the parameter to the configuration Override existing parameter if one
-     * exists.
+     * Add the parameter to the configuration - override existing value if the
+     * parameter already exists.
      *
-     * @param p the parameter flag
+     * @param p the parameter key
      * @param v the value associated
      * @return the configuration object from which the method is called (auto
      * complete feature)
@@ -216,29 +215,48 @@ public class SMconf extends Conf {
         return this;
     }
 
+    /**
+     * @return the id of the configuration
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * @return the flag of the configuration
+     */
     public String getFlag() {
         return flag;
     }
 
+    /**
+     * @return the name of the class which is associated to the configuration
+     */
     public String getClassName() {
         return className;
     }
 
+    /**
+     * @return the label of the configuration
+     */
     public String getLabel() {
         return label;
     }
-    
-    public void setLabel(String label){
+
+    /**
+     * 
+     * @param label the new label
+     */
+    public void setLabel(String label) {
         this.label = label;
     }
 
+    /**
+     * 
+     * @return the information content configuration
+     */
     public ICconf getIcConf() {
         return icConf;
     }
-    
-    
+
 }
