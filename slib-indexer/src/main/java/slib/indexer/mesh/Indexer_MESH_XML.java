@@ -37,16 +37,19 @@ package slib.indexer.mesh;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 import slib.indexer.IndexElementBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.URIFactory;
@@ -138,7 +141,11 @@ public class Indexer_MESH_XML {
 
             }
 
-        } catch (Exception ex) { // sorry
+        } catch (IOException ex) { 
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (ParserConfigurationException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SAXException ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
 

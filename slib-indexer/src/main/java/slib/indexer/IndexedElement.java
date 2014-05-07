@@ -35,7 +35,7 @@ package slib.indexer;
 
 import java.util.Collection;
 import java.util.Set;
-import org.openrdf.model.Value;
+import org.openrdf.model.URI;
 
 /**
  *
@@ -65,7 +65,7 @@ public interface IndexedElement {
      *
      * @return the value
      */
-    public Value getValue();
+    public URI getValue();
 
     /**
      *

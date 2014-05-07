@@ -53,8 +53,11 @@ public class MeshXMLHandler extends DefaultHandler {
     boolean treeNumber = false;
     boolean termDesc = false;
     boolean termDescString = false;
-    
-    StringBuilder tmpString;
+
+    StringBuilder tmpDescString;
+    StringBuilder tmpDescriptorUI;
+    StringBuilder tmpDescriptorName;
+    StringBuilder tmpTreeNumber;
 
     /**
      *
@@ -78,26 +81,28 @@ public class MeshXMLHandler extends DefaultHandler {
         // define UI only the first UI specified is considered
         if (qName.equalsIgnoreCase("DescriptorUI") && concept.descriptorUI == null) {
             descriptorUI = true;
+            tmpDescriptorUI = new StringBuilder();
         }
 
         // Define the name of the concept as the first descriptor tag encountred
         if (qName.equalsIgnoreCase("descriptorName") && concept.descriptorName == null) { // define descriptor name
             descriptorName = true;
+            tmpDescriptorName = new StringBuilder();
         }
 
         // Define the name of the concept as the first descriptor tag encountred
         if (qName.equalsIgnoreCase("Term")) { // define term definition
             termDesc = true;
-        }
-        else if (termDesc && qName.equalsIgnoreCase("String")) {// define tree number
+        } else if (termDesc && qName.equalsIgnoreCase("String")) {// define tree number
             termDescString = true;
-            tmpString = new StringBuilder();
+            tmpDescString = new StringBuilder();
         }
 
         if (qName.equalsIgnoreCase("TreeNumber")) {// define tree number
             treeNumber = true;
+            tmpTreeNumber = new StringBuilder();
         }
-        
+
     }
 
     @Override
@@ -105,16 +110,19 @@ public class MeshXMLHandler extends DefaultHandler {
 
         if (descriptorUI) {
             descriptorUI = false;
+            concept.descriptorUI = tmpDescriptorUI.toString();
         } else if (descriptorName) {
             descriptorName = false;
+            concept.descriptorName = tmpDescriptorName.toString();
         } else if (treeNumber) {
             treeNumber = false;
+            concept.treeNumberList.add(tmpTreeNumber.toString());
         } else if (qName.equalsIgnoreCase("Term")) { // define term definition
             termDesc = false;
         } else if (termDesc && qName.equalsIgnoreCase("String")) {
             termDescString = false;
-            concept.descriptions.add(tmpString.toString());
-            tmpString = null;
+            concept.descriptions.add(tmpDescString.toString());
+            tmpDescString = null;
         }
     }
 
@@ -122,14 +130,14 @@ public class MeshXMLHandler extends DefaultHandler {
     public void characters(char ch[], int start, int length) throws SAXException {
 
         if (descriptorUI) {
-            concept.descriptorUI = new String(ch, start, length);
+            tmpDescriptorUI.append(new String(ch, start, length));
         } else if (descriptorName) {
-            concept.descriptorName = new String(ch, start, length);
+            tmpDescriptorName.append(new String(ch, start, length));
         } else if (treeNumber) {
-            concept.addTreeNumber(new String(ch, start, length));
+            tmpTreeNumber.append(new String(ch, start, length));
         } else if (termDescString) {
             // Parser is calling characters method more than one time, because it can and allowed per spec...
-            tmpString.append(new String(ch, start, length));
+            tmpDescString.append(new String(ch, start, length));
         }
     }
 }
