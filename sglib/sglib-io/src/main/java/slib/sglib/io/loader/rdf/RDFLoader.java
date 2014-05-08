@@ -34,6 +34,8 @@
 package slib.sglib.io.loader.rdf;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -41,6 +43,8 @@ import org.openrdf.rio.ParserConfig;
 
 import org.openrdf.rio.RDFFormat;
 import org.openrdf.rio.RDFHandler;
+import org.openrdf.rio.RDFHandlerException;
+import org.openrdf.rio.RDFParseException;
 import org.openrdf.rio.RDFParser;
 import org.openrdf.rio.ntriples.NTriplesParser;
 import org.openrdf.rio.rdfxml.RDFXMLParser;
@@ -141,7 +145,9 @@ public class RDFLoader implements GraphLoader {
 
         try {
             load(g, new FileInputStream(file));
-        } catch (Exception e) {
+        } catch (FileNotFoundException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (SLIB_Ex_Critic e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
@@ -157,7 +163,11 @@ public class RDFLoader implements GraphLoader {
             logger.info("Parsing RDF file...");
             parser.parse(inputStream, "");
 
-        } catch (Exception e) {
+        } catch (IOException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (RDFParseException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (RDFHandlerException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
