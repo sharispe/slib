@@ -75,6 +75,18 @@ public class GraphReduction_Transitive {
      */
     public static Set<E> process(G graph) throws SLIB_Ex_Critic {
 
+        // remove self loops
+        int selfLoops = 0;
+        for (E e : graph.getE(RDFS.SUBCLASSOF)) {
+            if (e.getSource().equals(e.getTarget())) {
+                graph.removeE(e);
+                selfLoops++;
+            }
+        }
+        if (selfLoops != 0) {
+            logger.info(selfLoops + " self loops have been removed");
+        }
+
         ValidatorDAG validator = new ValidatorDAG();
 
         if (!validator.containsTaxonomicDag(graph)) {
@@ -99,7 +111,6 @@ public class GraphReduction_Transitive {
      */
     public static Set<E> process(G g, Set<URI> srcs) {
 
-
         Set<E> removableEdges = new HashSet<E>();
 
         logger.info("Processing transitive reduction: ");
@@ -116,7 +127,6 @@ public class GraphReduction_Transitive {
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 
             URI currentV = topoOrder.get(i);
-
 
             if (!reachableV.containsKey(currentV)) {
                 reachableV.put(currentV, new HashSet<URI>());
@@ -136,7 +146,6 @@ public class GraphReduction_Transitive {
                     Collection<URI> inter = SetUtils.intersection(reachableV.get(target), reachableV.get(currentV));
 
                     Collection<E> outTarget = g.getE(RDFS.SUBCLASSOF, target, Direction.OUT);
-
 
                     for (E eTarget : outTarget) {
                         if (inter.contains(eTarget.getTarget())) {
