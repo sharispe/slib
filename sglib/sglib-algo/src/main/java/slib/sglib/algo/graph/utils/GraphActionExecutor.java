@@ -104,10 +104,7 @@ public class GraphActionExecutor {
             transitive_reduction(action, g);
         } else if (actionType == GActionType.REROOTING) {
             rerooting(factory, action, g);
-        } //else if (actionType == GActionType.RDFS_INFERENCE) {
-        //            //rdfsInference(factory, action, g);
-        //            throw new SLIB_Ex_Critic("Method not supported in this version");
-        //        } 
+        }
         else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
         } else if (actionType == GActionType.PREDICATE_SUBSTITUTE) {
@@ -290,30 +287,6 @@ public class GraphActionExecutor {
         logger.info("-------------------------------------");
     }
 
-//    private static void rdfsInference(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
-//
-//        logger.info("Apply inference engine");
-//        Sail sail = new ForwardChainingRDFSInferencer(g);
-//        Repository repo = new SailRepository(sail);
-//
-//        try {
-//            repo.initialize();
-//            RepositoryConnection con = repo.getConnection();
-//            con.setAutoCommit(false);
-//
-//            for (E e : g.getE()) {
-//                con.add(factory.createStatement((Resource) e.getSource(), e.getURI(), e.getTarget()));
-//            }
-//
-//            con.commit();
-//            con.close();
-//            repo.shutDown();
-//
-//        } catch (RepositoryException e) {
-//            throw new SLIB_Ex_Critic(e.getMessage());
-//        }
-//
-//    }
     /**
      * Vocabulary associated to RDF
      *
@@ -399,11 +372,11 @@ public class GraphActionExecutor {
 
         String[] admittedTarget = {"CLASSES", "INSTANCES"};
 
-        if (!Arrays.asList(admittedTarget).contains(target)) {
+        if (!Arrays.asList(admittedTarget).contains(target.toUpperCase())) {
             throw new SLIB_Ex_Critic("Unknow target '" + target + "', please precise a valid 'target parameter', accepted values " + Arrays.asList(admittedTarget));
-        } else if (target.equals("CLASSES")) {
+        } else if (target.toUpperCase().equals("CLASSES")) {
             GraphReduction_Transitive.process(g);
-        } else if (target.equals("INSTANCES")) {
+        } else if (target.toUpperCase().equals("INSTANCES")) {
             transitive_reductionInstance(action, g);
         }
 
@@ -414,7 +387,6 @@ public class GraphActionExecutor {
 
     private static void transitive_reductionInstance(GAction action, G g) throws SLIB_Ex_Critic {
 
-        // --------------- TO_SPLIT
         int invalidInstanceNb = 0;
         int annotNbBase = 0;
         int annotDeleted = 0;
