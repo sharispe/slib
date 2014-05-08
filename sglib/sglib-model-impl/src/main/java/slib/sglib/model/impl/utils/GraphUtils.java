@@ -33,7 +33,13 @@
  */
 package slib.sglib.model.impl.utils;
 
+import org.openrdf.model.Statement;
 import org.openrdf.model.URI;
+import org.openrdf.model.Value;
+import org.openrdf.repository.RepositoryException;
+import org.openrdf.repository.RepositoryResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
@@ -46,6 +52,8 @@ import slib.sglib.model.repo.URIFactory;
  */
 public class GraphUtils {
 
+    static Logger logger = LoggerFactory.getLogger(GraphUtils.class);
+    
     /**
      * Build a triplet of URIs considering the given subject-predicate-object
      * objects (for instance, specified as URI or String objects). The URIs
@@ -143,6 +151,39 @@ public class GraphUtils {
      */
     public static void addTriplet(G graph, String s, String p, String o) {
         graph.addE(buildTriplet(s, p, o));
+    }
+
+    /**
+     * Load the set of statements only composed of URIs into the given graph.
+     * @param g the graph in which the statements must be loaded
+     * @param statements the set of statements from which the filter is applied
+     * @throws RepositoryException 
+     */
+    public static void loadStatements(G g, RepositoryResult<Statement> statements) throws RepositoryException {
+
+        int countLoaded =  0;
+        int countSkipped =  0;
+        
+        while (statements.hasNext()) {
+            
+            Statement st = statements.next();
+
+            Value s = st.getSubject();
+            Value o = st.getObject();
+
+            if (s instanceof URI && o instanceof URI) {
+                g.addE((URI) s, st.getPredicate(), (URI) o);
+                countLoaded++;
+            } else {
+                countSkipped++;
+            }
+            if (countLoaded % 100000 == 0) {
+                logger.info(countLoaded + " statements already loaded");
+                logger.info("Number of vertices: " + g.getV().size());
+                logger.info("Number of edges   : " + g.getE().size());
+            }
+        }
+        logger.info("Statements: "+countLoaded+" loaded, "+countSkipped+" skipped");
     }
 
 }
