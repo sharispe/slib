@@ -14,6 +14,12 @@
             <artifactId>sglib-model</artifactId>
             <version>0.8</version>
         </dependency>
+        
+        <dependency>
+            <groupId>fr.lgi2p.kid</groupId>
+            <artifactId>sglib-model-impl</artifactId>
+            <version>0.8</version>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
