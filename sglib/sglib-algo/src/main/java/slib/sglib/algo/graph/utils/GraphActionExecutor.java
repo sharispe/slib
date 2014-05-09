@@ -48,6 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
@@ -62,7 +63,6 @@ import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -76,7 +76,6 @@ public class GraphActionExecutor {
 
     public final static String REROOT_UNIVERSAL_ROOT_FLAG = "__FICTIVE__";
 
-    
     /**
      * Apply the given action to the graph.
      *
@@ -87,6 +86,7 @@ public class GraphActionExecutor {
     public static void applyAction(GAction action, G g) throws SLIB_Ex_Critic {
         applyAction(URIFactoryMemory.getSingleton(), action, g);
     }
+
     /**
      * Apply an action to the graph.
      *
@@ -104,8 +104,7 @@ public class GraphActionExecutor {
             transitive_reduction(action, g);
         } else if (actionType == GActionType.REROOTING) {
             rerooting(factory, action, g);
-        }
-        else if (actionType == GActionType.VERTICES_REDUCTION) {
+        } else if (actionType == GActionType.VERTICES_REDUCTION) {
             verticeReduction(factory, action, g);
         } else if (actionType == GActionType.PREDICATE_SUBSTITUTE) {
             predicateSubstitution(factory, action, g);
@@ -115,13 +114,19 @@ public class GraphActionExecutor {
     }
 
     /**
-     * Reduction of the set of vertices composing the graph. Accepted parameters
-     * are:
+     * Reduction of the set of vertices composing the graph.
+     *
+     * -------------------------------------------------------------------
+     * IMPORTANT: If modified, this documentation must also be modified in the
+     * class GActionType.
+     * -------------------------------------------------------------------
+     *
+     * Accepted parameters are:
      *
      * <ul>
      *
      * <li> regex: specify a REGEX in Java syntax which will be used to test if
-     * the value associated to a vertex makes it eligible to be remove. If the
+     * the value associated to a vertex makes it eligible to be removed. If the
      * value match the REGEX, the vertex will be removed </li>
      *
      * <li> vocabulary: Remove all the vertices associated to the vocabularies
@@ -327,6 +332,35 @@ public class GraphActionExecutor {
         }
     }
 
+    /**
+     * Root the graph according to the rdfs:subClassOf relationship.
+     *
+     * -------------------------------------------------------------------
+     * IMPORTANT: If modified, this documentation must also be modified in the
+     * class GActionType.
+     * -------------------------------------------------------------------
+     *
+     * For each URI x which is involved in a statement in which the predicate
+     * rdfs:subClassOf is used, if no statement x rdfs:subClassOf y exists, x is
+     * considered to refer to a root. In this treatment, for each root x a
+     * statement x rdfs:subClassOf new_root is created. The value of new_root
+     * can be defined automatically or manually see below.
+     *
+     * The root URI can be specified using the parameter "root_uri":
+     * <ul>
+     * <li>the value must refer to the URI to consider for the root. It can be
+     * an URI which is not already used in the graph.</li>
+     * <li>"__FICTIVE__" as value will be substituted by OWL.THING, i.e. refers
+     * to the OWL vocabulary in the Sesame API</li>
+     * </ul>
+     *
+     *
+     *
+     * @param factory
+     * @param action
+     * @param g
+     * @throws SLIB_Ex_Critic
+     */
     private static void rerooting(URIFactory factory, GAction action, G g) throws SLIB_Ex_Critic {
 
         logger.info("-------------------------------------");
@@ -341,47 +375,74 @@ public class GraphActionExecutor {
         URI rootURI;
 
         if (rootURIstring == null || rootURIstring.equals(REROOT_UNIVERSAL_ROOT_FLAG)) {
-            rootURI = SLIBVOC.THING_OWL;
+            rootURI = OWL.THING;
             g.addV(rootURI);
             logger.info("No root node explicitly specified using 'root_uri' parameter. Set root : " + rootURI);
         } else {
             rootURI = factory.getURI(rootURIstring);
             if (!g.containsVertex(rootURI)) {
-                logger.info("Create class "+rootURI);
+                logger.info("Create class " + rootURI);
                 g.addV(rootURI);
             }
         }
 
-        if (!g.containsVertex(rootURI)) {
-            throw new SLIB_Ex_Critic("Cannot resolve specified root:" + rootURI);
-        } else {
-            RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
-        }
+        RooterDAG.rootUnderlyingTaxonomicDAG(g, rootURI);
+
         logger.info("Rerooting performed");
         logger.info("-------------------------------------");
     }
 
+    /**
+     * Perform a transitive reduction of the relationships RDFS.SUBCLASSOF
+     * and/or RDF.TYPE - this treatment removes the relationships which can be
+     * removed according to the transitivity of the predicate rdfs:subClassOf.
+     *
+     * -------------------------------------------------------------------
+     * IMPORTANT: If modified, this documentation must also be modified in the
+     * class GActionType.
+     * -------------------------------------------------------------------
+     *
+     * You can specify the type of relationships on which the treatment must be
+     * performed using the parameter "target" with value:
+     * <ul>
+     * <li>CLASSES or rdfs:subClassOf or RDFS.SUBCLASSOF (upper or lower case)
+     * to remove relationships rdfs:subClassOf which can be inferred </li>
+     * <li>INSTANCES or rdf:type or RDF.TYPE (upper or lower case) to remove
+     * relationships rdf:type which can be inferred </li>
+     * <li>you can use both using a comma separator setting
+     * "CLASSES,INSTANCES"</li>
+     * </ul>
+     *
+     * @param action
+     * @param g
+     * @throws SLIB_Ex_Critic
+     */
     private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
 
-        String target = (String) action.getParameter("target");
+        String[] targets = ((String) action.getParameter("target")).split(",");
 
         logger.info("-------------------------------------");
         logger.info("Transitive Reduction");
         logger.info("-------------------------------------");
-        logger.info("Target: " + target);
+        logger.info("Targets: " + Arrays.toString(targets));
 
-        String[] admittedTarget = {"CLASSES", "INSTANCES"};
+        String[] admittedTarget_CLASSES = {"CLASSES", "RDFS:SUBCLASSOF", "RDFS.SUBCLASSOF"};
+        String[] admittedTarget_INSTANCES = {"INSTANCES", "RDF:TYPE", "RDF.TYPE"};
 
-        if (!Arrays.asList(admittedTarget).contains(target.toUpperCase())) {
-            throw new SLIB_Ex_Critic("Unknow target '" + target + "', please precise a valid 'target parameter', accepted values " + Arrays.asList(admittedTarget));
-        } else if (target.toUpperCase().equals("CLASSES")) {
-            GraphReduction_Transitive.process(g);
-        } else if (target.toUpperCase().equals("INSTANCES")) {
-            transitive_reductionInstance(action, g);
+        for (String target : targets) {
+            if (Arrays.asList(admittedTarget_CLASSES).contains(target.trim().toUpperCase())) {
+                GraphReduction_Transitive.process(g);
+            } else if (Arrays.asList(admittedTarget_INSTANCES).contains(target.trim().toUpperCase())) {
+                transitive_reductionInstance(action, g);
+            } else {
+                throw new SLIB_Ex_Critic("Unknow target '" + target + "', please precise a valid 'target' parameter', accepted values (in lower or upper case) " + Arrays.asList(admittedTarget_CLASSES) + " or " + Arrays.asList(admittedTarget_INSTANCES));
+            }
         }
 
-        logger.info("Transitive reduction performed");
-        logger.info("-------------------------------------");
+        logger.info(
+                "Transitive reduction performed");
+        logger.info(
+                "-------------------------------------");
 
     }
 
@@ -393,7 +454,7 @@ public class GraphActionExecutor {
 
         Set<URI> instances = GraphAccessor.getInstances(g);
 
-        logger.info("Cleaning "+RDF.TYPE+" triplets of " + g.getURI());
+        logger.info("Cleaning " + RDF.TYPE + " triplets of " + g.getURI());
         System.out.println(g);
 
         RVF_TAX rvf = new RVF_TAX(g, Direction.IN);
@@ -405,28 +466,28 @@ public class GraphActionExecutor {
 
             Set<URI> redundants = new HashSet<URI>();
             Set<URI> classes = g.getV(instance, RDF.TYPE, Direction.OUT);
-            
+
             annotNbBase += classes.size();
 
             Iterator<URI> it = classes.iterator();
-            while(it.hasNext()){
-                
+            while (it.hasNext()) {
+
                 URI c = it.next();
                 Set<URI> descC = descs.get(c);
-                
-                for(URI c2 : classes){
-                    
-                    if(c != c2 && descC.contains(c2)){
+
+                for (URI c2 : classes) {
+
+                    if (c != c2 && descC.contains(c2)) {
                         redundants.add(c);
                         it.remove();
-                        break;        
+                        break;
                     }
                 }
             }
-            
+
             if (!redundants.isEmpty()) {
-                
-                for(URI r : redundants){
+
+                for (URI r : redundants) {
                     g.removeE(new Edge(instance, RDF.TYPE, r));
                 }
                 invalidInstanceNb++;
@@ -470,7 +531,21 @@ public class GraphActionExecutor {
     }
 
     /**
-     * Can be used to substitute all the triplets of a specific predicate
+     * Can be used to substitute the predicate of all the triplets with a
+     * specific predicate.
+     *
+     * -------------------------------------------------------------------
+     * IMPORTANT: If modified, this documentation must also be modified in the
+     * class GActionType.
+     * -------------------------------------------------------------------
+     * 
+     * parameters expected:
+     * <ul>
+     * <li>old_uri: the URI predicate to replace</li>
+     * <li>new_uri: the new URI predicate</li>
+     * </ul>
+     * You can use RDFS.SUBCLASSOF to refer to
+     * http://www.w3.org/2000/01/rdf-schema#subClassOf
      *
      * @param factory
      * @param action
