@@ -38,6 +38,7 @@ import java.util.Set;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
@@ -56,7 +57,6 @@ import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.sglib.model.repo.URIFactory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
 import slib.utils.ex.SLIB_Exception;
@@ -215,7 +215,7 @@ public class Test_GraphReduction_Transitive {
 
         System.out.println(g.toString());
 
-        URI root_uri = SLIBVOC.THING_OWL;
+        URI root_uri = OWL.THING;
 
         RooterDAG.rootUnderlyingTaxonomicDAG(g, root_uri);
 
