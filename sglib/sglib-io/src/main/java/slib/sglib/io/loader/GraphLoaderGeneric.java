@@ -140,6 +140,7 @@ public class GraphLoaderGeneric {
      *
      *
      * @param graphConf the graph configuration
+     * @param g the graph
      * @return the graph which as been build form the configuration
      *
      * @throws SLIB_Exception
