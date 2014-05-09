@@ -40,17 +40,47 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Implementation of the measure proposed by Lin for comparing two concepts
+ * defined in a taxonomy.
  *
- * Lin D: An Information-Theoretic Definition of Similarity. In 15th
- * International Conference of Machine Learning. Madison,WI: 1998:296-304.
+ * <p>
+ * SYMMETRIC = YES <br/>
+ * VALUE : [0,1]
+ * </p>
+ *
+ * <p>
+ * <b>Reference</b>: Lin, Dekang. (1998). An Information-Theoretic Definition of
+ * Similarity. In 15th International Conference of Machine Learning (pp.
+ * 296–304). Madison,WI.
+ * </p>
+ *
+ * <p>
+ * Considering a function IC which is used to assess the information content of
+ * a concept, with IC(u) the information content of the concept u, this measure
+ * relies on a ratio between the IC of the Most Specific Common Ancestor of the
+ * compared concepts and the sum of their IC. The MICA is therefore the common
+ * ancestor of the compared concepts which maximizes the selected IC function.
+ * If multiple MICAs are found only one will be considered. <br/> <br/>
+ *
+ * The measure is therefore defined by: <br/><br/>
+ *
+ * <code>
+ * sim(u,v) = 2 x IC(MICA(u,v)) / (IC(u) + IC(v))
+ * </code>
+ * <br/><br/>
+ * Note that originally, the formulation proposed by Lin considered <code>IC(u) =
+ * log(p(u))</code> which is equivalent to considering the IC formulation
+ * proposed by Resnik <code>IC(u) = -log(p(u))</code>. However, in this
+ * implementation any IC formulation can be used - the IC values must decrease
+ * from the leaves to the root(s) of the taxonomy.
+ * </p>
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
- *
- *
  */
 public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
 
-    static boolean preventIncoherency = true;
+    private static boolean PREVENT_INCOHERENCES = true;
+    final public static boolean IS_SYMMETRIC = true;
 
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
@@ -63,7 +93,7 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     }
 
     /**
-     * Compute the similarity considering the given Information Content.
+     * Compute the similarity considering the given information content values.
      *
      * @param ic_a the IC of the concept A
      * @param ic_b the IC of the concept B
@@ -78,7 +108,7 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
 
         double den = ic_a + ic_b;
 
-        if (preventIncoherency
+        if (PREVENT_INCOHERENCES
                 && ((ic_mica > ic_a && ic_mica - ic_a > 0.00001)
                 || (ic_mica > ic_b && ic_mica - ic_b > 0.00001))) {
             throw new SLIB_Ex_Critic("Cannot compute Lin considering ic MICA > ic C1 or ic c2, ic MICA set to " + ic_mica + " ic c1 " + ic_a + " ic c2 " + ic_b);
@@ -91,15 +121,22 @@ public class Sim_pairwise_DAG_node_Lin_1998 implements Sim_DAG_node_abstract {
     }
 
     /**
+     * Setting this parameter you can decide if incoherences in the input
+     * parameters must be detected (true) or not (false) - default true.
      *
-     * @param preventIncoherency
+     * This is mainly to check that the information content values of the
+     * compared concepts are lower than the information content of their most
+     * informative common ancestor - which can lead to similarity values greater
+     * than 1.
+     *
+     * @param preventIncoherency true if incoherences must be detected
      */
     public void setPreventIncoherency(boolean preventIncoherency) {
-        Sim_pairwise_DAG_node_Lin_1998.preventIncoherency = preventIncoherency;
+        Sim_pairwise_DAG_node_Lin_1998.PREVENT_INCOHERENCES = preventIncoherency;
     }
 
     @Override
     public boolean isSymmetric() {
-        return true;
+        return IS_SYMMETRIC;
     }
 }
