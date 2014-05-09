@@ -895,30 +895,36 @@ public class SM_Engine {
     }
 
     /**
+     * Computes the number of instances which is associated to all the classes
+     * which are defined in the graph (with inferences). This methods considers
+     * the inferences induced by the transitivity of the rdfs:subClassOf
+     * predicate. Therefore, if i is an instance of the class B and B is a
+     * subclass of A it is also considered that i is an instance of A. Instances
+     * of a class are detected according to the predicate rdf:type. for all i in
+     * I(X) exists a statement (i rdf:type X).
      *
-     * @return for each class, the number of instances of the class (propagated,
-     * i.e. if iA is of class B and B is a subclass of A the iA is an instance
-     * of A)
      * @param addAnInstanceToEachTerminalClass if true, each class which doesn't
      * subsumes any other classes is assumed to have an instance which is only
-     * an instance of this class (without considering inference). This is to
-     * ensure that the number of instances increases according to the partial
-     * ordering (this is required to ensure coherency of Resnik's Information
-     * Content)
+     * an instance of this class (without considering inference). This can be
+     * required to ensure that the number of instances associated to a class is
+     * never equal to 0.
+     *
+     * @return A Map which contains an entry for each class with the number of
+     * instances of the class (with inference)
      */
     public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) {
 
-        Map<URI, Set<URI>> linkedEntities = new HashMap<URI, Set<URI>>();
+        Map<URI, Set<URI>> instancesOfClasses = new HashMap<URI, Set<URI>>();
 
         for (URI i : instances) {
-            Set<URI> annots = graph.getV(i, RDF.TYPE, Direction.OUT);
+            Set<URI> directClassOfi = graph.getV(i, RDF.TYPE, Direction.OUT);
 
-            if (annots != null) {
-                for (URI c : annots) {
-                    if (linkedEntities.get(c) == null) {
-                        linkedEntities.put(c, new HashSet<URI>());
+            if (directClassOfi != null) {
+                for (URI c : directClassOfi) {
+                    if (instancesOfClasses.get(c) == null) {
+                        instancesOfClasses.put(c, new HashSet<URI>());
                     }
-                    linkedEntities.get(c).add(i);
+                    instancesOfClasses.get(c).add(i);
                 }
             }
 
@@ -935,24 +941,30 @@ public class SM_Engine {
         // initialize data structure && add virtual instance if required
         for (URI c : topoOrdering) {
 
-            if (linkedEntities.get(c) == null) {
-                linkedEntities.put(c, new HashSet<URI>());
+            if (instancesOfClasses.get(c) == null) {
+                instancesOfClasses.put(c, new HashSet<URI>());
             }
-            // this is a trick is an instance must be added to each terminal class we add the corresponding class as instance
+            // this is a trick : if an instance must be added to each terminal class 
+            // we add the corresponding class as instance (onlu counts matters at the end)
             if (addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()) {
-                linkedEntities.get(c).add(c);
+                instancesOfClasses.get(c).add(c);
             }
         }
 
         for (URI c : topoOrdering) {
-            Set<URI> entities = linkedEntities.get(c);
-            // propagate Linked Entities in a bottom up fashion according the topological order
+            Set<URI> instanceOfc = instancesOfClasses.get(c);
+            rStack.put(c, instanceOfc.size());
+            
+            // propagate instances in a bottom up fashion according the topological order
+            // to the instances
+            
             for (E e : graph.getE(c, ancGetter.getWalkConstraint())) {
-                if (!entities.isEmpty()) {
-                    linkedEntities.get(e.getTarget()).addAll(entities);
+                
+                // we perform the union if the c contains instances
+                if (!instanceOfc.isEmpty()) {
+                    instancesOfClasses.get(e.getTarget()).addAll(instanceOfc);
                 }
             }
-            rStack.put(c, entities.size());
         }
         cache.nbOccurrencePropagatted = rStack;
 
