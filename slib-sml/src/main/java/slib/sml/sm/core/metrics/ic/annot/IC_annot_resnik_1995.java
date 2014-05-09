@@ -44,11 +44,29 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * Original Information Content definition
+ * Implementation of the original definition of Information Content (IC)
+ * proposed by Resnik.
  *
- * Resnik P: Using Information Content to Evaluate Semantic Similarity in a
- * Taxonomy. In Proceedings of the 14th International Joint Conference on
- * Artificial Intelligence IJCAI. Citeseer; 1995, 1:448–453.
+ * <p>
+ * <b>Reference</b>: Resnik, P. (1995). Using Information Content to Evaluate
+ * Semantic Similarity in a Taxonomy. In Proceedings of the 14th International
+ * Joint Conference on Artificial Intelligence IJCAI (Vol. 1, pp. 448–453).
+ * </p>
+ *
+ * <p>
+ * The IC of a concept u defined in a taxonomy is: -log(p(u)) with p(u) the
+ * probability that the concept u occurs in a corpora or in an annotation
+ * repository. The computation of the probability takes into account the
+ * ordering of the concepts which is defined by the relation "rdfs:subClassOf".
+ * In other words, if the concept u is subsumed by the concept v (i.e. u
+ * rdfs:subClassOf v), any occurrence of the concept u is also an occurrence of
+ * the concept v.
+ * </p>
+ * <p>
+ * In order to avoid error i.e. -log(0) an occurrence is systematically
+ * associated to all the leaf concepts specified in the taxonomy. A leaf concept
+ * is a concept which does not subsumes any concept.
+ * </p>
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
@@ -56,28 +74,35 @@ import slib.utils.ex.SLIB_Exception;
 public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
 
     /**
+     * Computes the information content defined by Resnik considering the given
+     * number of occurrences for each classes. For a concept u the IC is defined
+     * by -log(p(u)). Note that no inference technique is used to propagate the
+     * number of occurrences of a concept to its parent - This process is
+     * expected to have already been performed and this method does not consider
+     * the ordering of the concepts. In addition, the entry with the maximal
+     * number of occurrences is considered to define the number of instances in
+     * the repository. Thus the probability will be computed defining p(u) =
+     * occurrences(u) / max_occurrences.
      *
-     * @param nbOccurences
-     * @return the IC of all URIs specified in the given map. 
+     * @param nbOccurences the number of occurrences for each class. For each
+     * class the number of occurrences must be greater than 0.
+     * @return the IC of all URIs specified in the given map.
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Double> compute(Map<URI, Integer> nbOccurences) throws SLIB_Ex_Critic {
 
-        // add 1 to all element occurrence counts to avoid -log(0)
-        Map<URI, Double> rtemp = ProbOccurence.compute(nbOccurences, 1);
+        Map<URI, Double> rtemp = ProbOccurence.compute(nbOccurences, 0);
 
-        double curIc;
+        double curIc, pc;
 
         Map<URI, Double> results = new HashMap<URI, Double>();
 
         for (URI v : nbOccurences.keySet()) {
 
-
-            double pc = rtemp.get(v);
+            pc = rtemp.get(v);
 
             //long nbOccMax = (long) nbOccurences.getMax()+1;
             //logger.debug(v+"\t"+nbOccurences.get(v)+"\t"+pc+"\t"+nbOccMax);
-
             curIc = -Math.log(pc);
 
             results.put(v, curIc);
@@ -86,13 +111,6 @@ public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {
         return results;
     }
 
-    /**
-     *
-     * @param conf
-     * @param manager
-     * @return The IC of the classes composing the graph associated to the engine.
-     * @throws SLIB_Exception
-     */
     @Override
     public Map<URI, Double> compute(IC_Conf_Corpus conf, SM_Engine manager) throws SLIB_Exception {
 
