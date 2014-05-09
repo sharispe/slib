@@ -34,34 +34,82 @@
 package slib.sglib.algo.graph.utils;
 
 /**
- * Enumeration used to represent the various types of actions which can be applied to a graph.
- * 
+ * Enumeration used to represent the various types of actions which can be
+ * applied to a graph.
+ *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public enum GActionType {
 
     /**
-     * Transitive Reduction.
+     * Perform a transitive reduction of the relationships RDFS.SUBCLASSOF
+     * and/or RDF.TYPE - this treatment removes the relationships which can be
+     * removed according to the transitivity of the predicate rdfs:subClassOf.
+     * You can specify the type of relationships on which the treatment must be
+     * performed using the parameter "target" with value:
+     * <ul>
+     * <li>CLASSES or rdfs:subClassOf or RDFS.SUBCLASSOF (upper or lower case)
+     * to remove relationships rdfs:subClassOf which can be inferred </li>
+     * <li>INSTANCES or rdf:type or RDF.TYPE (upper or lower case) to remove
+     * relationships rdf:type which can be inferred </li>
+     * <li>you can use both using a comma separator setting
+     * "CLASSES,INSTANCES"</li>
+     * </ul>
      */
     TRANSITIVE_REDUCTION,
-    
     /**
-     * Rooting treatment.
+     * Root the graph according to the rdfs:subClassOf relationship.
+     *
+     * For each URI x which is involved in a statement in which the predicate
+     * rdfs:subClassOf is used, if no statement x rdfs:subClassOf y exists, x is
+     * considered to refer to a root. In this treatment, for each root x a
+     * statement x rdfs:subClassOf new_root is created. The value of new_root
+     * can be defined automatically or manually see below.
+     *
+     * The root URI can be specified using the parameter "root_uri":
+     * <ul>
+     * <li>the value must refer to the URI to consider for the root. It can be
+     * an URI which is not already used in the graph.</li>
+     * <li>"__FICTIVE__" as value will be substituted by OWL.THING, i.e. refers
+     * to the OWL vocabulary in the Sesame API</li>
+     * </ul>
      */
     REROOTING,
-    
-//    /**
-//     * Action flag corresponding to the RDFS Inference.
-//     */
-//    RDFS_INFERENCE,
-    
     /**
-     * Reduction of vertices.
+     * Remove of the set of vertices composing the graph.
+     *
+     * Accepted parameters are:
+     *
+     * <ul>
+     *
+     * <li> regex: specify a REGEX in Java syntax which will be used to test if
+     * the value associated to a vertex makes it eligible to be removed. If the
+     * value match the REGEX, the vertex will be removed </li>
+     *
+     * <li> vocabulary: Remove all the vertices associated to the vocabularies
+     * specified. Accepted vocabularies flag are RDF, RDFS, OWL. Several
+     * vocabularies can be specified using comma separator. </li>
+     *
+     * <li> file_uris: specify a list of files containing URIs corresponding to
+     * the vertices to remove. Multiple files can be specified using comma
+     * separator. </li>
+     *
+     * </ul>
+     *
      */
     VERTICES_REDUCTION,
-    
     /**
-     * Predicate Substitute.
+     * Can be used to substitute the predicate of all the triplets with a
+     * specific predicate.
+     *
+     * parameters expected:
+     * <ul>
+     * <li>old_uri: the URI predicate to replace</li>
+     * <li>new_uri: the new URI predicate</li>
+     * </ul>
+     * You can use RDFS.SUBCLASSOF to refer to
+     * http://www.w3.org/2000/01/rdf-schema#subClassOf
+     *
      */
     PREDICATE_SUBSTITUTE
 }
