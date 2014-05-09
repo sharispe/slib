@@ -47,6 +47,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,6 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
 import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -153,7 +153,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             logger.info("Loading relationships ");
 
             // Create universal root if required
-            URI universalRoot = SLIBVOC.THING_OWL;
+            URI universalRoot = OWL.THING;
 
             if (!graph.containsVertex(universalRoot)) {
                 graph.addV(universalRoot);
