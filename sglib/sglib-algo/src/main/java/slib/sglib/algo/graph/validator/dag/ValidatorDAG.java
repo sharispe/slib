@@ -58,7 +58,7 @@ import slib.utils.impl.SetUtils;
  */
 public class ValidatorDAG {
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
     WalkConstraint wc;
     HashMap<URI, Color> verticesColors;
@@ -223,9 +223,13 @@ public class ValidatorDAG {
         if(graph.getE().isEmpty()){
             logger.info("No edge");
         }
-        else if (startingNodes.isEmpty() || !isDag(graph, startingNodes, wc)) // No root No Dag
+        else if (startingNodes.isEmpty()) // No root No Dag
         {
+            logger.debug("No roots have been detected...");
             logger.debug("DAG = false");
+            return false;
+        }
+        else if(!isDag(graph, startingNodes, wc)){
             return false;
         }
         return true;
