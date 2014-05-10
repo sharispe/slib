@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
-import slib.indexer.IndexElementBasic;
+import slib.indexer.URIDescriptionBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -48,36 +48,39 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
 
 /**
+ * Class used to build an index for the terms specified in an OBO ontology
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexerOBO {
 
-    URIFactory factory;
-    
-    boolean onTermSpec = false;
-    String currentURI = null;
-    String currentName = null;
-    Pattern colon = Pattern.compile(":");
-    Pattern exclamation = Pattern.compile("!");
-    Pattern spaces = Pattern.compile("\\s+");
-    IndexHash index;
-    String defaultNamespace;
+    static URIFactory factory;
+
+    static boolean onTermSpec = false;
+    static String currentURI = null;
+    static String currentName = null;
+    static Pattern colon = Pattern.compile(":");
+    static Pattern exclamation = Pattern.compile("!");
+    static Pattern spaces = Pattern.compile("\\s+");
+    static IndexHash index;
+    static String defaultNamespace;
 
     /**
+     * Build an index for the terms specified in an OBO ontology. Each term will
+     * be associated to its name.
      *
-     * @param factory
-     * @param filepath
-     * @param defaultNamespace
-     * @return the index.
+     * @param factory the URI factory which will be used to generate the URIs
+     * @param filepath the path to the ontology file
+     * @param defaultNamespace the default namespace used to generate the URIs
+     * @return the index
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
-        
-        this.factory = factory;
+    public static IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+
+        IndexerOBO.factory = factory;
         index = new IndexHash();
 
-        this.defaultNamespace = defaultNamespace;
+        IndexerOBO.defaultNamespace = defaultNamespace;
         try {
 
             FileInputStream fstream = new FileInputStream(filepath);
@@ -106,7 +109,6 @@ public class IndexerOBO {
                         // check format-version 
 //						if(!format_version.equals(format_parser))
 //							throw new SGTK_Exception_Warning("Parser of format-version "+format_parser+" used to load OBO version "+format_version);
-
                         if (line.equals(OBOconstants.TERM_FLAG)) {
                             onTermSpec = true;
                         }
@@ -138,16 +140,17 @@ public class IndexerOBO {
 
                 }
             }
-            if(onTermSpec){ handleTerm(); }
+            if (onTermSpec) {
+                handleTerm();
+            }
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         return index;
     }
 
-    private String[] getDataColonSplit(String line) {
+    private static String[] getDataColonSplit(String line) {
 
         if (line.isEmpty()) {
             return null;
@@ -163,10 +166,9 @@ public class IndexerOBO {
         return data;
     }
 
-    private String buildURI(String value) throws SLIB_Ex_Critic {
+    private static String buildURI(String value) throws SLIB_Ex_Critic {
 
         String info[] = getDataColonSplit(value);
-
 
         if (info != null && info.length == 2) {
 
@@ -177,14 +179,14 @@ public class IndexerOBO {
 
             return ns + info[1];
         } else {
-            if(defaultNamespace == null){
+            if (defaultNamespace == null) {
                 throw new SLIB_Ex_Critic("No default-namespace. Cannot load " + value + ", please load required namespace prefix");
             }
             return defaultNamespace + value;
         }
     }
 
-    private String[] getData(String line, String regex) {
+    private static String[] getData(String line, String regex) {
 
         String data_prec[] = line.split("!"); // remove comment
         String data[] = data_prec[0].split(regex);
@@ -195,11 +197,11 @@ public class IndexerOBO {
         return data;
     }
 
-    private String removeComment(String value) {
+    private static String removeComment(String value) {
         return value.split("!")[0].trim();
     }
 
-    private String buildValue(String[] data, int from, String glue) {
+    private static String buildValue(String[] data, int from, String glue) {
         String value = "";
         for (int i = from; i < data.length; i++) {
 
@@ -212,7 +214,7 @@ public class IndexerOBO {
         return value;
     }
 
-    private void checkLine(String line) throws SLIB_Ex_Critic {
+    private static void checkLine(String line) throws SLIB_Ex_Critic {
 
         if (line.equals(OBOconstants.TERM_FLAG)) {
             handleTerm();
@@ -220,16 +222,16 @@ public class IndexerOBO {
         }
     }
 
-    private void handleTerm() throws SLIB_Ex_Critic {
+    private static void handleTerm() throws SLIB_Ex_Critic {
 
         if (onTermSpec) {
 
             URI uri = factory.getURI(currentURI);
-            
-            IndexElementBasic i = new IndexElementBasic(uri,currentName);
-            index.addValue(uri, i);
 
-            currentURI  = null;
+            URIDescriptionBasic i = new URIDescriptionBasic(uri, currentName);
+            index.addDescription(uri, i);
+
+            currentURI = null;
             currentName = null;
         }
     }

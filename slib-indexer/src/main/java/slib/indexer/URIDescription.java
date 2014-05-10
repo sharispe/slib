@@ -38,50 +38,76 @@ import java.util.Set;
 import org.openrdf.model.URI;
 
 /**
+ * Interface which defines a simple way to store String values associated to a
+ * resource which is identified by an URI. Class which implement this interface
+ * are mainly used to store and access the labels or descriptions associated to
+ * a resource.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface IndexedElement {
+public interface URIDescription {
 
     /**
+     * Add a description
      *
-     * @param d
+     * @param d the description
      */
     public void addDescription(String d);
 
     /**
+     * Add a collection of descriptions
      *
-     * @param d
+     * @param d the collection of descriptions
      */
     public void addDescriptions(Collection<String> d);
 
     /**
+     * Access to the descriptions associated to the object
      *
-     * @return the descriptions
+     * @return the descriptions associated to the object
      */
     public Set<String> getDescriptions();
 
     /**
-     *
-     * @return the value
+     * @return the URI of the resource the object describes
      */
-    public URI getValue();
+    public URI getAssociatedURI();
 
     /**
+     * Access to the preferred description of the resource.
      *
      * @return the preferred description
      */
     public String getPreferredDescription();
 
     /**
+     * Set the preferred description of the resource. If a preferred description
+     * already exists it will be replace but still considered as a description.
      *
-     * @param d
+     * @param d the preferred description.
      */
     public void setPreferredDescription(String d);
 
     /**
+     * Add an array of descriptions
      *
-     * @param d
+     * @param d an array of descriptions
      */
     public void addDescriptions(String[] d);
+
+    /**
+     * Remove a description. If this description is the preferred description,
+     * the preferred description will be set to null.
+     *
+     * @param d the description
+     */
+    public void removeDescription(String d);
+
+    /**
+     * Remove a collection of descriptions. If one of the given description is
+     * the preferred description, the preferred description will be set to null.
+     *
+     * @param d the collection of descriptions
+     */
+    public void removeDescriptions(Collection<String> d);
 }

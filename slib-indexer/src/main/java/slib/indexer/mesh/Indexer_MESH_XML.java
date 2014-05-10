@@ -50,23 +50,80 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
-import slib.indexer.IndexElementBasic;
+import slib.indexer.URIDescriptionBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
+ * Class used to build an index for the descriptors specified in the MeSH XML.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Indexer_MESH_XML {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-    Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
-    Set<MeshConcept> concepts = new HashSet<MeshConcept>();
-    URIFactory factory;
-    String default_namespace;
+    static Logger logger = LoggerFactory.getLogger(Indexer_MESH_XML.class);
+    static Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
+    static Set<MeshConcept> concepts = new HashSet<MeshConcept>();
+    static URIFactory factory;
+    static String default_namespace;
+
+    /**
+     * Build an index for the descriptors specified in the MeSH XML. Each
+     * descriptors will be associated to its preferred name and descriptions.
+     *
+     * @param factory the URI factory which will be used to generate the URIs
+     * @param filepath the path to the XML file
+     * @param defaultNamespace the default namespace used to generate the URIs
+     * @return the index
+     * @throws SLIB_Exception
+     */
+    public static IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+
+        Indexer_MESH_XML.factory = factory;
+
+        Indexer_MESH_XML.default_namespace = defaultNamespace;
+
+        IndexHash index = new IndexHash();
+        try {
+            logger.info(" Mesh XML Indexer");
+            idToConcepts = new HashMap<String, MeshConcept>();
+            SAXParserFactory f = SAXParserFactory.newInstance();
+            SAXParser saxParser;
+
+            saxParser = f.newSAXParser();
+            saxParser.parse(filepath, new MeshXMLHandler(concepts));
+
+            logger.info("Number of descriptor loaded " + concepts.size());
+            logger.info("Generating relationships ");
+
+            // create relationships 
+            for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
+
+                MeshConcept c = e.getValue();
+
+                String uriConceptAsString = default_namespace + c.getDescriptorUI();
+                URI uriConcept = factory.getURI(uriConceptAsString);
+
+                URIDescriptionBasic i = new URIDescriptionBasic(uriConcept, c.descriptorName);
+                i.addDescriptions(c.descriptions);
+
+                index.addDescription(uriConcept, i);
+
+            }
+
+        } catch (IOException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (ParserConfigurationException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SAXException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        }
+
+        logger.info("MESH loader - process performed");
+        return index;
+    }
 
     /**
      * Return parent ID i.e. giving C10.228.140.300.275.500 will return
@@ -94,62 +151,5 @@ public class Indexer_MESH_XML {
             idToConcepts.put(s, concept);
         }
         concepts.add(concept);
-    }
-
-    /**
-     *
-     * @param factory
-     * @param filepath
-     * @param defaultNamespace
-     * @return the index
-     * @throws SLIB_Exception
-     */
-    public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
-
-        this.factory = factory;
-
-        this.default_namespace = defaultNamespace;
-
-        IndexHash index = new IndexHash();
-        try {
-            logger.info(" Mesh XML Indexer");
-            idToConcepts = new HashMap<String, MeshConcept>();
-            SAXParserFactory f = SAXParserFactory.newInstance();
-            SAXParser saxParser;
-
-            saxParser = f.newSAXParser();
-            saxParser.parse(filepath, new MeshXMLHandler(this));
-
-
-            logger.info("Number of descriptor loaded " + concepts.size());
-            logger.info("Generating relationships ");
-
-
-
-            // create relationships 
-            for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
-
-                MeshConcept c = e.getValue();
-
-                String uriConceptAsString = default_namespace + c.getDescriptorUI();
-                URI uriConcept = factory.getURI(uriConceptAsString);
-
-                IndexElementBasic i = new IndexElementBasic(uriConcept, c.descriptorName);
-                i.addDescriptions(c.descriptions);
-
-                index.addValue(uriConcept, i);
-
-            }
-
-        } catch (IOException ex) { 
-            throw new SLIB_Ex_Critic(ex.getMessage());
-        } catch (ParserConfigurationException ex) {
-            throw new SLIB_Ex_Critic(ex.getMessage());
-        } catch (SAXException ex) {
-            throw new SLIB_Ex_Critic(ex.getMessage());
-        }
-
-        logger.info("MESH loader - process performed");
-        return index;
     }
 }

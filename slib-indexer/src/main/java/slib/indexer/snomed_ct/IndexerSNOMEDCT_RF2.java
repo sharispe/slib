@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.indexer.IndexElementBasic;
+import slib.indexer.URIDescriptionBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.repo.URIFactory;
@@ -57,13 +57,13 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class IndexerSNOMEDCT_RF2 {
 
-    private final int DESCRIPTION_CONCEPT_ID = 4;
-    private final int DESCRIPTION_ACTIVE = 2;
-    private final int DESCRIPTION_TERM = 7;
-    private final int DESCRIPTION_DATE = 1;
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-    Pattern p_tab = Pattern.compile("\\t");
-    URIFactory repo;
+    private static final int DESCRIPTION_CONCEPT_ID = 4;
+    private static final int DESCRIPTION_ACTIVE = 2;
+    private static final int DESCRIPTION_TERM = 7;
+    private static final int DESCRIPTION_DATE = 1;
+    static Logger logger = LoggerFactory.getLogger(IndexerSNOMEDCT_RF2.class);
+    static Pattern p_tab = Pattern.compile("\\t");
+    static URIFactory repo;
 
     /**
      * Only load an index for the URI already loaded
@@ -76,7 +76,7 @@ public class IndexerSNOMEDCT_RF2 {
      * @return the index.
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(URIFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
+    public static IndexHash buildIndex(URIFactory factory, G graph, String description_file, String defaultNamespace, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
         repo = factory;
         logger.info("Building Index");
@@ -117,7 +117,7 @@ public class IndexerSNOMEDCT_RF2 {
 
                         if (!index.getMapping().containsKey(cURI)) { // we add the entry to the collection
 
-                            IndexElementBasic i = new IndexElementBasic(cURI, split[DESCRIPTION_TERM]);
+                            URIDescriptionBasic i = new URIDescriptionBasic(cURI, split[DESCRIPTION_TERM]);
                             index.getMapping().put(cURI, i);
                         } else {
                             index.getMapping().get(cURI).addDescription(split[DESCRIPTION_TERM]);
@@ -147,7 +147,7 @@ public class IndexerSNOMEDCT_RF2 {
      * @return the index.
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(URIFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
+    public static IndexHash buildIndex(URIFactory factory, String description_file, String defaultNamespace, G graph, boolean EXCLUDE_INACTIVE_DESCRIPTIONS) throws SLIB_Exception {
 
         logger.info("Building Index");
         IndexHash index = buildIndex(factory, graph, description_file, defaultNamespace, EXCLUDE_INACTIVE_DESCRIPTIONS);

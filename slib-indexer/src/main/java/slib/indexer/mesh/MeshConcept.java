@@ -37,7 +37,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Dummy representation of a Mesh Concept
+ * Simple representation of a Mesh Concept
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */

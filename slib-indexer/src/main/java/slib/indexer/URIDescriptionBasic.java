@@ -40,99 +40,87 @@ import java.util.Set;
 import org.openrdf.model.URI;
 
 /**
+ * In-memory implementation of the interface URIDescription
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class IndexElementBasic implements IndexedElement{
-    
+public final class URIDescriptionBasic implements URIDescription {
+
     URI associatedURI;
     String preferredDescription;
     Set<String> descriptions;
-    
+
     /**
+     * Create a description for the given URI
      *
-     * @param v
+     * @param v the URI of the resource
      */
-    public IndexElementBasic(URI v){
+    public URIDescriptionBasic(URI v) {
         associatedURI = v;
         this.descriptions = new HashSet<String>();
     }
 
     /**
+     * Create a description for the given URI with the given description as
+     * preferred description.
      *
-     * @param v
-     * @param d
+     * @param v the URI of the resource
+     * @param d the preferred description
      */
-    public IndexElementBasic(URI v, String d) {
+    public URIDescriptionBasic(URI v, String d) {
         this(v);
-        this.preferredDescription = d;
-        this.descriptions.add(d);
+        setPreferredDescription(d);
     }
-    
-    
-    /**
-     *
-     * @param d
-     */
+
     @Override
-    public void addDescription(String d){
+    public void addDescription(String d) {
         descriptions.add(d);
     }
 
-    /**
-     *
-     * @return the descriptions
-     */
     @Override
     public Set<String> getDescriptions() {
         return descriptions;
     }
 
-    /**
-     *
-     * @return the preferred description
-     */
     @Override
     public String getPreferredDescription() {
         return preferredDescription;
     }
 
-    /**
-     *
-     * @param d
-     */
     @Override
     public void setPreferredDescription(String d) {
-        this.descriptions.remove(this.preferredDescription);
         this.preferredDescription = d;
         this.descriptions.add(d);
     }
 
-    /**
-     *
-     * @param d
-     */
     @Override
     public void addDescriptions(Collection<String> d) {
-       descriptions.addAll(d);
-    }
-    
-    /**
-     *
-     * @param d
-     */
-    @Override
-    public void addDescriptions(String[] d) {
-       descriptions.addAll(Arrays.asList(d));
+        descriptions.addAll(d);
     }
 
-    /**
-     *
-     * @return the value
-     */
     @Override
-    public URI getValue() {
+    public void addDescriptions(String[] d) {
+        descriptions.addAll(Arrays.asList(d));
+    }
+
+    @Override
+    public URI getAssociatedURI() {
         return associatedURI;
     }
-    
+
+    @Override
+    public void removeDescription(String d) {
+        descriptions.remove(d);
+        if (preferredDescription.equals(d)) {
+            preferredDescription = null;
+        }
+    }
+
+    @Override
+    public void removeDescriptions(Collection<String> d) {
+        for (String desc : d) {
+            removeDescription(desc);
+        }
+    }
+
 }

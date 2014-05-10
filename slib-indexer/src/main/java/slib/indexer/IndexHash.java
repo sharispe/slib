@@ -34,48 +34,57 @@
 package slib.indexer;
 
 import java.util.HashMap;
+import java.util.Map;
 import org.openrdf.model.URI;
 
 /**
+ * Class used to associate an URI to an object which contains its descriptions
+ * as String values. This class is therefore mainly used to store labels or
+ * string descriptions of a resource identified by an URI.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexHash {
 
-    HashMap<URI, IndexedElement> mapping = new HashMap<URI, IndexedElement>();
+    Map<URI, URIDescription> mapping = new HashMap<URI, URIDescription>();
 
     /**
+     * Access to the Map which stores the description of each resource.
      *
      * @return the complete mapping
      */
-    public HashMap<URI, IndexedElement> getMapping() {
+    public Map<URI, URIDescription> getMapping() {
         return mapping;
     }
 
     /**
+     * Access to the description associated to a specific URI
      *
-     * @param v
-     * @return the value associated to the given URI.
+     * @param v the URI of the resource of interest
+     * @return the description associated to the given URI or null if the URI is
+     * not loaded in the index.
      */
-    public IndexedElement valuesOf(URI v) {
+    public URIDescription getDescription(URI v) {
         return mapping.get(v);
     }
 
     /**
+     * Associate a description to the given URI
      *
-     * @param x
-     * @param o
+     * @param x the URI of the resource
+     * @param o its description
      */
-    public void addValue(URI x, IndexedElement o) {
+    public void addDescription(URI x, URIDescription o) {
         mapping.put(x, o);
     }
 
     /**
+     * Return true if the given URI is associated to a description.
      *
-     * @param x
+     * @param x the URI of the resource
      * @return true is the given URI is indexed
      */
-    public boolean containsIndexFor(URI x) {
+    public boolean containsDescriptionFor(URI x) {
         return mapping.containsKey(x);
     }
 }

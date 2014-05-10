@@ -33,6 +33,7 @@
  */
 package slib.indexer.mesh;
 
+import java.util.Set;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -43,10 +44,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class MeshXMLHandler extends DefaultHandler {
 
-    Indexer_MESH_XML loader;
-    /**
-     *
-     */
+    Set<MeshConcept> concepts;
     public MeshConcept concept;
     boolean descriptorName = false;
     boolean descriptorUI = false;
@@ -59,12 +57,9 @@ public class MeshXMLHandler extends DefaultHandler {
     StringBuilder tmpDescriptorName;
     StringBuilder tmpTreeNumber;
 
-    /**
-     *
-     * @param loader
-     */
-    public MeshXMLHandler(Indexer_MESH_XML loader) {
-        this.loader = loader;
+    
+    public MeshXMLHandler(Set<MeshConcept> concepts) {
+        this.concepts = concepts;
     }
 
     @Override
@@ -73,7 +68,7 @@ public class MeshXMLHandler extends DefaultHandler {
         if (qName.equalsIgnoreCase("DescriptorRecord")) {// start creation of a concept
 
             if (concept != null) {
-                loader.addConcept(concept);
+                concepts.add(concept);
             }
             concept = new MeshConcept();
         }
