@@ -56,6 +56,7 @@ public class GraphPlotter_Graphviz {
 
     /**
      *
+     * @param factory
      * @param graph
      * @param VertexUriColored
      * @param showLabels
@@ -67,6 +68,7 @@ public class GraphPlotter_Graphviz {
 
     /**
      *
+     * @param factory
      * @param graph
      * @param VertexColored
      * @param showLabels
@@ -101,9 +103,9 @@ public class GraphPlotter_Graphviz {
                 color = defColor_q_v;
             }
 
-            if (index != null && index.containsIndexFor(uri)) {
+            if (index != null && index.containsDescriptionFor(uri)) {
 
-                String indexVal = index.valuesOf(uri).getPreferredDescription() + " [" + factory.shortURIasString(uri) + "]";
+                String indexVal = index.getDescription(uri).getPreferredDescription() + " [" + factory.shortURIasString(uri) + "]";
 
                 String splittedLabel = splitString(indexVal, 20);
                 out += "\t\"" + splittedLabel + "\"[fillcolor=" + color + "];\n";
@@ -128,8 +130,8 @@ public class GraphPlotter_Graphviz {
             if (showLabels && !(showSubSlassOfLabels == false && predicate.equals(RDFS.SUBCLASSOF))) {
 
                 String predicateLabel = factory.shortURIasString(predicate);
-                if (index != null && index.containsIndexFor(predicate)) {
-                    predicateLabel = index.valuesOf(predicate).getPreferredDescription();
+                if (index != null && index.containsDescriptionFor(predicate)) {
+                    predicateLabel = index.getDescription(predicate).getPreferredDescription();
                 }
 
                 info = "[label=\"" + predicateLabel + "\",color=" + color + "]";
@@ -143,11 +145,11 @@ public class GraphPlotter_Graphviz {
 
             if (index != null) {
 
-                if (index.containsIndexFor(s)) {
-                    source = splitString(index.valuesOf(s).getPreferredDescription() + " [" + factory.shortURIasString(s) + "]", 20);
+                if (index.containsDescriptionFor(s)) {
+                    source = splitString(index.getDescription(s).getPreferredDescription() + " [" + factory.shortURIasString(s) + "]", 20);
                 }
-                if (index.containsIndexFor(e.getTarget())) {
-                    target = splitString(index.valuesOf(t).getPreferredDescription() + " [" + factory.shortURIasString(t) + "]", 20);
+                if (index.containsDescriptionFor(e.getTarget())) {
+                    target = splitString(index.getDescription(t).getPreferredDescription() + " [" + factory.shortURIasString(t) + "]", 20);
                 }
             }
             out += "\t\"" + source + "\" -> \"" + target + "\" " + info + ";\n";
