@@ -189,11 +189,13 @@ public class RVF_DAG extends RVF {
     }
 
     /**
-     * Return the set of terminal vertices (leaves) reachable for all vertices
-     * composing the loaded graph
+     * Return the set of terminal vertices (leaves) reachable. Only the nodes
+     * which are involved in a relationships which is accepted in the global
+     * configuration will be evaluated. Self-loop are not considered. Therefore
+     * if p is an accepted predicate if a node i is only involved in a
+     * relationship i p i, it will be considered has a leave.
      *
-     * @return an HashMap key V, value the set of terminal vertices reachable
-     * from the key Set<V>
+     * @return the leaves for each vertices
      */
     public Map<URI, Set<URI>> getTerminalVertices() {
 
@@ -206,11 +208,25 @@ public class RVF_DAG extends RVF {
         // Retrieve all leaves
         List<URI> queue = new ArrayList<URI>();
 
-        for (URI v : g.getV()) {
+        Set<URI> studiedURIs = new HashSet<URI>();
+        for (E e : g.getE(wc.getAcceptedPredicates())) {
+            studiedURIs.add(e.getSource());
+            studiedURIs.add(e.getTarget());
+        }
+
+        for (URI v : studiedURIs) {
 
             allReachableLeaves.put(v, new HashSet<URI>());
 
-            int inDegree = g.getE(wc.getAcceptedPredicates(), v, Direction.IN).size();
+            int inDegree = 0;
+            // we do not count self-loop
+            for (E e : g.getE(wc.getAcceptedPredicates(), v, Direction.IN)) {
+                if (!e.getSource().equals(v)) {
+                    inDegree++;
+                }
+            }
+
+            System.out.println(v + "\t in " + inDegree + "\t" + g.getE(wc.getAcceptedPredicates(), v, Direction.IN));
 
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
@@ -222,6 +238,7 @@ public class RVF_DAG extends RVF {
         }
 
         logger.info("Propagation of leave counts start from " + queue.size() + " leaves on " + g.getV().size() + " concepts");
+        logger.debug("Leaves: " + queue);
 
 //        long c = 0;
         while (!queue.isEmpty()) {
@@ -235,13 +252,16 @@ public class RVF_DAG extends RVF {
             for (E e : edges) {
 
                 URI target = e.getTarget();
-                int degreeDone = inDegreesDone.get(target).intValue();
+                if (target.equals(v)) {
+                    continue;
+                }
+                int degreeDone = inDegreesDone.get(target);
 
                 allReachableLeaves.put(target, SetUtils.union(allReachableLeaves.get(target), allReachableLeaves.get(v)));
 
                 inDegreesDone.put(target, degreeDone + 1);
 
-                if (inDegreesDone.get(target).intValue() == inDegrees.get(target).intValue()) {
+                if (inDegreesDone.get(target).equals(inDegrees.get(target))) {
                     queue.add(target);
                 }
             }
