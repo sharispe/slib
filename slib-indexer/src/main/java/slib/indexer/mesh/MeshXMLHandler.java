@@ -44,8 +44,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class MeshXMLHandler extends DefaultHandler {
 
-    Set<MeshConcept> concepts;
-    public MeshConcept concept;
+    Set<MeshDescriptor> descriptors;
+    public MeshDescriptor currentDescriptor;
     boolean descriptorName = false;
     boolean descriptorUI = false;
     boolean treeNumber = false;
@@ -58,8 +58,8 @@ public class MeshXMLHandler extends DefaultHandler {
     StringBuilder tmpTreeNumber;
 
     
-    public MeshXMLHandler(Set<MeshConcept> concepts) {
-        this.concepts = concepts;
+    public MeshXMLHandler(Set<MeshDescriptor> concepts) {
+        this.descriptors = concepts;
     }
 
     @Override
@@ -67,20 +67,20 @@ public class MeshXMLHandler extends DefaultHandler {
 
         if (qName.equalsIgnoreCase("DescriptorRecord")) {// start creation of a concept
 
-            if (concept != null) {
-                concepts.add(concept);
+            if (currentDescriptor != null) {
+                descriptors.add(currentDescriptor);
             }
-            concept = new MeshConcept();
+            currentDescriptor = new MeshDescriptor();
         }
 
         // define UI only the first UI specified is considered
-        if (qName.equalsIgnoreCase("DescriptorUI") && concept.descriptorUI == null) {
+        if (qName.equalsIgnoreCase("DescriptorUI") && currentDescriptor.descriptorUI == null) {
             descriptorUI = true;
             tmpDescriptorUI = new StringBuilder();
         }
 
         // Define the name of the concept as the first descriptor tag encountred
-        if (qName.equalsIgnoreCase("descriptorName") && concept.descriptorName == null) { // define descriptor name
+        if (qName.equalsIgnoreCase("descriptorName") && currentDescriptor.descriptorName == null) { // define descriptor name
             descriptorName = true;
             tmpDescriptorName = new StringBuilder();
         }
@@ -105,18 +105,18 @@ public class MeshXMLHandler extends DefaultHandler {
 
         if (descriptorUI) {
             descriptorUI = false;
-            concept.descriptorUI = tmpDescriptorUI.toString();
+            currentDescriptor.descriptorUI = tmpDescriptorUI.toString();
         } else if (descriptorName) {
             descriptorName = false;
-            concept.descriptorName = tmpDescriptorName.toString();
+            currentDescriptor.descriptorName = tmpDescriptorName.toString();
         } else if (treeNumber) {
             treeNumber = false;
-            concept.treeNumberList.add(tmpTreeNumber.toString());
+            currentDescriptor.treeNumberList.add(tmpTreeNumber.toString());
         } else if (qName.equalsIgnoreCase("Term")) { // define term definition
             termDesc = false;
         } else if (termDesc && qName.equalsIgnoreCase("String")) {
             termDescString = false;
-            concept.descriptions.add(tmpDescString.toString());
+            currentDescriptor.descriptions.add(tmpDescString.toString());
             tmpDescString = null;
         }
     }
