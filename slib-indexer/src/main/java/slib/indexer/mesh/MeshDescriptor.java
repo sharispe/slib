@@ -37,11 +37,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Simple representation of a Mesh Concept
+ * Simple representation of a Mesh Descriptor
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class MeshConcept {
+public class MeshDescriptor {
 
     String descriptorUI;
     String descriptorName;
@@ -51,7 +51,7 @@ public class MeshConcept {
     /**
      *
      */
-    public MeshConcept() {
+    public MeshDescriptor() {
         treeNumberList = new HashSet<String>();
         descriptions = new HashSet<String>();
     }
@@ -89,7 +89,6 @@ public class MeshConcept {
     }
 
     /**
-     *
      * @param treeNumber
      */
     public void addTreeNumber(String treeNumber) {
