@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>fr.lgi2p.kid</groupId>
-        <version>0.8</version>
+        <version>0.8.1</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools</artifactId>
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.8</version>
+            <version>0.8.1</version>
         </dependency>
     </dependencies>
   
