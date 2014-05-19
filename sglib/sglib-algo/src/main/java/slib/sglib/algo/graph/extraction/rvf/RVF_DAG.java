@@ -226,7 +226,7 @@ public class RVF_DAG extends RVF {
                 }
             }
 
-            System.out.println(v + "\t in " + inDegree + "\t" + g.getE(wc.getAcceptedPredicates(), v, Direction.IN));
+//            logger.debug(v + "\t in " + inDegree + "\t" + g.getE(wc.getAcceptedPredicates(), v, Direction.IN));
 
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
