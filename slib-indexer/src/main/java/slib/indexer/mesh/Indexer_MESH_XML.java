@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -64,8 +63,7 @@ import slib.utils.ex.SLIB_Exception;
 public class Indexer_MESH_XML {
 
     static Logger logger = LoggerFactory.getLogger(Indexer_MESH_XML.class);
-    static Map<String, MeshConcept> idToConcepts = new HashMap<String, MeshConcept>();
-    static Set<MeshConcept> concepts = new HashSet<MeshConcept>();
+    static Set<MeshDescriptor> descriptors = new HashSet<MeshDescriptor>();
     static URIFactory factory;
     static String default_namespace;
 
@@ -88,20 +86,17 @@ public class Indexer_MESH_XML {
         IndexHash index = new IndexHash();
         try {
             logger.info(" Mesh XML Indexer");
-            idToConcepts = new HashMap<String, MeshConcept>();
             SAXParserFactory f = SAXParserFactory.newInstance();
             SAXParser saxParser;
 
             saxParser = f.newSAXParser();
-            saxParser.parse(filepath, new MeshXMLHandler(concepts));
+            saxParser.parse(filepath, new MeshXMLHandler(descriptors));
 
-            logger.info("Number of descriptor loaded " + concepts.size());
+            logger.info("Number of descriptor loaded " + descriptors.size());
             logger.info("Generating relationships ");
-
+            
             // create relationships 
-            for (Entry<String, MeshConcept> e : idToConcepts.entrySet()) {
-
-                MeshConcept c = e.getValue();
+            for (MeshDescriptor c : descriptors) {
 
                 String uriConceptAsString = default_namespace + c.getDescriptorUI();
                 URI uriConcept = factory.getURI(uriConceptAsString);
@@ -110,7 +105,6 @@ public class Indexer_MESH_XML {
                 i.addDescriptions(c.descriptions);
 
                 index.addDescription(uriConcept, i);
-
             }
 
         } catch (IOException ex) {
@@ -120,36 +114,7 @@ public class Indexer_MESH_XML {
         } catch (SAXException ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
-
         logger.info("MESH loader - process performed");
         return index;
-    }
-
-    /**
-     * Return parent ID i.e. giving C10.228.140.300.275.500 will return
-     * C10.228.140.300.275
-     *
-     * @return the ID of the parent node
-     */
-    private String getParentId(String id) {
-
-        String[] data = id.split("\\.");
-        String idParent = null;
-
-        for (int i = data.length - 2; i >= 0; i--) {
-            if (idParent == null) {
-                idParent = data[i];
-            } else {
-                idParent = data[i] + "." + idParent;
-            }
-        }
-        return idParent;
-    }
-
-    void addConcept(MeshConcept concept) {
-        for (String s : concept.treeNumberList) {
-            idToConcepts.put(s, concept);
-        }
-        concepts.add(concept);
     }
 }
