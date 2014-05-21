@@ -1,3 +1,36 @@
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
+
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
+ */
 package slib.sglib.io.loader.bio.snomedct;
 
 import java.io.BufferedReader;
@@ -25,7 +58,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
 /**
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
 
@@ -52,16 +85,16 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     };
     
     // Concept file columns
-    private int CONCEPT_ID = 0;
-    private int CONCEPT_ACTIVE = 2;
-    private int CONCEPT_DATE = 1;
+    private final int CONCEPT_ID = 0;
+    private final int CONCEPT_ACTIVE = 2;
+    private final int CONCEPT_DATE = 1;
     // Relationships file columns
-    private int RELATIONSHIP_ID = 0;
-    private int RELATIONSHIP_DATE = 1;
-    private int RELATIONSHIP_ACTIVE = 2;
-    private int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
-    private int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
-    private int RELATIONSHIP_TYPE_ID = 7;
+    private final int RELATIONSHIP_ID = 0;
+    private final int RELATIONSHIP_DATE = 1;
+    private final int RELATIONSHIP_ACTIVE = 2;
+    private final int RELATIONSHIP_SOURCE_CONCEPT_ID = 4;
+    private final int RELATIONSHIP_TARGET_CONCEPT_ID = 5;
+    private final int RELATIONSHIP_TYPE_ID = 7;
     private boolean LOAD_ONLY_ACTIVE_CONCEPTS = true;
     private boolean LOAD_ONLY_ACTIVE_RELATIONSHIPS = true;
 
@@ -159,7 +192,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             for (ConceptSnomedCT concept : concepts.values()) {
 
                 if (!LOAD_ONLY_ACTIVE_CONCEPTS || concept.active) {
-                    URI cURI = repo.createURI(prefix,concept.id);
+                    URI cURI = repo.getURI(prefix,concept.id);
                     conceptMap.put(concept.id, cURI);
                     loaded++;
                 }
@@ -226,7 +259,7 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
                         if (idMapping.containsKey(r.relationshipID)) {
                             pred = idMapping.get(r.relationshipID);
                         } else {
-                            pred = repo.createURI(prefix,r.relationshipID);
+                            pred = repo.getURI(prefix,r.relationshipID);
                         }
                         E e = new Edge(src, pred, tar);
 

@@ -1,0 +1,32 @@
+<sglib>
+	<opt  threads = "1"  />
+
+	<graphs>    
+		<graph uri="http://g/"  >    
+			<data>
+				<file format="MESH_XML"   path="/data/mesh/2014/desc2014.xml"/>    
+				<file format="TSV_ANNOT"   path="/home/seb/Desktop/tmp/mesh/annot.tmp" prefixSubject="http://g/"  prefixObject="http://g/" header="false"/>    
+			</data>
+
+		</graph>    
+	</graphs>
+
+	<sml module="sm" graph="http://g/" >
+
+		<opt_module threads="1" />
+
+		<measures type = "groupwise">
+			<measure   id   = "to" flag = "SIM_GROUPWISE_DAG_TO"    />
+		</measures>
+
+		<queries id= "query" 
+			type    = "oTOo" 
+			file    = "/home/seb/Desktop/tmp/mesh/q2.tmp" 
+			output  = "/tmp/testMesH.tmp" 
+			noAnnots = "set=-1"
+			notFound = "exclude"
+			uri_prefix = "http://g/"
+			output_basename = "false" 
+		/>
+	</sml>
+</sglib>

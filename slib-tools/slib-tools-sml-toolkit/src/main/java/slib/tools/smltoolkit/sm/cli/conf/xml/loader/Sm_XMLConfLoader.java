@@ -1,36 +1,35 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
 
- Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
-
- This software is a computer program whose purpose is to 
- process semantic graphs.
-
- This software is governed by the CeCILL  license under French law and
- abiding by the rules of distribution of free software.  You can  use, 
- modify and/ or redistribute the software under the terms of the CeCILL
- license as circulated by CEA, CNRS and INRIA at the following URL
- "http://www.cecill.info". 
-
- As a counterpart to the access to the source code and  rights to copy,
- modify and redistribute granted by the license, users are provided only
- with a limited warranty  and the software's author,  the holder of the
- economic rights,  and the successive licensors  have only  limited
- liability. 
-
- In this respect, the user's attention is drawn to the risks associated
- with loading,  using,  modifying and/or developing or reproducing the
- software by the user in light of its specific status of free software,
- that may mean  that it is complicated to manipulate,  and  that  also
- therefore means  that it is reserved for developers  and  experienced
- professionals having in-depth computer knowledge. Users are therefore
- encouraged to load and test the software's suitability as regards their
- requirements in conditions enabling the security of their systems and/or 
- data to be ensured and,  more generally, to use and operate it in the 
- same conditions as regards security. 
-
- The fact that you are presently reading this means that you have had
- knowledge of the CeCILL license and that you accept its terms.
-
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.tools.smltoolkit.sm.cli.conf.xml.loader;
 
@@ -67,7 +66,7 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
@@ -285,9 +284,9 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         for (SMconf m : gConfPairwise) {
 
-            String id = m.id;
-            String flag = m.flag;
-            String label = m.label;
+            String id = m.getId();
+            String flag = m.getFlag();
+            String label = m.getLabel();
 
             if (SMConstants.PAIRWISE_MEASURE_FLAGS.contains(flag)) {
 
@@ -299,7 +298,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 // Check for duplicate label
                 for (SMconf mm : gConfPairwise) {
-                    if (mm != m && id.equals(mm.id)) {
+                    if (mm != m && id.equals(mm.getId())) {
                         Util.error("Duplicate id value for pairwise measure:" + id);
                     }
                 }
@@ -307,14 +306,14 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                 // --- Check Label
 
                 if (label == null) {
-                    m.label = id;
+                    m.setLabel(id);
                 }
 
 
                 // Check for duplicate label
                 for (SMconf mm : gConfPairwise) {
-                    if (mm != m && m.label.equals(mm.label)) {
-                        Util.error("Duplicate label:" + m.label);
+                    if (mm != m && m.getLabel().equals(mm.getLabel())) {
+                        Util.error("Duplicate label:" + m.getLabel());
                     }
                 }
 
@@ -325,7 +324,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     ICconf ic = m.getICconf();
 
                     if (ic == null || ic.getId() == null) {
-                        Util.error("Please specify an IC to node based measure: " + m.id);
+                        Util.error("Please specify an IC to node based measure: " + m.getId());
                     }
 
                     // Search corresponding ic specification
@@ -357,10 +356,10 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
         for (SMconf m : gConfGroupwise) {
 
-            String id = m.id;
-            String flag = m.flag;
-            String label = m.label;
-            String pairwise_measure = m.pairwise_measure_id;
+            String id = m.getId();
+            String flag = m.getFlag();
+            String label = m.getLabel();
+            String pairwise_measure = m.getParamAsString(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR);
 
             if (SMConstants.GROUPWISE_MEASURE_FLAGS.contains(flag)) {
 
@@ -378,7 +377,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     // Check pairwise measure exists
                     boolean valid = false;
                     for (SMconf mm : gConfPairwise) {
-                        if (mm.id.equals(pairwise_measure)) {
+                        if (mm.getId().equals(pairwise_measure)) {
                             valid = true;
                             break;
                         }
@@ -398,7 +397,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
                     ICconf ic = m.getICconf();
 
                     if (ic == null || ic.getId() == null) {
-                        Util.error("Please specify an IC to measure: " + m.id);
+                        Util.error("Please specify an IC to measure: " + m.getId());
                     }
 
                     // Search corresponding IC specification
@@ -418,20 +417,20 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 // Check for duplicate label
                 for (SMconf mm : gConfGroupwise) {
-                    if (mm != m && id.equals(mm.id)) {
+                    if (mm != m && id.equals(mm.getId())) {
                         Util.error("Duplicate id value for groupwise measure:" + id);
                     }
                 }
 
 
                 if (label == null) {
-                    m.label = id;
+                    m.setLabel(id);
                 }
 
                 // Check for duplicate label
                 for (SMconf mm : gConfGroupwise) {
-                    if (mm != m && m.label.equals(mm.label)) {
-                        Util.error("Duplicate label:" + m.label);
+                    if (mm != m && m.getLabel().equals(mm.getLabel())) {
+                        Util.error("Duplicate label:" + m.getLabel());
                     }
                 }
 
@@ -628,20 +627,20 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 
                 for (SMconf pmConf : gConfPairwise) {
 
-                    String id_tmp = id + "_" + pmConf.id;
+                    String id_tmp = id + "_" + pmConf.getId();
                     String label_tmp = null;
 
                     if (label != null) {
-                        label_tmp = label + "_" + pmConf.id;
+                        label_tmp = label + "_" + pmConf.getId();
                     }
 
                     c.addParam(XmlTags.ID_ATTR, id_tmp);
                     c.addParam(XmlTags.LABEL_ATTR, label_tmp);
-                    c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.id);
+                    c.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR, pmConf.getId());
 
 
 
-                    if (ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
+                    if(ic_id != null && ic_id.equals(Sm_XML_Cst.IC_ATTR_VALUE_FULL_LIST)) {
 
 
                         for (ICconf ic_conf : gConfICs) {
@@ -727,7 +726,7 @@ public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
         }
 
         SMconf pc = new SMconf(id, flag, label, icConf);
-        pc.setPairwise_measure_id(pairwise_measure);
+        pc.addParam(Sm_XML_Cst.PAIRWISE_MEASURE_ATTR,pairwise_measure);
 
         pc = addExtraAttributs(defaultAttributs, c, pc);
 

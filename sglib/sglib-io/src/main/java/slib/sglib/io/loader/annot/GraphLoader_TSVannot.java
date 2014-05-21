@@ -1,33 +1,35 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
  * 
- * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
- * LGI2P research center
- * This software is governed by the CeCILL  license under French law and
- * abiding by the rules of distribution of free software.  You can  use, 
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info". 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
+
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
  * 
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability. 
- * 
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or 
- * data to be ensured and,  more generally, to use and operate it in the 
- * same conditions as regards security. 
- * 
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sglib.io.loader.annot;
 
@@ -49,8 +51,7 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Util;
 
 /**
- * Class used to load annotation file:
- * <code>
+ * Class used to load annotation file:  <code>
  * XXXX1[TAB]c1;c2;c3
  * XXXX2[TAB]c2;c3
  * ...
@@ -64,7 +65,7 @@ import slib.utils.impl.Util;
  * By default the semantic relationship is RDF.TYPE. Prefixes can also be
  * defined for the subjects and the objects of the statements created.
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_TSVannot implements GraphLoader {
 
@@ -108,11 +109,9 @@ public class GraphLoader_TSVannot implements GraphLoader {
             skipHeader = true;
         }
 
-
-
         if (predicateParam != null) {
             try {
-                predicate = uriRepo.createURI(predicateParam);
+                predicate = uriRepo.getURI(predicateParam);
             } catch (IllegalArgumentException e) {
                 throw new SLIB_Ex_Critic("Error in data loader, parameter " + PARAM_PREDICATE + ", cannot create an URI from " + predicateParam + "\n" + e.getMessage());
             }
@@ -154,25 +153,23 @@ public class GraphLoader_TSVannot implements GraphLoader {
             while ((row = csvReader.readNext()) != null) {
                 if (skipHeader) {
                     skipHeader = false;
-                    continue;
-                }
-                if (row.length == 2) {
+                } else if (row.length == 2) {
 
                     subjectLocalName = row[0];
                     data = row[1].split(";");
 
                     if (prefixSubject == null) {
-                        s = uriRepo.createURI(subjectLocalName);
+                        s = uriRepo.getURI(subjectLocalName);
                     } else {
-                        s = uriRepo.createURI(prefixSubject + subjectLocalName);
+                        s = uriRepo.getURI(prefixSubject + subjectLocalName);
                     }
 
                     for (String os : data) {
 
                         if (prefixObject == null) {
-                            o = uriRepo.createURI(buildURIString(os));
+                            o = uriRepo.getURI(buildURIString(os));
                         } else {
-                            o = uriRepo.createURI(prefixObject + os);
+                            o = uriRepo.getURI(prefixObject + os);
                         }
 
                         E edge = new Edge(s, predicate, o);
@@ -191,7 +188,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
             logger.info("Number of lines processed " + processed);
             logger.info("Number of statements loaded " + statementsLoaded);
 
-
         } catch (Exception e) {
             throw new SLIB_Ex_Critic("Error processing file " + fileLoc + "\n" + e.getMessage());
         }
@@ -200,7 +196,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
     private String buildURIString(String value) throws SLIB_Ex_Critic {
 
         String info[] = getDataColonSplit(value);
-
 
         if (info != null && info.length == 2) {
 
@@ -216,7 +211,6 @@ public class GraphLoader_TSVannot implements GraphLoader {
     }
 
     private String[] getDataColonSplit(String value) {
-
 
         String data[] = colon.split(value);
         data[0] = data[0].trim();

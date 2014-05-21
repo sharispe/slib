@@ -1,58 +1,65 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
  * 
- * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
- * LGI2P research center
- * This software is governed by the CeCILL  license under French law and
- * abiding by the rules of distribution of free software.  You can  use, 
- * modify and/ or redistribute the software under the terms of the CeCILL
- * license as circulated by CEA, CNRS and INRIA at the following URL
- * "http://www.cecill.info". 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
+
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
  * 
- * As a counterpart to the access to the source code and  rights to copy,
- * modify and redistribute granted by the license, users are provided only
- * with a limited warranty  and the software's author,  the holder of the
- * economic rights,  and the successive licensors  have only  limited
- * liability. 
- * 
- * In this respect, the user's attention is drawn to the risks associated
- * with loading,  using,  modifying and/or developing or reproducing the
- * software by the user in light of its specific status of free software,
- * that may mean  that it is complicated to manipulate,  and  that  also
- * therefore means  that it is reserved for developers  and  experienced
- * professionals having in-depth computer knowledge. Users are therefore
- * encouraged to load and test the software's suitability as regards their
- * requirements in conditions enabling the security of their systems and/or 
- * data to be ensured and,  more generally, to use and operate it in the 
- * same conditions as regards security. 
- * 
- * The fact that you are presently reading this means that you have had
- * knowledge of the CeCILL license and that you accept its terms.
- * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sglib.io.loader.bio.mesh;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.loader.GraphLoader;
+import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
+import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.voc.SLIBVOC;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -64,7 +71,7 @@ import slib.utils.ex.SLIB_Exception;
  * The loader was designed for the 2013 XML version of the MeSH, coherency with
  * prior or older version hasn't been tested.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_MESH_XML implements GraphLoader {
 
@@ -73,6 +80,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     Set<MeshConcept> concepts = new HashSet<MeshConcept>();
     G graph;
     URIFactory factory = URIFactoryMemory.getSingleton();
+    int conceptIgnored  = 0;
     /**
      *
      */
@@ -101,12 +109,19 @@ public class GraphLoader_MESH_XML implements GraphLoader {
     }
 
     void addConcept(MeshConcept concept) {
-        for (String s : concept.treeNumberList) {
-            idToConcepts.put(s, concept);
-        }
-        concepts.add(concept);
-    }
 
+        if (!concept.treeNumberList.isEmpty()) {
+
+            for (String s : concept.treeNumberList) {
+                idToConcepts.put(s, concept);
+            }
+            concepts.add(concept);
+        }
+        else{
+            logger.info("Warning: no tree number associated to "+concept.descriptorUI+" concept ignored...");
+            conceptIgnored++;
+        }
+    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
@@ -123,7 +138,10 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             logger.info("-------------------------------------");
             logger.info("Loading Mesh XML");
             logger.info("-------------------------------------");
+
             idToConcepts = new HashMap<String, MeshConcept>();
+
+
             SAXParserFactory parserfactory = SAXParserFactory.newInstance();
             SAXParser saxParser;
 
@@ -131,11 +149,11 @@ public class GraphLoader_MESH_XML implements GraphLoader {
             saxParser.parse(conf.getLoc(), new MeshXMLHandler(this));
 
 
-            logger.info("Number of descriptor loaded " + concepts.size());
+            logger.info("Number of descriptor loaded " + concepts.size()+" (ignored "+conceptIgnored+")");
             logger.info("Loading relationships ");
 
             // Create universal root if required
-            URI universalRoot = SLIBVOC.THING_OWL;
+            URI universalRoot = OWL.THING;
 
             if (!graph.containsVertex(universalRoot)) {
                 graph.addV(universalRoot);
@@ -158,7 +176,7 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                         MeshConcept parent = idToConcepts.get(parentId);
 
                         if (parent == null) {
-                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber);
+                            throw new SLIB_Ex_Critic("Cannot locate parent identified by TreeNumber " + treeNumber + "\nError occured processing\n"+c);
                         } else {
 
                             //System.out.println("\t" + parentId + "\t" + parent.descriptorUI);
@@ -197,7 +215,13 @@ public class GraphLoader_MESH_XML implements GraphLoader {
                 }
             }
 
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (ParserConfigurationException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SAXException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        } catch (SLIB_Ex_Critic ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
 
@@ -209,11 +233,27 @@ public class GraphLoader_MESH_XML implements GraphLoader {
 
         String uriConceptAsString = default_namespace + descriptorUI;
 
-        URI uriConcept = factory.createURI(uriConceptAsString);
+        URI uriConcept = factory.getURI(uriConceptAsString);
 
         if (!graph.containsVertex(uriConcept)) {
             graph.addV(uriConcept);
         }
         return uriConcept;
+    }
+    
+    
+    public static void main(String[] args) throws Exception{
+        
+        
+        URIFactoryMemory factory = URIFactoryMemory.getSingleton();
+        G graph = new GraphMemory(factory.getURI("http://mesh"));
+        GraphLoader_MESH_XML loader = new GraphLoader_MESH_XML();
+        loader.populate(new GDataConf(GFormat.MESH_XML, "/data/mesh/desc2013.xml"), graph);
+        URI dna_barcoding = factory.getURI("http://D058893");
+        System.out.println(graph);
+        
+        System.out.println(graph.containsVertex(dna_barcoding));
+        
+        
     }
 }

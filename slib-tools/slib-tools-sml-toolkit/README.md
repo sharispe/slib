@@ -6,7 +6,7 @@ Please visit the dedicated website for downloads or extra documentation http://w
 The SML-Toolkit is composed of various tools related to Semantic Similarity/Relatedness computation and analysis.
 Those tools are provided through a common command-line interface.
 
-The source code is written using Java 1.6 and the SML-Toolkit can therefore be used on any platform (Linux, Windows, Mac) in which Java is installed.
+The source code is written using Java 1.7 and the SML-Toolkit can therefore be used on any platform (Linux, Windows, Mac) in which Java is installed.
 
 The project currently focuses on Semantic measures related to semantic graphs, e.g. between terms or concepts structured in a graph (ontology), between groups of concepts...
 A package dedicated to String similarity measures is also provided but this is not currently the main concern of the project.
@@ -198,7 +198,7 @@ Those GO terms come from the Molecular function aspect of the Gene Ontology `-as
 We use the measure proposed by Sclicker et al. and the Information content defined by Sanchez et al. (See the Semantic measures Library website for references).
 
 ```
--jar sml-toolkit-<version>.jar -t sm -profile GO -go /data/go/eval/gene_ontology.1_2.obo -mtype p -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm schlicker -ic sanchez -aspect MF
+java -jar sml-toolkit-<version>.jar -t sm -profile GO -go /data/go/eval/gene_ontology.1_2.obo -mtype p -queries /data/go/eval/input_query.tsv -output /tmp/test-sml.tsv -pm schlicker -ic sanchez -aspect MF
 ```
 
 ###### Semantic similarity between Gene products.
@@ -255,8 +255,8 @@ WORK IN PROGRESS. Coming soon (Already available through the generic XML interfa
 
 This profile is dedicated to the Medical Subject Headings (MeSH).
 It can be used to compute semantic measures scores between MeSH Descriptors or sets of MeSH Descriptors (e.g. documents annotated by MeSH descriptors).
-The MeSH must be in XML (2013 version supported), the sets of MeSH Descriptors must be in TSV format (Tabulated Separated Values, an example is provided below).
-The MeSH can be downloaded at http://changeme.com/
+The MeSH must be in XML (2014 version supported), the sets of MeSH Descriptors must be in TSV format (Tabulated Separated Values, an example is provided below).
+The MeSH can be downloaded at [http://www.nlm.nih.gov/mesh](http://www.nlm.nih.gov/mesh).
 
 ```
 Discuss MeSH modifications
@@ -270,7 +270,7 @@ Below the parameters which can be used, command-line examples are also provided:
 ##### Parameters
 
 * `-mesh <file path>` the path to the MeSH in XML format, other format are not supported (required).
-This file can be downloaded at http://www.changeme.com/
+This file can be downloaded at [http://www.nlm.nih.gov/mesh](http://www.nlm.nih.gov/mesh)
 
 * `-annots <file path>` the path to the annotation file. 
 Required for groupwise measures (`-mtype g` see above) or any measure relying on a extrinsic metric (e.g. Resnik's Information Content).

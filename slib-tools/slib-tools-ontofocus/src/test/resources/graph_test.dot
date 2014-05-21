@@ -1,0 +1,33 @@
+digraph plottedgraph {
+
+	rankdir=BT;
+	node [style=filled,shape=rect]
+
+	"http://graph/A3"[color="#FAAB9F"];
+	"http://graph/A2"[color="#FAAB9F"];
+	"http://graph/A5"[color="#FAAB9F"];
+	"http://graph/A221"[color="#FAAB9F"];
+	"http://graph/A4"[color="#FAAB9F"];
+	"http://graph/A222"[color="#FAAB9F"];
+	"http://graph/A22"[color="#FAAB9F"];
+	"http://graph/ROOT"[color="#FAAB9F"];
+	"http://graph/A1"[color="#FAAB9F"];
+	"http://graph/A12"[color="#FAAB9F"];
+	"http://graph/A21"[color="#FAAB9F"];
+	"http://graph/A11"[color="#FAAB9F"];
+	"http://graph/A3" -> "http://graph/A222" ;
+	"http://graph/A12" -> "http://graph/A1" ;
+	"http://graph/A3" -> "http://graph/ROOT" ;
+	"http://graph/A221" -> "http://graph/A22" ;
+	"http://graph/A22" -> "http://graph/A2" ;
+	"http://graph/A4" -> "http://graph/A11" ;
+	"http://graph/A11" -> "http://graph/A21" [label="sameAs",color=black];
+	"http://graph/A1" -> "http://graph/ROOT" ;
+	"http://graph/A11" -> "http://graph/A1" ;
+	"http://graph/A2" -> "http://graph/ROOT" ;
+	"http://graph/A4" -> "http://graph/A21" ;
+	"http://graph/A21" -> "http://graph/A2" ;
+	"http://graph/A222" -> "http://graph/A22" ;
+	"http://graph/A5" -> "http://graph/A4" ;
+	"http://graph/A3" -> "http://graph/A221" ;
+}

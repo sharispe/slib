@@ -2,7 +2,7 @@ package test;
 
 /*
  * 
- * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ * Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  * LGI2P research center
  * This software is governed by the CeCILL  license under French law and
  * abiding by the rules of distribution of free software.  You can  use, 
@@ -61,7 +61,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class TestGraphEngine {
 
@@ -88,7 +88,7 @@ public class TestGraphEngine {
 
 
             GraphLoader_SLIB loader = new GraphLoader_SLIB();
-            graph = new GraphMemory(factory.createURI(uriGraphTest));
+            graph = new GraphMemory(factory.getURI(uriGraphTest));
             loader.populate(new GDataConf(GFormat.SLIB, graphFile), graph);
             engine = new SM_Engine(graph);
 
@@ -134,7 +134,7 @@ public class TestGraphEngine {
             String[] data = l.split("\t");
             String nsConcept = data[COL_CONCEPT_NS];
 
-            URI cURI = factory.createURI(uriGraphTest + nsConcept);
+            URI cURI = factory.getURI(uriGraphTest + nsConcept);
 
             int ancCount = Integer.parseInt(data[COL_ANCESTORS_COUNT]);
             String[] ancNSStrings = data[COL_ANCESTORS].split(";");
@@ -145,7 +145,7 @@ public class TestGraphEngine {
 
             Set<URI> ancSet = new HashSet<URI>();
             for (String s : ancNSStrings) {
-                ancSet.add(factory.createURI(uriGraphTest + s));
+                ancSet.add(factory.getURI(uriGraphTest + s));
             }
             ancestors.put(cURI, ancSet);
 
@@ -158,7 +158,7 @@ public class TestGraphEngine {
 
             Set<URI> descSet = new HashSet<URI>();
             for (String s : descNSStrings) {
-                descSet.add(factory.createURI(uriGraphTest + s));
+                descSet.add(factory.getURI(uriGraphTest + s));
             }
             descendants.put(cURI, descSet);
 
@@ -167,7 +167,7 @@ public class TestGraphEngine {
 
             Set<URI> leavesSet = new HashSet<URI>();
             for (String s : leavesNSStrings) {
-                leavesSet.add(factory.createURI(uriGraphTest + s));
+                leavesSet.add(factory.getURI(uriGraphTest + s));
             }
             leaves.put(cURI, leavesSet);
 

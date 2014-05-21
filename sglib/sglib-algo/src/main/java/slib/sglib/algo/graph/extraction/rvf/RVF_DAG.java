@@ -1,36 +1,35 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
 
- Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
-
- This software is a computer program whose purpose is to 
- process semantic graphs.
-
- This software is governed by the CeCILL  license under French law and
- abiding by the rules of distribution of free software.  You can  use, 
- modify and/ or redistribute the software under the terms of the CeCILL
- license as circulated by CEA, CNRS and INRIA at the following URL
- "http://www.cecill.info". 
-
- As a counterpart to the access to the source code and  rights to copy,
- modify and redistribute granted by the license, users are provided only
- with a limited warranty  and the software's author,  the holder of the
- economic rights,  and the successive licensors  have only  limited
- liability. 
-
- In this respect, the user's attention is drawn to the risks associated
- with loading,  using,  modifying and/or developing or reproducing the
- software by the user in light of its specific status of free software,
- that may mean  that it is complicated to manipulate,  and  that  also
- therefore means  that it is reserved for developers  and  experienced
- professionals having in-depth computer knowledge. Users are therefore
- encouraged to load and test the software's suitability as regards their
- requirements in conditions enabling the security of their systems and/or 
- data to be ensured and,  more generally, to use and operate it in the 
- same conditions as regards security. 
-
- The fact that you are presently reading this means that you have had
- knowledge of the CeCILL license and that you accept its terms.
-
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sglib.algo.graph.extraction.rvf;
 
@@ -54,7 +53,7 @@ import slib.utils.impl.SetUtils;
  * particular vertex of an acyclic graph considering particular relationships
  * i.e. EdgeTypes
  *
- * @author Sebastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
 public class RVF_DAG extends RVF {
@@ -102,7 +101,13 @@ public class RVF_DAG extends RVF {
         for (URI v : g.getV()) {
 
             allVertices.put(v, new HashSet<URI>());
-            int sizeOpposite = g.getE(v, wc).size();
+
+            int sizeOpposite = 0;
+            for (E e : g.getE(v, wc)) {
+                if (!e.getSource().equals(e.getTarget())) { // avoid self-loop
+                    sizeOpposite++;
+                }
+            }
 
             inDegree.put(v, sizeOpposite);
             inDegreeDone.put(v, 0);
@@ -117,24 +122,19 @@ public class RVF_DAG extends RVF {
                     + "Cannot find terminal vertices, i.e. vertices with no reachable vertices considering walkContraint: \n" + wc + "\nNumber of vertices tested " + allVertices.size());
         }
 
-        
-
         logger.debug("Propagation started from " + queue.size() + " vertices");
-        if(queue.size() <= 10){
+        if (queue.size() <= 10) {
             logger.debug(queue.toString());
         }
-        
-        
+
         while (!queue.isEmpty()) {
 
             URI current = queue.get(0);
 
 //            logger.debug("Processing " + current);
-
             queue.remove(0);
 
             Set<E> edges = g.getE(current, oppositeWC);
-
 
             for (E e : edges) {
 
@@ -143,6 +143,9 @@ public class RVF_DAG extends RVF {
                 URI dest = e.getTarget();
                 if (dir == Direction.IN) {
                     dest = e.getSource();
+                }
+                if (dest.equals(current)) {
+                    continue;// avoid self-loop
                 }
                 int done = inDegreeDone.get(dest) + 1;
                 inDegreeDone.put(dest, done);
@@ -159,7 +162,6 @@ public class RVF_DAG extends RVF {
         }
 
         //TOREMOVE 
-
         logger.info("Checking Treatment coherency");
         long incoherencies = 0;
         for (URI c : inDegree.keySet()) {
@@ -169,7 +171,6 @@ public class RVF_DAG extends RVF {
                 if (incoherencies == 0) {
                     logger.debug("\tURI\tIndegree\tInDegreeDone");
                 }
-
                 logger.debug("\t" + c + "\tIndegree " + inDegree.get(c) + "\t" + inDegreeDone.get(c));
                 incoherencies++;
             }
@@ -183,17 +184,18 @@ public class RVF_DAG extends RVF {
             throw new SLIB_Ex_Critic("ERROR " + incoherenceMessage);
         }
 
-
         logger.debug("Get All reachable vertices : end");
         return allVertices;
     }
 
     /**
-     * Return the set of terminal vertices (leaves) reachable for all vertices
-     * composing the loaded graph
+     * Return the set of terminal vertices (leaves) reachable. Only the nodes
+     * which are involved in a relationships which is accepted in the global
+     * configuration will be evaluated. Self-loop are not considered. Therefore
+     * if p is an accepted predicate if a node i is only involved in a
+     * relationship i p i, it will be considered has a leave.
      *
-     * @return an HashMap key V, value the set of terminal vertices reachable
-     * from the key Set<V>
+     * @return the leaves for each vertices
      */
     public Map<URI, Set<URI>> getTerminalVertices() {
 
@@ -206,11 +208,25 @@ public class RVF_DAG extends RVF {
         // Retrieve all leaves
         List<URI> queue = new ArrayList<URI>();
 
-        for (URI v : g.getV()) {
+        Set<URI> studiedURIs = new HashSet<URI>();
+        for (E e : g.getE(wc.getAcceptedPredicates())) {
+            studiedURIs.add(e.getSource());
+            studiedURIs.add(e.getTarget());
+        }
+
+        for (URI v : studiedURIs) {
 
             allReachableLeaves.put(v, new HashSet<URI>());
 
-            int inDegree = g.getE(wc.getAcceptedPredicates(), v, Direction.IN).size();
+            int inDegree = 0;
+            // we do not count self-loop
+            for (E e : g.getE(wc.getAcceptedPredicates(), v, Direction.IN)) {
+                if (!e.getSource().equals(v)) {
+                    inDegree++;
+                }
+            }
+
+            System.out.println(v + "\t in " + inDegree + "\t" + g.getE(wc.getAcceptedPredicates(), v, Direction.IN));
 
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
@@ -222,9 +238,9 @@ public class RVF_DAG extends RVF {
         }
 
         logger.info("Propagation of leave counts start from " + queue.size() + " leaves on " + g.getV().size() + " concepts");
+        logger.debug("Leaves: " + queue);
 
 //        long c = 0;
-
         while (!queue.isEmpty()) {
 
             URI v = queue.get(0);
@@ -233,17 +249,19 @@ public class RVF_DAG extends RVF {
 
             //logger.info(c+"/"+g.getV().size()+" "+v.getValue().stringValue());
 //            c++;
-
             for (E e : edges) {
 
                 URI target = e.getTarget();
-                int degreeDone = inDegreesDone.get(target).intValue();
+                if (target.equals(v)) {
+                    continue;
+                }
+                int degreeDone = inDegreesDone.get(target);
 
                 allReachableLeaves.put(target, SetUtils.union(allReachableLeaves.get(target), allReachableLeaves.get(v)));
 
                 inDegreesDone.put(target, degreeDone + 1);
 
-                if (inDegreesDone.get(target).intValue() == inDegrees.get(target).intValue()) {
+                if (inDegreesDone.get(target).equals(inDegrees.get(target))) {
                     queue.add(target);
                 }
             }
@@ -260,7 +278,7 @@ public class RVF_DAG extends RVF {
         Map<URI, Integer> allVertices = new HashMap<URI, Integer>();
 
         for (URI v : g.getV()) {
-            allVertices.put(v,1);
+            allVertices.put(v, 1);
         }
         return propagateNbOccurences(allVertices);
     }
@@ -310,9 +328,7 @@ public class RVF_DAG extends RVF {
             queue.remove(0);
             allVertices.get(current).add(current);
 
-
             Set<E> edges = g.getE(wc.getAcceptedPredicates(), current, Direction.IN);
-
 
             for (E e : edges) {
                 URI dest = e.getTarget();

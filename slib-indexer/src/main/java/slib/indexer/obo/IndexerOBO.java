@@ -1,39 +1,36 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
 
- Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
-
- This software is a computer program whose purpose is to 
- process semantic graphs.
-
- This software is governed by the CeCILL  license under French law and
- abiding by the rules of distribution of free software.  You can  use, 
- modify and/ or redistribute the software under the terms of the CeCILL
- license as circulated by CEA, CNRS and INRIA at the following URL
- "http://www.cecill.info". 
-
- As a counterpart to the access to the source code and  rights to copy,
- modify and redistribute granted by the license, users are provided only
- with a limited warranty  and the software's author,  the holder of the
- economic rights,  and the successive licensors  have only  limited
- liability. 
-
- In this respect, the user's attention is drawn to the risks associated
- with loading,  using,  modifying and/or developing or reproducing the
- software by the user in light of its specific status of free software,
- that may mean  that it is complicated to manipulate,  and  that  also
- therefore means  that it is reserved for developers  and  experienced
- professionals having in-depth computer knowledge. Users are therefore
- encouraged to load and test the software's suitability as regards their
- requirements in conditions enabling the security of their systems and/or 
- data to be ensured and,  more generally, to use and operate it in the 
- same conditions as regards security. 
-
- The fact that you are presently reading this means that you have had
- knowledge of the CeCILL license and that you accept its terms.
-
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
- 
- 
 package slib.indexer.obo;
 
 import java.io.BufferedReader;
@@ -43,7 +40,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
 import org.openrdf.model.URI;
-import slib.indexer.IndexElementBasic;
+import slib.indexer.URIDescriptionBasic;
 import slib.indexer.IndexHash;
 import slib.sglib.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -51,36 +48,39 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;
 
 /**
+ * Class used to build an index for the terms specified in an OBO ontology
  *
- * @author Sébastien Harispe
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class IndexerOBO {
 
-    URIFactory factory;
-    
-    boolean onTermSpec = false;
-    String currentURI = null;
-    String currentName = null;
-    Pattern colon = Pattern.compile(":");
-    Pattern exclamation = Pattern.compile("!");
-    Pattern spaces = Pattern.compile("\\s+");
-    IndexHash index;
-    String defaultNamespace;
+    static URIFactory factory;
+
+    static boolean onTermSpec = false;
+    static String currentURI = null;
+    static String currentName = null;
+    static Pattern colon = Pattern.compile(":");
+    static Pattern exclamation = Pattern.compile("!");
+    static Pattern spaces = Pattern.compile("\\s+");
+    static IndexHash index;
+    static String defaultNamespace;
 
     /**
+     * Build an index for the terms specified in an OBO ontology. Each term will
+     * be associated to its name.
      *
-     * @param factory
-     * @param filepath
-     * @param defaultNamespace
-     * @return the index.
+     * @param factory the URI factory which will be used to generate the URIs
+     * @param filepath the path to the ontology file
+     * @param defaultNamespace the default namespace used to generate the URIs
+     * @return the index
      * @throws SLIB_Exception
      */
-    public IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
-        
-        this.factory = factory;
+    public static IndexHash buildIndex(URIFactory factory, String filepath, String defaultNamespace) throws SLIB_Exception {
+
+        IndexerOBO.factory = factory;
         index = new IndexHash();
 
-        this.defaultNamespace = defaultNamespace;
+        IndexerOBO.defaultNamespace = defaultNamespace;
         try {
 
             FileInputStream fstream = new FileInputStream(filepath);
@@ -109,7 +109,6 @@ public class IndexerOBO {
                         // check format-version 
 //						if(!format_version.equals(format_parser))
 //							throw new SGTK_Exception_Warning("Parser of format-version "+format_parser+" used to load OBO version "+format_version);
-
                         if (line.equals(OBOconstants.TERM_FLAG)) {
                             onTermSpec = true;
                         }
@@ -141,16 +140,17 @@ public class IndexerOBO {
 
                 }
             }
-            if(onTermSpec){ handleTerm(); }
+            if (onTermSpec) {
+                handleTerm();
+            }
             in.close();
         } catch (IOException e) {
-            e.printStackTrace();
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         return index;
     }
 
-    private String[] getDataColonSplit(String line) {
+    private static String[] getDataColonSplit(String line) {
 
         if (line.isEmpty()) {
             return null;
@@ -166,10 +166,9 @@ public class IndexerOBO {
         return data;
     }
 
-    private String buildURI(String value) throws SLIB_Ex_Critic {
+    private static String buildURI(String value) throws SLIB_Ex_Critic {
 
         String info[] = getDataColonSplit(value);
-
 
         if (info != null && info.length == 2) {
 
@@ -180,14 +179,14 @@ public class IndexerOBO {
 
             return ns + info[1];
         } else {
-            if(defaultNamespace == null){
+            if (defaultNamespace == null) {
                 throw new SLIB_Ex_Critic("No default-namespace. Cannot load " + value + ", please load required namespace prefix");
             }
             return defaultNamespace + value;
         }
     }
 
-    private String[] getData(String line, String regex) {
+    private static String[] getData(String line, String regex) {
 
         String data_prec[] = line.split("!"); // remove comment
         String data[] = data_prec[0].split(regex);
@@ -198,11 +197,11 @@ public class IndexerOBO {
         return data;
     }
 
-    private String removeComment(String value) {
+    private static String removeComment(String value) {
         return value.split("!")[0].trim();
     }
 
-    private String buildValue(String[] data, int from, String glue) {
+    private static String buildValue(String[] data, int from, String glue) {
         String value = "";
         for (int i = from; i < data.length; i++) {
 
@@ -215,7 +214,7 @@ public class IndexerOBO {
         return value;
     }
 
-    private void checkLine(String line) throws SLIB_Ex_Critic {
+    private static void checkLine(String line) throws SLIB_Ex_Critic {
 
         if (line.equals(OBOconstants.TERM_FLAG)) {
             handleTerm();
@@ -223,16 +222,16 @@ public class IndexerOBO {
         }
     }
 
-    private void handleTerm() throws SLIB_Ex_Critic {
+    private static void handleTerm() throws SLIB_Ex_Critic {
 
         if (onTermSpec) {
 
-            URI uri = factory.createURI(currentURI);
-            
-            IndexElementBasic i = new IndexElementBasic(uri,currentName);
-            index.addValue(uri, i);
+            URI uri = factory.getURI(currentURI);
 
-            currentURI  = null;
+            URIDescriptionBasic i = new URIDescriptionBasic(uri, currentName);
+            index.addDescription(uri, i);
+
+            currentURI = null;
             currentName = null;
         }
     }

@@ -1,36 +1,35 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
 
- Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
-
- This software is a computer program whose purpose is to 
- process semantic graphs.
-
- This software is governed by the CeCILL  license under French law and
- abiding by the rules of distribution of free software.  You can  use, 
- modify and/ or redistribute the software under the terms of the CeCILL
- license as circulated by CEA, CNRS and INRIA at the following URL
- "http://www.cecill.info". 
-
- As a counterpart to the access to the source code and  rights to copy,
- modify and redistribute granted by the license, users are provided only
- with a limited warranty  and the software's author,  the holder of the
- economic rights,  and the successive licensors  have only  limited
- liability. 
-
- In this respect, the user's attention is drawn to the risks associated
- with loading,  using,  modifying and/or developing or reproducing the
- software by the user in light of its specific status of free software,
- that may mean  that it is complicated to manipulate,  and  that  also
- therefore means  that it is reserved for developers  and  experienced
- professionals having in-depth computer knowledge. Users are therefore
- encouraged to load and test the software's suitability as regards their
- requirements in conditions enabling the security of their systems and/or 
- data to be ensured and,  more generally, to use and operate it in the 
- same conditions as regards security. 
-
- The fact that you are presently reading this means that you have had
- knowledge of the CeCILL license and that you accept its terms.
-
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sglib.test.algo.graph.reduction.dag;
 
@@ -39,11 +38,16 @@ import java.util.Set;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
+import org.openrdf.model.vocabulary.OWL;
+import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
 import slib.sglib.algo.graph.reduction.dag.GraphReduction_Transitive;
+import slib.sglib.algo.graph.utils.GAction;
+import slib.sglib.algo.graph.utils.GActionType;
+import slib.sglib.algo.graph.utils.GraphActionExecutor;
 import slib.sglib.algo.graph.utils.RooterDAG;
 import slib.sglib.io.conf.GDataConf;
 import slib.sglib.io.conf.GraphConf;
@@ -52,18 +56,19 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.voc.SLIBVOC;
+import slib.sglib.model.repo.URIFactory;
 import slib.sglib.test.algo.graph.SLIB_UnitTestValues;
 import slib.sglib.test.algo.graph.TestUtils;
 import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author seb
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class Test_GraphReduction_Transitive {
 
     G g;
+    URIFactory f = URIFactoryMemory.getSingleton();
     SLIB_UnitTestValues test = new SLIB_UnitTestValues();
 
     /**
@@ -111,7 +116,83 @@ public class Test_GraphReduction_Transitive {
         System.out.println(removedEdges);
         assertTrue(removedEdges.isEmpty());// duplicate edge note allowed
     }
+    
+    
+    @Test
+    public void transitiveReduction_Classes_2() throws SLIB_Exception {
 
+        System.out.println("Checking Transitive Reduction of "+RDFS.SUBCLASSOF);
+        Set<E> removedEdges;
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        assertTrue(removedEdges.isEmpty());
+
+        g.addE(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING);
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        System.out.println("Removed Edges " + removedEdges);
+        assertTrue(removedEdges.size() == 1);
+
+        E er =removedEdges.iterator().next();
+
+        assertTrue(er.getSource().equals(test.G_BASIC_HUMAN) && er.getTarget().equals(test.G_BASIC_THING));
+
+
+        g.addE(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING);
+        
+        GAction actionTR = new GAction(GActionType.TRANSITIVE_REDUCTION);
+        actionTR.addParameter("target", "CLASSES");
+        
+        int nbEdges = g.getNumberEdges();
+        assertTrue(g.containsEdge(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING));
+        
+        GraphActionExecutor.applyAction(actionTR, g);
+        
+        assertTrue(!g.containsEdge(test.G_BASIC_HUMAN, RDFS.SUBCLASSOF, test.G_BASIC_THING));
+        assertTrue(g.getNumberEdges() == nbEdges-1);        
+    }
+    
+
+    @Test
+    public void transitiveReduction_Instances() throws SLIB_Exception {
+
+        System.out.println("Checking Transitive Reduction of "+RDF.TYPE);
+        Set<E> removedEdges;
+
+        removedEdges = GraphReduction_Transitive.process(g);
+
+        assertTrue(removedEdges.isEmpty());
+
+        URI instanceHuman = f.getURI("http://test/darwin");
+        
+        
+        g.addE(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN);
+        
+        GAction actionTR = new GAction(GActionType.TRANSITIVE_REDUCTION);
+        actionTR.addParameter("target", "INSTANCES");
+        
+        // 1 - without redundancy
+        int nbEdges = g.getNumberEdges();
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN));
+        
+        GraphActionExecutor.applyAction(actionTR, g);
+        
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_HUMAN));
+        assertTrue(g.getNumberEdges() == nbEdges);        
+        
+        
+        // 2 - with a redundancy
+        g.addE(instanceHuman, RDF.TYPE, test.G_BASIC_THING);
+        nbEdges = g.getNumberEdges();
+        
+        assertTrue(g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_THING));
+        GraphActionExecutor.applyAction(actionTR, g);
+        assertTrue(!g.containsEdge(instanceHuman, RDF.TYPE, test.G_BASIC_THING));
+        assertTrue(g.getNumberEdges() == nbEdges-1);      
+    }
+    
     /**
      *
      * @throws SLIB_Exception
@@ -134,7 +215,7 @@ public class Test_GraphReduction_Transitive {
 
         System.out.println(g.toString());
 
-        URI root_uri = SLIBVOC.THING_OWL;
+        URI root_uri = OWL.THING;
 
         RooterDAG.rootUnderlyingTaxonomicDAG(g, root_uri);
 

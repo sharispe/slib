@@ -2,7 +2,7 @@ package test;
 
 /*
  * 
- * Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
+ * Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  * LGI2P research center
  * This software is governed by the CeCILL  license under French law and
  * abiding by the rules of distribution of free software.  You can  use, 
@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.impl.MatrixDouble;
 
 /**
- * @author Harispe Sébastien
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class TestGroupwiseIndirectMeasures {
 
@@ -93,14 +93,14 @@ public class TestGroupwiseIndirectMeasures {
      */
     private void loadDATA() {
 
-        s1_A = factory.createURI("http://graph/s1_A");
-        s1_B = factory.createURI("http://graph/s1_B");
-        s1_C = factory.createURI("http://graph/s1_C");
-        s1_D = factory.createURI("http://graph/s1_D");
+        s1_A = factory.getURI("http://graph/s1_A");
+        s1_B = factory.getURI("http://graph/s1_B");
+        s1_C = factory.getURI("http://graph/s1_C");
+        s1_D = factory.getURI("http://graph/s1_D");
 
-        s2_A = factory.createURI("http://graph/s2_A");
-        s2_B = factory.createURI("http://graph/s2_B");
-        s2_C = factory.createURI("http://graph/s2_C");
+        s2_A = factory.getURI("http://graph/s2_A");
+        s2_B = factory.getURI("http://graph/s2_B");
+        s2_C = factory.getURI("http://graph/s2_C");
 
         setA = new HashSet<URI>();
         setB = new HashSet<URI>();

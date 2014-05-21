@@ -1,40 +1,40 @@
-/*
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
 
- Copyright or © or Copr. Ecole des Mines d'Alès (2012) 
-
- This software is a computer program whose purpose is to 
- process semantic graphs.
-
- This software is governed by the CeCILL  license under French law and
- abiding by the rules of distribution of free software.  You can  use, 
- modify and/ or redistribute the software under the terms of the CeCILL
- license as circulated by CEA, CNRS and INRIA at the following URL
- "http://www.cecill.info". 
-
- As a counterpart to the access to the source code and  rights to copy,
- modify and redistribute granted by the license, users are provided only
- with a limited warranty  and the software's author,  the holder of the
- economic rights,  and the successive licensors  have only  limited
- liability. 
-
- In this respect, the user's attention is drawn to the risks associated
- with loading,  using,  modifying and/or developing or reproducing the
- software by the user in light of its specific status of free software,
- that may mean  that it is complicated to manipulate,  and  that  also
- therefore means  that it is reserved for developers  and  experienced
- professionals having in-depth computer knowledge. Users are therefore
- encouraged to load and test the software's suitability as regards their
- requirements in conditions enabling the security of their systems and/or 
- data to be ensured and,  more generally, to use and operate it in the 
- same conditions as regards security. 
-
- The fact that you are presently reading this means that you have had
- knowledge of the CeCILL license and that you accept its terms.
-
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sml.sm.core.engine;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,6 +63,7 @@ import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.graph.utils.Direction;
 import slib.sglib.model.graph.utils.WalkConstraint;
 import slib.sglib.model.graph.weight.GWS;
+import slib.sglib.model.impl.graph.weight.GWS_impl;
 import slib.sglib.utils.WalkConstraintUtils;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
@@ -85,8 +86,8 @@ import slib.utils.impl.MatrixDouble;
 import slib.utils.impl.SetUtils;
 
 /**
- * This class defines a Semantic Measures Engine giving access to numerous
- * methods commonly used to define graph-based semantic measures.
+ * This class defines a Semantic Measures Engine which gives access to several
+ * methods commonly used to define ontology-based semantic measures.
  * <br/>
  * The engine distinguished two types of vertices in the graph:
  * <ul>
@@ -132,7 +133,7 @@ import slib.utils.impl.SetUtils;
  * The engine stores commonly accessed results (e.g. ancestors of a class) which
  * can lead to high memory consumption dealing with large graphs.
  *
- * @author Harispe Sébastien
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class SM_Engine {
 
@@ -165,27 +166,32 @@ public class SM_Engine {
      *
      * The engine creation is expensive, avoid useless calls to the constructor.
      * Indeed, some information such as classes and instances of the graph are
-     * computed at engine creation which could lead to performance issues
-     * dealing with large graph.
+     * computed at engine creation which can lead to performance issues dealing
+     * with large graphs.
      *
      * @param g the graph associated to the engine.
      * @throws SLIB_Ex_Critic
      */
-    public SM_Engine(G g) throws SLIB_Ex_Critic {
+    public SM_Engine(final G g) throws SLIB_Ex_Critic {
 
         this.graph = g;
 
-        logger.info("---------------------------------------------------------------");
+        logger.info("================================================================");
         logger.info("Loading Semantic Measures Engine for graph " + graph.getURI());
-        logger.info("---------------------------------------------------------------");
+        logger.info("================================================================");
+        logger.info("Graph Info: ");
         logger.info(g.toString());
 
         ancGetter = new AncestorEngine(graph);
         descGetter = new DescendantEngine(graph);
 
-        logger.info("Computing classes");
+        logger.info("---------------------------------------------------------------");
+        logger.info("Pre-processing");
+        logger.info("---------------------------------------------------------------");
+        logger.info("Computing classes...");
         classes = GraphAccessor.getClasses(graph);
-        logger.info("Computing instances");
+
+        logger.info("Computing instances...");
         instances = GraphAccessor.getInstances(graph);
 
         logger.info("Classes  : " + classes.size());
@@ -199,17 +205,20 @@ public class SM_Engine {
 
         lcaFinder = new LCAFinderImpl(this);
 
+        logger.info("---------------------------------------------------------------");
         logger.info("Inferences ");
         logger.info("---------------------------------------------------------------");
 
-        logger.info("Inferring ancestors");
+        logger.info("Inferring ancestors...");
         computeAllclassesAncestors();
-        logger.info("Inferring descendants");
+        logger.info("Inferring descendants...");
         computeAllclassesDescendants();
-        logger.info("Inferring Conceptual Leaves");
+        logger.info("Inferring Conceptual Leaves...");
         computeLeaves();
-        logger.info("Semantic measures Engine initialized");
         logger.info("---------------------------------------------------------------");
+
+        logger.info("Engine initialized");
+        logger.info("================================================================");
     }
 
     /**
@@ -239,8 +248,6 @@ public class SM_Engine {
      *
      * @param setClasses the set of classes considered
      * @return the union of the inclusive ancestors of the given classes
-     * @throws IllegalAccessException if the given set contains an URI which
-     * cannot be associated to a class
      */
     public Set<URI> getAncestorsInc(Set<URI> setClasses) {
 
@@ -262,8 +269,6 @@ public class SM_Engine {
      *
      * @param v the considered class
      * @return the set of inclusive ancestors of the given class (v included)
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public Set<URI> getAncestorsInc(URI v) {
 
@@ -279,8 +284,6 @@ public class SM_Engine {
      *
      * @param v the considered class
      * @return the set of inclusive descendants of the given class (v included)
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public synchronized Set<URI> getDescendantsInc(URI v) {
         throwErrorIfNotClass(v);
@@ -300,8 +303,6 @@ public class SM_Engine {
      *
      * @param v the focus vertex
      * @return the set of parents of the given vertex
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public Set<URI> getParents(URI v) {
 
@@ -352,8 +353,6 @@ public class SM_Engine {
      * @param v the class
      * @return the information content of the specified class according to the
      * specified configuration.
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      * @throws SLIB_Exception
      *
      */
@@ -384,7 +383,7 @@ public class SM_Engine {
         if (cache.maxDepth == null) {
             cache.maxDepth = Collections.max(getMaxDepths().values());
         }
-        return cache.maxDepth.intValue();
+        return cache.maxDepth;
     }
 
     /**
@@ -393,6 +392,7 @@ public class SM_Engine {
      * multiple roots.
      *
      * @return the class corresponding to the root.
+     * @throws slib.utils.ex.SLIB_Ex_Critic
      */
     public synchronized URI getRoot() throws SLIB_Ex_Critic {
         if (root == null) {
@@ -414,8 +414,6 @@ public class SM_Engine {
      * classes.
      * @throws SLIB_Exception if no common ancestor is found between the two
      * classes
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * a class
      */
     public double getIC_MICA(ICconf icConf, URI a, URI b) throws SLIB_Exception {
 
@@ -439,8 +437,6 @@ public class SM_Engine {
      * @return the most informative common ancestor of the two classes.
      * @throws SLIB_Exception if no common ancestor is found between the two
      * classes
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * a class
      */
     public URI getMICA(ICconf icConf, URI a, URI b) throws SLIB_Exception {
 
@@ -498,7 +494,6 @@ public class SM_Engine {
      */
     public Map<URI, Double> getIC_results(ICconf icConf) throws SLIB_Ex_Critic {
 
-
         if (!cache.metrics_results.containsKey(icConf)) {
             cache.metrics_results.put(icConf, computeIC(icConf));
         }
@@ -520,7 +515,6 @@ public class SM_Engine {
         } else if (cache.metrics_results.get(icConf) != null) {
             return Collections.unmodifiableMap(cache.metrics_results.get(icConf));
         }
-
 
         logger.info("---------------------------------------------------------------");
         logger.info("computing IC " + icConf.getId());
@@ -564,9 +558,21 @@ public class SM_Engine {
                 }
             }
 
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (IllegalAccessException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (InstantiationException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (NoSuchMethodException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (SecurityException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (InvocationTargetException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         logger.info("ic " + icConf.getLabel() + " computed");
@@ -596,6 +602,7 @@ public class SM_Engine {
      * leaves. The result is cached for fast access.
      *
      *
+     * @param uri
      * @return the subsumed leaves for each classes
      */
     public synchronized Set<URI> getReachableLeaves(URI uri) {
@@ -633,7 +640,6 @@ public class SM_Engine {
             }
         }
 
-
         logger.info("Computing Nb Reachable Leaves : end");
 
         return Collections.unmodifiableMap(cache.allNbReachableLeaves);
@@ -666,9 +672,6 @@ public class SM_Engine {
      * @return the pairwise semantic measure score
      *
      * @throws SLIB_Ex_Critic
-     *
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * classes defined in the graph
      */
     public double computePairwiseSim(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
 
@@ -696,9 +699,8 @@ public class SM_Engine {
                     } else {
 
                         Class<?> cl;
-                        cl = Class.forName(pairwiseConf.className);
+                        cl = Class.forName(pairwiseConf.getClassName());
                         Constructor<?> co = cl.getConstructor();
-
 
                         pMeasure = (Sim_Pairwise) co.newInstance();
                         pairwiseMeasures.put(pairwiseConf, pMeasure);
@@ -706,14 +708,11 @@ public class SM_Engine {
                 }
                 sim = pMeasure.sim(a, b, this, pairwiseConf);
 
-
-
                 if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                     SMutils.throwArithmeticCriticalException(pairwiseConf, a, b, sim);
                 }
 
                 // Caching 
-
                 if (cachePairwiseResults) {
 
                     if (cache.pairwise_results.get(pairwiseConf) == null) {
@@ -730,10 +729,21 @@ public class SM_Engine {
                     cache.pairwise_results.get(pairwiseConf).get(a).put(b, sim);
                 }
             }
-        } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                e.printStackTrace();
-            }
+        } catch (ClassNotFoundException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (IllegalAccessException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (IllegalArgumentException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (InstantiationException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (NoSuchMethodException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (SecurityException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (InvocationTargetException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e);
         }
         return sim;
@@ -749,20 +759,19 @@ public class SM_Engine {
      * @return the group wise semantic measure score
      *
      * @throws SLIB_Ex_Critic
-     *
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * classes defined in the graph
      */
     public double computeGroupwiseStandaloneSim(
             SMconf confGroupwise,
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
 
+        throwErrorIfNullOrEmpty(setA);
+        throwErrorIfNullOrEmpty(setB);
+
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
 
         double sim = -Double.MAX_VALUE;
-
 
         try {
 
@@ -774,7 +783,7 @@ public class SM_Engine {
                     gMeasure = groupwiseStandaloneMeasures.get(confGroupwise);
                 } else {
                     Class<?> cl;
-                    String groupwiseClassName = confGroupwise.className;
+                    String groupwiseClassName = confGroupwise.getClassName();
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
@@ -784,8 +793,21 @@ public class SM_Engine {
             }
             sim = gMeasure.sim(setA, setB, this, confGroupwise);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (IllegalAccessException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (InstantiationException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (NoSuchMethodException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (SecurityException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (InvocationTargetException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        } catch (SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         return sim;
@@ -802,15 +824,15 @@ public class SM_Engine {
      * @return the group wise semantic measure score
      *
      * @throws SLIB_Ex_Critic
-     *
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * classes defined in the graph
      */
     public double computeGroupwiseAddOnSim(
             SMconf confGroupwise,
             SMconf confPairwise,
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
+
+        throwErrorIfNullOrEmpty(setA);
+        throwErrorIfNullOrEmpty(setB);
 
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
@@ -826,7 +848,7 @@ public class SM_Engine {
                     gMeasure = groupwiseAddOnMeasures.get(confGroupwise);
                 } else {
                     Class<?> cl;
-                    String groupwiseClassName = confGroupwise.className;
+                    String groupwiseClassName = confGroupwise.getClassName();
                     cl = Class.forName(groupwiseClassName);
                     Constructor<?> co = cl.getConstructor();
 
@@ -835,13 +857,23 @@ public class SM_Engine {
                 }
             }
 
-
             sim = gMeasure.sim(setA, setB, this, confGroupwise, confPairwise);
 
-        } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                e.printStackTrace();
-            }
+        } catch (ClassNotFoundException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (IllegalAccessException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (IllegalArgumentException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (InstantiationException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (NoSuchMethodException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (SecurityException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (InvocationTargetException e) {
+            throw new SLIB_Ex_Critic(e);
+        } catch (SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e);
         }
 
@@ -863,26 +895,36 @@ public class SM_Engine {
     }
 
     /**
+     * Computes the number of instances which is associated to all the classes
+     * which are defined in the graph (with inferences). This methods considers
+     * the inferences induced by the transitivity of the rdfs:subClassOf
+     * predicate. Therefore, if i is an instance of the class B and B is a
+     * subclass of A it is also considered that i is an instance of A. Instances
+     * of a class are detected according to the predicate rdf:type. for all i in
+     * I(X) exists a statement (i rdf:type X).
      *
-     * @return for each class, the number of instances of the class (propagated,
-     * i.e. if iA is of class B and B is a subclass of A the iA is an instance
-     * of A)
-     * @param addAnInstanceToEachTerminalClass if true, each class which doesn't subsumes any other classes is assumed to have an instance which is only an instance of this class (without considering inference).
-     * This is to ensure that the number of instances increases according to the partial ordering (this is required to ensure coherency of Resnik's Information Content)
+     * @param addAnInstanceToEachTerminalClass if true, each class which doesn't
+     * subsumes any other classes is assumed to have an instance which is only
+     * an instance of this class (without considering inference). This can be
+     * required to ensure that the number of instances associated to a class is
+     * never equal to 0.
+     *
+     * @return A Map which contains an entry for each class with the number of
+     * instances of the class (with inference)
      */
     public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) {
 
-        Map<URI, Set<URI>> linkedEntities = new HashMap<URI, Set<URI>>();
+        Map<URI, Set<URI>> instancesOfClasses = new HashMap<URI, Set<URI>>();
 
         for (URI i : instances) {
-            Set<URI> annots = graph.getV(i, RDF.TYPE, Direction.OUT);
+            Set<URI> directClassOfi = graph.getV(i, RDF.TYPE, Direction.OUT);
 
-            if (annots != null) {
-                for (URI c : annots) {
-                    if (linkedEntities.get(c) == null) {
-                        linkedEntities.put(c, new HashSet<URI>());
+            if (directClassOfi != null) {
+                for (URI c : directClassOfi) {
+                    if (instancesOfClasses.get(c) == null) {
+                        instancesOfClasses.put(c, new HashSet<URI>());
                     }
-                    linkedEntities.get(c).add(i);
+                    instancesOfClasses.get(c).add(i);
                 }
             }
 
@@ -894,35 +936,35 @@ public class SM_Engine {
         DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(ancGetter.getWalkConstraint(), (false)));
         List<URI> topoOrdering = dfs.getTraversalOrder();
 
-
         Map<URI, Integer> rStack = new HashMap<URI, Integer>();
 
         // initialize data structure && add virtual instance if required
-        URI c;
-        for (int i = 0; i < topoOrdering.size(); i++) {
-            c = topoOrdering.get(i);
-            if (linkedEntities.get(c) == null) {
-                linkedEntities.put(c, new HashSet<URI>());
+        for (URI c : topoOrdering) {
+
+            if (instancesOfClasses.get(c) == null) {
+                instancesOfClasses.put(c, new HashSet<URI>());
             }
-            // this is a trick is an instance must be added to each terminal class we add the corresponding class as instance
-            if(addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()){
-                linkedEntities.get(c).add(c);
+            // this is a trick : if an instance must be added to each terminal class 
+            // we add the corresponding class as instance (onlu counts matters at the end)
+            if (addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()) {
+                instancesOfClasses.get(c).add(c);
             }
         }
 
-        for (int i = 0; i < topoOrdering.size(); i++) {
-
-            c = topoOrdering.get(i);
-            Set<URI> entities = linkedEntities.get(c);
-
-            // propagate Linked Entities in a bottom up fashion according the topological order
+        for (URI c : topoOrdering) {
+            Set<URI> instanceOfc = instancesOfClasses.get(c);
+            rStack.put(c, instanceOfc.size());
+            
+            // propagate instances in a bottom up fashion according the topological order
+            // to the instances
+            
             for (E e : graph.getE(c, ancGetter.getWalkConstraint())) {
-                if (!entities.isEmpty()) {
-                    linkedEntities.get(e.getTarget()).addAll(entities);
+                
+                // we perform the union if the c contains instances
+                if (!instanceOfc.isEmpty()) {
+                    instancesOfClasses.get(e.getTarget()).addAll(instanceOfc);
                 }
             }
-
-            rStack.put(c, entities.size());
         }
         cache.nbOccurrencePropagatted = rStack;
 
@@ -967,8 +1009,6 @@ public class SM_Engine {
      *
      * @return the matrix filled with the scores.
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URIs cannot be associated to
-     * a class
      */
     public MatrixDouble<URI, URI> getMatrixScore(
             Set<URI> setA,
@@ -1081,7 +1121,7 @@ public class SM_Engine {
      * @return the weighting scheme associated to the string.
      */
     public GWS getWeightingScheme(String param) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        return new GWS_impl(1);
     }
 
     public AncestorEngine getAncestorEngine() {
@@ -1132,7 +1172,7 @@ public class SM_Engine {
             // Search a example of URI which cannnot be associated to a class
             String ex = null;
             for (URI ce : c) {
-                if (!c.contains(ce)) {
+                if (!classes.contains(ce)) {
                     ex = ce.toString();
                     break;
                 }
@@ -1141,25 +1181,38 @@ public class SM_Engine {
         }
     }
 
+    private void throwErrorIfNullOrEmpty(Set<URI> set) {
+        if (set == null) {
+            throw new IllegalArgumentException("Error the given set equals nul...");
+        } else if (set.isEmpty()) {
+            throw new IllegalArgumentException("Error the given set is empty...");
+        }
+    }
+
     /**
      * CACHED ! Be careful modification of RelTypes requires cache clearing
      *
      * @param a
      * @param b
+     * @param weightingScheme
      * @return the shortest path between the two classes considering the given
      * weighting scheme.
      * @throws SLIB_Ex_Critic
      */
     public double getShortestPath(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
-        if (cache.shortestPath.get(a) == null) {
+        if (cache.shortestPath.get(a) == null || cache.shortestPath.get(a).get(b) == null) {
+
+            if (cache.shortestPath.get(a) == null) {
+                cache.shortestPath.put(a, new ConcurrentHashMap<URI, Double>());
+            }
 
             WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
             wc.addWalkconstraints(descGetter.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
-            ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
-            cache.shortestPath.put(a, minDists_cA);
+            double sp = dijkstra.shortestPath(a, b);
+            cache.shortestPath.get(a).put(b, sp);
         }
         return cache.shortestPath.get(a).get(b);
     }
@@ -1169,10 +1222,9 @@ public class SM_Engine {
      *
      * @param a
      * @param b
+     * @param weightingScheme
      * @return the URI associated to the Most Specific Ancestor.
      * @throws SLIB_Ex_Critic
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public URI getMSA(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
@@ -1187,6 +1239,7 @@ public class SM_Engine {
      * CACHED
      *
      * @param a
+     * @param weightingScheme
      * @return a map containing the weight of the shortest path linking a the
      * given vertex.
      *
@@ -1214,8 +1267,6 @@ public class SM_Engine {
      * @param b
      * @return the probability of occurrence associated to the MICA.
      * @throws SLIB_Exception
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public double getP_MICA(ICconf conf, URI a, URI b) throws SLIB_Exception {
 
@@ -1230,8 +1281,6 @@ public class SM_Engine {
      * @param b
      * @return all subclasses of the superclass, of the given classes, which are
      * not shared.
-     * @throws IllegalAccessException if the given URI cannot be associated to a
-     * class
      */
     public Set<URI> getHypoAncEx(URI a, URI b) {
 

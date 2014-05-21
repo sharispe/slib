@@ -1,6 +1,35 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
+ *  
+ *  This software is a computer program whose purpose is to provide 
+ *  several functionalities for the processing of semantic data 
+ *  sources such as ontologies or text corpora.
+ *  
+ *  This software is governed by the CeCILL  license under French law and
+ *  abiding by the rules of distribution of free software.  You can  use, 
+ *  modify and/ or redistribute the software under the terms of the CeCILL
+ *  license as circulated by CEA, CNRS and INRIA at the following URL
+ *  "http://www.cecill.info". 
+ * 
+ *  As a counterpart to the access to the source code and  rights to copy,
+ *  modify and redistribute granted by the license, users are provided only
+ *  with a limited warranty  and the software's author,  the holder of the
+ *  economic rights,  and the successive licensors  have only  limited
+ *  liability. 
+
+ *  In this respect, the user's attention is drawn to the risks associated
+ *  with loading,  using,  modifying and/or developing or reproducing the
+ *  software by the user in light of its specific status of free software,
+ *  that may mean  that it is complicated to manipulate,  and  that  also
+ *  therefore means  that it is reserved for developers  and  experienced
+ *  professionals having in-depth computer knowledge. Users are therefore
+ *  encouraged to load and test the software's suitability as regards their
+ *  requirements in conditions enabling the security of their systems and/or 
+ *  data to be ensured and,  more generally, to use and operate it in the 
+ *  same conditions as regards security. 
+ * 
+ *  The fact that you are presently reading this means that you have had
+ *  knowledge of the CeCILL license and that you accept its terms.
  */
 package slib.sglib.io.loader.wordnet;
 
@@ -25,11 +54,10 @@ import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
- * @author Harispe Sébastien <harispe.sebastien@gmail.com>
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class GraphLoader_Wordnet implements GraphLoader {
 
@@ -93,7 +121,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
                 String lex_filenum = data[1];
                 String ss_type = data[2];
 
-                URI synset = dataRepo.createURI(uriPrefix + synset_offset);
+                URI synset = dataRepo.getURI(uriPrefix + synset_offset);
                 graph.addV(synset);
                 
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
@@ -119,8 +147,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
 //                        logger.info("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
 
-                        URI s = dataRepo.createURI(uriPrefix + synset_offset);
-                        URI o = dataRepo.createURI(uriPrefix + p.synsetOffset);
+                        URI s = dataRepo.getURI(uriPrefix + synset_offset);
+                        URI o = dataRepo.getURI(uriPrefix + p.synsetOffset);
 
                         graph.addV(s);
                         graph.addV(o);
@@ -133,7 +161,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
 
                     } else {
-                        logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
+                       //logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
                     }
                 }
             }
@@ -229,6 +257,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
             this.pos = pos;
         }
 
+        @Override
         public String toString() {
             return "symbol: " + this.pointerSymbol + "  "
                     + "synsetOffset: " + this.synsetOffset + "  "
@@ -249,7 +278,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
         public E createEdge(URI srcPointer, URI targetPointer) {
 
-            E e = null;
+            E e;
             if (fromSourceToTarget) {
                 e = new Edge(srcPointer, rel, targetPointer);
             } else {
@@ -257,35 +286,5 @@ public class GraphLoader_Wordnet implements GraphLoader {
             }
             return e;
         }
-    }
-
-    /**
-     *
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) throws Exception {
-
-
-        URI guri = URIFactoryMemory.getSingleton().createURI("http://graph/wordnet/");
-        G g = new GraphMemory(guri);
-
-        GraphLoader_Wordnet loader = new GraphLoader_Wordnet();
-
-        String dataloc = "/data/WordNet-3.0/dict/";
-        String data_noun = dataloc + "data.noun";
-        String data_verb = dataloc + "data.verb";
-        String data_adj = dataloc + "data.adj";
-        String data_adv = dataloc + "data.adv";
-
-        GDataConf dataNoun = new GDataConf(GFormat.WORDNET_DATA, data_noun);
-//        GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, data_verb);
-//        GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, data_adj);
-//        GDataConf dataAdv = new GDataConf(GFormat.WORDNET_DATA, data_adv);
-
-        loader.populate(dataNoun, g);
-//        loader.populate(dataVerb, g);
-//        loader.populate(dataAdj, g);
-//        loader.populate(dataAdv, g);
     }
 }
