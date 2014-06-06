@@ -103,9 +103,6 @@ public class ValidatorDAG {
 
         for (URI rootUri : startingURIs) {
 
-
-
-
             if (!graph.containsVertex(rootUri)) {
                 throw new SLIB_Ex_Critic("Vertex '" + rootUri + "' not found in " + graph.getURI());
             }
