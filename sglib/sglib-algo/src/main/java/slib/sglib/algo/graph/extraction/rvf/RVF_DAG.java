@@ -195,6 +195,16 @@ public class RVF_DAG extends RVF {
      * if p is an accepted predicate if a node i is only involved in a
      * relationship i p i, it will be considered has a leave.
      *
+     * It is important to stress that only nodes involved in the considered
+     * relationships will be considered. Therefore if the RVF is set to
+     * rdfs:subClassOf out all nodes which are not associated to an
+     * rdfs:subClassOf relationship will not be processed (even if they are
+     * associated to rdf:type relationships). This is important for instance if
+     * you use such a method to find all the leaves which are subsumed by a
+     * specific class. In this case if the DAF is not rooted you can have
+     * isolated class (which does not have ancestors or descendants) which are
+     * not considered in the results provided by this method.
+     *
      * @return the leaves for each vertices
      */
     public Map<URI, Set<URI>> getTerminalVertices() {
@@ -227,7 +237,6 @@ public class RVF_DAG extends RVF {
             }
 
 //            logger.debug(v + "\t in " + inDegree + "\t" + g.getE(wc.getAcceptedPredicates(), v, Direction.IN));
-
             inDegrees.put(v, inDegree);
             inDegreesDone.put(v, 0);
 
@@ -265,6 +274,8 @@ public class RVF_DAG extends RVF {
                     queue.add(target);
                 }
             }
+
+            //logger.debug(v+"\t-- "+allReachableLeaves.get(v));
         }
         return allReachableLeaves;
     }
