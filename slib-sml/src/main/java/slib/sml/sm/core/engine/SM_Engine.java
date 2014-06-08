@@ -43,11 +43,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Handler;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.html.HTMLBaseElement;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
@@ -591,7 +593,22 @@ public class SM_Engine {
     public synchronized Map<URI, Set<URI>> getReachableLeaves() {
 
         if (cache.reachableLeaves.isEmpty()) {
-            cache.reachableLeaves = descGetter.getTerminalVertices();
+
+            Map<URI, Set<URI>> leaves = descGetter.getTerminalVertices();
+            /* according to the documentation of the method used above, 
+             if there are classes which are isolated (which do not establish rdfs:subClassOf in this case),
+             the algorithm will not process them and them will not be associated to an entry in the returned map.
+             We therefore add this classes in the result map.
+             */
+            for (URI c : classes) {
+                if (!leaves.containsKey(c)) {
+                    Set<URI> s = new HashSet<URI>();
+                    s.add(c);
+                    leaves.put(c, s);
+                }
+            }
+
+            cache.reachableLeaves = leaves;
         }
         return Collections.unmodifiableMap(cache.reachableLeaves);
     }
@@ -625,8 +642,9 @@ public class SM_Engine {
      *
      *
      * @return the number subsumed leaves for each classes
+     * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public synchronized Map<URI, Integer> getAllNbReachableLeaves() {
+    public synchronized Map<URI, Integer> getAllNbReachableLeaves() throws SLIB_Ex_Critic {
 
         logger.info("Computing Nb Reachable Leaves : start");
 
@@ -636,6 +654,10 @@ public class SM_Engine {
             cache.allNbReachableLeaves = new HashMap<URI, Integer>();
 
             for (URI c : classes) {
+
+                if (!allReachableLeaves.containsKey(c)) { // this must never occurs
+                    throw new SLIB_Ex_Critic("Cannot found the number of leaves associated to concept " + c + " - this is abnormal and notify that their is an incoherency in the treatment, please notify this error to the development team");
+                }
                 cache.allNbReachableLeaves.put(c, allReachableLeaves.get(c).size());
             }
         }
@@ -954,12 +976,11 @@ public class SM_Engine {
         for (URI c : topoOrdering) {
             Set<URI> instanceOfc = instancesOfClasses.get(c);
             rStack.put(c, instanceOfc.size());
-            
+
             // propagate instances in a bottom up fashion according the topological order
             // to the instances
-            
             for (E e : graph.getE(c, ancGetter.getWalkConstraint())) {
-                
+
                 // we perform the union if the c contains instances
                 if (!instanceOfc.isEmpty()) {
                     instancesOfClasses.get(e.getTarget()).addAll(instanceOfc);
