@@ -419,11 +419,20 @@ public class GraphActionExecutor {
      */
     private static void transitive_reduction(GAction action, G g) throws SLIB_Ex_Critic {
 
-        String[] targets = ((String) action.getParameter("target")).split(",");
+        String[] targets;
 
         logger.info("-------------------------------------");
         logger.info("Transitive Reduction");
         logger.info("-------------------------------------");
+
+        if (!action.existsParam("target")) {
+            targets = new String[1];
+            targets[0] = "RDFS:SUBCLASSOF";
+        }
+        else{
+            targets = ((String) action.getParameter("target")).split(",");
+        }
+
         logger.info("Targets: " + Arrays.toString(targets));
 
         String[] admittedTarget_CLASSES = {"CLASSES", "RDFS:SUBCLASSOF", "RDFS.SUBCLASSOF"};
@@ -538,7 +547,7 @@ public class GraphActionExecutor {
      * IMPORTANT: If modified, this documentation must also be modified in the
      * class GActionType.
      * -------------------------------------------------------------------
-     * 
+     *
      * parameters expected:
      * <ul>
      * <li>old_uri: the URI predicate to replace</li>
