@@ -93,6 +93,7 @@ public class WordnetExample {
         GAction addRoot = new GAction(GActionType.REROOTING);
         GraphActionExecutor.applyAction(addRoot, wordnet);
 
+        // This is optional. It just shows which are the synsets which are not subsumed
         ValidatorDAG validatorDAG = new ValidatorDAG();
         Set<URI> roots = validatorDAG.getTaxonomicRoots(wordnet);
         System.out.println("Roots: " + roots);
