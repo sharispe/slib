@@ -1,0 +1,13 @@
+digraph test {
+rankdir = BT;
+ Mammal ->  Animal ;
+ Reptile ->  Animal ;
+ Human ->  Mammal ;
+ Cetacean ->  Mammal ;
+ Whale ->  Cetacean ;
+ BlueWhale ->  Whale ;
+ Dolphin ->  Cetacean ;
+ Horse ->  Mammal ;
+ Whale ->  Mammal ;
+ Crocodile ->  Reptile 
+}
