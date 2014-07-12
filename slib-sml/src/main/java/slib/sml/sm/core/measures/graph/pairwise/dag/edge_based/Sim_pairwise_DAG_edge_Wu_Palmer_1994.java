@@ -41,6 +41,7 @@ import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
@@ -93,20 +94,19 @@ public class Sim_pairwise_DAG_edge_Wu_Palmer_1994 extends Sim_DAG_edge_abstract 
 
         double sim = 0;
 
-
         Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
-        if (interSecAncestors.isEmpty()) {
-
+        if (!interSecAncestors.isEmpty()) {
 
             URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
-
 
             int d_mrca = maxDepths.get(msa) + 1;
             double sp_a_mrca = distMin_a.get(msa);
             double sp_b_mrca = distMin_b.get(msa);
 
             sim = (double) (2 * d_mrca) / (sp_a_mrca + sp_b_mrca + 2 * d_mrca);
+        } else {
+            throw new SLIB_Ex_Critic("Error using Wu & Palmer measure. The compared concepts (" + cA + "," + cB + ") do not have a common ancestor... This is required to compute their similarity using this measure. The graph have to be connex, you can root the graph to obtain such a graph.");
         }
 
         return sim;
