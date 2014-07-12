@@ -33,10 +33,16 @@
  */
 package slib.sml.sm.core.measures.graph.pairwise.dag.edge_based;
 
+import java.util.Map;
+import java.util.Set;
 import org.openrdf.model.URI;
+import slib.sglib.model.graph.weight.GWS;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.SetUtils;
 
 /**
  * Implementation of Leacock and Chodorow semantic similarity measure.
@@ -55,12 +61,35 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
     @Override
     public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
-        Sim_pairwise_DAG_edge_Rada_1989 sRada = new Sim_pairwise_DAG_edge_Rada_1989();
+        GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
 
-        double sp = sRada.sim(a, b, c, conf);
+        Set<URI> ancestors_A = c.getAncestorsInc(a);
+        Set<URI> ancestors_B = c.getAncestorsInc(b);
+        Map<URI, Double> distMin_a = c.getAllShortestPath(a, weightingScheme);
+        Map<URI, Double> distMin_b = c.getAllShortestPath(b, weightingScheme);
+        
+        Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
+        Map<URI, Integer> maxDepths = c.getMaxDepths();
+
+        double sp_a_mrca = -1, sp_b_mrca = -1;
+        
+        if (!interSecAncestors.isEmpty()) {
+
+            URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
+
+            sp_a_mrca = distMin_a.get(msa);
+            sp_b_mrca = distMin_b.get(msa);
+
+        } else {
+            throw new SLIB_Ex_Critic("Error using Leacock & Chodorow measure. The compared concepts (" + a + "," + b + ") do not have a common ancestor... This is required to compute their similarity using this measure. The graph have to be connex, you can root the graph to obtain such a graph.");
+        }
+        
+        if(sp_a_mrca == -1 || sp_b_mrca == -1){// must never happend
+            throw new SLIB_Ex_Critic("Error using Leacock & Chodorow measure processing concepts (" + a + "," + b + ")... Impossible to compute the length of shortest path linking the concepts and their most common ancestors.");
+        }
+
+        double sp = sp_a_mrca + sp_b_mrca;
         double maxDepth = c.getMaxDepth();
-
-
 
         return sim(sp, maxDepth);
     }
@@ -68,12 +97,11 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
     /**
      * Compute the semantic similarity considering the given parameters.
      *
-     * @param shortestPath the shortest path between the two concepts.
-     * @param depth_max the maximal depth
+     * @param shortestPath the length of the shortest path between the two concepts.
+     * @param depth_max the maximal depth of the taxonomy
      * @return the semantic similarity
      */
     public double sim(Double shortestPath, double depth_max) {
-
 
         // add +1 to the path to avoid infinity value if sim(a,a)
         double lc = -Math.log((shortestPath + 1) / (2 * depth_max));
