@@ -91,7 +91,7 @@ public class Sim_pairwise_DAG_edge_Rada_LCA_1989 extends Sim_DAG_edge_abstract {
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancestors_A, ancestors_B);
 
-        if (interSecAncestors.isEmpty()) {
+        if (!interSecAncestors.isEmpty()) {
 
             URI msa = SimDagEdgeUtils.searchMSA(interSecAncestors, maxDepths);
             sim = 1 / (minDists_cA.get(msa) + minDists_cB.get(msa) + 1);
