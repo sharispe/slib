@@ -31,7 +31,7 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid;
+package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid.experimental;
 
 import org.openrdf.model.URI;
 
