@@ -38,7 +38,23 @@ package slib.sml.sm.core.measures;
  * 
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface Sim_Groupwise {
+public abstract class Sim_Groupwise implements Measure_Groupwise{
+
+
+    @Override
+    public MType getType() {
+        return MType.SIMILARITY;
+    }
+
+    @Override
+    public Boolean isSymmetric() {
+        return null;
+    }
+
+    @Override
+    public Boolean isNormalized() {
+        return null;
+    }
     
 
 

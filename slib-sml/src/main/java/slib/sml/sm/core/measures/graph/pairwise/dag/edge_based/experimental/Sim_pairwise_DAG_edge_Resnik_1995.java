@@ -46,10 +46,10 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_pairwise_DAG_edge_Resnik_1995 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         Sim_pairwise_DAG_edge_Rada_LCA_1989 simRadaLCA = new Sim_pairwise_DAG_edge_Rada_LCA_1989();
-        double min_path_lca = simRadaLCA.sim(a, b, c, conf);
+        double min_path_lca = simRadaLCA.compare(a, b, c, conf);
         double max_depth = c.getMaxDepth();
 
 
@@ -70,8 +70,4 @@ public class Sim_pairwise_DAG_edge_Resnik_1995 extends Sim_DAG_edge_abstract {
         return resnik;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

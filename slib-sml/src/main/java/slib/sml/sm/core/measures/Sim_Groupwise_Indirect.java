@@ -37,27 +37,23 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * Interface used to represent groupwise measures based on a pairwise measures.
- * Those measures rely on the aggregation of the scores produced by pairwise measures and are therefore considered as indirect in the literature.
- * 
+ * Those measures rely on the aggregation of the scores produced by pairwise
+ * measures and are therefore considered as indirect in the literature.
+ *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface Sim_Groupwise_Indirect extends Sim_Groupwise {
+public abstract class Sim_Groupwise_Indirect extends Sim_Groupwise {
+    
 
-    /**
-     * Compute the similarity between the given sets of concepts considering a particular configuration. 
-     * Note that the specified pairwise configuration must override the pairwise configuration originally specified in the groupwise configuration (if any).
-     * 
-     * @param setA the first set of vertices
-     * @param setB the second set of vertices
-     * @param rc the engine used to access specific information used by the measures
-     * @param groupwiseconf the groupwise configuration.
-     * @param pairwiseConf the pairwise configuration.
-     * @return the semantic similarity of the pair of groups of concepts
-     * @throws SLIB_Exception
-     */
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SLIB_Exception;
+    @Override
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Ex_Critic {
+        return compare(setA, setB, rc, groupwiseconf,(SMconf) groupwiseconf.getParam(MConstant.PAIRWISE_MEASURE));
+    }
+    
+    public abstract double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf, SMconf pairwiseConf) throws SLIB_Ex_Critic;
+
 }

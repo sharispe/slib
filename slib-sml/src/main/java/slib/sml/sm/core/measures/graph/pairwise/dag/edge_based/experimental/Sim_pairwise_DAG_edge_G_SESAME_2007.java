@@ -52,7 +52,7 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
 
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) {
 
         throw new UnsupportedOperationException(Sim_pairwise_DAG_edge_G_SESAME_2007.class + " is not available yet ");
     }
@@ -99,8 +99,4 @@ public class Sim_pairwise_DAG_edge_G_SESAME_2007 extends Sim_DAG_edge_abstract {
         return sim;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

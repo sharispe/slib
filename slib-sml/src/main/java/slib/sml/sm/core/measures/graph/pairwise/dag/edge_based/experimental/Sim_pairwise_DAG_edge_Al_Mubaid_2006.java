@@ -52,7 +52,7 @@ import slib.sml.sm.core.utils.SMconf;
 public abstract class Sim_pairwise_DAG_edge_Al_Mubaid_2006 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) {
         throw new UnsupportedOperationException();
 
     }

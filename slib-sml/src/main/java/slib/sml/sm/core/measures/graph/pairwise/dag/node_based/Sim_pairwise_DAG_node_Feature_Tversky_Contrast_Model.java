@@ -68,7 +68,7 @@ public class Sim_pairwise_DAG_node_Feature_Tversky_Contrast_Model extends Sim_pa
     }
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         if (conf != null && conf.containsParam(gamma_param_name)) {
             gamma = conf.getParamAsDouble(gamma_param_name);

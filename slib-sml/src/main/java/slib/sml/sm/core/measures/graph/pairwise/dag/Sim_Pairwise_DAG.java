@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
@@ -36,11 +36,9 @@ package slib.sml.sm.core.measures.graph.pairwise.dag;
 import slib.sml.sm.core.measures.Sim_Pairwise;
 
 /**
- * Interface of a semantic similarity measure which can be used to compute the
- * semantic similarity of two classes/concepts structured in a Directed Acyclic
- * Graph (DAG).
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface Sim_Pairwise_DAG extends Sim_Pairwise {
+public abstract class Sim_Pairwise_DAG extends Sim_Pairwise implements ISim_Pairwise_DAG {
+
 }

@@ -57,7 +57,7 @@ public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract
 
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) {
 
         Set<URI> hypoAncEx = c.getHypoAncEx(a, b);
         Set<URI> hypoA = c.getDescendantsInc(a);
@@ -78,10 +78,5 @@ public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract
         double sim = -(union - inter);
 
         return sim;
-    }
-
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

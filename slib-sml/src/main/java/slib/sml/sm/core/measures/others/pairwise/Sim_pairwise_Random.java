@@ -46,17 +46,17 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_Random implements Sim_Pairwise {
+public class Sim_pairwise_Random extends Sim_Pairwise {
 
     Random r = new Random();
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
         return r.nextDouble();
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return false;
     }
 }

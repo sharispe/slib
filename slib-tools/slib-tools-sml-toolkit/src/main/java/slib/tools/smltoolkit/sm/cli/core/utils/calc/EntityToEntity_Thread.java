@@ -231,7 +231,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                             throw new SLIB_Ex_Critic("Cannot locate configuration associated to pairwise measure " + pm_id);
                         }
 
-                        sim = sspM.simManager.computeGroupwiseAddOnSim(m, pm_conf, setE1, setE2);
+                        sim = sspM.simManager.compare(m, pm_conf, setE1, setE2);
 
                         tmp_buffer.append("\t").append(sim);
 
@@ -240,7 +240,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                         }
                     } else {
 
-                        sim = sspM.simManager.computeGroupwiseStandaloneSim(m, setE1, setE2);
+                        sim = sspM.simManager.compare(m, setE1, setE2);
 
                         if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                             SMutils.throwArithmeticCriticalException(m, e1, e2, sim);

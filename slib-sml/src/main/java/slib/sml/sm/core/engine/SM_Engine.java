@@ -43,13 +43,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Handler;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDF;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.html.HTMLBaseElement;
 import slib.sglib.algo.graph.accessor.GraphAccessor;
 import slib.sglib.algo.graph.extraction.rvf.AncestorEngine;
 import slib.sglib.algo.graph.extraction.rvf.DescendantEngine;
@@ -695,7 +693,7 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    public double computePairwiseSim(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
+    public double compare(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
 
         throwErrorIfNotClass(a);
         throwErrorIfNotClass(b);
@@ -728,7 +726,7 @@ public class SM_Engine {
                         pairwiseMeasures.put(pairwiseConf, pMeasure);
                     }
                 }
-                sim = pMeasure.sim(a, b, this, pairwiseConf);
+                sim = pMeasure.compare(a, b, this, pairwiseConf);
 
                 if (Double.isNaN(sim) || Double.isInfinite(sim)) {
                     SMutils.throwArithmeticCriticalException(pairwiseConf, a, b, sim);
@@ -782,7 +780,7 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    public double computeGroupwiseStandaloneSim(
+    public double compare(
             SMconf confGroupwise,
             Set<URI> setA,
             Set<URI> setB) throws SLIB_Ex_Critic {
@@ -813,7 +811,7 @@ public class SM_Engine {
                     groupwiseStandaloneMeasures.put(confGroupwise, gMeasure);
                 }
             }
-            sim = gMeasure.sim(setA, setB, this, confGroupwise);
+            sim = gMeasure.compare(setA, setB, this, confGroupwise);
 
         } catch (ClassNotFoundException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
@@ -847,7 +845,7 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    public double computeGroupwiseAddOnSim(
+    public double compare(
             SMconf confGroupwise,
             SMconf confPairwise,
             Set<URI> setA,
@@ -879,7 +877,7 @@ public class SM_Engine {
                 }
             }
 
-            sim = gMeasure.sim(setA, setB, this, confGroupwise, confPairwise);
+            sim = gMeasure.compare(setA, setB, this, confGroupwise, confPairwise);
 
         } catch (ClassNotFoundException e) {
             throw new SLIB_Ex_Critic(e);
@@ -1043,7 +1041,7 @@ public class SM_Engine {
 
         for (URI a : setA) {
             for (URI b : setB) {
-                m.setValue(a, b, computePairwiseSim(pairwiseConf, a, b));
+                m.setValue(a, b, compare(pairwiseConf, a, b));
             }
         }
         return m;

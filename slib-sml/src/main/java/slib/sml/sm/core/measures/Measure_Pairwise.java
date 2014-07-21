@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
@@ -31,15 +31,26 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.others.groupwise.indirect.experimental;
-import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
+package slib.sml.sm.core.measures;
 
+import org.openrdf.model.URI;
+import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.utils.SMconf;
+import slib.utils.ex.SLIB_Exception;
 
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public abstract class Sim_groupwise_general_abstract implements Sim_Groupwise_Indirect{
-	
+public interface Measure_Pairwise extends Measure {
 
+    /*
+     * @param a the first class
+     * @param b the second class
+     * @param c the engine used to access information required by the measures
+     * @param conf the configuration to consider
+     * @return the similarity between the pair of classes.
+     * @throws SLIB_Exception
+     */
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception;
 }

@@ -53,7 +53,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 public class Sim_pairwise_DAG_edge_Pekar_Staab_2002 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Ex_Critic {
 
         GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
         URI msa = c.getMSA(a, b, weightingScheme);
@@ -94,7 +94,7 @@ public class Sim_pairwise_DAG_edge_Pekar_Staab_2002 extends Sim_DAG_edge_abstrac
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

@@ -54,7 +54,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         Set<URI> ancestors_A = c.getAncestorsInc(a);
         Set<URI> ancestors_B = c.getAncestorsInc(b);
@@ -142,10 +142,5 @@ public class Sim_pairwise_DAG_edge_Slimani_2006 extends Sim_DAG_edge_abstract {
         pf = gamma + alpha;
 
         return pf;
-    }
-
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -61,7 +61,7 @@ public class Sim_pairwise_DAG_node_Feature_Tversky_Ratio_Model extends Sim_pairw
     }
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         if (conf != null && conf.containsParam(alpha_param_name)) {
             alpha = conf.getParamAsDouble(alpha_param_name);

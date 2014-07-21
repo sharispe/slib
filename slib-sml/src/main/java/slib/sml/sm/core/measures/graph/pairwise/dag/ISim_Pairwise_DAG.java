@@ -31,66 +31,16 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.graph.framework.dag;
+package slib.sml.sm.core.measures.graph.pairwise.dag;
 
-import java.util.Set;
-import org.openrdf.model.URI;
-
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.impl.SetUtils;
+import slib.sml.sm.core.measures.ISim_Pairwise;
 
 /**
- * Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
- * querying. International Journal of Intelligent Systems 2004, 22:739-761.
+ * Interface of a semantic similarity measure which can be used to compute the
+ * semantic similarity of two classes/concepts structured in a Directed Acyclic
+ * Graph (DAG).
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abstract {
-
-    private double k = 0.5;
-
-    public Sim_Framework_DAG_Set_Knappe_2004() {
-    }
-
-    
-    public Sim_Framework_DAG_Set_Knappe_2004(double k) {
-        if(k < 0 || k > 1){
-            throw new IllegalArgumentException("k parameter must be in [0;1]");
-        }
-        this.k = k;
-    }
-
-    @Override
-    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
-
-        Set<URI> interSecAncestors = SetUtils.intersection(ancA, ancB);
-
-        double nbAncest_a = ancA.size();
-        double nbAncest_b = ancB.size();
-
-        double knappe = (double) k * (interSecAncestors.size() / nbAncest_a) + (1 - k) * (interSecAncestors.size() / nbAncest_b);
-
-        return knappe;
-    }
-
-    /**
-     *
-     * @return k parameter
-     */
-    public double getK() {
-        return k;
-    }
-
-    /**
-     *
-     * @param k
-     */
-    public void setK(double k) {
-        this.k = k;
-    }
-    
-    @Override
-    public Boolean isSymmetric() {
-        return k == 0.5;
-    }
+public interface ISim_Pairwise_DAG extends ISim_Pairwise {
 }

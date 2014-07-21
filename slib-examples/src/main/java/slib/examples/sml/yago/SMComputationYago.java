@@ -121,7 +121,7 @@ public class SMComputationYago {
         SM_Engine engine = new SM_Engine(g);
 
 
-        double sim = engine.computePairwiseSim(smConf, wikiRugbyFoorballerURI, WordnetSoccerPlayerURI);
+        double sim = engine.compare(smConf, wikiRugbyFoorballerURI, WordnetSoccerPlayerURI);
         System.out.println("Similarity: " + sim);
 
         /* 
@@ -146,7 +146,7 @@ public class SMComputationYago {
             c1 = listVertices.get(id1);
             c2 = listVertices.get(id2);
 
-            sim = engine.computePairwiseSim(smConf, c1, c2);
+            sim = engine.compare(smConf, c1, c2);
 
             if ((i + 1) % 1000 == 0) {
                 idC1 = c1.getLocalName();

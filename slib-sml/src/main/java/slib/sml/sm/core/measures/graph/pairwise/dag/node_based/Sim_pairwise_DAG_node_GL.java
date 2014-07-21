@@ -48,13 +48,13 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_GL extends Sim_DAG_node_abstract {
 
     public static final String beta_param_name = "beta";
     private double beta = 0.;
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         ICconf icConf = conf.getICconf();
 
@@ -84,7 +84,7 @@ public class Sim_pairwise_DAG_node_GL implements Sim_DAG_node_abstract {
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

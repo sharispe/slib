@@ -33,31 +33,10 @@
  */
 package slib.sml.sm.core.measures;
 
-import java.util.Set;
-import org.openrdf.model.URI;
-import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Exception;
-
 /**
  * Interface used to represent direct groupwise measures. Those measures do not
  * rely on a pairwise measure to compute the likeness of two group of concepts.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface Sim_Groupwise_Direct extends Sim_Groupwise {
-
-    /**
-     * Compute the similarity between the given sets of concepts considering a
-     * particular configuration.
-     *
-     * @param setA the first set of vertices
-     * @param setB the second set of vertices
-     * @param rc the engine used to access specific information used by the
-     * measures
-     * @param groupwiseconf the groupwise configuration.
-     * @return the semantic similarity of the pair of groups of concepts
-     * @throws SLIB_Exception
-     */
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception;
-}
+public abstract class Sim_Groupwise_Direct extends Sim_Groupwise {}

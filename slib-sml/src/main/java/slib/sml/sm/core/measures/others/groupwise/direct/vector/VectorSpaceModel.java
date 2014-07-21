@@ -46,11 +46,11 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class VectorSpaceModel implements Sim_Groupwise_Direct {
+public class VectorSpaceModel extends Sim_Groupwise_Direct {
 
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception {
 
         Map<URI, Double> v1 = rc.getVector(setA, groupwiseconf);
         Map<URI, Double> v2 = rc.getVector(setB, groupwiseconf);

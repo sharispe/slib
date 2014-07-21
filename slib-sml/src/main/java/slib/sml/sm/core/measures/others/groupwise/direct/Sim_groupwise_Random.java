@@ -46,12 +46,12 @@ import slib.utils.ex.SLIB_Exception;
  * Random measure (used for test)
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_groupwise_Random implements Sim_Groupwise_Direct {
+public class Sim_groupwise_Random extends Sim_Groupwise_Direct {
 
     Random r = new Random();
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf)
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf)
             throws SLIB_Exception {
 
         return r.nextDouble();

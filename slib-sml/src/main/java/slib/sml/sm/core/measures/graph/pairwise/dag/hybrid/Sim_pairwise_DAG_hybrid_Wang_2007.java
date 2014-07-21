@@ -31,66 +31,27 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.graph.framework.dag;
+package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid;
 
-import java.util.Set;
 import org.openrdf.model.URI;
 
+import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.impl.SetUtils;
+import slib.utils.ex.SLIB_Exception;
 
 /**
- * Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
- * querying. International Journal of Intelligent Systems 2004, 22:739-761.
- *
+ * ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to measure the semantic similarity of GO terms. 
+ * Bioinformatics (Oxford, England) 2007, 23:1274-81.
+ * 
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ *
  */
-public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abstract {
-
-    private double k = 0.5;
-
-    public Sim_Framework_DAG_Set_Knappe_2004() {
-    }
-
-    
-    public Sim_Framework_DAG_Set_Knappe_2004(double k) {
-        if(k < 0 || k > 1){
-            throw new IllegalArgumentException("k parameter must be in [0;1]");
-        }
-        this.k = k;
-    }
+public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
 
     @Override
-    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
-
-        Set<URI> interSecAncestors = SetUtils.intersection(ancA, ancB);
-
-        double nbAncest_a = ancA.size();
-        double nbAncest_b = ancB.size();
-
-        double knappe = (double) k * (interSecAncestors.size() / nbAncest_a) + (1 - k) * (interSecAncestors.size() / nbAncest_b);
-
-        return knappe;
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    /**
-     *
-     * @return k parameter
-     */
-    public double getK() {
-        return k;
-    }
-
-    /**
-     *
-     * @param k
-     */
-    public void setK(double k) {
-        this.k = k;
-    }
-    
-    @Override
-    public Boolean isSymmetric() {
-        return k == 0.5;
-    }
 }

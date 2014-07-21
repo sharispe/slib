@@ -51,11 +51,11 @@ import slib.utils.ex.SLIB_Ex_Warning;
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
-public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Resnik_1995_Descendants extends Sim_DAG_node_abstract {
 
     
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double sim = 0;
         Set<URI> dcas = c.getLCAs(a, b);
@@ -81,8 +81,4 @@ public class Sim_pairwise_DAG_node_Resnik_1995_Descendants implements Sim_DAG_no
         return sim;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

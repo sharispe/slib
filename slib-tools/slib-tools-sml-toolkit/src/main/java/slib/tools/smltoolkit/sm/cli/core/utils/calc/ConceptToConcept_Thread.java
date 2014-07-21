@@ -164,7 +164,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
                 tmp_buffer.append(ids_pairs);
                 for (SMconf p : sspM.conf.gConfPairwise) {
 
-                    sim = sspM.simManager.computePairwiseSim(p, e1, e2);
+                    sim = sspM.simManager.compare(p, e1, e2);
 
                     tmp_buffer.append("\t").append(sim);
 

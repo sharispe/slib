@@ -137,8 +137,8 @@ public class WordnetExample {
         SM_Engine engine = new SM_Engine(wordnet);
 
         // we compute the semantic similarities
-        double sim_iced_coffee_vs_instant_coffee = engine.computePairwiseSim(measureConf, uri_iced_coffee, uri_instant_coffee);
-        double sim_iced_coffee_vs_green_tea = engine.computePairwiseSim(measureConf, uri_iced_coffee, uri_green_tea);
+        double sim_iced_coffee_vs_instant_coffee = engine.compare(measureConf, uri_iced_coffee, uri_instant_coffee);
+        double sim_iced_coffee_vs_green_tea = engine.compare(measureConf, uri_iced_coffee, uri_green_tea);
 
         // That's it
         System.out.println("sim(iced_coffee,instant_coffee) = " + sim_iced_coffee_vs_instant_coffee);

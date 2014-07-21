@@ -33,30 +33,26 @@
  */
 package slib.sml.sm.core.measures;
 
-import org.openrdf.model.URI;
-import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Exception;
-
 /**
  * Interface used to represent a pairwise measure which can be used to compute
  * the semantic similarity of a pair of concepts/classes.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public interface Sim_Pairwise {
+public abstract class Sim_Pairwise implements ISim_Pairwise {
+    
+    @Override
+    public MType getType(){
+        return MType.SIMILARITY;
+    }
+    
+    @Override
+    public Boolean isSymmetric() {
+        return null;
+    }
 
-    /**
-     * Compute the semantic similarity of the pair of concepts/classes.
-     *
-     * @param a the first concept/class
-     * @param b the second concept/class
-     * @param c the engine used to access information required by the measures
-     * @param conf the configuration to consider
-     * @return the similarity between the pair of concept/class.
-     * @throws SLIB_Exception
-     */
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception;
-
-    public boolean isSymmetric();
+    @Override
+    public Boolean isNormalized() {
+        return null;
+    }
 }

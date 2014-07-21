@@ -115,7 +115,7 @@ public class SMComputationSnomedCT {
 
         // We retrieve the vertices corresponding to the two concepts
 
-        double sim = engine.computePairwiseSim(smConf, heartURI, myocardiumURI);
+        double sim = engine.compare(smConf, heartURI, myocardiumURI);
         System.out.println("Similarity Heart/Myocardium: " + sim);
 
         /* 
@@ -140,7 +140,7 @@ public class SMComputationSnomedCT {
             c1 = listVertices.get(id1);
             c2 = listVertices.get(id2);
 
-            sim = engine.computePairwiseSim(smConf, c1, c2);
+            sim = engine.compare(smConf, c1, c2);
 
             if ((i + 1) % 1000 == 0) {
                 idC1 = c1.getLocalName();

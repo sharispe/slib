@@ -59,7 +59,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         GWS weightingScheme = c.getWeightingScheme(conf.getParamAsString("WEIGHTING_SCHEME"));
 
@@ -108,8 +108,9 @@ public class Sim_pairwise_DAG_edge_Leacock_Chodorow_1998 extends Sim_DAG_edge_ab
         return lc;
     }
 
+    
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

@@ -36,7 +36,6 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 import java.text.DecimalFormat;
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
-import static slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model.sim;
 import slib.sml.sm.core.metrics.ic.utils.ICconf;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -49,7 +48,7 @@ import slib.utils.impl.SetUtils;
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
-public class Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model extends Sim_DAG_node_abstract {
 
     public static final String alpha_param_name = "alpha";
     public static final String beta_param_name = "beta";
@@ -71,7 +70,7 @@ public class Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model implements Sim_DA
     }
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         if (conf != null && conf.containsParam(alpha_param_name)) {
             alpha = conf.getParamAsDouble(alpha_param_name);
@@ -142,7 +141,7 @@ public class Sim_pairwise_DAG_node_IC_Prop_Tversky_Ratio_Model implements Sim_DA
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return alpha == beta;
     }
 }

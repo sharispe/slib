@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel extends Sim_DAG_node_abstract {
 
     /**
      *
@@ -56,7 +56,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
 
  
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
@@ -79,7 +79,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
             throw new SLIB_Ex_Critic("Probability measure is expected... Given IC " + confic.getId() + " is not suited as it apparently doesn't provide values restricted in [0,1] ");
         }
 
-        return sim(ic_a, ic_b, ic_MICA, p_MICA, beta);
+        return compare(ic_a, ic_b, ic_MICA, p_MICA, beta);
     }
 
     /**
@@ -92,7 +92,7 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
      * @return the similarity
      * @throws SLIB_Ex_Critic
      */
-    public double sim(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
+    public double compare(double ic_a, double ic_b, double ic_mica, double p_mica, double beta) throws SLIB_Ex_Critic {
 
         double den = ((ic_a - ic_mica) + (ic_b - ic_mica) + (2. - beta) * ic_mica);
         double j = 0;
@@ -104,8 +104,4 @@ public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel implements Sim_DAG_node_a
         return j * (1. - p_mica);
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

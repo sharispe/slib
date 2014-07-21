@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_Framework_DAG_Set_Simpson_1960 extends Sim_Framework_DAG_Set_abstract {
 
     @Override
-    public double sim(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
+    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancA, ancB);
 
@@ -62,7 +62,7 @@ public class Sim_Framework_DAG_Set_Simpson_1960 extends Sim_Framework_DAG_Set_ab
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

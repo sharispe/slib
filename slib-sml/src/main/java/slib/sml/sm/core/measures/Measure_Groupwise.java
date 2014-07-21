@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
@@ -31,66 +31,27 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.graph.framework.dag;
+package slib.sml.sm.core.measures;
 
 import java.util.Set;
 import org.openrdf.model.URI;
-
+import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.utils.SMconf;
-import slib.utils.impl.SetUtils;
+import slib.utils.ex.SLIB_Exception;
 
 /**
- * Knappe R, Bulskov H, Andreasen T: Perspectives on ontology-based
- * querying. International Journal of Intelligent Systems 2004, 22:739-761.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_Framework_DAG_Set_Knappe_2004 extends Sim_Framework_DAG_Set_abstract {
+public interface Measure_Groupwise extends Measure {
 
-    private double k = 0.5;
-
-    public Sim_Framework_DAG_Set_Knappe_2004() {
-    }
-
-    
-    public Sim_Framework_DAG_Set_Knappe_2004(double k) {
-        if(k < 0 || k > 1){
-            throw new IllegalArgumentException("k parameter must be in [0;1]");
-        }
-        this.k = k;
-    }
-
-    @Override
-    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
-
-        Set<URI> interSecAncestors = SetUtils.intersection(ancA, ancB);
-
-        double nbAncest_a = ancA.size();
-        double nbAncest_b = ancB.size();
-
-        double knappe = (double) k * (interSecAncestors.size() / nbAncest_a) + (1 - k) * (interSecAncestors.size() / nbAncest_b);
-
-        return knappe;
-    }
-
-    /**
-     *
-     * @return k parameter
+    /*
+     * @param a the first class
+     * @param b the second class
+     * @param c the engine used to access information required by the measures
+     * @param conf the configuration to consider
+     * @return the similarity between the pair of classes.
+     * @throws SLIB_Exception
      */
-    public double getK() {
-        return k;
-    }
-
-    /**
-     *
-     * @param k
-     */
-    public void setK(double k) {
-        this.k = k;
-    }
-    
-    @Override
-    public Boolean isSymmetric() {
-        return k == 0.5;
-    }
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf groupwiseconf) throws SLIB_Exception;
 }

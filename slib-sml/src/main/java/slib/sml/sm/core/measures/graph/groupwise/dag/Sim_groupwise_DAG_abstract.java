@@ -41,5 +41,6 @@ import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public abstract class Sim_groupwise_DAG_abstract implements Sim_Groupwise_Direct {
+public abstract class Sim_groupwise_DAG_abstract extends Sim_Groupwise_Direct {
+
 }

@@ -56,7 +56,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         Set<URI> ancestors_A = c.getAncestorsInc(a);
         Set<URI> ancestors_B = c.getAncestorsInc(b);
@@ -107,7 +107,7 @@ public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

@@ -34,6 +34,7 @@
 package slib.sml.sm.core.measures.graph.framework.dag;
 
 import java.util.Set;
+import javax.swing.text.StyledEditorKit;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;
@@ -54,27 +55,27 @@ import slib.utils.impl.SetUtils;
 public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) {
 
         int nbV = c.getClasses().size();
         Set<URI> ancA = c.getAncestorsInc(a);
         Set<URI> ancB = c.getAncestorsInc(b);
 
-        return sim(nbV, ancA, ancB);
+        return compare(nbV, ancA, ancB);
     }
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) {
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) {
 
         int nbV = c.getClasses().size();
         Set<URI> ancA = c.getAncestorsInc(setA);
         Set<URI> ancB = c.getAncestorsInc(setB);
 
-        return sim(nbV, ancA, ancB);
+        return compare(nbV, ancA, ancB);
     }
 
     @Override
-    public double sim(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
+    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) {
 
 
         Set<URI> interSecAncestors = SetUtils.intersection(ancA, ancB);
@@ -103,7 +104,7 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
      * @param b
      * @return the similarity
      */
-    public double sim(int nbVertices, Set<URI> a, Set<URI> b) {
+    public double compare(int nbVertices, Set<URI> a, Set<URI> b) {
 
         Set<URI> interSecAncestors = SetUtils.intersection(a, b);
         Set<URI> unionAncestors = SetUtils.union(a, b);
@@ -122,7 +123,7 @@ public class Sim_Framework_DAG_Set_Batet_2010 extends Sim_Framework_DAG_Set_abst
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return true;
     }
 }

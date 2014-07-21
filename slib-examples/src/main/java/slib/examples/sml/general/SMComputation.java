@@ -117,8 +117,8 @@ public class SMComputation {
         // Finally, we compute the similarity between the concepts Horse and Whale
         URI horse = factory.getURI("http://graph/class/Horse");
         
-        double sim = engine.computePairwiseSim(smConf, whale, horse);
+        double sim = engine.compare(smConf, whale, horse);
         System.out.println("Sim Whale/Horse: "+sim);
-        System.out.println("Sim Horse/Horse: "+engine.computePairwiseSim(smConf, horse, horse));
+        System.out.println("Sim Horse/Horse: "+engine.compare(smConf, horse, horse));
     }
 }

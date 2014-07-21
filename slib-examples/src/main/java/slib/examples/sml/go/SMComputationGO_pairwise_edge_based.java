@@ -122,7 +122,7 @@ public class SMComputationGO_pairwise_edge_based {
         double sim;
         for (URI v : graph.getV()) {
 
-            sim = engine.computePairwiseSim(smConf, concept, v);
+            sim = engine.compare(smConf, concept, v);
             System.out.println(concept+"\t"+v+"\t"+sim);
         }
     }

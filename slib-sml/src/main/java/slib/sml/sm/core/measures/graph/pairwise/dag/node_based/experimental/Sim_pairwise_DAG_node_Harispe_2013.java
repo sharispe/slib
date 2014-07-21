@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Harispe_2013 extends Sim_DAG_node_abstract {
 
     public static final String aggregation_lca = "aggregation_lca";
     public static final String measure_param = "measure";
@@ -56,7 +56,7 @@ public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract
     public static final String[] acceptedAggregations = {"Max", "Min", "Avg", "Agg"};
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         if (!conf.containsParam(measure_param)) {
             throw new SLIB_Ex_Critic("Measure " + conf + " requires a parameter '" + measure_param + "' to be defined");
@@ -149,8 +149,4 @@ public class Sim_pairwise_DAG_node_Harispe_2013 implements Sim_DAG_node_abstract
         return ic_lca;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

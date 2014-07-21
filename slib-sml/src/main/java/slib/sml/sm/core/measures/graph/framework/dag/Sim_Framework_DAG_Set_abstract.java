@@ -37,8 +37,8 @@ import java.util.Set;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
-import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.sml.sm.core.measures.graph.pairwise.dag.ISim_Pairwise_DAG;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 
@@ -47,23 +47,23 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG, Sim_Groupwise_Direct {
+public abstract class Sim_Framework_DAG_Set_abstract extends Sim_Groupwise_Direct implements ISim_Pairwise_DAG{
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         Set<URI> ancA = c.getAncestorsInc(a);
         Set<URI> ancB = c.getAncestorsInc(b);
 
-        return sim(ancA, ancB, conf);
+        return compare(ancA, ancB, conf);
     }
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine c, SMconf conf) throws SLIB_Exception {
         Set<URI> ancA = c.getAncestorsInc(setA);
         Set<URI> ancB = c.getAncestorsInc(setB);
 
-        return sim(ancA, ancB, conf);
+        return compare(ancA, ancB, conf);
     }
 
     /**
@@ -78,5 +78,6 @@ public abstract class Sim_Framework_DAG_Set_abstract implements Sim_Pairwise_DAG
      * @return the similarity of the two sets.
      * @throws SLIB_Exception
      */
-    public abstract double sim(Set<URI> ancA, Set<URI> ancB, SMconf conf) throws SLIB_Exception;
+    public abstract double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) throws SLIB_Exception;
+
 }

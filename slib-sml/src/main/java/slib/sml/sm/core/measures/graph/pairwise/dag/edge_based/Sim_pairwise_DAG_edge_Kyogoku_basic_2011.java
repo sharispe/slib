@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Exception;
 public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstract {
 
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         int maxDepth = c.getMaxDepth();
 
@@ -81,8 +81,5 @@ public class Sim_pairwise_DAG_edge_Kyogoku_basic_2011 extends Sim_DAG_edge_abstr
         return sim;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        return true;
-    }
+    
 }

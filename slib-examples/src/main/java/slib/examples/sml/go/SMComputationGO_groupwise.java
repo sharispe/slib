@@ -155,7 +155,7 @@ public class SMComputationGO_groupwise {
 
             Set<URI> annotations_v = iAccessor.getDirectClass(v);
 
-            sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
+            sim = engine.compare(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
 //            System.out.println(i + "\t" + v + "\t" + sim);
             c++;
         }

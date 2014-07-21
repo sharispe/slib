@@ -51,11 +51,11 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
  */
-public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_Mazandu_2012 extends Sim_DAG_node_abstract {
 
     
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
 
         double ic_mica = c.getIC_MICA(conf.getICconf(), a, b);
@@ -65,8 +65,5 @@ public class Sim_pairwise_DAG_node_Mazandu_2012 implements Sim_DAG_node_abstract
         return ic_mica / Math.max(ic_a, ic_b);
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+   
 }

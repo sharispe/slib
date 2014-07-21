@@ -174,7 +174,7 @@ public class MeSHExample_XML_2013 {
 
 
             // We compute the similarity
-            double sim = engine.computePairwiseSim(measureConf, c1, c2);
+            double sim = engine.compare(measureConf, c1, c2);
             System.out.println("Sim " + c1 + "\t" + c2 + "\t" + sim);
             
             System.out.println(meshGraph.toString());
@@ -197,7 +197,7 @@ public class MeSHExample_XML_2013 {
                 c1 = concepts.get(id1);
                 c2 = concepts.get(id2);
 
-                sim = engine.computePairwiseSim(measureConf, c1, c2);
+                sim = engine.compare(measureConf, c1, c2);
 
                 if ((i + 1) % 50000 == 0) {
                     idC1 = c1.getLocalName();

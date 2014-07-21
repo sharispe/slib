@@ -1,4 +1,4 @@
-/* 
+/*
  *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
@@ -31,35 +31,13 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package slib.sml.sm.core.measures.graph.pairwise.dag.hybrid;
 
-import org.openrdf.model.URI;
-
-import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;
-import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.utils.SMconf;
-import slib.utils.ex.SLIB_Exception;
+package slib.sml.sm.core.measures;
 
 /**
- * ﻿Wang JZ, Du Z, Payattakool R, Yu PS, Chen C-F: A new method to measure the semantic similarity of GO terms. 
- * Bioinformatics (Oxford, England) 2007, 23:1274-81.
- * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  *
+ * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_DAG_hybrid_Wang_2007 extends Sim_DAG_edge_abstract{
-
-    @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-
-
-
+public enum MType {
+    SIMILARITY,DISTANCE;
 }

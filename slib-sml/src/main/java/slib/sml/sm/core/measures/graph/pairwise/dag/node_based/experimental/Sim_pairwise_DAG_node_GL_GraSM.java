@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
+public class Sim_pairwise_DAG_node_GL_GraSM extends Sim_DAG_node_abstract {
 
     /**
      *
@@ -55,7 +55,7 @@ public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
     private double beta = 0.;
  
     @Override
-    public double sim(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
+    public double compare(URI a, URI b, SM_Engine c, SMconf conf) throws SLIB_Exception {
 
         double ic_a = c.getIC(conf.getICconf(), a);
         double ic_b = c.getIC(conf.getICconf(), b);
@@ -99,8 +99,4 @@ public class Sim_pairwise_DAG_node_GL_GraSM implements Sim_DAG_node_abstract {
         return j;
     }
 
-    @Override
-    public boolean isSymmetric() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

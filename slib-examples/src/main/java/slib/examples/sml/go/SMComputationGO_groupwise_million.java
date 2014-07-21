@@ -165,7 +165,7 @@ public class SMComputationGO_groupwise_million {
             annots_A = iAccessor.getDirectClass(iA);
             annots_B = iAccessor.getDirectClass(iB);
 
-            sim = engine.computeGroupwiseAddOnSim(smConfGroupwise, smConfPairwise, annots_A, annots_B);
+            sim = engine.compare(smConfGroupwise, smConfPairwise, annots_A, annots_B);
             if (i % 100000 == 0) {
                 System.out.println(i + "/" + count + "\t" + iA + "\t" + iB + "\t" + sim);
             }

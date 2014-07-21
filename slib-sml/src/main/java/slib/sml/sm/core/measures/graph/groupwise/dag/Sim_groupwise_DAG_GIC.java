@@ -51,7 +51,7 @@ import slib.utils.impl.SetUtils;
 public class Sim_groupwise_DAG_GIC extends Sim_groupwise_DAG_abstract {
 
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) throws SLIB_Exception {
 
         Set<URI> anc_setA = rc.getAncestorsInc(setA);
         Set<URI> anc_setB = rc.getAncestorsInc(setB);

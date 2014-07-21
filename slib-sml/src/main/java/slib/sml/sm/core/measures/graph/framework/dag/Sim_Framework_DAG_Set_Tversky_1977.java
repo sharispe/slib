@@ -72,7 +72,7 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
     }
 
     @Override
-    public double sim(Set<URI> ancA, Set<URI> ancB, SMconf conf) throws SLIB_Exception {
+    public double compare(Set<URI> ancA, Set<URI> ancB, SMconf conf) throws SLIB_Exception {
 
         if (conf != null && conf.containsParam(k_param_name)) {
             k = conf.getParamAsDouble(k_param_name);
@@ -114,7 +114,7 @@ public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_ab
     }
 
     @Override
-    public boolean isSymmetric() {
+    public Boolean isSymmetric() {
         return k == 0.5;
     }
 }

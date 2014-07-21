@@ -51,7 +51,7 @@ public class Sim_groupwise_DAG_UI extends Sim_groupwise_DAG_abstract {
 
     
     @Override
-    public double sim(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) {
+    public double compare(Set<URI> setA, Set<URI> setB, SM_Engine rc, SMconf conf) {
 
         Set<URI> anc_setA = rc.getAncestorsInc(setA);
         Set<URI> anc_setB = rc.getAncestorsInc(setB);
