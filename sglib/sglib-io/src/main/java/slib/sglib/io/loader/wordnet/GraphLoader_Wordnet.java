@@ -50,7 +50,6 @@ import slib.sglib.io.util.GFormat;
 import slib.sglib.model.graph.G;
 import slib.sglib.model.graph.elements.E;
 import slib.sglib.model.impl.graph.elements.Edge;
-import slib.sglib.model.impl.graph.memory.GraphMemory;
 import slib.sglib.model.impl.repo.URIFactoryMemory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
