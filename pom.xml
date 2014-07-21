@@ -4,7 +4,7 @@
     <groupId>fr.lgi2p.kid</groupId>
     <name>slib</name>
     <artifactId>slib</artifactId>
-    <version>0.8.4</version>
+    <version>0.9-beta</version>
     <packaging>pom</packaging>
     
     <properties>
