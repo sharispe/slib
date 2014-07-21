@@ -91,7 +91,7 @@ public class Test_Shortest_path {
 
         sp = d.shortestPath(thing, spiderman);
         System.out.println("Shortest Path Thing/Spiderman = null, found " + sp);
-        assertTrue(sp == Dijkstra.NOT_COMPUTED);
+        assertTrue(sp == Dijkstra.NOT_COMPUTED.doubleValue());
         
         sp = d.shortestPath(spiderman, animal);
         System.out.println("Shortest Path Spiderman/Animal = 2, found " + sp);
@@ -122,7 +122,7 @@ public class Test_Shortest_path {
 
         sp = d.shortestPath(spiderman, thing);
         System.out.println("Shortest Path Spiderman/Thing = null, found " + sp);
-        assertTrue(sp == Dijkstra.NOT_COMPUTED);
+        assertTrue(sp == Dijkstra.NOT_COMPUTED.doubleValue());
 
 
         sp = d.shortestPath(thing, spiderman);
@@ -131,7 +131,7 @@ public class Test_Shortest_path {
         
         sp = d.shortestPath(spiderman, animal);
         System.out.println("Shortest Path Spiderman/Animal = null, found " + sp);
-        assertTrue(sp == Dijkstra.NOT_COMPUTED);
+        assertTrue(sp == Dijkstra.NOT_COMPUTED.doubleValue());
         
         sp = d.shortestPath(animal, spiderman);
         System.out.println("Shortest Path Animal/Spiderman = 2, found " + sp);
