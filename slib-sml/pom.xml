@@ -45,6 +45,14 @@
             <version>0.9-beta</version>
             <type>jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>4.9.0</version>
+        </dependency>
+
+
     </dependencies>
     
     <build>
