@@ -55,6 +55,8 @@ public class IcUtils {
      * Most Informative Common Ancestor, considering the input sets as the
      * inclusive ancestors of the concepts for which we search the MICAS.
      *
+     * @param a
+     * @param b
      * @param setA the first set
      * @param setB the second set
      * @param icScores the metric result to consider to evaluate the specificity
@@ -111,6 +113,8 @@ public class IcUtils {
      * input sets as the inclusive ancestors of the concepts for which we search
      * the MICAS.
      *
+     * @param a
+     * @param b
      * @param setA the first set
      * @param setB the second set
      * @param icScores the metric result to consider to evaluate the specificity
