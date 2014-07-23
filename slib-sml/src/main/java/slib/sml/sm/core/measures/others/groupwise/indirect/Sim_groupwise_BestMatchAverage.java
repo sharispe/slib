@@ -39,7 +39,6 @@ import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.MatrixDouble;
 
 /**

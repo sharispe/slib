@@ -72,7 +72,6 @@ public class Sim_groupwise_BestMatchMax extends Sim_Groupwise_Indirect {
 
         for (URI v : matrix.getRowElements()) {
             sumMaxRow += matrix.getMaxRow(v);
-            System.out.println(v+"\t"+matrix.getMaxRow(v));
         }
 
         double num = 1. / matrix.getNbColumns();
