@@ -42,7 +42,6 @@ import slib.sml.sm.core.metrics.utils.LogBasedMetric;
 import slib.sml.sm.core.utils.MathSML;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.ex.SLIB_Exception;
 
 /**
  * Seco N, Veale T, Hayes J: An Intrinsic Information Content Metric for
@@ -85,7 +84,7 @@ public class ICi_seco_2004 extends LogBasedMetric implements ICtopo {
 
             try {
                 cur_ic = computeIC(nbDesc, setSize);
-            } catch (SLIB_Exception e) {
+            } catch (SLIB_Ex_Critic e) {
                 throw new SLIB_Ex_Critic("Error computing IC of concept " + v + "\n" + e.getMessage());
             }
 
