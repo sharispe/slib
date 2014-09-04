@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
@@ -70,6 +70,37 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <finalName>slib-${project.version}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/sdk.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            
         </plugins>
     </build>
 </project>

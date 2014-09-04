@@ -2,10 +2,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
+    
     <artifactId>slib-dist</artifactId>
     <packaging>pom</packaging>
 
@@ -61,7 +62,7 @@
                 <version>2.9.1</version>
                 <configuration>
                     <use>false</use>
-                    <excludePackageNames>slib.quicktest.*:sglib.gui.*</excludePackageNames>
+                    <excludePackageNames>slib.quicktest.*:slib-graph.gui.*</excludePackageNames>
                     <stylesheet>maven</stylesheet>
                     <descriptors>
                         <descriptor>src/main/assembly/all-jar.xml</descriptor>
@@ -78,47 +79,66 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
     </build>
     
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-algo</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-algo</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model-impl</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model-impl</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-indexer</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-io</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-io</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-sml-toolkit</artifactId>
             <version>0.9-beta</version>
         </dependency>

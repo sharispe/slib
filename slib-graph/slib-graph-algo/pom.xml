@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>sglib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <artifactId>slib-graph</artifactId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>sglib-algo</artifactId>
+    <artifactId>slib-graph-algo</artifactId>
     
-    <name>${project.artifactId}</name>
+    <name>slib-graph-algo</name>
     <description>Graph algorithm library which can be used to manipulate graph of URIs</description>
     <url>http://www.semantic-measures-library.org</url>
     
@@ -31,14 +31,14 @@
     
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model</artifactId>
             <version>0.9-beta</version>
         </dependency>
         
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model-impl</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model-impl</artifactId>
             <version>0.9-beta</version>
         </dependency>
 
@@ -55,8 +55,8 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-utils</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-utils</artifactId>
             <version>0.9-beta</version>
             <type>jar</type>
         </dependency>
@@ -88,6 +88,25 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
     </build>
 </project>

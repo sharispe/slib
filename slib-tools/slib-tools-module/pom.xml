@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib-tools</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
@@ -38,8 +38,8 @@
         </dependency>
 
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-io</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-io</artifactId>
             <version>0.9-beta</version>
         </dependency>
         
@@ -48,7 +48,6 @@
             <artifactId>commons-configuration</artifactId>
             <version>1.6</version>
         </dependency>
-      
         
     </dependencies>
 

@@ -3,14 +3,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>sglib</artifactId>
+    
+    <artifactId>slib-graph</artifactId>
     <packaging>pom</packaging>
     
-    <name>${project.artifactId}</name>
+    <name>slib-graph</name>
     <description>Graph engine library which can be used to manipulate graph of URIs</description>
     <url>http://www.semantic-measures-library.org</url>
     
@@ -31,20 +32,20 @@
     </developers>
     
     <modules>
-        <module>sglib-model</module>
-        <module>sglib-model-impl</module>
-        <module>sglib-algo</module>
-        <module>sglib-io</module>
-        <module>sglib-test</module>
-        <module>sglib-utils</module>
+        <module>slib-graph-model</module>
+        <module>slib-graph-model-impl</module>
+        <module>slib-graph-algo</module>
+        <module>slib-graph-io</module>
+        <module>slib-graph-test</module>
+        <module>slib-graph-utils</module>
     </modules>
+    
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
             <version>0.9-beta</version>
         </dependency>
-
     </dependencies>
 </project>
 

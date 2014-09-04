@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>sglib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <artifactId>slib-graph</artifactId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>sglib-model</artifactId>
+    <artifactId>slib-graph-model</artifactId>
     
-    <name>${project.artifactId}</name>
+    <name>slib-graph-model</name>
     <description>Graph model used to represent graph of URIs</description>
     <url>http://www.semantic-measures-library.org</url>
     
@@ -28,15 +28,6 @@
         </developer>
     </developers>
   
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-
-    </repositories>
   
     <dependencies>
 
@@ -44,7 +35,7 @@
         <dependency>
             <groupId>org.openrdf.sesame</groupId>
             <artifactId>sesame-runtime</artifactId>
-            <version>2.7.3</version>
+            <version>2.7.13</version>
         </dependency>
 
     </dependencies>
@@ -75,6 +66,25 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
     </build>
 	

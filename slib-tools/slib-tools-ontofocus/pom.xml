@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib-tools</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
@@ -31,13 +31,13 @@
     
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-io</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-io</artifactId>
             <version>0.9-beta</version>
         </dependency>
 
@@ -53,7 +53,7 @@
         </dependency>
 
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
             <version>0.9-beta</version>
         </dependency>
@@ -64,7 +64,11 @@
             <type>jar</type>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-indexer</artifactId>
+            <version>0.9-beta</version>
+        </dependency>
     </dependencies>
   
     <properties>
@@ -147,7 +151,23 @@
                 </executions>
             </plugin>
 
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
         </plugins>
 

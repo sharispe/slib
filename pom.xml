@@ -3,7 +3,7 @@
     
     
     <modelVersion>4.0.0</modelVersion>
-    <groupId>fr.lgi2p.kid</groupId>
+    <groupId>com.github.sharispe</groupId>
     <artifactId>slib</artifactId>
     <version>0.9-beta</version>
     <packaging>pom</packaging>
@@ -42,7 +42,6 @@
     </scm>
 
     <modules>
-        <module>sglib</module>
         <module>slib-utils</module>
         <module>slib-tools</module>
         <module>slib-indexer</module>
@@ -50,6 +49,7 @@
         <module>slib-quicktest</module>
         <module>slib-examples</module>
         <module>slib-dist</module>
+        <module>slib-graph</module>
     </modules>
 
 
@@ -107,9 +107,7 @@
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.7</version>
                 </plugin>
-                
-                                
-                                
+                        
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
@@ -138,6 +136,7 @@
                     <configuration>
                         <excludes> 
                             <exclude>slib.quicktest</exclude> 
+                            <exclude>slib.slib-tools.slib-tools-sml-dist</exclude> 
                         </excludes>
                         <!--<excludePackageNames>slib.quicktest.*</excludePackageNames>-->
                         <!--<stylesheet>maven</stylesheet>-->
@@ -153,22 +152,37 @@
                     </executions>
                 </plugin>
                 
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <inherited>false</inherited>
+                    <configuration>
+                        <finalName>slib-${project.version}</finalName>
+                        <descriptors>
+                            <descriptor>src/main/assembly/sdk.xml</descriptor>
+                        </descriptors>
+                    </configuration>
+                </plugin>
+               
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.5</version>
+                    <configuration>
+                        <passphrase>${gpg.passphrase}</passphrase>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
-        
-        <plugins>
-
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <inherited>false</inherited>
-                <configuration>
-                    <finalName>slib-${project.version}</finalName>
-                    <descriptors>
-                        <descriptor>src/main/assembly/sdk.xml</descriptor>
-                    </descriptors>
-                </configuration>
-            </plugin>
-            
-        </plugins>
+       
     </build>
 </project>

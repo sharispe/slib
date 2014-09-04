@@ -2,14 +2,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>sglib</artifactId>
-        <groupId>fr.lgi2p.kid</groupId>
+        <artifactId>slib-graph</artifactId>
+        <groupId>com.github.sharispe</groupId>
         <version>0.9-beta</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>sglib-io</artifactId>
+    <artifactId>slib-graph-io</artifactId>
         
-    <name>${project.artifactId}</name>
+    <name>slib-graph-io</name>
     <description>Graph I/O library which can be used to load and store graphs</description>
     <url>http://www.semantic-measures-library.org</url>
     
@@ -29,46 +29,28 @@
         </developer>
     </developers>
     
-    <repositories>
-        <repository>
-            <id>central</id>
-            <name>Maven Repository Switchboard</name>
-            <layout>default</layout>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-		
-        <repository>
-            <id>aduna-repo</id>
-            <name>Aduna repository</name>
-            <url>http://repo.aduna-software.org/maven2/releases</url>
-        </repository>
-    </repositories>
   
   	
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-utils</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-utils</artifactId>
             <version>0.9-beta</version>
         </dependency>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-model-impl</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-model-impl</artifactId>
             <version>0.9-beta</version>
         </dependency>
+        
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>slib-indexer</artifactId>
-            <version>0.9-beta</version>
-        </dependency>
-        <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
-            <artifactId>sglib-algo</artifactId>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-graph-algo</artifactId>
             <version>0.9-beta</version>
         </dependency>
 
@@ -109,6 +91,11 @@
             <artifactId>sesame-rio-turtle</artifactId>
             <version>2.7.3</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-indexer</artifactId>
+            <version>0.9-beta</version>
+        </dependency>
     </dependencies>
     
     <build>
@@ -133,6 +120,24 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <passphrase>${gpg.passphrase}</passphrase>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
                         </goals>
                     </execution>
                 </executions>
