@@ -79,6 +79,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
      * @param queriesBench
      * @param sspM
      * @param nbMeasures
+     * @param queryParam
      */
     public EntityToEntity_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, int nbMeasures, SMQueryParam queryParam) {
 
@@ -256,7 +257,7 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
             results.setSetValue(setValue);
             results.setSkipped(skipped);
 
-        } catch (Exception e) {
+        } catch (SLIB_Ex_Critic e) {
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }

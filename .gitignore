@@ -5,6 +5,7 @@ target/
 .project
 trash/
 slib-tools-sml-toolkit-gui/
+slib-tools-sml-dist/
 nbactions.xml
 pom.xml.versionsBackup
 doc_perso/

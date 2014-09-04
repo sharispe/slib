@@ -10,6 +10,27 @@
         
     <artifactId>slib-utils</artifactId>
     
+    
+    <name>${project.artifactId}</name>
+    <description>Utility class for the slib project</description>
+    <url>http://www.semantic-measures-library.org</url>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
+    
     <repositories>
         <repository>
             <id>aduna-repo</id>

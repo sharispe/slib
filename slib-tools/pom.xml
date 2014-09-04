@@ -8,10 +8,33 @@
     </parent>
     <artifactId>slib-tools</artifactId>
     <packaging>pom</packaging>
+    
+    
+    <name>${project.artifactId}</name>
+    <description>Tools based on slib modules</description>
+    <url>http://www.semantic-measures-library.org</url>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
+    
     <modules>
         <module>slib-tools-module</module>
         <module>slib-tools-sml-toolkit</module>
         <module>slib-tools-ontofocus</module>
+        <module>slib-tools-sml-dist</module>
     </modules>
     <dependencies>
         <dependency>

@@ -1,11 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.lgi2p.kid</groupId>
-    <name>slib</name>
     <artifactId>slib</artifactId>
     <version>0.9-beta</version>
     <packaging>pom</packaging>
+    
+    <name>${project.artifactId}</name>
+    <description>Slib is a JAVA library dedicated to semantic data analysis. The project currently focuses on semantic data represented as semantic graphs (networks). The Semantic Measures Library (SML) is a sub-project of the Slib. </description>
+    <url>http://www.semantic-measures-library.org</url>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
     
     <properties>
         <slib.version>${project.version}</slib.version>
@@ -13,6 +34,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
+    
+    <scm>
+        <connection>scm:git:git://github.com/sharispe/slib.git</connection>
+        <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
+        <url>http://github.com/sharispe/slib</url>
+    </scm>
 
     <modules>
         <module>sglib</module>
@@ -25,8 +52,6 @@
         <module>slib-dist</module>
     </modules>
 
-    <description>Core modules for slib</description>
-    
 
     
     <dependencyManagement>

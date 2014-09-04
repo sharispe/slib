@@ -7,6 +7,28 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-indexer</artifactId>
+    
+    <name>${project.artifactId}</name>
+    <description>Simple Index representation</description>
+    <url>http://www.semantic-measures-library.org</url>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
+    
+    
     <dependencies>
         <dependency>
             <groupId>fr.lgi2p.kid</groupId>
@@ -20,7 +42,6 @@
             <type>jar</type>
         </dependency>
     </dependencies>
-    <name>slib-indexer</name>
     
     <build>
         <plugins>

@@ -72,16 +72,22 @@ public class Timer {
      */
     public void elapsedTime() {
 
-        if (stop == 0) {
-            stop();
+        String status = "Running";
+        long estop = System.currentTimeMillis();
+        if (stop != 0) {
+            status = "Stopped";
+            estop = stop;
         }
-        long diff = stop - start;
+        
+        long diff = estop - start;
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        logger.info("Start Time: " + dateFormat.format(new Date(start)));
-        logger.info("End Time  : " + dateFormat.format(new Date(stop)));
-        logger.info("Total Time: " + dateFormat.format(new Date(diff)));
+        logger.info("Timer "+status);
+        logger.info("Start Time  : " + dateFormat.format(new Date(start)));
+        logger.info("Current Time: " + dateFormat.format(new Date(estop)));
+        logger.info("End Time    : " + dateFormat.format(new Date(stop)));
+        logger.info("Total Time  : " + dateFormat.format(new Date(diff)));
     }
 }

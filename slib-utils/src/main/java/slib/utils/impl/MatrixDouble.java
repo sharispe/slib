@@ -76,9 +76,9 @@ public class MatrixDouble<C, R> {
         init(columResources, rowResources);
 
         if (initValue != null) {
-            for (int i = 0; i < matrix.length; i++) {
-                for (int j = 0; j < matrix[i].length; j++) {
-                    matrix[i][j] = initValue;
+            for (Double[] mat : matrix) {
+                for (int j = 0; j < mat.length; j++) {
+                    mat[j] = initValue;
                 }
             }
         }
@@ -228,10 +228,10 @@ public class MatrixDouble<C, R> {
     public Double getMax() {
         Double max = null;
 
-        for (int i = 0; i < matrix.length; i++) {
+        for (Double[] mat : matrix) {
             for (int j = 0; j < matrix[0].length; j++) {
-                if (matrix[i][j] != null && (max == null || matrix[i][j] > max)) {
-                    max = matrix[i][j];
+                if (mat[j] != null && (max == null || mat[j] > max)) {
+                    max = mat[j];
                 }
             }
         }
@@ -239,10 +239,12 @@ public class MatrixDouble<C, R> {
     }
 
     /**
+     * @param v 
      * @return the maximal value stored in the column of the given resource
      * @throws IllegalArgumentException if the given value cannot be associated
      * to a column
      */
+   
     public Double getMaxColumn(C v) {
 
         if (!isInColumnIndex(v)) {
@@ -260,6 +262,7 @@ public class MatrixDouble<C, R> {
     }
 
     /**
+     * @param v
      * @return the maximal value stored in the row of the given resource
      * @throws IllegalArgumentException if the given value cannot be associated
      * to a row
@@ -289,11 +292,10 @@ public class MatrixDouble<C, R> {
 
         Double min = null;
 
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-
-                if (matrix[i][j] != null && (min == null || matrix[i][j] < min)) {
-                    min = matrix[i][j];
+        for (Double[] row : matrix) {
+            for (Double v : row) {
+                if (v != null && (min == null || v < min)) {
+                    min = v;
                 }
             }
         }
@@ -308,10 +310,10 @@ public class MatrixDouble<C, R> {
     public Double getAverage() {
         Double sum = 0.;
         double count = 0.;
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j] != null) {
-                    sum += matrix[i][j];
+        for (Double[] row : matrix) {
+            for (Double v : row) {
+                if (v != null) {
+                    sum += v;
                     count++;
                 }
             }
@@ -375,11 +377,10 @@ public class MatrixDouble<C, R> {
     public Double getSum() {
         double sum = 0;
         boolean touched = false;
-        for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-
-                if (matrix[i][j] != null) {
-                    sum += matrix[i][j];
+        for (Double[] row : matrix) {
+            for (Double v : row) {
+                if (v != null) {
+                    sum += v;
                     touched = true;
                 }
             }

@@ -8,6 +8,27 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>sglib-test</artifactId>
+    
+    <name>${project.artifactId}</name>
+    <description>Tests of the modules related to the Graph library</description>
+    <url>http://www.semantic-measures-library.org</url>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
+    
     <dependencies>
 
         <dependency>

@@ -35,6 +35,7 @@ package slib.tools.smltoolkit.sm.cli.core;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -295,6 +296,7 @@ public class SmCli implements SmlModuleCLI {
                     QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
 
                     if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)) {
+                        
                         perform_cTOc(qloader, queryParam);
                     } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
                         perform_oTOo(qloader, queryParam);
@@ -309,7 +311,11 @@ public class SmCli implements SmlModuleCLI {
                     throw new UnsupportedOperationException(type + " is not a supported " + XmlTags.TYPE_ATTR + " of queries");
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
+            throw new SLIB_Exception(e);
+        } catch (SLIB_Exception e) {
+            throw new SLIB_Exception(e);
+        } catch (UnsupportedOperationException e) {
             throw new SLIB_Exception(e);
         }
     }
