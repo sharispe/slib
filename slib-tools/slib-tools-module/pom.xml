@@ -4,7 +4,7 @@
     <parent>
         <artifactId>slib-tools</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9-beta</version>
+        <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools-module</artifactId>
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         
         <dependency>

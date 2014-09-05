@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sharispe</groupId>
     <artifactId>slib</artifactId>
-    <version>0.9-beta</version>
+    <version>0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>${project.artifactId}</name>
@@ -40,6 +40,19 @@
         <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
         <url>http://github.com/sharispe/slib</url>
     </scm>
+    
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus snapshot repository</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+<!--        <repository>
+            <id>sonatype-nexus-staging</id>
+            <name>Sonatype Nexus release repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>-->
+    </distributionManagement>
 
     <modules>
         <module>slib-utils</module>
@@ -106,6 +119,12 @@
                 <plugin>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.7</version>
+                    <configuration>
+                        <excludes> 
+                            <exclude>slib-quicktest</exclude> 
+                            <exclude>slib-tools-sml-dist</exclude> 
+                        </excludes>
+                    </configuration>
                 </plugin>
                         
                 <plugin>
@@ -136,7 +155,7 @@
                     <configuration>
                         <excludes> 
                             <exclude>slib.quicktest</exclude> 
-                            <exclude>slib.slib-tools.slib-tools-sml-dist</exclude> 
+                            <exclude>slib.tools.sml-dist</exclude> 
                         </excludes>
                         <!--<excludePackageNames>slib.quicktest.*</excludePackageNames>-->
                         <!--<stylesheet>maven</stylesheet>-->
@@ -181,7 +200,18 @@
                         </execution>
                     </executions>
                 </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>2.2.2</version>
+                    <configuration>
+                        <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                    </configuration>
+                </plugin>
+            
             </plugins>
+            
         </pluginManagement>
        
     </build>

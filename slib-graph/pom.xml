@@ -4,7 +4,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9-beta</version>
+        <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     
@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

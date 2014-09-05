@@ -4,7 +4,7 @@
     <parent>
         <artifactId>slib-tools</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9-beta</version>
+        <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools-sml-toolkit</artifactId>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -61,12 +61,12 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.9-beta</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
