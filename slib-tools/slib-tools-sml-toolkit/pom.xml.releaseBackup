@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>slib-tools</artifactId>
@@ -6,11 +7,11 @@
         <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>slib-tools-ontofocus</artifactId>
+    <artifactId>slib-tools-sml-toolkit</artifactId>
     
     
     <name>${project.artifactId}</name>
-    <description>Ontofocus: command line tool used to perform the transitive reduction in a DAG</description>
+    <description>SML-Toolkit: command-line interface of the Semantic Measures Library</description>
     <url>http://www.semantic-measures-library.org</url>
     
     <licenses>
@@ -29,6 +30,11 @@
         </developer>
     </developers>
     
+    <properties>
+        <toolkit.version>${sml-toolkit.version}</toolkit.version>
+        <toolkit.build.snapshot>${maven.build.timestamp}</toolkit.build.snapshot>
+    </properties>
+  
     <dependencies>
         <dependency>
             <groupId>com.github.sharispe</groupId>
@@ -54,52 +60,43 @@
 
         <dependency>
             <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-tools-module</artifactId>
+            <artifactId>slib-sml</artifactId>
             <version>0.9-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <type>jar</type>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-indexer</artifactId>
+            <artifactId>slib-tools-module</artifactId>
             <version>0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
-  
-    <properties>
-        <ontofocus.version>0.2.2</ontofocus.version>
-    </properties>
-  
-    <build>
-        <finalName>ontofocus-${ontofocus.version}-${maven.build.timestamp}-lib</finalName>
 
+    <build>
+        <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
+        <!--
+        -->        
         <filters>
-            <filter>src/main/resources/ontofocus-constants.properties</filter>
+            <filter>src/main/resources/sml-toolkit-constants.properties</filter>
         </filters>
     
         <resources>
-            <!-- include main.properties -->
+            <!--             include main.properties 
+            -->            
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
                 <includes>
                     <include>**/*.xml</include>
-                    <include>ontofocus-constants.properties</include>
+                    <include>sml-toolkit-constants.properties</include>
                 </includes>
             </resource>
 
-            <!-- exclude everything else -->
+            <!--exclude everything else--> 
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/*.xml</exclude>
-                    <exclude>ontofocus-constants.properties</exclude>
+                    <exclude>sml-toolkit-constants.properties</exclude>
                 </excludes>
             </resource>
         </resources>
@@ -110,20 +107,20 @@
                 <artifactId>maven-assembly-plugin</artifactId>
 
                 <configuration>
-                    <finalName>ontofocus-${ontofocus.version}-${maven.build.timestamp}</finalName>
-                    <appendAssemblyId>true</appendAssemblyId>
+                    <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>slib.tools.ontofocus.cli.OntoFocusCmdHandler</mainClass>
+                            <mainClass>slib.tools.smltoolkit.SmlToolKitCli</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly-ontofocus</id><!-- this is used for inheritance merges -->
+                        <id>make-assembly-sml-toolkit</id><!-- this is used for inheritance merges -->
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
                             <goal>attached</goal><!-- goals == mojos -->
@@ -140,8 +137,9 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-latest.jar" />
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-${ontofocus.version}.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-${sml-toolkit.version}.jar"/>
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/../releases/sml-toolkit-${sml-toolkit.version}-LATEST.jar"/>
                             </tasks>
                         </configuration>
                         <goals>
@@ -149,6 +147,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -172,5 +180,5 @@
         </plugins>
 
     </build>
-    
+
 </project>

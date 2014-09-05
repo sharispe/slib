@@ -1,17 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>slib</artifactId>
+        <artifactId>slib-tools</artifactId>
         <groupId>com.github.sharispe</groupId>
         <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    
-    <artifactId>slib-graph</artifactId>
-    <packaging>pom</packaging>
-    
-    <name>slib-graph</name>
-    <description>Graph engine library which can be used to manipulate graph of URIs</description>
+    <artifactId>slib-tools-module</artifactId>
+
+
+    <name>${project.artifactId}</name>
+    <description>Utility classes for building a module</description>
     <url>http://www.semantic-measures-library.org</url>
     
     <licenses>
@@ -30,22 +30,25 @@
         </developer>
     </developers>
     
-    <modules>
-        <module>slib-graph-model</module>
-        <module>slib-graph-model-impl</module>
-        <module>slib-graph-algo</module>
-        <module>slib-graph-io</module>
-        <module>slib-graph-test</module>
-        <module>slib-graph-utils</module>
-    </modules>
-    
     <dependencies>
         <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-utils</artifactId>
+            <artifactId>slib-graph-io</artifactId>
             <version>0.9-SNAPSHOT</version>
         </dependency>
+        
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.6</version>
+        </dependency>
+        
     </dependencies>
+
 </project>
-
-

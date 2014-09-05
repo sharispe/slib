@@ -6,10 +6,12 @@
         <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
-    <artifactId>slib-examples</artifactId>
-
+    <artifactId>slib-tools</artifactId>
+    <packaging>pom</packaging>
+    
+    
     <name>${project.artifactId}</name>
-    <description>Module showing how to use slib and associated modules</description>
+    <description>Tools based on slib modules</description>
     <url>http://www.semantic-measures-library.org</url>
     
     <licenses>
@@ -28,59 +30,20 @@
         </developer>
     </developers>
     
+    <modules>
+        <module>slib-tools-module</module>
+        <module>slib-tools-sml-toolkit</module>
+        <module>slib-tools-ontofocus</module>
+        <module>slib-tools-sml-dist</module>
+    </modules>
     <dependencies>
-
-
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- concrete Log4J Implementation for SLF4J API -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
+            <groupId>fr.lgi2p.kid</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9-beta</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-graph-model-impl</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-indexer</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-graph-algo</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-graph-io</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.github.sharispe</groupId>
-            <artifactId>slib-sml</artifactId>
-            <version>0.9-SNAPSHOT</version>
-        </dependency>
-
-
     </dependencies>
-    
-    
+  
     <build>
         <plugins>
             <plugin>
@@ -109,6 +72,17 @@
             </plugin>
             
             <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <finalName>slib-${project.version}</finalName>
+                    <descriptors>
+                        <descriptor>src/main/assembly/sdk.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+            
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
                 <version>1.5</version>
@@ -125,8 +99,8 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            
         </plugins>
     </build>
-
-
 </project>
