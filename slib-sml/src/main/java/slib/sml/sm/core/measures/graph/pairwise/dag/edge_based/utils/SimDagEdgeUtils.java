@@ -39,7 +39,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import org.openrdf.model.URI;
 
-import slib.sglib.algo.graph.shortest_path.Dijkstra;
+import slib.graph.algo.shortest_path.Dijkstra;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 

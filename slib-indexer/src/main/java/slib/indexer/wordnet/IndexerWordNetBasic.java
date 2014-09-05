@@ -46,8 +46,8 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.model.graph.G;
-import slib.sglib.model.repo.URIFactory;
+import slib.graph.model.graph.G;
+import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**

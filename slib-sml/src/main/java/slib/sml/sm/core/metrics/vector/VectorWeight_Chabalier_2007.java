@@ -42,8 +42,8 @@ import org.openrdf.model.vocabulary.RDF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.utils.Direction;
+import slib.graph.model.graph.G;
+import slib.graph.model.graph.utils.Direction;
 import slib.sml.sm.core.engine.SM_Engine;
 
 /**

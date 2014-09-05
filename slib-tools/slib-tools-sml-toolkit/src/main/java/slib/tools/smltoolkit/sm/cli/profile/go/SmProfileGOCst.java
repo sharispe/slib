@@ -38,7 +38,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
-import slib.sglib.io.util.GFormat;
+import slib.graph.io.util.GFormat;
 import slib.tools.module.ToolCmdHandlerCst;
 import slib.tools.smltoolkit.SmlToolKitCliCst;
 

@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 
-import slib.sglib.model.graph.weight.GWS;
+import slib.graph.model.graph.weight.GWS;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.utils.SimDagEdgeUtils;
 import slib.sml.sm.core.engine.SM_Engine;
 import slib.sml.sm.core.measures.graph.pairwise.dag.edge_based.Sim_DAG_edge_abstract;

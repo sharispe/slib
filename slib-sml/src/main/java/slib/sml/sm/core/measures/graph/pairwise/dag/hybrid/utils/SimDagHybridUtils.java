@@ -41,10 +41,10 @@ import java.util.Set;
 import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.model.graph.G;
-import slib.sglib.model.graph.elements.E;
-import slib.sglib.model.graph.utils.Direction;
-import slib.sglib.model.graph.weight.GWS;
+import slib.graph.model.graph.G;
+import slib.graph.model.graph.elements.E;
+import slib.graph.model.graph.utils.Direction;
+import slib.graph.model.graph.weight.GWS;
 
 /**
  *

@@ -41,10 +41,10 @@ import org.openrdf.model.URI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import slib.sglib.algo.graph.extraction.rvf.instances.InstancesAccessor;
-import slib.sglib.model.graph.G;
-import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.repo.URIFactory;
+import slib.graph.algo.extraction.rvf.instances.InstancesAccessor;
+import slib.graph.model.graph.G;
+import slib.graph.model.impl.repo.URIFactoryMemory;
+import slib.graph.model.repo.URIFactory;
 import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.tools.smltoolkit.sm.cli.conf.xml.utils.Sm_XML_Cst;

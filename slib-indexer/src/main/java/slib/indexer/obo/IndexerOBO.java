@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 import org.openrdf.model.URI;
 import slib.indexer.URIDescriptionBasic;
 import slib.indexer.IndexHash;
-import slib.sglib.model.repo.URIFactory;
+import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.OBOconstants;

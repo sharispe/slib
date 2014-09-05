@@ -37,7 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.openrdf.model.URI;
-import slib.sglib.model.graph.G;
+import slib.graph.model.graph.G;
 import slib.utils.impl.QueryEntry;
 import slib.utils.impl.QueryIterator;
 

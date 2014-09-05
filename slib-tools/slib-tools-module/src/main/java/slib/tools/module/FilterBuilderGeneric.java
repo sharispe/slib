@@ -35,12 +35,12 @@ package slib.tools.module;
 
 import java.util.Arrays;
 
-import slib.sglib.io.loader.utils.filter.graph.Filter;
-import slib.sglib.io.loader.utils.filter.graph.FilterCst;
-import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
-import slib.sglib.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
-import slib.sglib.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics;
-import slib.sglib.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics_cst;
+import slib.graph.io.loader.utils.filter.graph.Filter;
+import slib.graph.io.loader.utils.filter.graph.FilterCst;
+import slib.graph.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2;
+import slib.graph.io.loader.utils.filter.graph.gaf2.FilterGraph_GAF2_cst;
+import slib.graph.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics;
+import slib.graph.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics_cst;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 import slib.utils.impl.Util;

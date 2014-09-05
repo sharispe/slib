@@ -13,11 +13,11 @@ import org.openrdf.model.vocabulary.OWL;
 import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slib.sglib.io.plotter.GraphPlotter_Graphviz;
-import slib.sglib.model.graph.G;
-import slib.sglib.model.impl.graph.memory.GraphMemory;
-import slib.sglib.model.impl.repo.URIFactoryMemory;
-import slib.sglib.model.repo.URIFactory;
+import slib.graph.io.plotter.GraphPlotter_Graphviz;
+import slib.graph.model.graph.G;
+import slib.graph.model.impl.graph.memory.GraphMemory;
+import slib.graph.model.impl.repo.URIFactoryMemory;
+import slib.graph.model.repo.URIFactory;
 import slib.tools.ontofocus.core.OntoFocus;
 import slib.utils.ex.SLIB_Exception;
 
