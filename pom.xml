@@ -39,7 +39,8 @@
         <connection>scm:git:git://github.com/sharispe/slib.git</connection>
         <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
         <url>http://github.com/sharispe/slib</url>
-    </scm>
+      <tag>slib-0.9</tag>
+  </scm>
     
     <distributionManagement>
         <snapshotRepository>
@@ -59,7 +60,6 @@
         <module>slib-tools</module>
         <module>slib-indexer</module>
         <module>slib-sml</module>
-        <module>slib-quicktest</module>
         <module>slib-examples</module>
         <module>slib-dist</module>
         <module>slib-graph</module>
@@ -157,8 +157,6 @@
                             <exclude>slib.quicktest</exclude> 
                             <exclude>slib.tools.sml-dist</exclude> 
                         </excludes>
-                        <!--<excludePackageNames>slib.quicktest.*</excludePackageNames>-->
-                        <!--<stylesheet>maven</stylesheet>-->
                     </configuration>
                     <executions>
                         <execution>

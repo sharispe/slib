@@ -34,7 +34,6 @@
         <module>slib-tools-module</module>
         <module>slib-tools-sml-toolkit</module>
         <module>slib-tools-ontofocus</module>
-        <module>slib-tools-sml-dist</module>
     </modules>
     <dependencies>
         <dependency>
