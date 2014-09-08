@@ -1,3 +1,5 @@
+pom.xml.releaseBackup
+release.properties
 *.log
 target/
 .settings/
