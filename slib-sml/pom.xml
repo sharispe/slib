@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.10-SNAPSHOT</version>
+        <version>0.9-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-sml</artifactId>
@@ -41,28 +41,28 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
             <type>pom</type>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model-impl</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-algo</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-utils</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         
