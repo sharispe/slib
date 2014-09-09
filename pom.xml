@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sharispe</groupId>
     <artifactId>slib</artifactId>
-    <version>0.9-SNAPSHOT</version>
+    <version>0.9</version>
     <packaging>pom</packaging>
     
     <name>${project.artifactId}</name>
@@ -39,7 +39,7 @@
         <connection>scm:git:git://github.com/sharispe/slib.git</connection>
         <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
         <url>http://github.com/sharispe/slib</url>
-        <tag>slib-0.9</tag>
+        <tag>v0.9.5</tag>
     </scm>
     
     <distributionManagement>
