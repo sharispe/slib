@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
         
         <dependency>

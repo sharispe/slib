@@ -7,7 +7,7 @@
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools-sml-toolkit</artifactId>
-  <version>0.10-SNAPSHOT</version>
+  <version>0.9-SNAPSHOT</version>
     
     
     <name>${project.artifactId}</name>
@@ -66,7 +66,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

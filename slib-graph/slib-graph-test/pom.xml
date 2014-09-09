@@ -64,7 +64,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-utils</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
             <scope>test</scope>
             <type>jar</type>
         </dependency>
