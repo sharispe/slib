@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib-parent</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9-SNAPSHOT</version>
+        <version>0.9</version>
         <relativePath>../slib-parent</relativePath>
     </parent>
     <artifactId>slib-indexer</artifactId>
@@ -33,12 +33,12 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9-SNAPSHOT</version>
+            <version>0.9</version>
             <type>jar</type>
         </dependency>
     </dependencies>
