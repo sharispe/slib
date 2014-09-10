@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>slib</artifactId>
+        <artifactId>slib-parent</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.10-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <version>0.9-SNAPSHOT</version>
+        <relativePath>../slib-parent</relativePath>
     </parent>
     
     <artifactId>slib-graph</artifactId>
     <packaging>pom</packaging>
     
-    <name>slib-graph</name>
+    <name>${project.artifactId}</name>
     <description>Graph engine library which can be used to manipulate graph of URIs</description>
     <url>http://www.semantic-measures-library.org</url>
     
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
     

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sharispe</groupId>
     <artifactId>slib</artifactId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.9-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <name>${project.artifactId}</name>
@@ -111,9 +111,14 @@
                 </plugin>
                 
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
                     <version>2.8.1</version>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
                 </plugin>
+
                         
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -179,7 +184,6 @@
                     <version>2.5</version>
                     <configuration>
                         <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-                        <skip>true</skip>
                     </configuration>
                 </plugin>
             
