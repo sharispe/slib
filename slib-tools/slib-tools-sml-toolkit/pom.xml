@@ -8,8 +8,7 @@
     </parent>
     <artifactId>slib-tools-sml-toolkit</artifactId>
   <version>0.10-SNAPSHOT</version>
-    
-    
+
     <name>${project.artifactId}</name>
     <description>SML-Toolkit: command-line interface of the Semantic Measures Library</description>
     <url>http://www.semantic-measures-library.org</url>
@@ -29,10 +28,10 @@
             <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
         </developer>
     </developers>
-    
+
     <properties>
         <toolkit.version>${sml-toolkit.version}</toolkit.version>
-        <toolkit.build.snapshot>${maven.build.timestamp}</toolkit.build.snapshot>
+        <toolkit.build.snapshot>${timestamp}</toolkit.build.snapshot>
     </properties>
   
     <dependencies>
@@ -71,7 +70,7 @@
     </dependencies>
 
     <build>
-        <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}-lib</finalName>
+        <finalName>sml-toolkit-${sml-toolkit.version}-${timestamp}-lib</finalName>
         <!--
         -->        
         <filters>
@@ -107,7 +106,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
 
                 <configuration>
-                    <finalName>sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}</finalName>
+                    <finalName>sml-toolkit-${sml-toolkit.version}-${timestamp}</finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
@@ -137,9 +136,9 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar" />
-                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-${sml-toolkit.version}.jar" />
-                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${maven.build.timestamp}.jar" tofile="${project.build.directory}/../releases/sml-toolkit-${sml-toolkit.version}-LATEST.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-latest.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${timestamp}.jar" tofile="${project.build.directory}/sml-toolkit-${sml-toolkit.version}.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/sml-toolkit-${sml-toolkit.version}-${timestamp}.jar" tofile="${project.build.directory}/../releases/sml-toolkit-${sml-toolkit.version}-LATEST.jar" />
                             </tasks>
                         </configuration>
                         <goals>

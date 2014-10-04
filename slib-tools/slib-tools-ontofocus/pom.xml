@@ -140,8 +140,8 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-latest.jar" />
-                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${maven.build.timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-${ontofocus.version}.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-latest.jar" />
+                                <copy overwrite="true" file="${project.build.directory}/ontofocus-${ontofocus.version}-${timestamp}-jar-with-dependencies.jar" tofile="${project.build.directory}/ontofocus-${ontofocus.version}.jar" />
                             </tasks>
                         </configuration>
                         <goals>
