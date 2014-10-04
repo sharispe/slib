@@ -37,9 +37,9 @@
     </modules>
     <dependencies>
         <dependency>
-            <groupId>fr.lgi2p.kid</groupId>
+            <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9-beta</version>
+            <version>0.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
   
