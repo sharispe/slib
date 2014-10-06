@@ -5,7 +5,7 @@ Slib
 
 
 * *slib-sml*, the module dedicated to [The Semantic Measures Library](http://www.semantic-measures-library.org) (SML), a library dedicated to semantic measures (similarity/relatedness) computation, evaluation and analysis. See dedicated web site: http://www.semantic-measures-library.org for more information on both semantic measures and this module.
-* 
+
 * *slib-graph* a simple in-memory graph engine used to manipulate graphs of URIs - based on on the sesame library (RDF/OWL data loading...). This module provides an easy way to process semantic graphs (e.g. RDF graph) as graphs in which traversal can easily be performed. Numerous algorithms commonly used to process semantic graphs are implemented.
                                                                                  
 * *slib-tools* various command-line tools performing processes on semantic graph/data
