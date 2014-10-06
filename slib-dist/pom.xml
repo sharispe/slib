@@ -36,7 +36,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
-                    <finalName>slib-dist-${slib.version}-${maven.build.timestamp}</finalName>
+                    <finalName>slib-dist-${slib.version}-${timestamp}</finalName>
                 </configuration>
                 <version>2.4</version>
                 <executions>
