@@ -990,7 +990,7 @@ public final class SMConstants {
             putAll(SIM_PAIRWISE_DAG_EDGE_BASED);
             putAll(SIM_PAIRWISE_DAG_NODE_BASED);
             putAll(SIM_PAIRWISE_DAG_HYBRID_BASED);
-            putAll(SIM_FRAMEWORK_DAG_SET_BASED);
+            //putAll(SIM_FRAMEWORK_DAG_SET_BASED);
         }
     };
     /**
