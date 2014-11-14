@@ -47,7 +47,8 @@
         <connection>scm:git:git://github.com/sharispe/slib.git</connection>
         <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
         <url>http://github.com/sharispe/slib</url>
-    </scm>
+      <tag>slib-0.10d</tag>
+  </scm>
     
     <distributionManagement>
         <snapshotRepository>
@@ -194,9 +195,9 @@
                     <executions>
                         <execution>
                             <id>sign-artifacts</id>
-                            <phase>verify</phase>
+                            <phase>deploy</phase>
                             <goals>
-                                <goal>sign</goal>
+                                <goal>sign-and-deploy-file</goal>
                             </goals>
                         </execution>
                     </executions>
