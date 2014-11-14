@@ -47,7 +47,6 @@
         <connection>scm:git:git://github.com/sharispe/slib.git</connection>
         <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
         <url>http://github.com/sharispe/slib</url>
-        <tag>slib-0.10c</tag>
     </scm>
     
     <distributionManagement>
@@ -164,22 +163,16 @@
                 </plugin>
                
                 
+                
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
                     <version>1.5</version>
                     <configuration>
                         <passphrase>${gpg.passphrase}</passphrase>
+                        <gpg.skip>false</gpg.skip>
+                        <packaging>pom</packaging>
                     </configuration>
-                    <executions>
-                        <execution>
-                            <id>sign-artifacts</id>
-                            <phase>verify</phase>
-                            <goals>
-                                <goal>sign</goal>
-                            </goals>
-                        </execution>
-                    </executions>
                 </plugin>
                 
                 <plugin>
@@ -198,6 +191,15 @@
                     <configuration>
                         <skip>false</skip>
                     </configuration>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             
             </plugins>
