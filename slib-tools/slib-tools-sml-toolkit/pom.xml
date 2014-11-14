@@ -3,11 +3,11 @@
     <parent>
         <artifactId>slib-tools</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.10-SNAPSHOT</version>
+        <version>0.10</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools-sml-toolkit</artifactId>
-  <version>0.10-SNAPSHOT</version>
+  <version>0.10</version>
 
     <name>${project.artifactId}</name>
     <description>SML-Toolkit: command-line interface of the Semantic Measures Library</description>
@@ -38,12 +38,12 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.10</version>
         </dependency>
 
         <dependency>
@@ -60,12 +60,12 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.10</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.10</version>
         </dependency>
     </dependencies>
 
