@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.10-SNAPSHOT</version>
+        <version>0.10</version>
         <relativePath>..</relativePath>
     </parent>
         
