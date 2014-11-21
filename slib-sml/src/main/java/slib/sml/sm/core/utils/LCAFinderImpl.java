@@ -56,24 +56,22 @@ import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;
 
 /**
- * Dummy implementation of the LCAFinder interface (high algorithmic
- * complexity).
+ * Dummy implementation of the LCAFinder interface. The algorithmic complexity
+ * of this implementation can easily be reduced.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class LCAFinderImpl implements LCAFinder {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    
+
     G graph;
     SM_Engine engine;
-    
-    public LCAFinderImpl(SM_Engine engine){
+
+    public LCAFinderImpl(SM_Engine engine) {
         this.engine = engine;
         graph = engine.getGraph();
     }
-    
-    
 
     private URI getNextUnvisited(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
         for (int i = ancestorsOrdered.size() - 1; i >= 0; i--) {
@@ -112,20 +110,17 @@ public class LCAFinderImpl implements LCAFinder {
             throw new SLIB_Ex_Critic("Graph " + graph.getURI() + " doesn't contain vertice " + b);
         }
 
-
-        Set<URI> lca = new HashSet<URI>();
+        Set<URI> lca = new HashSet();
 
         Set<URI> ancA = engine.getAncestorsInc(a);
         Set<URI> ancB = engine.getAncestorsInc(b);
 
         // Test if a (resp. b) subsumes b (resp. a)
-
         if (ancA.contains(b)) {
             lca = SetUtils.buildSet(b);
         } else if (ancB.contains(a)) {
             lca = SetUtils.buildSet(a);
         } else { // search the intersetion of the ancestors of the compared concepts
-
 
             Set<URI> intersection = SetUtils.intersection(engine.getAncestorsInc(a), engine.getAncestorsInc(b));
 //        logger.info(union.toString());
@@ -143,8 +138,7 @@ public class LCAFinderImpl implements LCAFinder {
             to.remove(b);
 
 //        logger.debug("Traversal Order : " + to);
-
-            List<URI> ancestorsOrdered = new ArrayList<URI>(to.size());
+            List<URI> ancestorsOrdered = new ArrayList(to.size());
 
             for (URI v : to) {
                 if (intersection.contains(v)) {
@@ -154,10 +148,8 @@ public class LCAFinderImpl implements LCAFinder {
 
 //        logger.debug("Union size : " + union.size());
 //        logger.debug("Ancestors ordered : " + ancestorsOrdered.size());
-
             // Create dataStructure which will help us to manage 
             // the visited vertices
-
             Map<URI, Boolean> isVisited = new HashMap<URI, Boolean>(ancestorsOrdered.size());
             for (URI v : ancestorsOrdered) {
                 isVisited.put(v, Boolean.FALSE);

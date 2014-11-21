@@ -271,7 +271,7 @@ public class TestGraphEngine {
     @Test
     public void test_retrieveLeaves() throws SLIB_Ex_Critic {
 
-        Set<URI> leavesGraph = engine.getTaxonomicLeaves();
+        Set<URI> leavesGraph = engine.getLeaves();
 
         //logger.info("" + leavesGraph.size() + "\t" + leavesGraph);
         //TODO check equality

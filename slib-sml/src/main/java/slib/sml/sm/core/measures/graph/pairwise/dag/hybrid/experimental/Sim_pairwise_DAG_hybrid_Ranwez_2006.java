@@ -59,7 +59,7 @@ public class Sim_pairwise_DAG_hybrid_Ranwez_2006 extends Sim_DAG_hybrid_abstract
     @Override
     public double compare(URI a, URI b, SM_Engine c, SMconf conf) {
 
-        Set<URI> hypoAncEx = c.getHypoAncEx(a, b);
+        Set<URI> hypoAncEx = c.getHypoOfAncDiff(a, b);
         Set<URI> hypoA = c.getDescendantsInc(a);
         Set<URI> hypoB = c.getDescendantsInc(b);
 

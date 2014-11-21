@@ -55,7 +55,7 @@ public class SetUtils {
      */
     public static <X> Set<X> union(Collection<X> a, Collection<X> b) {
 
-        Set<X> union = new HashSet<X>(a);
+        Set<X> union = new HashSet(a);
         union.addAll(b);
         return union;
     }
@@ -69,7 +69,7 @@ public class SetUtils {
      * @return the intersection
      */
     public static <X> Set<X> intersection(Collection<X> anc_setA, Collection<X> anc_setB) {
-        Set<X> inter = new HashSet<X>(anc_setA);
+        Set<X> inter = new HashSet(anc_setA);
         inter.retainAll(anc_setB);
         return inter;
     }
@@ -93,19 +93,19 @@ public class SetUtils {
     }
 
     /**
-     * Build a Set<X> containing the given object of type X. If the object is
-     * null, null is returned
+     * Build a Set containing the given object of type X. If the object is null,
+     * null is returned
      *
      * @param <X>
      * @param o
-     * @return a Set<X> containing the given object of type X or null
+     * @return a Set containing the given object of type X or null
      */
     public static <X> Set<X> buildSet(X o) {
         if (o == null) {
             return null;
         }
 
-        Set<X> set = new HashSet<X>();
+        Set<X> set = new HashSet();
         set.add(o);
         return set;
     }
