@@ -108,10 +108,6 @@ public class AncestorEngine extends RVF_TAX {
      */
     public Map<URI, Set<URI>> getAllAncestorsInc() throws SLIB_Ex_Critic {
 
-        Map<URI, Set<URI>> allAncs = getAllRV();
-        for (URI v : allAncs.keySet()) {
-            allAncs.get(v).add(v);
-        }
-        return allAncs;
+        return getAllRVInc();
     }
 }

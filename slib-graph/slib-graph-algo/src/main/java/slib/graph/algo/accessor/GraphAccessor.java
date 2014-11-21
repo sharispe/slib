@@ -71,7 +71,7 @@ public class GraphAccessor {
 
         logger.debug("retrieving Classes");
 
-        Set<URI> classes = new HashSet<URI>();
+        Set<URI> classes = new HashSet();
         for (E e : graph.getE(RDFS.SUBCLASSOF)) {
             classes.add(e.getSource());
             classes.add(e.getTarget());
@@ -103,7 +103,7 @@ public class GraphAccessor {
      * @return a set of URI corresponding to the classes of the graph
      */
     public static Set<URI> getInstances(G graph) {
-        Set<URI> instances = new HashSet<URI>(graph.getV());
+        Set<URI> instances = new HashSet(graph.getV());
 
         URI o;
         for (E e : graph.getE(RDFS.SUBCLASSOF)) {
@@ -126,7 +126,7 @@ public class GraphAccessor {
     public static Set<URI> getV_NoEdgeType(G g, Set<URI> edgeTypes, Direction dir) {
 
 
-        Set<URI> valid = new HashSet<URI>();
+        Set<URI> valid = new HashSet();
 
         Set<URI> vSel = g.getV();
 

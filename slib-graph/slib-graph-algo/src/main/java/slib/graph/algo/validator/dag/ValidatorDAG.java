@@ -247,7 +247,7 @@ public class ValidatorDAG {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
 
-        Set<URI> roots = new HashSet<URI>();
+        Set<URI> roots = new HashSet();
         for (URI v : classes) {
 
             if (g.getV(v, wc).isEmpty()) {

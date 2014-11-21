@@ -58,24 +58,31 @@ import slib.graph.model.graph.utils.WalkConstraint;
 public class RVF {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    /**
-     *
-     */
+
     protected WalkConstraint wc;
-    /**
-     *
-     */
     protected G g;
 
     /**
-     * Reachable vertex Finder
+     * Reachable Vertex Finder
      *
      * @param g
-     * @param wc 
+     * @param wc
      */
     public RVF(G g, WalkConstraint wc) {
         this.g = g;
         this.wc = wc;
+    }
+
+    /**
+     * Retrieve the neighbors of the given node according to the specified
+     * configuration. Exclusive process: the focused node will be included in
+     * the set of reachable vertices - expect if a inner loop is specified.
+     *
+     * @param v the focus vertex
+     * @return the set of neighbors.
+     */
+    public Set<URI> getNeighbors(URI v) {
+        return g.getV(v, wc);
     }
 
     /**
@@ -91,7 +98,7 @@ public class RVF {
      */
     public Set<URI> getRV(URI v) {
 
-        List<URI> rv = new ArrayList<URI>();
+        List<URI> rv = new ArrayList();
 
         BFS it = new BFS(g, v, wc);
 
@@ -103,7 +110,7 @@ public class RVF {
 
         rv.remove(v);// The BFS is exclusive
 
-        return new HashSet<URI>(rv);
+        return new HashSet(rv);
     }
 
     /**
@@ -114,14 +121,14 @@ public class RVF {
      * vertices will NOT be included in their respective set of reachable
      * vertices.
      *
-     * @param queryVertices 
+     * @param queryVertices
      * @return an Map key V value the set of vertices reachable from the key
      */
     public Map<URI, Set<URI>> getRV(Set<URI> queryVertices) {
 
         logger.debug("Get All reachable vertices : start");
 
-        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
+        Map<URI, Set<URI>> allVertices = new HashMap();
 
         for (URI v : queryVertices) {
             allVertices.put(v, getRV(v));
@@ -139,27 +146,26 @@ public class RVF {
      * vertices will NOT be counted as part of their respective set of reachable
      * vertices.
      *
-     * @param queryVertices 
-     * @return an Map key V value the size of the set of vertices reachable
-     * from the key as Integer
+     * @param queryVertices
+     * @return an Map key V value the size of the set of vertices reachable from
+     * the key as Integer
      */
     public Map<URI, Integer> getRVnb(Set<URI> queryVertices) {
 
         Map<URI, Set<URI>> r = getRV(queryVertices);
-        Map<URI, Integer> results = new HashMap<URI, Integer>(r.size());
+        Map<URI, Integer> results = new HashMap(r.size());
 
         for (Entry<URI, Set<URI>> entry : r.entrySet()) {
             results.put(entry.getKey(), entry.getValue().size());
         }
-
         return results;
     }
-    
-    public WalkConstraint getWalkConstraint(){
+
+    public WalkConstraint getWalkConstraint() {
         return wc;
     }
-    
-    public void setWalkConstraint(WalkConstraint nwc){
+
+    public void setWalkConstraint(WalkConstraint nwc) {
         this.wc = nwc;
     }
 }
