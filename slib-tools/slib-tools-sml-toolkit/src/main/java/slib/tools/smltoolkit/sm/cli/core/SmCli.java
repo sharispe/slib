@@ -108,15 +108,15 @@ public class SmCli implements SmlModuleCLI {
      */
     @Override
     public void execute(String[] args) throws SLIB_Exception {
-        
+
         SmCmdHandler c = new SmCmdHandler();
-        
+
         c.processArgs(args);
-        
+
         if (c.xmlConfFile != null) {
             execute(c.xmlConfFile);
         } else {
-            
+
             String profileconf = System.getProperty("user.dir") + "/sml-xmlconf.xml";
             logger.info("Writing profile configuration to " + profileconf);
             FileWriterUtil.writeToFile(profileconf, c.xmlConfAsString);
@@ -140,7 +140,6 @@ public class SmCli implements SmlModuleCLI {
 
         conf = new Sm_XMLConfLoader(confFile);
 
-
         // Load the graph and perform required graph treatments
         GraphLoaderGeneric.load(conf.generic.getGraphConfs());
 
@@ -160,11 +159,9 @@ public class SmCli implements SmlModuleCLI {
 
         simManager = new SM_Engine(graph);
 
-
         for (ICconf icConf : conf.gConfICs) {
             simManager.computeIC(icConf);
         }
-
 
         if (conf.getCachePairwiseResults() == null) {
             simManager.setCachePairwiseResults(CACHE_PAIRWISE_RESULTS);
@@ -176,14 +173,11 @@ public class SmCli implements SmlModuleCLI {
             SIZE_BENCH = conf.getBenchSize();
         }
 
-
-
         if (conf.isQuiet()) {
             QUIET = true;
         } else {
             QUIET = false;
         }
-
 
         logger.info("---------------------------------------------------------------");
         logger.info(" Global parameters");
@@ -192,7 +186,6 @@ public class SmCli implements SmlModuleCLI {
         logger.info("Bench size : " + SIZE_BENCH);
         logger.info("Number of threads allowed: " + ThreadManager.getSingleton().getCapacity());
         logger.info("---------------------------------------------------------------");
-
 
         // check if the evaluated measure requires the graph to be a DAG
         if (requireDAG()) {
@@ -240,7 +233,6 @@ public class SmCli implements SmlModuleCLI {
                 boolean useLoadedURIprefixes = Util.stringToBoolean(use_uri_prefix);
                 boolean useLoadedURIprefixesOutput = Util.stringToBoolean(use_uri_prefix_output);
 
-
                 if (outputBaseName_s != null) {
                     outputBasedName = Util.stringToBoolean(outputBaseName_s);
                 }
@@ -266,7 +258,6 @@ public class SmCli implements SmlModuleCLI {
                     throw new SLIB_Ex_Critic("Error loading query " + id + ", parameters " + XmlTags.URI_PREFIX_ATTR + " and " + Sm_XML_Cst.USE_URI_PREFIX_ATTR + " cannot be used togethers. Consult documentation");
                 }
 
-
                 SMQueryParam queryParam = new SMQueryParam(id);
                 queryParam.setNoAnnotAction(noAnnotAction)
                         .setNoAnnotationScore(noAnnotationScore)
@@ -279,7 +270,6 @@ public class SmCli implements SmlModuleCLI {
                         .setUseLoadedURIprefixes(useLoadedURIprefixes)
                         .setUseLoadedURIprefixesOutput(useLoadedURIprefixesOutput);
 
-
                 logger.info(
                         "---------------------------------------------------------------");
                 logger.info(
@@ -288,7 +278,6 @@ public class SmCli implements SmlModuleCLI {
                         "---------------------------------------------------------------");
                 logger.info(queryParam.toString());
 
-
                 // require file
                 if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)
                         || type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
@@ -296,7 +285,7 @@ public class SmCli implements SmlModuleCLI {
                     QueryIterator qloader = new QueryFileIterator(infile, uri_prefix);
 
                     if (type.equals(Sm_XML_Cst.QUERIES_TYPE_CTOC)) {
-                        
+
                         perform_cTOc(qloader, queryParam);
                     } else if (type.equals(Sm_XML_Cst.QUERIES_TYPE_OTOO)) {
                         perform_oTOo(qloader, queryParam);
@@ -322,14 +311,12 @@ public class SmCli implements SmlModuleCLI {
 
     private void perform_oTOo(QueryIterator qloader, SMQueryParam queryParam) throws SLIB_Exception {
 
-
         logger.info("Starting computing query " + Sm_XML_Cst.QUERIES_TYPE_OTOO);
 
         ThreadManager threadManager = ThreadManager.getSingleton();
         PoolWorker poolWorker = null;
 
         try {
-
 
             long queryNumber = qloader.getNumberQueries();
             logger.info("Number of query ~" + queryNumber);
@@ -355,7 +342,6 @@ public class SmCli implements SmlModuleCLI {
             int setValue = 0;
 
             // Compute measure results
-
             poolWorker = threadManager.getMaxLoadPoolWorker();
 
             long count = 0;
@@ -433,10 +419,14 @@ public class SmCli implements SmlModuleCLI {
             }
 
             file.close();
-            logger.info(count+" queries considered");
-            logger.info("skipped:" + skipped + "/" + count + "(" + skipped * 100 / count + "%)");
-            logger.info("setted :" + setValue + "/" + count + "(" + setValue * 100 / count + "%)");
-            logger.info("consult:" + queryParam.getOutfile());
+            logger.info(count + " queries considered");
+            if (count == 0) {
+                logger.info("Nothing to do... Please check your query file if any.");
+            } else {
+                logger.info("skipped:" + skipped + "/" + count + "(" + skipped * 100 / count + "%)");
+                logger.info("setted :" + setValue + "/" + count + "(" + setValue * 100 / count + "%)");
+                logger.info("consult:" + queryParam.getOutfile());
+            }
 
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
@@ -453,7 +443,6 @@ public class SmCli implements SmlModuleCLI {
 
     private void perform_cTOc(QueryIterator qloader, SMQueryParam queryParam) throws SLIB_Exception {
 
-
         logger.info("Starting computing query " + Sm_XML_Cst.QUERIES_TYPE_CTOC);
 
         ThreadManager threadManager = ThreadManager.getSingleton();
@@ -461,21 +450,17 @@ public class SmCli implements SmlModuleCLI {
 
         try {
 
-
             long queryNumber = qloader.getNumberQueries();
             logger.info("Number of query ~" + queryNumber);
 
             long queryNumberLogStep = queryNumber / 10; // we log 10 times
             int nbLogStep = 0;
 
-
-
             FileWriter fstream = new FileWriter(queryParam.getOutfile());
             BufferedWriter file = new BufferedWriter(fstream);
 
             // Build Header
             String header = Sm_XML_Cst.C1_ATTR + "\t" + Sm_XML_Cst.C2_ATTR;
-
 
             for (SMconf m : conf.gConfPairwise) {
                 header += "\t" + m.getLabel();
@@ -487,7 +472,6 @@ public class SmCli implements SmlModuleCLI {
             int setValue = 0;
 
             // Compute measure results
-
             poolWorker = threadManager.getMaxLoadPoolWorker();
 
             long count = 0;
@@ -505,8 +489,6 @@ public class SmCli implements SmlModuleCLI {
                 List<QueryEntry> queriesBench = qloader.nextValids(SIZE_BENCH);
 
                 ConceptToConcept_Thread callable = new ConceptToConcept_Thread(poolWorker, queriesBench, this, queryParam);
-
-
 
                 poolWorker.addTask();
 //				logger.debug("- Adding Thread task "+poolWorker.getLoad()+"/"+poolWorker.getCapacity());
@@ -565,10 +547,14 @@ public class SmCli implements SmlModuleCLI {
             }
 
             file.close();
-            logger.info(count+" queries considered");
-            logger.info("skipped:" + skipped + "/" + count + " (" + skipped * 100 / count + "%)");
-            logger.info("setted :" + setValue + "/" + count + " (" + setValue * 100 / count + "%)");
-            logger.info("consult:" + queryParam.getOutfile());
+            logger.info(count + " queries considered");
+            if (count == 0) {
+                logger.info("Nothing to do... Please check your query file if any.");
+            } else {
+                logger.info("skipped:" + skipped + "/" + count + " (" + skipped * 100 / count + "%)");
+                logger.info("setted :" + setValue + "/" + count + " (" + setValue * 100 / count + "%)");
+                logger.info("consult:" + queryParam.getOutfile());
+            }
 
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
