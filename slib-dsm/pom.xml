@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.sharispe</groupId>
+        <artifactId>slib</artifactId>
+        <version>0.9.2-SNAPSHOT</version>
+    </parent>
+    <artifactId>slib-dsm</artifactId>
+    <version>0.9.2-SNAPSHOT</version>
+
+    <name>${project.artifactId}</name>
+    
+    <description>SLIB DSM: distributional semantic models</description>
+    
+    <licenses>
+        <license>
+            <name>CECILL</name>
+            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+        </license>
+    </licenses>
+    
+    <developers>
+        <developer>
+            <name>Sébastien Harispe</name>
+            <email>sebastien.harispe@gmail.com</email>
+            <organization>Ecole des mines d'Alès - LGI2P</organization>
+            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+        </developer>
+    </developers>
+    
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>3.4</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>edu.stanford.nlp</groupId>
+            <artifactId>stanford-corenlp</artifactId>
+            <version>3.4</version>
+            <classifier>models</classifier>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-utils</artifactId>
+            <version>0.9.2-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-sml</artifactId>
+            <version>0.9.2-SNAPSHOT</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-tools-module</artifactId>
+            <version>0.9.2-SNAPSHOT</version>
+        </dependency>
+        
+    </dependencies>
+</project>
