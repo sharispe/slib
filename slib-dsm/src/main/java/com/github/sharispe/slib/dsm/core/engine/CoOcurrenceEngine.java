@@ -71,8 +71,8 @@ public class CoOcurrenceEngine {
 
     Logger logger = LoggerFactory.getLogger(CoOcurrenceEngine.class);
 
-    public static final int WINDOW_SIZE_LEFT = 10;
-    public static final int WINDOW_SIZE_RIGHT = 10;
+    public static final int WINDOW_SIZE_LEFT  = 30;
+    public static final int WINDOW_SIZE_RIGHT = 30;
 
     private Map<String, Integer> vocIndex;
     Pattern blank_pattern = Pattern.compile("\\s+");
@@ -270,6 +270,10 @@ public class CoOcurrenceEngine {
 
         List<File> flist = new ArrayList();
         int chunk_size = files.size() / nbThreads;
+        if(chunk_size > 10000) chunk_size = 10000;
+        
+        logger.info("chunk size " + chunk_size);
+        
         int count_chunk = 0;
 
         for (File f : files) {

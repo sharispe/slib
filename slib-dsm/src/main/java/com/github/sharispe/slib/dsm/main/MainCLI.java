@@ -129,7 +129,7 @@ public class MainCLI {
     public static void main(String[] argv) throws IOException, FileNotFoundException, SLIB_Ex_Critic, SLIB_Exception {
 
         log("---------------------------------------------------------------------");
-        log("SML-Dist v" + VERSION);
+        log("SLIB-DSM " + VERSION);
         log("---------------------------------------------------------------------");
         log("args: " + Arrays.toString(argv));
 
@@ -405,18 +405,62 @@ public class MainCLI {
 
             while (true) {
                 log("---------------------------------------");
-                entity_label = getInput("Please type a label -- type quit() to stop: ");
-                if (!entityIndex.containsKey(entity_label)) {
-                    if (entity_label.equals("quit()")) {
-                        break;
-                    }
-                    log("Index does not contain label : " + entity_label);
+                String[] entity_labels = getInput("Please type a label (you can use mutliple labels using / separator) -- type quit() to stop: ").split("/");
+                log("Entities: " + Arrays.toString(entity_labels));
 
+                if (entity_labels.length == 1) {
+                    entity_label = entity_labels[0];
+                    if (!entityIndex.containsKey(entity_label)) {
+                        if (entity_label.equals("quit()")) {
+                            break;
+                        }
+                        log("Index does not contain label : " + entity_label);
+
+                    } else {
+                        SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_label, k, true);
+                    }
                 } else {
-                    SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_label, k, true);
+
+                    boolean validLabels = true;
+
+                    for (int i = 0; i < entity_labels.length; i++) {
+                        if (!entityIndex.containsKey(entity_labels[i])) {
+                            log("Index does not contain label : " + entity_labels[i]);
+                            validLabels = false;
+                            break;
+                        }
+                    }
+
+                    if (validLabels) {
+                        Map<String, Double> scores = new HashMap();
+
+                        for (int i = 0; i < entity_labels.length; i++) {
+
+                            logger.info("Computing results for: " + entity_labels[i]);
+
+                            Map<String, Double> scoresCurrenEntity = SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_labels[i], k, true);
+
+                            for (String key : scoresCurrenEntity.keySet()) {
+                                if (scores.containsKey(key)) {
+                                    scores.put(key, scores.get(key) + scoresCurrenEntity.get(key));
+                                } else {
+                                    scores.put(key, scoresCurrenEntity.get(key));
+                                }
+                            }
+                        }
+
+                        logger.info("sorting results...");
+                        
+                        int id = 0;
+
+                        for (Map.Entry<String, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
+                            id++;
+                            logger.info("\t" + id+ "\t"+ e.getKey() +"\t" + e.getValue());
+                            if(id == 40) break;
+                        }
+                    }
                 }
             }
-
         } else {
 
             log("Looking for best sim " + entity_label + " (k=" + k + ")");
@@ -446,6 +490,8 @@ public class MainCLI {
         String dm_term_dir = argv[0];
         String dm_doc_dir = argv[1];
         String doc_label = argv[2];
+        
+        
         int k = Integer.parseInt(argv[3]);
 
         String outfile = argv.length == 5 ? argv[4] : null;
@@ -585,6 +631,8 @@ public class MainCLI {
     }
 
     private static void CMD_REDUCE_MODEL(String[] argv) throws IOException, SLIB_Ex_Critic {
+
+        log("Params: " + Arrays.toString(argv));
 
         String dist_error
                 = "- k_high_coverage: only consider the k more covered dimension based on word usage in doc, i.e. nbFilesWithWord/NbDoc\n"
