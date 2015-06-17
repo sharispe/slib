@@ -33,45 +33,40 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-
-
-import slib.utils.ex.SLIB_Exception;
-
 /**
- *
- * Distributional Model Engine. Class used to build distributional models
- *
+ * Used to store information about a n-gram
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class DMEngine {
+class NgramInfo {
 
-    public static void build_distributional_model_TERM_TO_TERM(Collection<File> files, Voc vocIndex, ModelConf model, int nbThreads) throws SLIB_Exception, IOException {
-
-        CoOcurrenceEngine engine = new CoOcurrenceEngine(vocIndex);
-        SparseMatrix wordCoocurences = engine.computeCoOcurrence(files, nbThreads);
-        build_distributional_model_TERM_TO_TERM(vocIndex, wordCoocurences, model);
+    String ngram; 
+    int size; 
+    int nbOccurrences;
+    int nbFilesWithNgram; 
+    
+    public NgramInfo(String ngram, int size, int nbOccurrences, int nbFilesWithNgram) {
+        this.ngram = ngram;
+        this.size = size;
+        this.nbOccurrences = nbOccurrences;
+        this.nbFilesWithNgram = nbFilesWithNgram;
     }
 
-    public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
-
-        ConfUtils.initModel(model);
-        ConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
-
-        // We flush the index for entities and the dimensions
-        XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
-        FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
-        
-        
-        ConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
+    public String getNgram() {
+        return ngram;
     }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getNbOccurrences() {
+        return nbOccurrences;
+    }
+
+    public int getNbFilesWithNgram() {
+        return nbFilesWithNgram;
+    }
+    
+    
+    
 }

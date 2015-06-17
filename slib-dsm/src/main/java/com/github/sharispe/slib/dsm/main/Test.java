@@ -33,6 +33,16 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
+import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
+import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract;
+import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator_Allow_Shorter;
+import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator_FixedSize;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import slib.utils.impl.UtilDebug;
+
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
@@ -40,6 +50,41 @@ package com.github.sharispe.slib.dsm.main;
 public class Test {
 
     public static void main(String[] args) throws Exception {
+
+        File f = new File("//home/seb/data/OANC/data/written_2/non-fiction/OUP/Castro/chL.txt");
+        WordIteratorAbstract w;
+//        w = new WordIterator_Allow_Shorter(f, 2);
+//        while (w.hasNext()) {
+//            System.out.println(w.next());
+//        }
+
+        System.out.println("FIXED SIZE");
+        w = new WordIterator_FixedSize(f, 2);
+        while (w.hasNext()) {
+            System.out.println(w.next());
+        }
+
+        UtilDebug.exit();
+
+        List<Integer> list = new ArrayList();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        System.out.println(list.toString());
+        list.add(1, 5);
+
+        System.out.println(list.toString());
+
+        String[] arguments = {"/data/xp/dsm", "/tmp/voc", "6", "2"};
+        MainCLI.CMD_VOC_INDEX(arguments);
+        VocStatComputer.computeStat("/tmp/voc", 50);
+
+        System.exit(0);
+
+        Voc index = new Voc("/tmp/voc");
+        System.out.println(index.size());
+
+        System.exit(0);
 
         String input = "  ( king ) + ( man ) ";
 
@@ -66,13 +111,9 @@ public class Test {
                 n.setOperation(e);
                 n.setLeftPart(current);
                 current = n;
-            } 
-            else if(e.equals("(")){
-                
-                
-                
-            }
-            else {
+            } else if (e.equals("(")) {
+
+            } else {
                 System.out.println("Create Node: " + e);
                 Node n = new Node(e);
 

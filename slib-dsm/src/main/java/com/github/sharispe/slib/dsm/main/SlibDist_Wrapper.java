@@ -33,8 +33,8 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
+import com.github.sharispe.slib.dsm.core.engine.VocStatConf;
 import com.github.sharispe.slib.dsm.core.Tf_Idf;
-import com.github.sharispe.slib.dsm.core.engine.CoOcurrenceEngine;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
 import com.github.sharispe.slib.dsm.utils.Lemmatizer;
@@ -58,7 +58,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sml.sm.core.measures.vector.CosineSimilarity;
 import com.github.sharispe.slib.dsm.core.engine.DMEngine;
-import com.github.sharispe.slib.dsm.core.engine.VocUsageUtils;
+import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
@@ -70,7 +71,6 @@ import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelType;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorMemory_2D;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessor_2D;
-
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -123,97 +123,99 @@ public class SlibDist_Wrapper {
      * @throws FileNotFoundException
      * @throws SLIB_Ex_Critic
      */
-    public static void build_DM_doc_refined(String path_term_model, String path_doc_model, Integer k, String new_doc_model_dir) throws IOException, FileNotFoundException, SLIB_Ex_Critic {
-
-        logger.info("Loading data");
-
-        ModelConf term_dm_conf = ModelConf.load(path_term_model);
-        ModelConf doc_dm_conf = ModelConf.load(path_doc_model);
-
-        ModelAccessorMemory_2D termModelAccessor = new ModelAccessorMemory_2D(term_dm_conf);
-        ModelAccessorMemory_2D docModelAccessor = new ModelAccessorMemory_2D(doc_dm_conf);
-
-        Map<String, Integer> termIndex = XPUtils.loadIndex(term_dm_conf.getEntityIndex());
-        Map<String, Integer> docIndex = XPUtils.loadIndex(doc_dm_conf.getEntityIndex());
-        Map<Integer, String> termIndexDocModel = MapUtils.revert(XPUtils.loadIndex(doc_dm_conf.getDimensionIndex()));
-
-        int vec_size_new_model = term_dm_conf.vec_size;
-
-        logger.info("Updating vectors...");
-
-        ModelConf new_doc_dm_conf = new ModelConf(ModelType.TWO_D_DOC_MODEL, new_doc_model_dir, new_doc_model_dir, docIndex.size(), vec_size_new_model, doc_dm_conf.nb_files, GConstants.STORAGE_FORMAT_VERSION);
-
-        long start_binary_vec = 0;
-        byte[] sep_binary = {0};
-        File f_binary = new File(new_doc_dm_conf.getModelBinary());
-
-        ConfUtils.initModel(new_doc_dm_conf);
-
-        // Flush row Index and binary representation of vectors
-        try (PrintWriter index_writer = new PrintWriter(new_doc_dm_conf.getModelIndex(), "UTF-8")) {
-            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
-
-                index_writer.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
-
-                for (Map.Entry<String, Integer> e : MapUtils.sortByValue(docIndex).entrySet()) {
-
-                    String f = e.getKey();
-                    int id_file = e.getValue();
-
-                    logger.info(f + "\t" + id_file + "/" + docIndex.size() + "\r");
-
-                    double[] vec_document = docModelAccessor.vectorRepresentationOf(id_file);
-
-                    double[] sum = new double[vec_size_new_model];
-
-                    for (int i = 0; i < vec_document.length; i++) {
-
-                        if (vec_document[i] != 0) {
-
-                            // we retrieve the label of the dimension i
-                            String dim_label = termIndexDocModel.get(i);
-
-                            if (!termIndex.containsKey(dim_label)) {
-                                throw new SLIB_Ex_Critic("Error term/term model does not contains a representation for term labelled: " + dim_label);
-                            }
-
-                            // we retrieve the dimension id of this label in the term model
-                            int id_term = termIndex.get(dim_label);
-                            double[] vec_term = termModelAccessor.vectorRepresentationOf(id_term);
-
-                            // we apply a threashold if any as been specified
-                            if (k != null) {
-                                vec_term = XPUtils.applyKthreshold(vec_term, k);
-                            }
-                            sum = XPUtils.sumVectors(sum, XPUtils.multiplyVector(vec_document[i], vec_term));
-                        }
-                    }
-                    // Write the vector into the binary file
-
-                    double[] compressedVector = CompressionUtils.compressDoubleArray(sum);
-                    int nonNullValues = compressedVector.length / 2;
-                    // write index info 
-                    index_writer.println(id_file + "\t" + start_binary_vec + "\t" + nonNullValues);
-
-                    // write the binary representation
-                    byte[] compressed_vector_byte = BinarytUtils.toByteArray(compressedVector);
-                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
-                    fo.write(sep_binary);
-
-                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
-                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
-
-                    id_file++;
-                }
-
-                XPUtils.flushIndex(docIndex, new_doc_dm_conf.getEntityIndex());
-                // dimensions are not meaningfull
-                logger.info("model save at: " + new_doc_dm_conf.path);
-
-            }
-        }
-
-    }
+//    public static void build_DM_doc_refined(String path_term_model, String path_doc_model, Integer k, String new_doc_model_dir) throws IOException, FileNotFoundException, SLIB_Ex_Critic {
+//
+//        logger.info("Loading data");
+//
+//        ModelConf term_dm_conf = ModelConf.load(path_term_model);
+//        ModelConf doc_dm_conf = ModelConf.load(path_doc_model);
+//
+//        ModelAccessorMemory_2D termModelAccessor = new ModelAccessorMemory_2D(term_dm_conf);
+//        ModelAccessorMemory_2D docModelAccessor = new ModelAccessorMemory_2D(doc_dm_conf);
+//
+//        Map<String,Integer> vocIndex = XPUtils.loadMAP(term_dm_conf.getEntityIndex());
+//
+//        Map<String, Integer> termIndex = vocIndex.getIndex();
+//        Map<String, Integer> docIndex = XPUtils.loadMAP(doc_dm_conf.getEntityIndex());
+//        Map<Integer, String> termIndexDocModel = MapUtils.revert(XPUtils.loadMAP(doc_dm_conf.getDimensionIndex()));
+//
+//        int vec_size_new_model = term_dm_conf.vec_size;
+//
+//        logger.info("Updating vectors...");
+//
+//        ModelConf new_doc_dm_conf = new ModelConf(ModelType.TWO_D_DOC_MODEL, new_doc_model_dir, new_doc_model_dir, docIndex.size(), vec_size_new_model, doc_dm_conf.nb_files, GConstants.STORAGE_FORMAT_VERSION);
+//
+//        long start_binary_vec = 0;
+//        byte[] sep_binary = {0};
+//        File f_binary = new File(new_doc_dm_conf.getModelBinary());
+//
+//        ConfUtils.initModel(new_doc_dm_conf);
+//
+//        // Flush row Index and binary representation of vectors
+//        try (PrintWriter index_writer = new PrintWriter(new_doc_dm_conf.getModelIndex(), "UTF-8")) {
+//            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
+//
+//                index_writer.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
+//
+//                for (Map.Entry<String, Integer> e : MapUtils.sortByValue(docIndex).entrySet()) {
+//
+//                    String f = e.getKey();
+//                    int id_file = e.getValue();
+//
+//                    logger.info(f + "\t" + id_file + "/" + docIndex.size() + "\r");
+//
+//                    double[] vec_document = docModelAccessor.vectorRepresentationOf(id_file);
+//
+//                    double[] sum = new double[vec_size_new_model];
+//
+//                    for (int i = 0; i < vec_document.length; i++) {
+//
+//                        if (vec_document[i] != 0) {
+//
+//                            // we retrieve the label of the dimension i
+//                            String dim_label = termIndexDocModel.get(i);
+//
+//                            if (!termIndex.containsKey(dim_label)) {
+//                                throw new SLIB_Ex_Critic("Error term/term model does not contains a representation for term labelled: " + dim_label);
+//                            }
+//
+//                            // we retrieve the dimension id of this label in the term model
+//                            int id_term = termIndex.get(dim_label);
+//                            double[] vec_term = termModelAccessor.vectorRepresentationOf(id_term);
+//
+//                            // we apply a threashold if any as been specified
+//                            if (k != null) {
+//                                vec_term = XPUtils.applyKthreshold(vec_term, k);
+//                            }
+//                            sum = XPUtils.sumVectors(sum, XPUtils.multiplyVector(vec_document[i], vec_term));
+//                        }
+//                    }
+//                    // Write the vector into the binary file
+//
+//                    double[] compressedVector = CompressionUtils.compressDoubleArray(sum);
+//                    int nonNullValues = compressedVector.length / 2;
+//                    // write index info 
+//                    index_writer.println(id_file + "\t" + start_binary_vec + "\t" + nonNullValues);
+//
+//                    // write the binary representation
+//                    byte[] compressed_vector_byte = BinarytUtils.toByteArray(compressedVector);
+//                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
+//                    fo.write(sep_binary);
+//
+//                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+//                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
+//
+//                    id_file++;
+//                }
+//
+//                XPUtils.flushMAP(docIndex, new_doc_dm_conf.getEntityIndex());
+//                // dimensions are not meaningfull
+//                logger.info("model save at: " + new_doc_dm_conf.path);
+//
+//            }
+//        }
+//
+//    }
 
     /**
      * Compute a TF-IDF vector representation of documents considering a given
@@ -227,113 +229,106 @@ public class SlibDist_Wrapper {
      * @throws IOException
      * @throws SLIB_Ex_Critic
      */
-    public static void build_model_doc_classic(List<File> files, Map<String, Integer> vocIndex, ModelConf model) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
-
-        ConfUtils.initModel(model);
-
-        // Computes several statistics 
-        // words occurrences in the collection of documents
-        logger.info("Loading the vocabulary stats (voc size=" + vocIndex.size() + ")");
-
-        // words occurrences for each document and in the collection
-        Map<File, Map<Integer, Integer>> vocUsageLocal = VocUsageUtils.localVocUsage(files, vocIndex);
-
-        // for each word the number of document which contains it
-        int c = 0;
-        int numberOfDocsInCollection = files.size();
-        int[] nbDocWithTheTermInCollection = new int[vocIndex.size()];
-
-        for (Map<Integer, Integer> vdoc : vocUsageLocal.values()) {
-
-            for (Integer w_id : vdoc.keySet()) {
-                nbDocWithTheTermInCollection[w_id] += 1;
-            }
-        }
-
-        double[] idf = new double[vocIndex.size()];
-        for (Integer i : vocIndex.values()) {
-            idf[i] = Tf_Idf.idfCalculator(numberOfDocsInCollection, nbDocWithTheTermInCollection[i]);
-        }
-        Set<Integer> vocIndexIDs = new HashSet(vocIndex.values());
-
-        logger.info("Computing vector representation for each document (n=" + files.size() + ")");
-
-        long start_binary_vec = 0;
-        byte[] sep_binary = {0};
-        File f_binary = new File(model.getModelBinary());
-
-        Map<String, Integer> entityIndex = new HashMap();
-
-        // Flush row Index and binary representation of vectors
-        try (PrintWriter index_writer = new PrintWriter(model.getModelIndex(), "UTF-8")) {
-            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
-
-                int id_file = 0;
-                index_writer.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
-                // we now create a vector representation of the files
-                Map<Integer, Integer> vocDocUsage;
-                Map<Integer, Double> compressedVector;
-
-                int numberOfTermsInDocument, numberOfTermOccurrenceInDocument, nonNullValues;
-                byte[] compressed_vector_byte;
-                double tfidf;
-                for (File f : files) {
-
-                    vocDocUsage = vocUsageLocal.get(f);
-                    compressedVector = new HashMap(vocDocUsage.size());
-
-                    c++;
-
-                    // compute number of terms in document 
-                    numberOfTermsInDocument = 0;
-                    for (Integer v : vocDocUsage.values()) {
-                        numberOfTermsInDocument += v;
-                    }
-
-                    int idWord;
-                    for (Map.Entry<Integer, Integer> e : vocDocUsage.entrySet()) {
-
-                        idWord = e.getKey();
-                        numberOfTermOccurrenceInDocument = e.getValue(); // This will always be > O
-
-                        if (!vocIndexIDs.contains(idWord)) {
-                            throw new SLIB_Ex_Critic("Word '" + idWord + "' is not in the index (which contains " + vocIndex.size() + " elements)...");
-                        }
-                        tfidf = idf[idWord] * Tf_Idf.tfCalculator(numberOfTermOccurrenceInDocument, numberOfTermsInDocument);
-
-                        if (tfidf == 0) { // we don't want 0 values
-                            continue;
-                        }
-                        compressedVector.put(idWord, tfidf);
-                    }
-
-                    nonNullValues = compressedVector.size();
-
-                    if (c % 1000 == 0) {
-                        logger.info("building vector " + c + "/" + files.size() + "  " + f.getPath() + " size non null=" + nonNullValues + "/" + vocIndex.size());
-                    }
-
-                    // write the binary representation
-                    compressed_vector_byte = CompressionUtils.toByteArray(compressedVector);
-                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
-                    fo.write(sep_binary);
-
-                    // write index info 
-                    index_writer.println(id_file + "\t" + start_binary_vec + "\t" + nonNullValues);
-
-                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
-                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
-
-                    entityIndex.put(f.getPath(), id_file);
-                    id_file++;
-                }
-            }
-        }
-
-        XPUtils.flushIndex(entityIndex, model.getEntityIndex());
-        XPUtils.flushIndex(vocIndex, model.getDimensionIndex());
-        logger.info("model save at: " + model.path);
-    }
+//    public static void build_model_doc_classic(List<File> files, Voc vocIndex, ModelConf model) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
+//
+//        ConfUtils.initModel(model);
+//
+//        // Computes several statistics 
+//        // words occurrences in the collection of documents
+//        logger.info("Loading the vocabulary stats (voc size=" + vocIndex.size() + ")");
+//
+//        // words occurrences for each document and in the collection
+//        Map<Integer, Integer> nbDocWithTheTermInCollection = vocIndex.getNbfilesWithWord();
+//
+//        // for each word the number of document which contains it
+//        int numberOfDocsInCollection = files.size();
+//
+//        double[] idf = new double[vocIndex.size()];
+//        for (Integer i : vocIndex.getIndex().values()) {
+//            idf[i] = Tf_Idf.idfCalculator(numberOfDocsInCollection, nbDocWithTheTermInCollection.get(i));
+//        }
+//        
+////        Set<Integer> vocIndexIDs = new HashSet(vocIndex.getIndex().values());
+//
+//        logger.info("Computing vector representation for each document (n=" + files.size() + ")");
+//
+//        long start_binary_vec = 0;
+//        byte[] sep_binary = {0};
+//        File f_binary = new File(model.getModelBinary());
+//
+//        Map<String, Integer> entityIndex = new HashMap();
+//
+//        int c = 0;
+//        // Flush row Index and binary representation of vectors
+//        try (PrintWriter index_writer = new PrintWriter(model.getModelIndex(), "UTF-8")) {
+//            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
+//
+//                int id_file = 0;
+//                index_writer.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
+//                // we now create a vector representation of the files
+//                Map<Integer, Integer> vocDocUsage;
+//                Map<Integer, Double> compressedVector;
+//
+//                int numberOfTermsInDocument, numberOfTermOccurrenceInDocument, nonNullValues;
+//                byte[] compressed_vector_byte;
+//                double tfidf;
+//                for (File f : files) {
+//
+//                    vocDocUsage = VocUsageUtils.getVocUsage(f, vocIndex);
+//                    compressedVector = new HashMap(vocDocUsage.size());
+//
+//                    c++;
+//
+//                    // compute number of terms in document 
+//                    numberOfTermsInDocument = 0;
+//                    for (Integer v : vocDocUsage.values()) {
+//                        numberOfTermsInDocument += v;
+//                    }
+//
+//                    int idWord;
+//                    for (Map.Entry<Integer, Integer> e : vocDocUsage.entrySet()) {
+//
+//                        idWord = e.getKey();
+//                        numberOfTermOccurrenceInDocument = e.getValue(); // This will always be > O
+//
+////                        if (!vocIndexIDs.contains(idWord)) {
+////                            throw new SLIB_Ex_Critic("Word '" + idWord + "' is not in the index (which contains " + vocIndex.size() + " elements)...");
+////                        }
+//                        tfidf = idf[idWord] * Tf_Idf.tfCalculator(numberOfTermOccurrenceInDocument, numberOfTermsInDocument);
+//
+//                        if (tfidf == 0) { // we don't want 0 values
+//                            continue;
+//                        }
+//                        compressedVector.put(idWord, tfidf);
+//                    }
+//
+//                    nonNullValues = compressedVector.size();
+//
+//                    if (c % 1000 == 0) {
+//                        logger.info("building vector " + c + "/" + files.size() + "  " + f.getPath() + " size non null=" + nonNullValues + "/" + vocIndex.size());
+//                    }
+//
+//                    // write the binary representation
+//                    compressed_vector_byte = CompressionUtils.toByteArray(compressedVector);
+//                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
+//                    fo.write(sep_binary);
+//
+//                    // write index info 
+//                    index_writer.println(id_file + "\t" + start_binary_vec + "\t" + nonNullValues);
+//
+//                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+//                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
+//
+//                    entityIndex.put(f.getPath(), id_file);
+//                    id_file++;
+//                }
+//            }
+//        }
+//
+//        XPUtils.flushMAP(entityIndex, model.getEntityIndex());
+//        XPUtils.flushMAP(vocIndex.getIndex(), model.getDimensionIndex());
+//        logger.info("model save at: " + model.path);
+//    }
 
     public static double computeEntitySimilarity(Map<String, Integer> entityIndex, ModelAccessor model, String label_eA, String label_eB) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
 
@@ -476,12 +471,6 @@ public class SlibDist_Wrapper {
 
     }
 
-    public static void computeVocIndex(String dir, String voc_index_file) throws SLIB_Ex_Critic {
-        logger.info("Computing vocabulary");
-        Map<String, Integer> vocIndex = new CoOcurrenceEngine().loadVocIndex(dir, null);
-        XPUtils.flushIndex(vocIndex, voc_index_file);
-        logger.info("done");
-    }
 
     public static double computeDocSimNewApproach(double[] vec_entity_a, double[] vec_entity_b, Map<String, Integer> termDimensionIndex, ModelAccessor termModelAccessor) throws SLIB_Ex_Critic {
 
@@ -527,7 +516,7 @@ public class SlibDist_Wrapper {
         return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
     }
 
-    public static void buildTerm2TermDM(ModelConf conf, Collection<File> files, Map<String, Integer> vocIndex, int nbThreads) throws SLIB_Exception, IOException {
+    public static void buildTerm2TermDM(ModelConf conf, Collection<File> files, Voc vocIndex, int nbThreads) throws SLIB_Exception, IOException {
         DMEngine.build_distributional_model_TERM_TO_TERM(files, vocIndex, conf, nbThreads);
     }
 
@@ -537,14 +526,14 @@ public class SlibDist_Wrapper {
             throw new SLIB_Ex_Critic("Error, voc stats and model conf do not specify the same number of files... Are you sure you are using the good stats/model?");
         }
         logger.info("Loading entity index...");
-        Map<String, Integer> rowIndex = XPUtils.loadIndex(mconf.getEntityIndex());
+        Map<String, Integer> rowIndex = XPUtils.loadMAP(mconf.getEntityIndex());
         logger.info("Loading dimension index...");
-        Map<String, Integer> dimensionIndex = XPUtils.loadIndex(mconf.getDimensionIndex());
+        Map<String, Integer> dimensionIndex = XPUtils.loadMAP(mconf.getDimensionIndex());
         Map<Integer, String> dimensionIndex_revert = MapUtils.revert(dimensionIndex);
 
         logger.info("Loading voc usage...");
         Map<Integer, Integer> vocTermUsage = XPUtils.loadVocUsage(vstatconf.getVocUsageFile());
-        Map<String, Integer> vocStatIndex = XPUtils.loadIndex(vstatconf.getVocIndex());
+        Map<String, Integer> vocStatIndex = XPUtils.loadMAP(vstatconf.getVocIndex());
 
         logger.info("Computing coverage of labels associated to dimensions...");
         Map<Integer, Double> dimensionLabelCoverage = new HashMap();
@@ -727,8 +716,8 @@ public class SlibDist_Wrapper {
 
             ModelConf newModelConf = new ModelConf(ModelType.TWO_D_TERM_MODEL, mconf.name, conf.NEW_MODEL_DIR, mconf.entity_size, selected_dims.size(), mconf.nb_files, mconf.format_version);
             ConfUtils.initModel(newModelConf);
-            XPUtils.flushIndex(rowIndex, newModelConf.getEntityIndex());
-            XPUtils.flushIndex(newDimensionIndex, newModelConf.getDimensionIndex());
+            XPUtils.flushMAP(rowIndex, newModelConf.getEntityIndex());
+            XPUtils.flushMAP(newDimensionIndex, newModelConf.getDimensionIndex());
             ConfUtils.buildIndex(newModelConf, rowIndex, newMatrix);
             ConfUtils.buildModelBinary(newModelConf, rowIndex, newMatrix);
         } else {

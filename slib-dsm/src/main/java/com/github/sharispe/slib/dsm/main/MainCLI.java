@@ -33,7 +33,11 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
-import com.github.sharispe.slib.dsm.core.engine.VocUsageUtils;
+import com.github.sharispe.slib.dsm.core.engine.VocStatConf;
+import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
+import com.github.sharispe.slib.dsm.core.engine.VocStatComputerThreads;
+import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
 import com.github.sharispe.slib.dsm.core.kb.EntityVectorRepresentationComputer;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorFullMemory_2D;
@@ -61,8 +65,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.apache.commons.io.FileUtils;
@@ -100,7 +106,8 @@ public class MainCLI {
 
         log("Please use one of the following tools: ");
         log("- lem: lemmatize the files contained in a directory");
-        log("- voc_index: extract the vocabulary for a directory and create an index");
+        log("- voc_index: extract the vocabulary for a directory and create an index - basic statistics are also computed");
+        log("- merge_voc_index: merge voc indexes computed using voc_index");
         log("- compute_stat_voc: compute basic statistics on the given vocabulary");
         log("- reduce_voc: reduce a vocabulary based on the analysis of basic statistics on it");
         log("- build_model: build a Distributional Model (DM) of the terms considering a vocabulary and a directory of files");
@@ -126,71 +133,81 @@ public class MainCLI {
         log("---------------------------------------------------------------------");
     }
 
-    public static void main(String[] argv) throws IOException, FileNotFoundException, SLIB_Ex_Critic, SLIB_Exception {
+    public static void main(String[] argv) {
 
-        log("---------------------------------------------------------------------");
-        log("SLIB-DSM " + VERSION);
-        log("---------------------------------------------------------------------");
-        log("args: " + Arrays.toString(argv));
+        try {
 
-        if (argv.length != 0) {
+            log("---------------------------------------------------------------------");
+            log("SLIB-DSM " + VERSION);
+            log("---------------------------------------------------------------------");
+            log("args: " + Arrays.toString(argv));
 
-            String cmd = argv[0].toLowerCase();
-            argv = shift(argv);
+            if (argv.length != 0) {
 
-            switch (cmd) {
-                case "lem":
-                    CMD_LEM(argv);
-                    break;
-                case "voc_index":
-                    CMD_VOC_INDEX(argv);
-                    break;
-                case "compute_stat_voc":
-                    CMD_COMPUTE_VOC_STAT(argv);
-                    break;
-                case "reduce_voc":
-                    CMD_REDUCE_VOC(argv);
-                    break;
-                case "build_model":
-                    CMD_BUILD_MODEL(argv);
-                    break;
-                case "normalize":
-                    CMD_NORMALIZE(argv);
-                    break;
-                case "reduce_model":
-                    CMD_REDUCE_MODEL(argv);
-                    break;
-                case "check_null_vec":
-                    CMD_CHECK_NULL_VEC(argv);
-                    break;
-                case "sim":
-                    CMD_SIM(argv);
-                    break;
-                case "simdoctest":
-                    CMD_SIM_DOC_ADVANCED(argv);
-                    break;
-                case "bestsim":
-                    CMD_BEST_SIM(argv);
-                    break;
-                case "bestsimdoctest":
-                    CMD_BEST_SIM_DOC_ADVANCED(argv);
-                    break;
-                case "show_vec":
-                    CMD_SHOW_VEC(argv);
-                    break;
-                case "kb":
-                    EntityVectorRepresentationComputer.main(argv);
-                    break;
-                case "dist_mat":
-                    CMD_DIST_MAT(argv);
-                    break;
-                default:
-                    showdoc();
-                    break;
+                String cmd = argv[0].toLowerCase();
+                argv = shift(argv);
+
+                switch (cmd) {
+                    case "lem":
+                        CMD_LEM(argv);
+                        break;
+                    case "voc_index":
+                        CMD_VOC_INDEX(argv);
+                        break;
+                    case "merge_voc_index":
+                        CMD_MERGE_VOC_INDEX(argv);
+                        break;
+                    case "compute_stat_voc":
+                        CMD_COMPUTE_VOC_STAT(argv);
+                        break;
+                    case "reduce_voc":
+                        CMD_REDUCE_INDEX(argv);
+                        break;
+                    case "build_model":
+                        CMD_BUILD_MODEL(argv);
+                        break;
+                    case "normalize":
+                        CMD_NORMALIZE(argv);
+                        break;
+                    case "reduce_model":
+                        CMD_REDUCE_MODEL(argv);
+                        break;
+                    case "check_null_vec":
+                        CMD_CHECK_NULL_VEC(argv);
+                        break;
+                    case "sim":
+                        CMD_SIM(argv);
+                        break;
+                    case "simdoctest":
+                        CMD_SIM_DOC_ADVANCED(argv);
+                        break;
+                    case "bestsim":
+                        CMD_BEST_SIM(argv);
+                        break;
+                    case "bestsimdoctest":
+                        CMD_BEST_SIM_DOC_ADVANCED(argv);
+                        break;
+                    case "show_vec":
+                        CMD_SHOW_VEC(argv);
+                        break;
+                    case "kb":
+                        EntityVectorRepresentationComputer.main(argv);
+                        break;
+                    case "dist_mat":
+                        CMD_DIST_MAT(argv);
+                        break;
+                    default:
+                        showdoc();
+                        break;
+                }
+
+            } else {
+                showdoc();
             }
 
-        } else {
-            showdoc();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
         }
 
     }
@@ -205,7 +222,7 @@ public class MainCLI {
         }
         String dm_dir = argv[0];
         ModelConf modelConf = ModelConf.load(dm_dir);
-        Map<String, Integer> entityIndex = XPUtils.loadIndex(modelConf.getEntityIndex());
+        Map<String, Integer> entityIndex = XPUtils.loadMAP(modelConf.getEntityIndex());
         ModelAccessor modelAccessor = new ModelAccessorPersistance_2D(modelConf);
 
         if (argv[1].toLowerCase().equals("-i")) { // interactive mode
@@ -218,13 +235,9 @@ public class MainCLI {
                 }
                 String entityB = getInput("Please type a label for entity B -- type quit() to stop: ");
                 if (!entityIndex.containsKey(entityA)) {
-
                     log("Index does not contain label : " + entityA);
-
                 } else if (!entityIndex.containsKey(entityB)) {
-
                     log("Index does not contain label : " + entityB);
-
                 } else {
                     double sim = SlibDist_Wrapper.computeEntitySimilarity(entityIndex, modelAccessor, entityA, entityB);
                     log("sim " + entityA + "/" + entityB + " = " + sim);
@@ -261,11 +274,11 @@ public class MainCLI {
         ModelConf modelConf_TERM = ModelConf.load(dm_term_dir);
         ModelConf modelConf_DOC = ModelConf.load(dm_doc_dir);
 
-        Map<String, Integer> docIndex = XPUtils.loadIndex(modelConf_DOC.getEntityIndex());
+        Map<String, Integer> docIndex = XPUtils.loadMAP(modelConf_DOC.getEntityIndex());
         ModelAccessor modelAccessor_doc = new ModelAccessorMemory_2D(modelConf_DOC);
         ModelAccessor modelAccessor_term = new ModelAccessorMemory_2D(modelConf_TERM);
 
-        Map<String, Integer> termIndex = XPUtils.loadIndex(modelConf_TERM.getEntityIndex());
+        Map<String, Integer> termIndex = XPUtils.loadMAP(modelConf_TERM.getEntityIndex());
 
         if (argv[2].toLowerCase().equals("-i")) { // interactive mode
 
@@ -335,7 +348,7 @@ public class MainCLI {
         if (flag.equals("id")) {
             voc_id = Integer.parseInt(val);
         } else {
-            Map<String, Integer> entityIndex = XPUtils.loadIndex(ModelConf.load(dm_dir).getEntityIndex());
+            Map<String, Integer> entityIndex = XPUtils.loadMAP(ModelConf.load(dm_dir).getEntityIndex());
             log("Looking for vector representation of '" + val + "'");
             if (!entityIndex.containsKey(val)) {
                 throw new SLIB_Ex_Critic("Index does not contain label: '" + val + "'");
@@ -386,7 +399,7 @@ public class MainCLI {
         int k = Integer.parseInt(argv[2]);
         int modelAccessApproach = Integer.parseInt(argv[3]);
         ModelConf mConf = ModelConf.load(dm_dir);
-        Map<String, Integer> entityIndex = XPUtils.loadIndex(mConf.getEntityIndex());
+        Map<String, Integer> entityIndex = XPUtils.loadMAP(mConf.getEntityIndex());
 
         String outfile = argv.length == 5 ? argv[4] : null;
 
@@ -450,13 +463,15 @@ public class MainCLI {
                         }
 
                         logger.info("sorting results...");
-                        
+
                         int id = 0;
 
                         for (Map.Entry<String, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
                             id++;
-                            logger.info("\t" + id+ "\t"+ e.getKey() +"\t" + e.getValue());
-                            if(id == 40) break;
+                            logger.info("\t" + id + "\t" + e.getKey() + "\t" + e.getValue());
+                            if (id == 40) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -490,16 +505,15 @@ public class MainCLI {
         String dm_term_dir = argv[0];
         String dm_doc_dir = argv[1];
         String doc_label = argv[2];
-        
-        
+
         int k = Integer.parseInt(argv[3]);
 
         String outfile = argv.length == 5 ? argv[4] : null;
 
         ModelConf model_doc_conf = ModelConf.load(dm_doc_dir);
         ModelConf model_term_conf = ModelConf.load(dm_term_dir);
-        Map<String, Integer> docIndex = XPUtils.loadIndex(model_doc_conf.getEntityIndex());
-        Map<String, Integer> termIndex = XPUtils.loadIndex(model_term_conf.getEntityIndex());
+        Map<String, Integer> docIndex = XPUtils.loadMAP(model_doc_conf.getEntityIndex());
+        Map<String, Integer> termIndex = XPUtils.loadMAP(model_term_conf.getEntityIndex());
 
         ModelAccessor_2D modelDocAccessor = new ModelAccessorMemory_2D(model_doc_conf);
         ModelAccessor_2D modelTermAccessor = new ModelAccessorMemory_2D(model_term_conf);
@@ -548,14 +562,51 @@ public class MainCLI {
         }
     }
 
-    private static void CMD_VOC_INDEX(String[] argv) throws SLIB_Ex_Critic {
-        if (argv.length != 2) {
+    public static void CMD_VOC_INDEX(String[] argv) throws SLIB_Ex_Critic, IOException, Exception {
+
+        if (argv.length < 2 || argv.length > 7) {
             log("[0] directory which contains the files to consider");
-            log("[1] output filename");
+            log("[1] output directory");
+            log("[2] word size constraint (optional default=1)");
+            log("[3] (1) Forces size constraint to be strict or (2) allows words of size between 1 token and size constraint tokens (optional default=1)");
+            log("[4] nbThreads (optional default=1)");
+            log("[5] file per thread (optional default=" + VocStatComputer.DEFAULT_CHUNK_FILE_SIZE + "): number of files allocated to a thread");
+            log("[6] cache thread (optional default=" + VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE + "): size of the index stored into memory");
             System.exit(0);
         } else {
-            SlibDist_Wrapper.computeVocIndex(argv[0], argv[1]);
+
+            String corpusDir = argv[0];
+            String outputDir = argv[1];
+            int maxWordSize = argv.length >= 3 ? Integer.parseInt(argv[2]) : 1;
+            WordIteratorConstraint sizeConstraint = argv.length >= 5 ? Integer.parseInt(argv[3]) == 2 ? WordIteratorConstraint.ALLOW_SHORTER_WORDS : WordIteratorConstraint.FIXED_SIZE : WordIteratorConstraint.FIXED_SIZE;
+            int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 1;
+            int file_per_threads = argv.length >= 6 ? Integer.parseInt(argv[5]) : VocStatComputer.DEFAULT_CHUNK_FILE_SIZE;
+            int cache_thread = argv.length == 7 ? Integer.parseInt(argv[6]) : VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE;
+
+            logger.info("Computing vocabulary, max word size: " + maxWordSize);
+            VocStatComputer.computeVocStats(corpusDir, outputDir, maxWordSize, nbThreads, file_per_threads, cache_thread, sizeConstraint);
+            logger.info("Vocabulary computed at: " + outputDir);
+
         }
+    }
+
+    private static void CMD_MERGE_VOC_INDEX(String[] argv) throws Exception {
+        if (argv.length < 4) {
+            log("[0] directory of the merged index");
+            log("[1] delete merged indexes (true/false)");
+            log("[2] index 1");
+            log("[3] index 2");
+            log("[n] index n (optional)");
+            System.exit(0);
+        }
+
+        String new_index = argv[0];
+        boolean delete = argv[1].equalsIgnoreCase("true");
+        Set<String> indexToMerge = new HashSet();
+        for (int i = 2; i < argv.length; i++) {
+            indexToMerge.add(argv[i]);
+        }
+        VocStatComputer.mergeIndexes(indexToMerge, delete, new_index);
     }
 
     private static void CMD_BUILD_MODEL(String[] argv) throws SLIB_Exception, IOException {
@@ -579,7 +630,7 @@ public class MainCLI {
                 System.exit(0);
             } else {
                 String dir_files = argv[0];
-                Map<String, Integer> vocIndex = XPUtils.loadIndex(argv[1]);
+                Voc vocIndex = new Voc(argv[1]);
                 String model_dir = argv[2];
                 int nbThreads = Integer.parseInt(argv[3]);
 
@@ -592,39 +643,43 @@ public class MainCLI {
 
         } else if (argv[0].equals("doc/term")) {
 
-            argv = shift(argv);
+            throw new UnsupportedOperationException();
 
-            if (argv.length != 3) {
-                log("[0] directory which contains the files to consider");
-                log("[1] vocabulary index (e.g. generated by voc_index)");
-                log("[2] output directory");
-                System.exit(0);
-            } else {
-                String dir_files = argv[0];
-                Map<String, Integer> vocIndex = XPUtils.loadIndex(argv[1]);
-                String model_dir = argv[2];
-                List<File> files = FileUtility.listFilesForFolder(dir_files);
-
-                ModelConf modelConf = new ModelConf(ModelType.TWO_D_DOC_MODEL, model_dir, model_dir, files.size(), vocIndex.size(), files.size(), GConstants.STORAGE_FORMAT_VERSION);
-
-                SlibDist_Wrapper.build_model_doc_classic(files, vocIndex, modelConf);
-            }
+//            argv = shift(argv);
+//
+//            if (argv.length != 3) {
+//                log("[0] directory which contains the files to consider");
+//                log("[1] vocabulary index (e.g. generated by voc_index)");
+//                log("[2] output directory");
+//                System.exit(0);
+//            } else {
+//                String dir_files = argv[0];
+//                Voc vocIndex = new Voc(argv[1]);
+//                String model_dir = argv[2];
+//                List<File> files = FileUtility.listFilesForFolder(dir_files);
+//
+//                ModelConf modelConf = new ModelConf(ModelType.TWO_D_DOC_MODEL, model_dir, model_dir, files.size(), vocIndex.size(), files.size(), GConstants.STORAGE_FORMAT_VERSION);
+//
+//                SlibDist_Wrapper.build_model_doc_classic(files, vocIndex, modelConf);
+//            }
         } else if (argv[0].equals("doc/term_2")) {
 
-            argv = shift(argv);
-            if (argv.length != 4) {
-                log("[1] term/term distributional model");
-                log("[2] doc/term distributional model");
-                log("[3] k threashold, i.e. number of values to consider, type null to avoid applying the threashold");
-                log("[4] output directory");
-                System.exit(0);
-            } else {
-                String term_dm = argv[0];
-                String doc_dm = argv[1];
-                Integer k_threashold = argv[2].toLowerCase().equals("null") ? null : Integer.parseInt(argv[2]);
-                String new_dm = argv[3];
-                SlibDist_Wrapper.build_DM_doc_refined(term_dm, doc_dm, k_threashold, new_dm);
-            }
+            throw new UnsupportedOperationException();
+
+//            argv = shift(argv);
+//            if (argv.length != 4) {
+//                log("[1] term/term distributional model");
+//                log("[2] doc/term distributional model");
+//                log("[3] k threashold, i.e. number of values to consider, type null to avoid applying the threashold");
+//                log("[4] output directory");
+//                System.exit(0);
+//            } else {
+//                String term_dm = argv[0];
+//                String doc_dm = argv[1];
+//                Integer k_threashold = argv[2].toLowerCase().equals("null") ? null : Integer.parseInt(argv[2]);
+//                String new_dm = argv[3];
+//                SlibDist_Wrapper.build_DM_doc_refined(term_dm, doc_dm, k_threashold, new_dm);
+//            }
         } else {
             log(dist_error);
         }
@@ -733,7 +788,7 @@ public class MainCLI {
             String model_dir = argv[0];
 
             ModelConf mconf = ModelConf.load(model_dir);
-            Map<Integer, String> vocIndex = MapUtils.revert(XPUtils.loadIndex(mconf.getEntityIndex()));
+            Map<Integer, String> vocIndex = MapUtils.revert(XPUtils.loadMAP(mconf.getEntityIndex()));
 
             logger.info("Load in-memory model accessor for " + mconf.name);
             ModelAccessorMemory_2D modelAccessor = new ModelAccessorMemory_2D(mconf);
@@ -751,76 +806,38 @@ public class MainCLI {
         }
     }
 
-    private static void CMD_COMPUTE_VOC_STAT(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
+    private static void CMD_COMPUTE_VOC_STAT(String[] argv) throws Exception {
 
         logger.info("Compute Statistics");
-
-        if (argv.length != 3) {
-            log("[0] directory which contains the files to consider");
-            log("[1] vocabulary index (e.g. generated by voc_index)");
-            log("[2] output directory");
+//
+        if (argv.length != 2) {
+            log("[0] directory which contains the index to consider");
+            log("[1] number of results");
             System.exit(0);
         } else {
-
-            String dir_files = argv[0];
-            String voc_file = argv[1];
-            Map<String, Integer> vocIndex = XPUtils.loadIndex(voc_file);
-            String stat_dir = argv[2];
-
-            List<File> files = FileUtility.listFilesFromFolder(dir_files, null);
-
-            VocStatConf conf = new VocStatConf(stat_dir, dir_files, voc_file, files.size());
-            ConfUtils.initVocUsage(conf);
-
-            logger.info("Flush statistics to: " + conf.getVocUsageFile());
-            Map<Integer, Long> nbFilesWithWord = VocUsageUtils.computeNBFilesWithWord(files, vocIndex);
-            try (PrintWriter writer = new PrintWriter(conf.getVocUsageFile(), "UTF-8")) {
-                writer.println("ID_ENT\tNB_FILES_WITH_WORD");
-                SortedSet<Integer> keys = new TreeSet(nbFilesWithWord.keySet());
-                for (Integer k : keys) {
-                    writer.println(k + "\t" + nbFilesWithWord.get(k));
-                }
-            } catch (IOException e) {
-                throw new SLIB_Ex_Critic("Error creating statistics (usage) " + e.getMessage());
-            }
+            String voc_dir = argv[0];
+            int nbResutls = Integer.parseInt(argv[1]);
+            VocStatComputer.computeStat(voc_dir, nbResutls);
         }
-
     }
 
-    private static void CMD_REDUCE_VOC(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
+    private static void CMD_REDUCE_INDEX(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
 
-        logger.info("Reduce a given vocabulary only consider the k most used terms");
+        logger.info("Reduce a given index only considering words that occurs more than k times");
 
         if (argv.length != 3) {
-            log("[0] vocabulary statistics (e.g. generated by compute_stat_voc)");
-            log("[1] number of terms to keep");
-            log("[2] output file");
+            log("[0] index to reduce (e.g. generated by voc_index)");
+            log("[1] location of the reduced index");
+            log("[2] number of occurrences of the terms to keep");
             System.exit(0);
         } else {
 
-            String stat_dir = argv[0];
-            int k = Integer.parseInt(argv[1]);
-            String outfile = argv[2];
+            String index_to_reduce = argv[0];
+            String reduced_index = argv[1];
+            int k = Integer.parseInt(argv[2]);
 
-            VocStatConf vstatConf = VocStatConf.load(stat_dir);
-
-            Map<Integer, String> vocIndex = XPUtils.loadIndexRevert(vstatConf.getVocIndex());
-            Map<Integer, Integer> vocStats = XPUtils.loadVocUsage(vstatConf.getVocUsageFile());
-
-            Map<Integer, Integer> vs_sorted = MapUtils.sortByValueDecreasing(vocStats);
-            int i = 0;
-            try (PrintWriter writer = new PrintWriter(outfile, "UTF-8")) {
-
-                for (Map.Entry<Integer, Integer> e : vs_sorted.entrySet()) {
-                    if (i < k) {
-                        writer.println(i + "\t" + vocIndex.get(e.getKey()));
-                    }
-                    i++;
-                }
-            } catch (IOException e) {
-                throw new SLIB_Ex_Critic("Error creating statistics (usage) " + e.getMessage());
-            }
-            logger.info("Vocabulary of size k=" + k + " saved at: " + outfile);
+            VocStatComputer.reduceIndex(index_to_reduce, reduced_index, k);
+            logger.info("Index reduced at " + reduced_index);
         }
 
     }
@@ -972,4 +989,5 @@ public class MainCLI {
         }
         w.close();
     }
+
 }

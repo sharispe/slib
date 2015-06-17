@@ -71,20 +71,17 @@ public class CoOcurrenceEngine {
 
     Logger logger = LoggerFactory.getLogger(CoOcurrenceEngine.class);
 
-    public static final int WINDOW_SIZE_LEFT  = 30;
+    public static final int WINDOW_SIZE_LEFT = 30;
     public static final int WINDOW_SIZE_RIGHT = 30;
 
-    private Map<String, Integer> vocIndex;
+    private Voc vocIndex;
     Pattern blank_pattern = Pattern.compile("\\s+");
 
-    public CoOcurrenceEngine(Map<String, Integer> voc_index) {
+    public CoOcurrenceEngine(Voc voc_index) {
         this.vocIndex = voc_index;
     }
 
-    public CoOcurrenceEngine() {
-        vocIndex = new HashMap();
-    }
-
+    
     /**
      *
      * @param directory
@@ -193,55 +190,8 @@ public class CoOcurrenceEngine {
         return mat_tfidf;
     }
 
-    /**
-     * Load the vocabulary considering the words contained into the files of the
-     * specified directory
-     *
-     * @param directory
-     * @param admittedExtensions
-     * @return
-     * @throws slib.utils.ex.SLIB_Ex_Critic
-     */
-    public Map<String, Integer> loadVocIndex(String directory, List<String> admittedExtensions) throws SLIB_Ex_Critic {
-
-        List<File> files = FileUtility.listFilesFromFolder(directory, admittedExtensions);
-        int nbFileDone = 0;
-        int cid = 0;
-        vocIndex = new HashMap();
-
-        for (File f : files) {
-            nbFileDone++;
-
-            if (nbFileDone % 1000 == 0) {
-                logger.info("File: " + nbFileDone + "/" + files.size() + "\t" + f.getPath());
-            }
-
-            try (BufferedReader br = new BufferedReader(new FileReader(f))) {
-
-                String line = br.readLine();
-
-                while (line != null) {
-
-                    if (line.isEmpty()) {
-                        line = br.readLine();
-                        continue;
-                    }
-
-                    for (String w : blank_pattern.split(line)) {
-                        if (!vocIndex.containsKey(w)) {
-                            vocIndex.put(w, cid);
-                            cid++;
-                        }
-                    }
-                    line = br.readLine();
-                }
-            } catch (IOException e) {
-                throw new SLIB_Ex_Critic(e.getMessage());
-            }
-        }
-        return vocIndex;
-    }
-
+    
+    
     /**
      * Compute the cooccurrence between the terms contained in the texts located
      * in a specified directory. The vocabulary and vocabulary usage is expected
@@ -270,10 +220,12 @@ public class CoOcurrenceEngine {
 
         List<File> flist = new ArrayList();
         int chunk_size = files.size() / nbThreads;
-        if(chunk_size > 10000) chunk_size = 10000;
-        
+        if (chunk_size > 10000) {
+            chunk_size = 10000;
+        }
+
         logger.info("chunk size " + chunk_size);
-        
+
         int count_chunk = 0;
 
         for (File f : files) {
@@ -315,10 +267,6 @@ public class CoOcurrenceEngine {
         return wordCoocurences;
     }
 
-    public Set<String> getVoc() {
-        return vocIndex.keySet();
-    }
-
     class ResultProcessor implements Runnable {
 
         private final int nbServices;
@@ -354,7 +302,6 @@ public class CoOcurrenceEngine {
                     e.printStackTrace();
                     critical_errors++;
                 }
-
             }
         }
 

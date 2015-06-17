@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.engine;
 
 import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads.CooccEngineResult;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
+import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,10 +58,9 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     int id;
     Collection<File> files;
-    SparseMatrix localWordCoocurences;
     SparseMatrix globalCoocurences;
     Logger logger = LoggerFactory.getLogger(CoOccurrenceEngineTheads.class);
-    Map<String, Integer> vocIndex;
+    Voc vocIndex;
     int fileErrors = 0;
     int nbFileDone = 0;
 
@@ -72,18 +71,12 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     public class CooccEngineResult {
 
-        SparseMatrix wordCoocurences;
         int file_processed;
         int errors;
 
-        public CooccEngineResult(SparseMatrix wordCoocurences, int file_processed, int errors) {
-            this.wordCoocurences = wordCoocurences;
+        public CooccEngineResult(int file_processed, int errors) {
             this.file_processed = file_processed;
             this.errors = errors;
-        }
-
-        public SparseMatrix getWordCoocurences() {
-            return wordCoocurences;
         }
 
         public int getFile_processed() {
@@ -96,21 +89,19 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     }
 
-    public CoOccurrenceEngineTheads(int id, Collection<File> files, Map<String, Integer> vocIndex, SparseMatrix globalCoocurences) {
+    public CoOccurrenceEngineTheads(int id, Collection<File> files, Voc vocIndex, SparseMatrix globalCoocurences) {
         this.id = id;
         this.files = files;
-        // Matrices are isolated among thread, there is therefore no need to use a concurrent matrix
-        this.localWordCoocurences = SparseMatrixGenerator.buildSparseMatrix(vocIndex.size(), vocIndex.size());
         this.globalCoocurences = globalCoocurences;
         this.vocIndex = vocIndex;
     }
 
     @Override
     public CooccEngineResult call() {
-        
+
         for (File f : files) {
             nbFileDone++;
-            
+
             try {
                 loadWordCooccurrenceFromFile(f);
             } catch (SLIB_Ex_Critic ex) {
@@ -119,8 +110,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             }
 
         }
-        globalCoocurences.add(localWordCoocurences);
-        return new CooccEngineResult(localWordCoocurences, nbFileDone, fileErrors);
+        return new CooccEngineResult(nbFileDone, fileErrors);
     }
 
     private void loadWordCooccurrenceFromFile(File file) throws SLIB_Ex_Critic {
@@ -131,11 +121,13 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         try {
             String s = FileUtils.readFileToString(file);
-            String[] stab = VocUsageUtils.blank_pattern.split(s);
+            String[] stab = Utils.blank_pattern.split(s);
             int[] text = textToArrayIDs(stab);
-            
-            logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath()+"\t word ex:"+(stab.length-text.length)+"/"+stab.length);
 
+            if (nbFileDone % 100 == 0) {
+                logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath() + "\t word ex:" + (stab.length - text.length) + "/" + stab.length);
+            }
+            
             List<Integer> window = new ArrayList();
             int wsize = 1 + window_size_right < text.length ? 1 + window_size_right : text.length;
             for (int i = 0; i < wsize; i++) {
@@ -197,8 +189,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     private void processWindowForward(int focalWordID, List<Integer> window) {
 
         for (int i = focalWordID + 1; i < window.size(); i++) {
-            localWordCoocurences.add(window.get(focalWordID), window.get(i), 1);
-            localWordCoocurences.add(window.get(i), window.get(focalWordID), 1);
+            globalCoocurences.add(window.get(focalWordID), window.get(i), 1);
+            globalCoocurences.add(window.get(i), window.get(focalWordID), 1);
         }
     }
 
@@ -215,14 +207,16 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     private int[] textToArrayIDs(String[] s) {
         ArrayList<Integer> list = new ArrayList();
         for (String ss : s) {
-            Integer id = vocIndex.get(ss);
-            if(id == null) {
+            Integer id = vocIndex.getID(ss);
+            if (id == null) {
 //                logger.info("skip='"+ss+"'");
                 continue;
             }
-            list.add(vocIndex.get(ss));
+            list.add(vocIndex.getID(ss));
         }
         return ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
     }
+    
+    
 
 }

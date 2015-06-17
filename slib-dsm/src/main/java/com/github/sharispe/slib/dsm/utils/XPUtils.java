@@ -33,6 +33,8 @@
  */
 package com.github.sharispe.slib.dsm.utils;
 
+import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.WordInfo;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -41,6 +43,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import org.slf4j.LoggerFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
@@ -76,13 +79,44 @@ public class XPUtils {
         return r;
     }
 
-    public static void flushIndex(Map<String, Integer> index, String filename) throws SLIB_Ex_Critic {
+//    public static void flushIndex(Voc index, String filename) throws SLIB_Ex_Critic {
+//
+//        logger.info("Flushing index into " + filename + " (n=" + index.size() + ")");
+//        try (PrintWriter writer = new PrintWriter(filename, "UTF-8")) {
+//            
+//            writer.println(index.getMaxWordSize());
+//            
+//            Map<String,Integer> indexInternal = index.getIndex();
+//            
+//            for (String k : indexInternal.keySet()) {
+//
+//                writer.println(indexInternal.get(k) + "\t" + index.getSize(k) + "\t" + k);
+//            }
+//        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+//            throw new SLIB_Ex_Critic(e.getMessage());
+//        }
+//
+//    }
+    
+    /**
+     * use Utils class function instead
+     * @param <K>
+     * @param <V>
+     * @param index
+     * @param filename
+     * @throws SLIB_Ex_Critic
+     * @deprecated
+     */
+    @Deprecated
+    public static <K,V extends Comparable> void flushMAP(Map<K,V> index, String filename) throws SLIB_Ex_Critic {
 
         logger.info("Flushing index into " + filename + " (n=" + index.size() + ")");
         try (PrintWriter writer = new PrintWriter(filename, "UTF-8")) {
-            for (String k : MapUtils.sortByValue(index).keySet()) {
+            
+            
+            for (Object k : MapUtils.sortByValue(index).keySet()) {
 
-                writer.println(index.get(k) + "\t" + k);
+                writer.println(index.get(((K) k)).toString() + "\t" + k);
             }
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
@@ -93,41 +127,74 @@ public class XPUtils {
     public static Map<Integer,String> loadIndexRevert(String filename) throws SLIB_Ex_Critic {
 
         Map<Integer,String> vocIndex = new HashMap();
-        try {
-            String line;
-            String[] data;
-            try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
-                line = br.readLine();
-
-                while (line != null) {
-                    data = line.split("\t");
-                    if (data.length == 2) {
-                        vocIndex.put(Integer.parseInt(data[0]),data[1]);
-                    }
-                    line = br.readLine();
-                }
-            }
-
-        } catch (IOException ex) {
-            throw new SLIB_Ex_Critic(ex.getMessage());
+        Voc i = new Voc(filename);
+        for(Entry<String, Integer> e  : i.getIndex().entrySet()){
+            vocIndex.put(e.getValue(), e.getKey());
         }
-        logger.info("Index " + filename + " loaded (n=" + vocIndex.size() + ")");
         return vocIndex;
     }
 
-    public static Map<String, Integer> loadIndex(String filename) throws SLIB_Ex_Critic {
+//    public static VocIndex loadIndex(String filename) throws SLIB_Ex_Critic {
+//
+//        
+//        
+//        int maxWordSize = 1;
+//        Map<Integer, WordInfo> vocIndexMap = new HashMap();
+//        try {
+//            String line;
+//            String[] data;
+//            try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+//                
+//                line = br.readLine();
+//                // try to retrieve wordsize
+//                try{
+//                line = line.trim();
+//                maxWordSize = Integer.parseInt(line);
+//                }
+//                catch(Exception e ){
+//                    throw new SLIB_Ex_Critic("Error cannot retrieve the max word size of the index");
+//                }
+//                line = br.readLine();
+//                
+//                
+//                while (line != null) {
+//                    data = line.split("\t");
+//                    if (data.length == 3) {
+//                        vocIndexMap.put(Integer.parseInt(data[0]), new WordInfo(data[2], Integer.parseInt(data[1])));
+//                    }
+//                    line = br.readLine();
+//                }
+//            }
+//
+//        } catch (IOException ex) {
+//            throw new SLIB_Ex_Critic(ex.getMessage());
+//        }
+//        logger.info("Index " + filename + " loaded (n=" + vocIndexMap.size() + ")");
+//        return new VocIndex(vocIndexMap,maxWordSize);
+//    }
+    
+    /**
+     * Use utils
+     * @param filename
+     * @return
+     * @throws SLIB_Ex_Critic
+     * @deprecated
+     */
+    @Deprecated
+    public static Map<String, Integer> loadMAP(String filename) throws SLIB_Ex_Critic {
 
-        Map<String, Integer> vocIndex = new HashMap();
+        Map<String, Integer> map = new HashMap();
         try {
             String line;
             String[] data;
             try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+                
                 line = br.readLine();
-
+                
                 while (line != null) {
                     data = line.split("\t");
                     if (data.length == 2) {
-                        vocIndex.put(data[1], Integer.parseInt(data[0]));
+                        map.put(data[1], Integer.parseInt(data[0]));
                     }
                     line = br.readLine();
                 }
@@ -136,8 +203,8 @@ public class XPUtils {
         } catch (IOException ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
-        logger.info("Index " + filename + " loaded (n=" + vocIndex.size() + ")");
-        return vocIndex;
+        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
+        return map;
     }
 
     public static Map<Integer, Integer> loadVocUsage(String filename) throws SLIB_Ex_Critic {

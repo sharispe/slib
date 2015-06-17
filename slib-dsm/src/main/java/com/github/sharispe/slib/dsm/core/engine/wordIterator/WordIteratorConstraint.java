@@ -31,47 +31,14 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.engine;
-
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-
-
-import slib.utils.ex.SLIB_Exception;
+package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
 /**
  *
- * Distributional Model Engine. Class used to build distributional models
- *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class DMEngine {
+public enum WordIteratorConstraint {
 
-    public static void build_distributional_model_TERM_TO_TERM(Collection<File> files, Voc vocIndex, ModelConf model, int nbThreads) throws SLIB_Exception, IOException {
-
-        CoOcurrenceEngine engine = new CoOcurrenceEngine(vocIndex);
-        SparseMatrix wordCoocurences = engine.computeCoOcurrence(files, nbThreads);
-        build_distributional_model_TERM_TO_TERM(vocIndex, wordCoocurences, model);
-    }
-
-    public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
-
-        ConfUtils.initModel(model);
-        ConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
-
-        // We flush the index for entities and the dimensions
-        XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
-        FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
-        
-        
-        ConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
-    }
+    ALLOW_SHORTER_WORDS,
+    FIXED_SIZE
 }

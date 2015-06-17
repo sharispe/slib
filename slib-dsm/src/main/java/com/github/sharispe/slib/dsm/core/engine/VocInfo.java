@@ -33,45 +33,57 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-
-
-import slib.utils.ex.SLIB_Exception;
+import com.github.sharispe.slib.dsm.utils.Utils;
+import java.util.HashMap;
+import java.util.Map;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * Distributional Model Engine. Class used to build distributional models
- *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class DMEngine {
+public class VocInfo {
 
-    public static void build_distributional_model_TERM_TO_TERM(Collection<File> files, Voc vocIndex, ModelConf model, int nbThreads) throws SLIB_Exception, IOException {
+    private final static String NB_FILES_FLAG = "NB_FILES";
+    private final static String NB_WORDS_FLAG = "NB_WORDS";
 
-        CoOcurrenceEngine engine = new CoOcurrenceEngine(vocIndex);
-        SparseMatrix wordCoocurences = engine.computeCoOcurrence(files, nbThreads);
-        build_distributional_model_TERM_TO_TERM(vocIndex, wordCoocurences, model);
+    public final int nbWords;
+    public final int nbFiles;
+
+    public VocInfo(int nbWords, int nbFiles) {
+        this.nbWords = nbWords;
+        this.nbFiles = nbFiles;
     }
 
-    public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
+    /**
+     * Stores the VocInfo into the given file.
+     *
+     * @param filepath
+     * @throws slib.utils.ex.SLIB_Ex_Critic
+     */
+    public void flush(String filepath) throws SLIB_Ex_Critic {
 
-        ConfUtils.initModel(model);
-        ConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
+        Map<String, String> vocInfo = new HashMap();
+        vocInfo.put("NB_FILES", nbFiles + "");
+        vocInfo.put("NB_WORDS", nbWords + "");
 
-        // We flush the index for entities and the dimensions
-        XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
-        FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
-        
-        
-        ConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
+        Utils.flushMapKV(vocInfo, "=", filepath);
+    }
+
+    /**
+     * Build a VocInfo object considering the specified file.
+     * @param filepath of the following form NB_FILES=X NB_WORDS=Y
+     * @throws slib.utils.ex.SLIB_Ex_Critic
+     */
+    public VocInfo(String filepath) throws SLIB_Ex_Critic {
+
+        Map<String, Integer> map = Utils.loadMap(filepath, "=");
+
+        if (!map.containsKey(NB_WORDS_FLAG) || !map.containsKey(NB_FILES_FLAG)) {
+            throw new SLIB_Ex_Critic("Cannot load voc statistics from: " + filepath + ", please consult the documentation");
+        }
+
+        nbWords = map.get(NB_WORDS_FLAG);
+        nbFiles = map.get(NB_FILES_FLAG);
     }
 }

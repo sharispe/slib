@@ -31,7 +31,7 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.main;
+package com.github.sharispe.slib.dsm.core.engine;
 
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.GConstants;
 import java.io.FileReader;

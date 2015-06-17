@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.model.utils.modelconf;
 
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
-import com.github.sharispe.slib.dsm.main.VocStatConf;
+import com.github.sharispe.slib.dsm.core.engine.VocStatConf;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
 import com.github.sharispe.slib.dsm.utils.MapUtils;
@@ -143,11 +143,11 @@ public class ConfUtils {
     /**
      *
      * @param model
-     * @param vocIndex
+     * @param index
      * @param matrix
      * @throws SLIB_Ex_Critic
      */
-    public static void buildIndex(ModelConf model, Map<String, Integer> vocIndex, SparseMatrix matrix) throws SLIB_Ex_Critic {
+    public static void buildIndex(ModelConf model, Map<String,Integer> index, SparseMatrix matrix) throws SLIB_Ex_Critic {
 
         logger.info("Printing model index to " + model.getModelIndex());
 
@@ -156,7 +156,7 @@ public class ConfUtils {
             writer.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
 
             long current = 0;
-            for (Map.Entry<String, Integer> e : MapUtils.sortByValue(vocIndex).entrySet()) {
+            for (Map.Entry<String, Integer> e : MapUtils.sortByValue(index).entrySet()) {
 
                 int id = e.getValue();
                 int nonNullValues = matrix.getNbNonNullValuesInElementVector(id);
@@ -179,7 +179,7 @@ public class ConfUtils {
 
     }
 
-    public static void buildModelBinary(ModelConf model, Map<String, Integer> vocIndex, SparseMatrix m) throws SLIB_Ex_Critic {
+    public static void buildModelBinary(ModelConf model, Map<String, Integer> index, SparseMatrix m) throws SLIB_Ex_Critic {
 
         logger.info("Writting the model into " + model.getModelBinary());
 
@@ -189,7 +189,7 @@ public class ConfUtils {
         int warning = 0;
 
         try (FileOutputStream fo = new FileOutputStream(f)) {
-            for (Map.Entry<String, Integer> e : MapUtils.sortByValue(vocIndex).entrySet()) {
+            for (Map.Entry<String, Integer> e : MapUtils.sortByValue(index).entrySet()) {
 
                 //double[] cooc_term = m.getElementVector(e.getValue());
                 int id = e.getValue();

@@ -31,47 +31,44 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.engine;
+package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-
-
-import slib.utils.ex.SLIB_Exception;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * Distributional Model Engine. Class used to build distributional models
- *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class DMEngine {
+public class WordIteratorAccessor {
 
-    public static void build_distributional_model_TERM_TO_TERM(Collection<File> files, Voc vocIndex, ModelConf model, int nbThreads) throws SLIB_Exception, IOException {
-
-        CoOcurrenceEngine engine = new CoOcurrenceEngine(vocIndex);
-        SparseMatrix wordCoocurences = engine.computeCoOcurrence(files, nbThreads);
-        build_distributional_model_TERM_TO_TERM(vocIndex, wordCoocurences, model);
+    /**
+     * Provides access to the suitable word accessor considering the given
+     * constraints.
+     *
+     * @param f the file from which the word iteration has to be done.
+     * @param word_size_constraint the constraint related to the number of must
+     * have (at most). The way this constraint is understood is function of the
+     * word iterator constraint definition (see above).
+     * @param c defines how the iteration is performed considering the given
+     * size constraint. ALLOW_SHORTER_WORDS enables words that are shorter or
+     * equal to the specified constraint. FIXED_SIZE forces the words to have a
+     * number of token equal to the given constraint.
+     * @return the appropriate instance of word iterator considering the given
+     * constraints
+     * @throws SLIB_Ex_Critic
+     * @throws IOException
+     */
+    public static WordIteratorAbstract getWordIterator(File f, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
+        switch (c) {
+            case ALLOW_SHORTER_WORDS:
+                return new WordIterator_Allow_Shorter(f, word_size_constraint);
+            case FIXED_SIZE:
+                return new WordIterator_FixedSize(f, word_size_constraint);
+            default:
+                throw new SLIB_Ex_Critic(c + " is not a supported word constraint");
+        }
     }
 
-    public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
-
-        ConfUtils.initModel(model);
-        ConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
-
-        // We flush the index for entities and the dimensions
-        XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
-        FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
-        
-        
-        ConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
-    }
 }
