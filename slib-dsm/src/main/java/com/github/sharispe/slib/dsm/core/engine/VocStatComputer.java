@@ -160,7 +160,7 @@ public class VocStatComputer {
             List<File> flist = new ArrayList();
             while (fileIterator.hasNext() && flist.size() != chunk_size) {
                 File n = fileIterator.next();
-                logger.info("queuing: " + n.toString());
+//                logger.info("queuing: " + n.toString());
                 flist.add(n);
             }
             poolWorker.addTask();
