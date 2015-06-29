@@ -31,57 +31,24 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.model.access;
-
-import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import slib.utils.ex.SLIB_Ex_Critic;
+package com.github.sharispe.slib.dsm.core.model.utils;
 
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class ModelAccessorUtils {
+public class IndexedVectorInfo {
 
-    static Logger logger = LoggerFactory.getLogger(ModelAccessorUtils.class);
+    public final int id;
+    public final long start_pos;
+    public final int length_double_non_null;
+    public final String label;
 
-    public static Map<Integer, IndexedVectorInfo> loadIndex_2D_MODEL(ModelConf model) throws SLIB_Ex_Critic {
-
-        Map<Integer, IndexedVectorInfo> index = new HashMap();
-        String index_path = model.getModelIndex();
-
-        logger.info("Loading index from " + index_path);
-
-        try (BufferedReader br = new BufferedReader(new FileReader(index_path))) {
-            // skip header
-            br.readLine();
-            String line = br.readLine();
-
-            while (line != null) {
-
-                String[] data = line.split("\t");
-
-//                if (data.length == 3) {
-                    int id = Integer.parseInt(data[0]);
-                    long start_pos = Long.parseLong(data[1]);
-                    int length_double_non_null = Integer.parseInt(data[2]);
-
-                    index.put(id, new IndexedVectorInfo(id, start_pos, length_double_non_null,data[3]));
-//                }
-
-                line = br.readLine();
-            }
-        } catch (IOException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        }
-        logger.info("Index loaded, size=" + index.size());
-        return index;
+    public IndexedVectorInfo(int id, long start_pos, int length_double_non_null, String label) {
+        this.id = id;
+        this.start_pos = start_pos;
+        this.length_double_non_null = length_double_non_null;
+        this.label = label;
     }
+
 }

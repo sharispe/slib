@@ -34,7 +34,7 @@
 package com.github.sharispe.slib.dsm.core.engine;
 
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
-import com.github.sharispe.slib.dsm.utils.KBestQueue;
+import com.github.sharispe.slib.dsm.utils.RQueue;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import static com.github.sharispe.slib.dsm.utils.Utils.loadMap;
 import java.io.BufferedReader;
@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -51,6 +52,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -82,8 +84,9 @@ public class VocStatComputer {
 
     public final static int DEFAULT_CHUNK_FILE_SIZE = 50000;
 
-    public static final String FILE_INDEX = "file_index.tsv";
-    public static final String FILE_VOC_INFO = "info";
+    public static final String CORPUS_INDEX = "corpus_index.tsv";
+    public static final String CHUNK_INDEX = "chunk_index.tsv";
+    public static final String GENERAL_INFO = "info";
 
     private static final Object lock_nb_files_processed = new Object();
 
@@ -214,6 +217,8 @@ public class VocStatComputer {
     }
 
     /**
+     * Build an index considering an existing one by only considering words that
+     * have a specified minimal number of occurrences
      *
      * @param indexToReduceLocation
      * @param reducedIndexLocation
@@ -221,11 +226,12 @@ public class VocStatComputer {
      * @throws SLIB_Ex_Critic
      * @throws IOException
      */
-    @Deprecated
     public static void reduceIndex(String indexToReduceLocation, String reducedIndexLocation, int minNbOcc) throws SLIB_Ex_Critic, IOException {
 
-        logger.info("Reducing index " + indexToReduceLocation + "\t into " + reducedIndexLocation + " only considering words with at least " + minNbOcc + " occurrences");
-        Map<String, Integer> indexIDs = loadMap(indexToReduceLocation + "/" + FILE_INDEX);
+        logger.info("Reducing index " + indexToReduceLocation + "\t into " + reducedIndexLocation);
+        logger.info("Only considering words with at least " + minNbOcc + " occurrences");
+
+        Map<String, Integer> indexIDs = loadMap(indexToReduceLocation + "/" + CHUNK_INDEX);
 
         File reducedIndex = new File(reducedIndexLocation);
         reducedIndex.mkdir();
@@ -233,7 +239,7 @@ public class VocStatComputer {
         List<String> indexes = new ArrayList(indexIDs.keySet());
         Collections.sort(indexes, String.CASE_INSENSITIVE_ORDER);
 
-        File reducedIndexFile = new File(reducedIndexLocation + "/" + FILE_INDEX);
+        File reducedIndexFile = new File(reducedIndexLocation + "/" + CHUNK_INDEX);
         int nbWordsTested = 0;
         int nbWordsSelected = 0;
 
@@ -246,17 +252,19 @@ public class VocStatComputer {
 
                 c++;
 
-                logger.info(c + "/" + indexes.size());
-
+                if (c % 10 == 0) {
+                    double p = c * 100.0 / indexes.size();
+                    System.out.print("processing: " + c + "/" + indexes.size() + "\t" + Utils.format2digits(p) + "%" + "\r");
+                }
                 int indexID = indexIDs.get(indexKey);
                 BufferedReader br = new BufferedReader(new FileReader(indexToReduceLocation + "/" + indexID));
 
-                File reducedIndexChunk = new File(reducedIndexLocation + "/" + idFile);
-                FileWriter brChunk = new FileWriter(reducedIndexChunk);
-
                 int nbWords = 0;
 
-                try {
+                File reducedChunkFile = new File(reducedIndexLocation + "/" + idFile);
+
+                try (FileWriter fwReducedChunk = new FileWriter(reducedChunkFile)) {
+
                     String line = br.readLine();
 
                     String[] data;
@@ -264,33 +272,33 @@ public class VocStatComputer {
 
                         nbWordsTested++;
                         data = Utils.tab_pattern.split(line);
-                        NgramInfo nInfo = new NgramInfo(data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]));
+                        int nbOccurrences = Integer.parseInt(data[2]);
 
-                        if (nInfo.nbOccurrences >= minNbOcc) {
+                        if (nbOccurrences >= minNbOcc) {
                             nbWordsSelected++;
                             nbWords++;
-                            brChunk.write(nInfo.ngram + "\t" + nInfo.size + "\t" + nInfo.nbOccurrences + "\t" + nInfo.nbFilesWithNgram + "\n");
+                            fwReducedChunk.write(data[0] + "\t" + Integer.parseInt(data[1]) + "\t" + Integer.parseInt(data[2]) + "\t" + Integer.parseInt(data[3]) + "\t" + data[4] + "\n");
                         }
                         line = br.readLine();
                     }
-
-                } finally {
-                    br.close();
-                    brChunk.close();
                 }
-
                 if (nbWords == 0) {
-                    reducedIndexChunk.delete();
+                    reducedChunkFile.delete();
                 } else {
-                    fwReducedIndexFile.write(indexKey + "\t" + idFile);
+                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\n");
                     idFile++;
                 }
-
             }
-        }
-        double p = (double) nbWordsSelected * 100.0 / nbWordsTested;
-        logger.info(nbWordsSelected + "/" + nbWordsTested + " words selected (" + p + "%)");
+            double p = (double) nbWordsSelected * 100.0 / nbWordsTested;
+            logger.info(nbWordsSelected + "/" + nbWordsTested + " words selected (" + Utils.format2digits(p) + "%)");
 
+            // Copy other files 
+            Files.copy(new File(indexToReduceLocation + "/" + CORPUS_INDEX).toPath(), new File(reducedIndexLocation + "/" + CORPUS_INDEX).toPath());
+
+            VocInfo voc_info = new VocInfo(indexToReduceLocation + "/" + GENERAL_INFO);
+            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected,voc_info.nbFiles);
+            voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
+        }
     }
 
     /**
@@ -298,17 +306,19 @@ public class VocStatComputer {
      * statistics are assumed to be computed on different corpus that do not
      * contains the same files (if a word occurs 23 times into corpus A and 40
      * times into corpus B it will be considered to occur 63 times in the merged
-     * corpus).
+     * corpus). To avoid high computational time complexity we consider that two
+     * indexes do not contains the same file.
      *
-     * @param pathIndexesToMerge the set of paths of the index to merge
+     * @param indexes the set of paths of the index to merge
      * @param deleteMerged true to delete merged indexes
      * @param mergedIndexLocation the merged index location
      * @throws SLIB_Ex_Critic
      * @throws IOException
      * @throws Exception
      */
-    public static void mergeIndexes(Set<String> pathIndexesToMerge, boolean deleteMerged, String mergedIndexLocation) throws Exception {
+    public static void mergeIndexes(Set<String> indexes, boolean deleteMerged, String mergedIndexLocation) throws Exception {
 
+        LinkedHashSet<String> pathIndexesToMerge = new LinkedHashSet(indexes);
         logger.info("Merging " + pathIndexesToMerge.size() + " indexes");
         logger.info("Computing key indexes");
 
@@ -316,26 +326,51 @@ public class VocStatComputer {
         mergedIndex.mkdir();
 
         // retrieve all the key indexes
-        Set<String> indexKeys = new HashSet();
+        Set<String> chunkKeys = new HashSet();
 
         int totalWordNumbers = 0;
         int totalFile = 0;
 
-        for (String idx : pathIndexesToMerge) {
-            logger.info("Loading index: " + idx);
-            Map<String, Integer> indexToMerge = Utils.loadMap(idx + "/" + FILE_INDEX);
-            indexKeys.addAll(indexToMerge.keySet());
+        // In each index file numbering starts from 0
+        // a new id is therefore computed for each file of the merged index
+        // to avoid high computational time complexity we consider that two 
+        // indexes do not contains the same file
+        Map<String, Integer> valuesToAddToCorpusFileIds = new HashMap();
+        int nbFiles = 0;
 
-            VocInfo idxInfo = new VocInfo(idx + "/" + FILE_VOC_INFO);
-            totalFile += idxInfo.nbFiles;
+        // we generate the new corpus index
+        // and we retrive all the chunk keys
+        try (FileWriter corpusIndexWriter = new FileWriter(mergedIndexLocation + "/" + CORPUS_INDEX)) {
+
+            for (String idx : pathIndexesToMerge) {
+
+                logger.info("Loading index: " + idx);
+                Map<String, Integer> chunksToMerge = Utils.loadMap(idx + "/" + CHUNK_INDEX);
+                chunkKeys.addAll(chunksToMerge.keySet());
+
+                VocInfo idxInfo = new VocInfo(idx + "/" + GENERAL_INFO);
+                totalFile += idxInfo.nbFiles;
+
+                Map<Integer, String> fileIdsToMerge = Utils.loadMap_IntString(idx + "/" + CORPUS_INDEX);
+
+                for (Map.Entry<Integer, String> entrySet : fileIdsToMerge.entrySet()) {
+                    Integer key = entrySet.getKey();
+                    String value = entrySet.getValue();
+                    corpusIndexWriter.write((key + nbFiles) + "\t" + value + "\n");
+                }
+                valuesToAddToCorpusFileIds.put(idx, nbFiles);
+                logger.info(idx + " - add " + nbFiles + " to corpus file ids");
+                nbFiles += fileIdsToMerge.size();
+
+            }
         }
-        logger.info("Size merged index: " + indexKeys.size());
+        logger.info("Size merged index: " + chunkKeys.size());
 
-        List<String> indexKeysSorted = new ArrayList(indexKeys);
+        List<String> indexKeysSorted = new ArrayList(chunkKeys);
         Collections.sort(indexKeysSorted, String.CASE_INSENSITIVE_ORDER);
 
         // map used to store the information of the words for the merged indexes
-        try (FileWriter fileIdx = new FileWriter(mergedIndexLocation + "/" + FILE_INDEX)) {
+        try (FileWriter fileIdx = new FileWriter(mergedIndexLocation + "/" + CHUNK_INDEX)) {
             // map used to store the information of the words for the merged indexes
             Map<String, WordInfo> mergedIdxKeyWordsInfo = new HashMap();
 
@@ -347,14 +382,13 @@ public class VocStatComputer {
                 mergedIdxKeyWordsInfo.clear();
 
                 String key = indexKeysSorted.get(i);
-                fileIdx.write(key + "\t" + i + "\n");
 
                 logger.info("processing " + (i + 1) + "/" + indexKeysSorted.size() + "\t" + key);
 
                 // for each key we merge the all the indexes
                 for (String idx : pathIndexesToMerge) {
 
-                    Map<String, Integer> idxIndexKeys = loadMap(idx + "/" + FILE_INDEX);
+                    Map<String, Integer> idxIndexKeys = loadMap(idx + "/" + CHUNK_INDEX);
 
                     // the file that may contain the statistics of the words starting with the current key
                     String idxKeyChunk = idx + "/" + idxIndexKeys.get(key);
@@ -365,21 +399,43 @@ public class VocStatComputer {
 
                         for (String m : idxKeyWordsInfo.keySet()) {
 
+                            WordInfo winfo = idxKeyWordsInfo.get(m);
+
+                            // compute the new string of document ids 
+                            String newFileInfo = "";
+                            String[] fileInfos = winfo.additionnalInfo.split(":"); // 5-1:6-3:7-5... file_id_1-nb_occ_file_1:file_id_2-nb_occ_file_2
+
+                            for (int j = 0; j < fileInfos.length; j++) {
+                                String[] infoFile = fileInfos[j].split("-");
+                                int idFile = Integer.parseInt(infoFile[0]) + valuesToAddToCorpusFileIds.get(idx);
+                                if (j != 0) {
+                                    newFileInfo += ":";
+                                }
+                                newFileInfo += idFile + "-" + infoFile[1];
+
+                            }
+
                             if (mergedIdxKeyWordsInfo.containsKey(m)) {
-                                mergedIdxKeyWordsInfo.get(m).sumWordInfo(idxKeyWordsInfo.get(m));
+                                mergedIdxKeyWordsInfo.get(m).sumWordInfo(winfo);
+                                // concat additional information
+                                mergedIdxKeyWordsInfo.get(m).concatAdditionnalInfo(newFileInfo);
                             } else {
-                                mergedIdxKeyWordsInfo.put(m, idxKeyWordsInfo.get(m));
+                                mergedIdxKeyWordsInfo.put(m, winfo);
+                                // additional info may have been changed
+                                mergedIdxKeyWordsInfo.get(m).additionnalInfo = newFileInfo;
                             }
                         }
                     }
                 }
+
+                fileIdx.write(key + "\t" + i + "\t" + mergedIdxKeyWordsInfo.size() + "\n");
 
                 // Flush map and n-gram size
                 // n-gram size_n-gram nb_occurrences
                 try (FileWriter file = new FileWriter(mergedIndexLocation + "/" + i)) {
 
                     for (Map.Entry<String, WordInfo> e : mergedIdxKeyWordsInfo.entrySet()) {
-                        file.write(e.getKey() + "\t" + Utils.blank_pattern.split(e.getKey()).length + "\t" + e.getValue().nbOccurrences + "\t" + +e.getValue().nbFilesWithWord + "\n");
+                        file.write(e.getKey() + "\t" + Utils.blank_pattern.split(e.getKey()).length + "\t" + e.getValue().nbOccurrences + "\t" + e.getValue().nbFilesWithWord + "\t" + e.getValue().additionnalInfo + "\n");
                     }
                 }
                 totalWordNumbers += mergedIdxKeyWordsInfo.size();
@@ -387,7 +443,7 @@ public class VocStatComputer {
         }
 
         VocInfo mergedInfo = new VocInfo(totalWordNumbers, totalFile);
-        mergedInfo.flush(mergedIndexLocation + "/" + FILE_VOC_INFO);
+        mergedInfo.flush(mergedIndexLocation + "/" + GENERAL_INFO);
 
         if (deleteMerged) {
             for (String idx : pathIndexesToMerge) {
@@ -403,7 +459,7 @@ public class VocStatComputer {
         Map<Integer, Integer> nbOcc_NGRAM = new HashMap();
         Map<Integer, Integer> nb_unique_NGRAM = new HashMap();
 
-        Map<String, Integer> indexFiles = Utils.loadMap(dir + "/" + FILE_INDEX);
+        Map<String, Integer> indexFiles = Utils.loadMap(dir + "/" + CHUNK_INDEX);
 
         logger.info("computing global statistics...");
         int c = 0;
@@ -411,7 +467,7 @@ public class VocStatComputer {
             c++;
 
             File chunkFile = new File(dir + "/" + i);
-            logger.info("\tprocessing chunk " + c + "/" + indexFiles.size() + "\t" + chunkFile);
+            System.out.print("\tprocessing chunk " + c + "/" + indexFiles.size() + "\t" + chunkFile + "\r");
             List<NgramInfo> ngramInfo = loadListNgramInfo(chunkFile);
 
             for (NgramInfo info : ngramInfo) {
@@ -449,8 +505,8 @@ public class VocStatComputer {
             logger.info("nbOcc: " + nb_occ);
             logger.info("nb  unique: " + nb_unique + " (" + p_unique + "%)");
             logger.info("nb !unique: " + nb_not_unique + " (" + p_not_unique + "%)");
-            
-            KBestQueue<String, Double> bestProbabilities = new KBestQueue(nbResults);
+
+            RQueue<String, Double> bestProbabilities = new RQueue(nbResults);
 
             logger.info("Computing ngrams with best probabilities");
 
@@ -468,7 +524,7 @@ public class VocStatComputer {
                 for (NgramInfo info : ngramInfo) {
 
                     if (info.size == size_ngram) {
-                        double p = info.nbOccurrences / (double) nb_ngram;
+                        double p = info.nbOccurrences / (double) nb_occ;
                         bestProbabilities.add(info.ngram, p);
                         total_words++;
 
@@ -499,6 +555,111 @@ public class VocStatComputer {
                 logger.info(j + "\t" + wordsWithNbOccurences.get(j) + "\t" + current_sum + "\t" + p + "%\t");
             }
         }
+    }
+
+    public static void computePMI(String dir) throws Exception {
+
+        Map<Integer, Integer> sizeVoc_NGRAM = new HashMap();
+        Map<Integer, Integer> nbOcc_NGRAM = new HashMap();
+
+        Map<String, Integer> indexFiles = Utils.loadMap(dir + "/" + CHUNK_INDEX);
+
+        logger.info("computing global statistics...");
+        int c = 0;
+        for (Integer i : indexFiles.values()) {
+            c++;
+
+            File chunkFile = new File(dir + "/" + i);
+            System.out.print("processing chunk " + c + "/" + indexFiles.size() + "\r");
+            List<NgramInfo> ngramInfo = loadListNgramInfo(chunkFile);
+
+            for (NgramInfo info : ngramInfo) {
+
+                if (!sizeVoc_NGRAM.containsKey(info.size)) {
+                    sizeVoc_NGRAM.put(info.size, 0);
+                    nbOcc_NGRAM.put(info.size, 0);
+                }
+
+                sizeVoc_NGRAM.put(info.size, sizeVoc_NGRAM.get(info.size) + 1);
+                nbOcc_NGRAM.put(info.size, nbOcc_NGRAM.get(info.size) + info.nbOccurrences);
+            }
+        }
+        // sort keys 
+        List<Integer> sortedKeys = new ArrayList(sizeVoc_NGRAM.keySet());
+        Collections.sort(sortedKeys);
+
+        // computing statistics for simple token
+        logger.info("computing probabilities of single tokens...");
+        int nb_occ_n1 = nbOcc_NGRAM.get(1);
+
+        Map<String, Double> probabilityToken = new HashMap();
+        RQueue<String, Double> bestProbabilityToken = new RQueue(10000);
+
+        for (Integer i : indexFiles.values()) {
+
+            File chunk = new File(dir + "/" + i);
+
+            // load the statistics associated to the prefix
+            List<NgramInfo> ngramInfo = loadListNgramInfo(chunk);
+
+            for (NgramInfo info : ngramInfo) {
+
+                if (info.size == 1) {
+                    double p = (double) info.nbOccurrences / (double) nb_occ_n1;
+                    bestProbabilityToken.add(info.ngram, p);
+                    probabilityToken.put(info.ngram, p);
+                }
+            }
+        }
+
+        logger.info(bestProbabilityToken.toString());
+
+        logger.info("computing probabilities of 2-grams and PMI...");
+        // compute pmi for each 2-gram size 
+
+        int nb_occ_n2 = nbOcc_NGRAM.get(2);
+        int nb_ngram_n2 = sizeVoc_NGRAM.get(2);
+
+        RQueue<String, Double> higherPMI = new RQueue(100);
+        RQueue<String, Double> lowestPMI = new RQueue(100, false);
+        RQueue<String, Double> allPMI = new RQueue(nb_ngram_n2);
+
+        logger.info("Computing ngrams with best PMI");
+
+        for (Integer i : indexFiles.values()) {
+
+            File chunk = new File(dir + "/" + i);
+
+            // load the statistics associated to the prefix
+            List<NgramInfo> ngramInfo = loadListNgramInfo(chunk);
+
+            for (NgramInfo info : ngramInfo) {
+
+                if (info.size == 2) {
+
+                    String[] twoGram = Utils.blank_pattern.split(info.ngram);
+
+                    String u = twoGram[0];
+                    String v = twoGram[1];
+
+                    double p_uv = (double) info.nbOccurrences / (double) nb_occ_n2;
+                    double p_u = probabilityToken.get(u);
+                    double p_v = probabilityToken.get(v);
+
+                    double pmi = Math.log(p_uv / (p_u * p_v));
+
+                    higherPMI.add(info.ngram, pmi);
+                    lowestPMI.add(info.ngram, pmi);
+                    allPMI.add(info.ngram, pmi);
+                }
+            }
+        }
+        logger.info("Best PMI");
+        logger.info(higherPMI.toString());
+        logger.info("Lowest PMI");
+        logger.info(lowestPMI.toString());
+        logger.info("All PMI");
+        logger.info(allPMI.toString());
     }
 
     private static List<NgramInfo> loadListNgramInfo(File ngramInfoFile) throws Exception {

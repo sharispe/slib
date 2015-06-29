@@ -38,14 +38,13 @@ import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAccesso
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
+import java.io.FileWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,49 +96,62 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
             int nbFileDone = 0, nbFileDoneLastIteration = 0;
             WordIteratorAbstract wordIT;
-            Set<String> fileVoc;
+            Map<String, Integer> fileVoc;
             String w;
 
             Map<String, WordInfo> wordOccurences = new HashMap();
 
-            for (File f : files) {
-                
-//                logger.info(f.getPath());
+            File corpus_index = new File(rootPath + "/" + VocStatComputer.CORPUS_INDEX);
 
-                nbFileDone++;
-                nbFileDoneLastIteration++;
+            try (FileWriter corpusIndexWriter = new FileWriter(corpus_index)) {
 
-                if (nbFileDone % 1000 == 0) {
-                    logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size);
-                }
+                for (File f : files) {
 
-                wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
-                fileVoc = new HashSet();
+                    nbFileDoneLastIteration++;
 
-                // retrieve all the words and associated number of occurrences
-                while (wordIT.hasNext()) {
+                    int file_id = nbFileDone;
+                    corpusIndexWriter.write(file_id + "\t" + f.getPath() + "\n");
 
-                    w = wordIT.next();
-
-                    if (!wordOccurences.containsKey(w)) {
-                        int size = Utils.blank_pattern.split(w).length;
-                        wordOccurences.put(w, new WordInfo(size));
+                    if (nbFileDone % 1000 == 0) {
+                        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size);
                     }
-                    fileVoc.add(w);
-                    wordOccurences.get(w).addOccurrence();
-                }
 
-                // add a file occurrence to each word
-                for (String word : fileVoc) {
-                    wordOccurences.get(word).addFileWithWord();
-                }
+                    wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
 
-                if (wordOccurences.size() >= cache_map_size) {
-                    indexer.addToIndex(wordOccurences);
-                    VocStatComputer.incrementProcessedFiles(nbFileDoneLastIteration);
-                    logger.info("(" + id + ") * File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
-                    wordOccurences.clear();
-                    nbFileDoneLastIteration = 0;
+                    fileVoc = new HashMap();
+
+                    // retrieve all the words and associated number of occurrences
+                    while (wordIT.hasNext()) {
+
+                        w = wordIT.next();
+
+                        if (!wordOccurences.containsKey(w)) {
+                            int size = Utils.blank_pattern.split(w).length;
+                            wordOccurences.put(w, new WordInfo(size));
+                        }
+                        if (!fileVoc.containsKey(w)) {
+                            fileVoc.put(w, 1);
+                        } else {
+                            fileVoc.put(w, fileVoc.get(w) + 1);
+                        }
+                        wordOccurences.get(w).addOccurrence();
+                    }
+
+                    // add a file occurrence to each word
+                    for (String word : fileVoc.keySet()) {
+                        WordInfo winfo = wordOccurences.get(word);
+                        winfo.addFileWithWord();
+                        winfo.concatAdditionnalInfo(file_id + "-" + fileVoc.get(word));
+                    }
+
+                    if (wordOccurences.size() >= cache_map_size) {
+                        indexer.addToIndex(wordOccurences);
+                        VocStatComputer.incrementProcessedFiles(nbFileDoneLastIteration);
+                        logger.info("(" + id + ") * File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
+                        wordOccurences.clear();
+                        nbFileDoneLastIteration = 0;
+                    }
+                    nbFileDone++;
                 }
             }
             indexer.addToIndex(wordOccurences);
@@ -148,12 +160,12 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
             // compute vocabulary size
             VocInfo info = new VocInfo(indexer.computeVocabularySize(), nbFileDone);
-            info.flush(this.rootPath + "/" + VocStatComputer.FILE_VOC_INFO);
+            info.flush(this.rootPath + "/" + VocStatComputer.GENERAL_INFO);
 
             logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
             logger.info("(" + id + ") computation finished");
         } catch (Exception e) {
-            logger.error("An error occured in thread: "+id);
+            logger.error("An error occured in thread: " + id);
             e.printStackTrace();
             throw e;
         } finally {

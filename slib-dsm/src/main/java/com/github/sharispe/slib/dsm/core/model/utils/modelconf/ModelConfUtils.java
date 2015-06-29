@@ -59,9 +59,9 @@ import slib.utils.ex.SLIB_Exception;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class ConfUtils {
+public class ModelConfUtils {
 
-    static Logger logger = LoggerFactory.getLogger(ConfUtils.class);
+    static Logger logger = LoggerFactory.getLogger(ModelConfUtils.class);
 
     /**
      * Initialize a model according to the given configuration.

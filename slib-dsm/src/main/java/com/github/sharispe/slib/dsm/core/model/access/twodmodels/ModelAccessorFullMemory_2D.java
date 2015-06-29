@@ -33,8 +33,10 @@
  */
 package com.github.sharispe.slib.dsm.core.model.access.twodmodels;
 
+import com.github.sharispe.slib.dsm.core.model.access.ModelAccessorUtils;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVector;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.entityinfo.EntityInfo_2D_MODEL;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import java.io.FileInputStream;
@@ -42,6 +44,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Iterator;
 import java.util.Map;
 
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -54,12 +57,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class ModelAccessorFullMemory_2D extends ModelAccessor_2D {
 
-    double[][] mat;
-
-    public ModelAccessorFullMemory_2D(ModelConf c, Map<Integer, EntityInfo_2D_MODEL> index) throws SLIB_Ex_Critic {
-        super(c, index);
-        loadModel();
-    }
+    IndexedVector[] vectors;
 
     public ModelAccessorFullMemory_2D(ModelConf model) throws SLIB_Ex_Critic {
         super(model);
@@ -67,15 +65,40 @@ public class ModelAccessorFullMemory_2D extends ModelAccessor_2D {
     }
 
     @Override
-    public double[] vectorRepresentationOf(int id_vector) throws SLIB_Ex_Critic {
-        return mat[id_vector];
+    public Iterator<IndexedVector> iterator() {
+        return new ModelIterator();
+    }
+
+    public class ModelIterator implements Iterator<IndexedVector> {
+
+        int c = 0;
+
+        @Override
+        public boolean hasNext() {
+            return c < vectors.length;
+        }
+
+        @Override
+        public IndexedVector next() {
+            IndexedVector v = vectors[c];
+            c++;
+            return v;
+        }
+
+    }
+
+    @Override
+    public IndexedVector vectorRepresentationOf(IndexedVectorInfo vectorInfo) throws SLIB_Ex_Critic {
+        return vectors[vectorInfo.id];
     }
 
     private void loadModel() throws SLIB_Ex_Critic {
 
         logger.info("Loading model into memory");
 
-        mat = new double[index.size()][model.vec_size];
+        Map<Integer, IndexedVectorInfo> index = ModelAccessorUtils.loadIndex_2D_MODEL(model);
+
+        vectors = new IndexedVector[model.vec_size];
 
         try {
 
@@ -83,7 +106,7 @@ public class ModelAccessorFullMemory_2D extends ModelAccessor_2D {
             FileChannel fchannel = fis.getChannel();
 
             int c = 1;
-            for (EntityInfo_2D_MODEL einfo : index.values()) {
+            for (IndexedVectorInfo einfo : index.values()) {
 
                 logger.info("..." + c + "/" + index.size());
                 c++;
@@ -98,7 +121,7 @@ public class ModelAccessorFullMemory_2D extends ModelAccessor_2D {
                 bbf.position(0);
                 DoubleBuffer dbf = bbf.asDoubleBuffer();
                 dbf.get(vector_compressed);
-                mat[einfo.id] = CompressionUtils.uncompressDoubleArray(vector_compressed, model.vec_size);
+                vectors[einfo.id] = new IndexedVector(einfo.id, einfo.label, CompressionUtils.uncompressDoubleArray(vector_compressed, model.vec_size));
             }
         } catch (IOException e) {
             throw new SLIB_Ex_Critic("Error reading the index: " + e.getMessage());

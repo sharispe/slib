@@ -34,7 +34,7 @@
 package com.github.sharispe.slib.dsm.core.engine;
 
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
+import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConfUtils;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.XPUtils;
 import java.io.File;
@@ -64,14 +64,14 @@ public class DMEngine {
 
     public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
 
-        ConfUtils.initModel(model);
-        ConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
+        ModelConfUtils.initModel(model);
+        ModelConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
 
         // We flush the index for entities and the dimensions
         XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
         FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
         
         
-        ConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
+        ModelConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
     }
 }

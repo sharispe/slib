@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
+import java.util.Arrays;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -79,16 +80,16 @@ public class CompressionUtils {
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
     public static double[] uncompressDoubleArray(double[] arr, int size) throws SLIB_Ex_Critic {
-        double[] ur = new double[size];
+        double[] u = new double[size];
 
         for (int i = 0; i < arr.length; i += 2) {
 
-            if (arr[i] > size) {
-                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + size + "): it contains an entry id=" + arr[i] + " val=" + arr[i + 1]);
+            if (arr[i] >= size) {
+                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + size + "): it contains an entry id=" + arr[i] + " val=" + arr[i + 1]+"\n"+Arrays.toString(arr));
             }
-            ur[(int) arr[i]] = arr[i + 1];
+            u[(int) arr[i]] = arr[i + 1];
         }
-        return ur;
+        return u;
     }
 
     /**
@@ -127,7 +128,8 @@ public class CompressionUtils {
             
             k = e.getKey();
             if (k >= sizeVector || k < 0) {
-                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + sizeVector + "): it contains an entry id=" + e.getKey() + " val=" + e.getValue());
+                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + sizeVector + "): it contains an entry id=" + e.getKey() + " val=" + e.getValue()+"\nArray: "+sparserow);
+            
             }
             vec[e.getKey()] = e.getValue();
         }

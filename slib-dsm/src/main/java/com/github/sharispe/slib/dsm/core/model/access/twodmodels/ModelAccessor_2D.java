@@ -34,11 +34,7 @@
 package com.github.sharispe.slib.dsm.core.model.access.twodmodels;
 
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
-import com.github.sharispe.slib.dsm.core.model.access.ModelAccessorUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.entityinfo.EntityInfo_2D_MODEL;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,33 +47,14 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public abstract class ModelAccessor_2D implements ModelAccessor<EntityInfo_2D_MODEL> {
+public abstract class ModelAccessor_2D implements ModelAccessor {
 
     Logger logger = LoggerFactory.getLogger(ModelAccessor_2D.class);
 
-    Map<Integer, EntityInfo_2D_MODEL> index;
     final ModelConf model;
 
     public ModelAccessor_2D(ModelConf c) throws SLIB_Ex_Critic {
         this.model = c;
-        this.index = ModelAccessorUtils.loadIndex_2D_MODEL(c);
-    }
-        
-    public ModelAccessor_2D(ModelConf c, Map<Integer, EntityInfo_2D_MODEL> index) throws SLIB_Ex_Critic {
-        this.model = c;
-        this.index = index;
-    }
-
-   
-
-    @Override
-    public Map<Integer, EntityInfo_2D_MODEL> getIndexedElementInfo() {
-        return index;
-    }
-
-    @Override
-    public Set<Integer> getElementIds() {
-        return index.keySet();
     }
 
     @Override

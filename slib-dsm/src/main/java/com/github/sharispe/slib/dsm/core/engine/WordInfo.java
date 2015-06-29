@@ -33,8 +33,6 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.utils.Utils;
-
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
@@ -44,11 +42,13 @@ public class WordInfo {
     public int ngramsize;
     public int nbOccurrences;
     public int nbFilesWithWord;
+    public String additionnalInfo;
 
-    public WordInfo(int ngramsize, int nbOccurrences, int nbFilesWithWord) {
+    public WordInfo(int ngramsize, int nbOccurrences, int nbFilesWithWord, String additionnalInfo) {
         this.ngramsize = ngramsize;
         this.nbOccurrences = nbOccurrences;
         this.nbFilesWithWord = nbFilesWithWord;
+        this.additionnalInfo = additionnalInfo;
     }
 
     public WordInfo(int size) {
@@ -76,6 +76,19 @@ public class WordInfo {
     public void sumWordInfo(WordInfo w) {
         nbOccurrences += w.getNbOccurrences();
         nbFilesWithWord += w.getNbFilesWithWord();
+    }
+
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionnalInfo = additionalInfo;
+    }
+
+    void concatAdditionnalInfo(String s) {
+        if (this.additionnalInfo == null) {
+            this.additionnalInfo = s;
+        } else {
+            this.additionnalInfo = this.additionnalInfo + ":" + s;
+        }
+
     }
 
 }

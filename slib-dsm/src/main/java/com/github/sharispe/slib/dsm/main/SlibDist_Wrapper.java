@@ -33,44 +33,40 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
-import com.github.sharispe.slib.dsm.core.engine.VocStatConf;
-import com.github.sharispe.slib.dsm.core.Tf_Idf;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
 import com.github.sharispe.slib.dsm.utils.Lemmatizer;
-import com.github.sharispe.slib.dsm.utils.MapUtils;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sml.sm.core.measures.vector.CosineSimilarity;
 import com.github.sharispe.slib.dsm.core.engine.DMEngine;
 import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.VocInfo;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
+import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorPersistance_2D;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.entityinfo.EntityInfo_2D_MODEL;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ConfUtils;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
+import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConfUtils;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.GConstants;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelType;
-import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorMemory_2D;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessor_2D;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVector;
+import com.github.sharispe.slib.dsm.utils.RQueue;
+import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Iterator;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -216,7 +212,6 @@ public class SlibDist_Wrapper {
 //        }
 //
 //    }
-
     /**
      * Compute a TF-IDF vector representation of documents considering a given
      * vocabulary. The result is a set of files representing the vector
@@ -329,400 +324,630 @@ public class SlibDist_Wrapper {
 //        XPUtils.flushMAP(vocIndex.getIndex(), model.getDimensionIndex());
 //        logger.info("model save at: " + model.path);
 //    }
+    /**
+     * Compute a TF-IDF vector representation of documents considering a given
+     * vocabulary. The result is a set of files representing the vector
+     * representation of each file composing the given directory.
+     *
+     * @param voc_index
+     * @param model_dir
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws SLIB_Ex_Critic
+     */
+    public static void build_model_term_doc_classic(String voc_index, String model_dir) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
 
-    public static double computeEntitySimilarity(Map<String, Integer> entityIndex, ModelAccessor model, String label_eA, String label_eB) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
+        VocInfo vocInfo = new VocInfo(voc_index + "/" + VocStatComputer.GENERAL_INFO);
+        ModelConf model = new ModelConf(ModelType.TWO_D_TERM_DOC, "T x D model", model_dir, vocInfo.nbWords, vocInfo.nbFiles, vocInfo.nbFiles, "0.1");
 
-        double[] eA = model.vectorRepresentationOf(entityIndex.get(label_eA));
-        double[] eB = model.vectorRepresentationOf(entityIndex.get(label_eB));
+        ModelConfUtils.initModel(model);
+
+        // Compute the vector representation of each word
+        logger.info("Computing vector representation for each document (n=" + vocInfo.nbWords + ")");
+
+        long start_binary_vec = 0;
+        byte[] sep_binary = {0};
+        File f_binary = new File(model.getModelBinary());
+
+        byte[] compressed_vector_byte;
+
+        Map<String, Integer> chunk_index = Utils.loadMap(voc_index + "/" + VocStatComputer.CHUNK_INDEX);
+        int chunk_done_count = 0;
+
+        // We generate 
+        // (i)  the index in which information regarding the location of term vector representation will be specified 
+        // (ii) the binary index in which the binary representation of vectors will be saved
+        try (PrintWriter index_writer = new PrintWriter(model.getModelIndex(), "UTF-8")) {
+            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
+
+                int id_word = 0;
+                index_writer.println("ID_WORD\tSTART_POS\tLENGTH_DOUBLE_NON_NULL\tWORD");
+
+                // We iterate over the chunks to process each associated words
+                for (Integer id_chunk : chunk_index.values()) {
+
+                    chunk_done_count++;
+                    System.out.print("processing chunk " + chunk_done_count + "/" + chunk_index.size() + "    \r");
+
+                    // We iterate over the words of the chunk
+                    // and create their vector representation
+                    try (BufferedReader br = new BufferedReader(new FileReader(voc_index + "/" + id_chunk))) {
+                        String line;
+
+                        while ((line = br.readLine()) != null) {
+                            String[] word_data = Utils.tab_pattern.split(line);
+
+                            String word = word_data[0];
+                            String encodedFileOcc = word_data[4];
+
+                            // Convert the string that encodes the number of occurrences per files into a Map
+                            Map<Integer, Double> compressedVectorAsMap = decodeFileOccDistribution(encodedFileOcc);
+                            int nonNullValues = compressedVectorAsMap.size();
+
+                            // write the binary representation
+                            compressed_vector_byte = CompressionUtils.toByteArray(compressedVectorAsMap);
+                            fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
+                            fo.write(sep_binary);
+
+                            // write index info 
+                            index_writer.println(id_word + "\t" + start_binary_vec + "\t" + nonNullValues + "\t" + word);
+
+                            start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+                            start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
+
+                            id_word++;
+                        }
+                    }
+                }
+            }
+        }
+        logger.info("model save at: " + model.path);
+    }
+
+    public static double computeEntitySimilarity(ModelAccessor model, IndexedVectorInfo eAID, IndexedVectorInfo eBID) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
+
+        double[] eA = model.vectorRepresentationOf(eAID).values;
+        double[] eB = model.vectorRepresentationOf(eBID).values;
 
         return CosineSimilarity.sim(eA, eB);
     }
 
-    public static Map<String, Double> computeBestEntitySimilarity(Map<String, Integer> entityIndex, ModelAccessor_2D modelAccessor, String entityTarget, int k_limit, boolean outputResult) throws IOException, SLIB_Ex_Critic {
+    public static RQueue<String, Double> computeBestSimilarities(ModelAccessor_2D modelAccessor, IndexedVectorInfo queryVectorInfo, int k_limit) throws IOException, SLIB_Ex_Critic {
 
-        logger.info("entity=" + entityTarget + "\tk=" + k_limit + " on " + entityIndex.size() + " entities");
-
-        Timer t = new Timer();
-        t.start();
-
-        if (!entityIndex.containsKey(entityTarget)) {
-            throw new SLIB_Ex_Critic("no entity identified by '" + entityTarget + "'");
-        }
-
-        double[] entity_target_vec = modelAccessor.vectorRepresentationOf(entityIndex.get(entityTarget));
-        double[] entity_o;
-
-        Map<Integer, EntityInfo_2D_MODEL> indexInfo = modelAccessor.getIndexedElementInfo();
-        Map<Integer, Double> scores = new HashMap();
-
-        int c = 0;
-        int skipped = 0;
-        int id;
-        for (Map.Entry<String, Integer> e : entityIndex.entrySet()) {
-
-            id = e.getValue();
-            if (indexInfo.get(id).length_double_non_null == 0) {
-                logger.info("skip entity " + e.getKey() + "\tempty vector");
-                skipped++;
-                continue;
-            }
-
-            entity_o = modelAccessor.vectorRepresentationOf(e.getValue());
-
-            double sim = CosineSimilarity.sim(entity_target_vec, entity_o);
-            scores.put(id, sim);
-            c++;
-            if (entityIndex.size() > 20 && c % (entityIndex.size() / 20) == 0) {
-                logger.info("processsing: " + c + "/" + entityIndex.size() + "... ");
-            }
-        }
-        logger.info("number of skipped entities: " + skipped);
-
-        String[] entityIndex_rev = new String[entityIndex.size()];
-        for (Map.Entry<String, Integer> e : entityIndex.entrySet()) {
-            entityIndex_rev[e.getValue()] = e.getKey();
-        }
-
-        logger.info("sorting results...");
-        // print the sorted resultsI
-        Map<String, Double> score_results = new LinkedHashMap();
-
-        for (Map.Entry<Integer, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
-
-            Integer row_id = e.getKey();
-            Double score = e.getValue();
-            if (outputResult) {
-                logger.info("\t" + entityIndex_rev[row_id] + "\t" + score);
-            }
-            score_results.put(entityIndex_rev[row_id], score);
-            k_limit--;
-            if (k_limit == 0) {
-                break;
-            }
-        }
-        t.elapsedTime();
-        return score_results;
-
-    }
-
-    public static Map<String, Double> computeBestDocSimilarity_Advanced(
-            String docLabel, Map<String, Integer> docIndex, ModelAccessor_2D model_doc_accessor,
-            Map<String, Integer> termIndex, ModelAccessor_2D model_term_accessor,
-            int k_limit, boolean outputResult) throws IOException, SLIB_Ex_Critic {
-
-        logger.info("entity=" + docLabel + "\tk=" + k_limit + " on " + docIndex.size() + " documents");
+        int nbComparisons = modelAccessor.getConf().entity_size;
+        logger.info("entity=" + queryVectorInfo.label + "\tk=" + k_limit + " on " + nbComparisons + " entities (vector size: " + modelAccessor.getConf().vec_size + ")");
 
         Timer t = new Timer();
         t.start();
 
-        double[] entity_target_vec = model_doc_accessor.vectorRepresentationOf(docIndex.get(docLabel));
-        double[] entity_o;
+        double[] q = modelAccessor.vectorRepresentationOf(queryVectorInfo).values;
 
-        Map<Integer, EntityInfo_2D_MODEL> docInfo = model_doc_accessor.getIndexedElementInfo();
-        Map<Integer, Double> scores = new HashMap();
+        RQueue<String, Double> bestScores = new RQueue(k_limit);
 
-        int c = 0;
-        int skipped = 0;
-        int id;
-        for (Map.Entry<String, Integer> e : docIndex.entrySet()) {
+        Iterator<IndexedVector> vectorIterator = modelAccessor.iterator();
 
-            id = e.getValue();
-            if (docInfo.get(id).length_double_non_null == 0) {
-                logger.info("skip entity " + e.getKey() + "\tempty vector");
-                skipped++;
-                continue;
-            }
+        int i = 0;
 
-            entity_o = model_doc_accessor.vectorRepresentationOf(e.getValue());
+        while (vectorIterator.hasNext()) {
 
-            double sim = computeDocSimNewApproach(entity_target_vec, entity_o, termIndex, model_term_accessor);
-            scores.put(id, sim);
-            c++;
-            if (docIndex.size() > 20 && c % (docIndex.size() / 20) == 0) {
-                logger.info("processsing: " + c + "/" + docIndex.size() + "... ");
+            IndexedVector vinfo = vectorIterator.next();
+            double[] v = vinfo.values;
+
+            double sim = CosineSimilarity.sim(q, v);
+
+            bestScores.add(vinfo.label, sim);
+
+            i++;
+            if (i % 1000 == 0) {
+                String p = Utils.format2digits((double) i * 100.0 / nbComparisons);
+                System.out.print(i + "/" + nbComparisons + "  " + p + "% \r");
             }
         }
-        logger.info("number of skipped entities: " + skipped);
-
-        String[] entityIndex_rev = new String[docIndex.size()];
-        for (Map.Entry<String, Integer> e : docIndex.entrySet()) {
-            entityIndex_rev[e.getValue()] = e.getKey();
-        }
-
-        logger.info("sorting results...");
-        // print the sorted resultsI
-        Map<String, Double> sorted_score_results = new HashMap();
-
-        for (Map.Entry<Integer, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
-
-            Integer row_id = e.getKey();
-            Double score = e.getValue();
-            if (outputResult) {
-                logger.info("\t" + entityIndex_rev[row_id] + "\t" + score);
-            }
-            sorted_score_results.put(entityIndex_rev[row_id], score);
-            k_limit--;
-            if (k_limit == 0) {
-                break;
-            }
-        }
+        t.stop();
         t.elapsedTime();
-        return sorted_score_results;
+        return bestScores;
 
     }
 
-
-    public static double computeDocSimNewApproach(double[] vec_entity_a, double[] vec_entity_b, Map<String, Integer> termDimensionIndex, ModelAccessor termModelAccessor) throws SLIB_Ex_Critic {
-
-        double dotProduct = 0;
-        double normA = 0;
-        double normB = 0;
-
-        // (redefined) norm A 
-        for (int i = 0; i < vec_entity_a.length; i++) {
-
-            double[] a_i_vec = termModelAccessor.vectorRepresentationOf(i);
-
-            for (int j = 0; j < vec_entity_b.length; j++) {
-                double[] a_j_vec = termModelAccessor.vectorRepresentationOf(j);
-                normA += vec_entity_a[i] * vec_entity_a[j] * CosineSimilarity.sim(a_i_vec, a_j_vec);
-            }
-        }
-
-        // (redefined) norm B
-        for (int i = 0; i < vec_entity_b.length; i++) {
-
-            double[] b_i_vec = termModelAccessor.vectorRepresentationOf(i);
-
-            for (int j = 0; j < vec_entity_b.length; j++) {
-
-                double[] b_j_vec = termModelAccessor.vectorRepresentationOf(j);
-                normB += vec_entity_b[i] * vec_entity_b[j] * CosineSimilarity.sim(b_i_vec, b_j_vec);
-            }
-        }
-
-        // (redefined) dot product 
-        for (int i = 0; i < vec_entity_a.length; i++) {
-
-            double[] a_i_vec = termModelAccessor.vectorRepresentationOf(i);
-
-            for (int j = 0; j < vec_entity_b.length; j++) {
-
-                double[] b_j_vec = termModelAccessor.vectorRepresentationOf(j);
-                dotProduct += vec_entity_a[i] * vec_entity_b[j] * CosineSimilarity.sim(a_i_vec, b_j_vec);
-            }
-        }
-
-        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
-    }
-
+//
+//        double[] entity_target_vec = modelAccessor.vectorRepresentationOf(entityIndex.get(entityTarget));
+//        double[] entity_o;
+//
+//        Map<Integer, EntityInfo_2D_MODEL> indexInfo = modelAccessor.getIndexedElementInfo();
+//        Map<Integer, Double> scores = new HashMap();
+//
+//        int c = 0;
+//        int skipped = 0;
+//        int id;
+//        for (Map.Entry<String, Integer> e : entityIndex.entrySet()) {
+//
+//            id = e.getValue();
+//            if (indexInfo.get(id).length_double_non_null == 0) {
+//                logger.info("skip entity " + e.getKey() + "\tempty vector");
+//                skipped++;
+//                continue;
+//            }
+//
+//            entity_o = modelAccessor.vectorRepresentationOf(e.getValue());
+//
+//            double sim = CosineSimilarity.sim(entity_target_vec, entity_o);
+//            scores.put(id, sim);
+//            c++;
+//            if (entityIndex.size() > 20 && c % (entityIndex.size() / 20) == 0) {
+//                logger.info("processsing: " + c + "/" + entityIndex.size() + "... ");
+//            }
+//        }
+//        logger.info("number of skipped entities: " + skipped);
+//
+//        String[] entityIndex_rev = new String[entityIndex.size()];
+//        for (Map.Entry<String, Integer> e : entityIndex.entrySet()) {
+//            entityIndex_rev[e.getValue()] = e.getKey();
+//        }
+//
+//        logger.info("sorting results...");
+//        // print the sorted resultsI
+//        Map<String, Double> score_results = new LinkedHashMap();
+//
+//        for (Map.Entry<Integer, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
+//
+//            Integer row_id = e.getKey();
+//            Double score = e.getValue();
+//            if (outputResult) {
+//                logger.info("\t" + entityIndex_rev[row_id] + "\t" + score);
+//            }
+//            score_results.put(entityIndex_rev[row_id], score);
+//            k_limit--;
+//            if (k_limit == 0) {
+//                break;
+//            }
+//        }
+//        t.elapsedTime();
+//        return score_results;
+//
+//    }
+//    public static Map<String, Double> computeBestDocSimilarity_Advanced(
+//            String docLabel, Map<String, Integer> docIndex, ModelAccessor_2D model_doc_accessor,
+//            Map<String, Integer> termIndex, ModelAccessor_2D model_term_accessor,
+//            int k_limit, boolean outputResult) throws IOException, SLIB_Ex_Critic {
+//
+//        logger.info("entity=" + docLabel + "\tk=" + k_limit + " on " + docIndex.size() + " documents");
+//
+//        Timer t = new Timer();
+//        t.start();
+//
+//        double[] entity_target_vec = model_doc_accessor.vectorRepresentationOf(docIndex.get(docLabel));
+//        double[] entity_o;
+//
+//        Map<Integer, EntityInfo_2D_MODEL> docInfo = model_doc_accessor.getIndexedElementInfo();
+//        Map<Integer, Double> scores = new HashMap();
+//
+//        int c = 0;
+//        int skipped = 0;
+//        int id;
+//        for (Map.Entry<String, Integer> e : docIndex.entrySet()) {
+//
+//            id = e.getValue();
+//            if (docInfo.get(id).length_double_non_null == 0) {
+//                logger.info("skip entity " + e.getKey() + "\tempty vector");
+//                skipped++;
+//                continue;
+//            }
+//
+//            entity_o = model_doc_accessor.vectorRepresentationOf(e.getValue());
+//
+//            double sim = computeDocSimNewApproach(entity_target_vec, entity_o, termIndex, model_term_accessor);
+//            scores.put(id, sim);
+//            c++;
+//            if (docIndex.size() > 20 && c % (docIndex.size() / 20) == 0) {
+//                logger.info("processsing: " + c + "/" + docIndex.size() + "... ");
+//            }
+//        }
+//        logger.info("number of skipped entities: " + skipped);
+//
+//        String[] entityIndex_rev = new String[docIndex.size()];
+//        for (Map.Entry<String, Integer> e : docIndex.entrySet()) {
+//            entityIndex_rev[e.getValue()] = e.getKey();
+//        }
+//
+//        logger.info("sorting results...");
+//        // print the sorted resultsI
+//        Map<String, Double> sorted_score_results = new HashMap();
+//
+//        for (Map.Entry<Integer, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
+//
+//            Integer row_id = e.getKey();
+//            Double score = e.getValue();
+//            if (outputResult) {
+//                logger.info("\t" + entityIndex_rev[row_id] + "\t" + score);
+//            }
+//            sorted_score_results.put(entityIndex_rev[row_id], score);
+//            k_limit--;
+//            if (k_limit == 0) {
+//                break;
+//            }
+//        }
+//        t.elapsedTime();
+//        return sorted_score_results;
+//
+//    }
+//    public static double computeDocSimNewApproach(double[] vec_entity_a, double[] vec_entity_b, Map<String, Integer> termDimensionIndex, ModelAccessor termModelAccessor) throws SLIB_Ex_Critic {
+//
+//        double dotProduct = 0;
+//        double normA = 0;
+//        double normB = 0;
+//
+//        // (redefined) norm A 
+//        for (int i = 0; i < vec_entity_a.length; i++) {
+//
+//            double[] a_i_vec = termModelAccessor.vectorRepresentationOf(i);
+//
+//            for (int j = 0; j < vec_entity_b.length; j++) {
+//                double[] a_j_vec = termModelAccessor.vectorRepresentationOf(j);
+//                normA += vec_entity_a[i] * vec_entity_a[j] * CosineSimilarity.sim(a_i_vec, a_j_vec);
+//            }
+//        }
+//
+//        // (redefined) norm B
+//        for (int i = 0; i < vec_entity_b.length; i++) {
+//
+//            double[] b_i_vec = termModelAccessor.vectorRepresentationOf(i);
+//
+//            for (int j = 0; j < vec_entity_b.length; j++) {
+//
+//                double[] b_j_vec = termModelAccessor.vectorRepresentationOf(j);
+//                normB += vec_entity_b[i] * vec_entity_b[j] * CosineSimilarity.sim(b_i_vec, b_j_vec);
+//            }
+//        }
+//
+//        // (redefined) dot product 
+//        for (int i = 0; i < vec_entity_a.length; i++) {
+//
+//            double[] a_i_vec = termModelAccessor.vectorRepresentationOf(i);
+//
+//            for (int j = 0; j < vec_entity_b.length; j++) {
+//
+//                double[] b_j_vec = termModelAccessor.vectorRepresentationOf(j);
+//                dotProduct += vec_entity_a[i] * vec_entity_b[j] * CosineSimilarity.sim(a_i_vec, b_j_vec);
+//            }
+//        }
+//
+//        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
+//    }
     public static void buildTerm2TermDM(ModelConf conf, Collection<File> files, Voc vocIndex, int nbThreads) throws SLIB_Exception, IOException {
         DMEngine.build_distributional_model_TERM_TO_TERM(files, vocIndex, conf, nbThreads);
     }
 
-    static void reduceModelWithTermsAsDimensions(VocStatConf vstatconf, ModelConf mconf, ActionConf_ReduceTerm2Term conf) throws SLIB_Ex_Critic {
+//    static void reduceModelWithTermsAsDimensions(VocStatConf vstatconf, ModelConf mconf, ActionConf_ReduceTerm2Term conf) throws SLIB_Ex_Critic {
+//
+//        if (mconf.nb_files != vstatconf.nb_files) {
+//            throw new SLIB_Ex_Critic("Error, voc stats and model conf do not specify the same number of files... Are you sure you are using the good stats/model?");
+//        }
+//        logger.info("Loading entity index...");
+//        Map<String, Integer> rowIndex = XPUtils.loadMAP(mconf.getEntityIndex());
+//        logger.info("Loading dimension index...");
+//        Map<String, Integer> dimensionIndex = XPUtils.loadMAP(mconf.getDimensionIndex());
+//        Map<Integer, String> dimensionIndex_revert = MapUtils.revert(dimensionIndex);
+//
+//        logger.info("Loading voc usage...");
+//        Map<Integer, Integer> vocTermUsage = XPUtils.loadVocUsage(vstatconf.getVocUsageFile());
+//        Map<String, Integer> vocStatIndex = XPUtils.loadMAP(vstatconf.getVocIndex());
+//
+//        logger.info("Computing coverage of labels associated to dimensions...");
+//        Map<Integer, Double> dimensionLabelCoverage = new HashMap();
+//        for (Map.Entry<String, Integer> e : dimensionIndex.entrySet()) {
+//
+//            String dim_label = e.getKey();
+//            int dim_id = e.getValue();
+//
+//            if (!vocStatIndex.containsKey(dim_label)) {
+//                throw new SLIB_Ex_Critic("Error cannot define the dimension id associated to the dimension '" + dim_label + "'. Are you sure that the statistics in use have been computed using the vocabulary used to compute the model?");
+//            }
+//
+//            int dim_id_in_vocstat = vocStatIndex.get(dim_label);
+//            double coverage = (double) vocTermUsage.get(dim_id_in_vocstat) / (double) vstatconf.nb_files;
+//            dimensionLabelCoverage.put(dim_id, coverage);
+//        }
+//
+//        logger.info("Loading original model");
+//
+//        ModelAccessorMemory_2D modelAccessor = new ModelAccessorMemory_2D(mconf);
+//
+//        Map<Integer, Double> dimensionLabelCoverage_sorted;
+//
+//        if (conf.USE_HIGH_COVERAGE) {
+//            logger.info("Use dimensions with best coverage");
+//            dimensionLabelCoverage_sorted = MapUtils.sortByValueDecreasing(dimensionLabelCoverage);
+//        } else {
+//            logger.info("Use dimensions with lower coverage");
+//            dimensionLabelCoverage_sorted = MapUtils.sortByValue(dimensionLabelCoverage);
+//        }
+//
+//        List<Integer> selected_dims = new ArrayList();
+////        Map<String, Integer> dimension_index_reduced = new HashMap();
+//
+//        if (conf.USE_K_APPROACH) {
+//
+//            Long nbDimensions = conf.k;
+//
+//            if (nbDimensions < 1 || nbDimensions > dimensionIndex.size() - 1) {
+//                throw new SLIB_Ex_Critic("Incorrect number of dimensions, accepted [1," + (dimensionIndex.size() - 1) + "], initial model has " + dimensionIndex.size() + " dimensions");
+//            }
+//
+//            logger.info("Identifying more relevant dimensions, k=" + nbDimensions);
+//
+//            // select the best dimensions
+//            long k = nbDimensions;
+//
+//            int c = 0;
+//            int dim_id;
+//            String dim_label;
+//            double dim_val;
+//
+//            for (Map.Entry<Integer, Double> e : dimensionLabelCoverage_sorted.entrySet()) {
+//
+//                dim_id = e.getKey();
+//                dim_val = e.getValue();
+//                dim_label = dimensionIndex_revert.get(dim_id);
+//
+//                logger.info(c + "\t" + dim_label + " (id entity=" + dim_id + ", id dimension=" + dim_id + ")\t" + dim_val);
+//                selected_dims.add(dim_id);
+//
+//                k--;
+//                c++;
+//                if (k == 0) {
+//                    break;
+//                }
+//            }
+//        } else { // AUTO SELECTION OF THE DIMENSIONS NUMBER
+//
+//            logger.info("Identifying reduced set of dimensions which generates no more null vectors");
+//
+//            logger.info("Building reverse model for computing <dimension,entities>");
+//
+//            // We built a matrix which will enable us a fast access of all the entity ids
+//            // associated to a specified dimension, i.e., the value of the dimension of 
+//            // the entity representation is not set to null
+//            Map<Integer, Set<Integer>> reverse_matrix = new HashMap();
+//
+//            // We also save the ids of the entities which are already associated to empty vectors
+//            Set<Integer> entities_with_empty_vectors = new HashSet();
+//
+//            int count = 1;
+//            for (Integer id_entity : rowIndex.values()) {
+//
+//                Set<Integer> nonnullDimensions = modelAccessor.getCompressedRepresentation(id_entity).keySet();
+//
+//                if (nonnullDimensions.isEmpty()) { // empty vec
+//                    entities_with_empty_vectors.add(id_entity);
+//                } else {
+//                    for (Integer dim_id : nonnullDimensions) {
+//                        if (!reverse_matrix.containsKey(dim_id)) {
+//                            reverse_matrix.put(dim_id, new HashSet());
+//                        }
+//                        reverse_matrix.get(dim_id).add(id_entity);
+//                    }
+//                }
+//                if (count % 100 == 0) {
+//                    logger.info("..." + count + "/" + rowIndex.size());
+//                }
+//                count++;
+//            }
+//            modelAccessor = null;
+//
+//            // These are the entities for which the reduction will lead to 
+//            // empty vectors if we only consider the dimensions specified 
+//            // into selected_dims (we remove entities which are already associated to empty vectors)
+//            Set<Integer> uncapturedEntities = new HashSet(rowIndex.values());
+//            uncapturedEntities.removeAll(entities_with_empty_vectors);
+//            logger.info("Non null vector expected " + uncapturedEntities.size() + " (" + entities_with_empty_vectors.size() + " already associated to null vectors)");
+//
+//            logger.info("Selecting dimensions...");
+//
+//            count = 0;
+//
+//            for (Map.Entry<Integer, Double> e : dimensionLabelCoverage_sorted.entrySet()) {
+//
+//                count++;
+//                Integer dim_id = e.getKey();
+//
+//                if (!reverse_matrix.containsKey(dim_id)) {
+//                    String dim_label = dimensionIndex_revert.get(dim_id);
+//                    logger.info("skip dimension " + dim_label + " (id=" + dim_id + ") null dimension, i.e. all entities have null for this dimension\t");
+//                    //continue; we could also exclude these dimensions but it will create inconsitencies if they are not excluded when k is set manualliy (see above)
+//                } else {
+//                    // we remove all the entities which have a non null value for this dimension
+//                    uncapturedEntities.removeAll(reverse_matrix.get(dim_id));
+//                }
+//                selected_dims.add(dim_id);
+//
+//                if (count % 1000 == 0) {
+//                    logger.info("\t dim:" + count + "/" + dimensionLabelCoverage_sorted.size() + " - added=" + selected_dims.size() + "\tmissing entities: " + uncapturedEntities.size() + "...");
+//                }
+//
+//                if (uncapturedEntities.isEmpty()) {
+//                    break;
+//                }
+//            }
+//            if (!uncapturedEntities.isEmpty()) {
+//                throw new SLIB_Ex_Critic("An error occured during model reduction, please report the problem... missing entities: " + uncapturedEntities.size());
+//            }
+//            logger.info("Number of dimensions selected " + selected_dims.size() + "/" + dimensionLabelCoverage_sorted.size());
+//        }
+//
+//        if (conf.FLUSH_MODEL) {
+//            Collections.sort(selected_dims);
+//
+//            // create new indexes
+//            Map<String, Integer> newDimensionIndex = new HashMap();
+//            Map<Integer, Integer> new_dimension_ids = new HashMap();
+//
+//            for (int new_id = 0; new_id < selected_dims.size(); new_id++) {
+//                int old_id = selected_dims.get(new_id);
+//                new_dimension_ids.put(old_id, new_id);
+//                newDimensionIndex.put(dimensionIndex_revert.get(old_id), new_id);
+//            }
+//
+//            // reduce the matrix
+//            logger.info("Reducing model");
+//            SparseMatrix newMatrix = SparseMatrixGenerator.buildSparseMatrix(rowIndex.size(), selected_dims.size());
+//
+//            int nb_entity = rowIndex.size();
+//            int nb_entity_done = 0;
+//
+//            for (Integer entity_id : rowIndex.values()) {
+//
+//                if (nb_entity_done % 100 == 0) {
+//                    logger.info("\t" + nb_entity_done + "/" + nb_entity);
+//                }
+//
+//                double[] vec = modelAccessor.vectorRepresentationOf(entity_id);
+//                for (Integer dim_id_old : selected_dims) {
+//                    double dim_val = vec[dim_id_old];
+//                    int dim_id_new = new_dimension_ids.get(dim_id_old);
+//                    newMatrix.set(entity_id, dim_id_new, dim_val); // note that i = newIds.get(i) 
+//                }
+//                nb_entity_done++;
+//            }
+//
+//            logger.info("flushing new model");
+//
+//            ModelConf newModelConf = new ModelConf(ModelType.TWO_D_TERM_MODEL, mconf.name, conf.NEW_MODEL_DIR, mconf.entity_size, selected_dims.size(), mconf.nb_files, mconf.format_version);
+//            ConfUtils.initModel(newModelConf);
+//            XPUtils.flushMAP(rowIndex, newModelConf.getEntityIndex());
+//            XPUtils.flushMAP(newDimensionIndex, newModelConf.getDimensionIndex());
+//            ConfUtils.buildIndex(newModelConf, rowIndex, newMatrix);
+//            ConfUtils.buildModelBinary(newModelConf, rowIndex, newMatrix);
+//        } else {
+//            logger.info("Do not flush new model");
+//        }
+//    }
+    /**
+     * Convert a String of the form
+     * FILE_ID_1-NB_OCCURRENCE_FILE_1:FILE_ID_2-NB_OCCURRENCE_FILE_2 etc (ex:
+     * 2-50:3-1:4-1) into a map. Keys refer to the file ids values refer to the
+     * associated value.
+     *
+     * @param encodedFileOcc
+     * @return
+     */
+    private static Map<Integer, Double> decodeFileOccDistribution(String encodedFileOcc) {
 
-        if (mconf.nb_files != vstatconf.nb_files) {
-            throw new SLIB_Ex_Critic("Error, voc stats and model conf do not specify the same number of files... Are you sure you are using the good stats/model?");
+        Map<Integer, Double> encodedResult = new HashMap();
+
+        String[] nbocc_files = Utils.colon_pattern.split(encodedFileOcc);
+        for (String nbocc_file : nbocc_files) {
+            String[] data = Utils.dash_pattern.split(nbocc_file);
+            encodedResult.put(Integer.parseInt(data[0]), Double.parseDouble(data[1]));
         }
-        logger.info("Loading entity index...");
-        Map<String, Integer> rowIndex = XPUtils.loadMAP(mconf.getEntityIndex());
-        logger.info("Loading dimension index...");
-        Map<String, Integer> dimensionIndex = XPUtils.loadMAP(mconf.getDimensionIndex());
-        Map<Integer, String> dimensionIndex_revert = MapUtils.revert(dimensionIndex);
+        return encodedResult;
+    }
 
-        logger.info("Loading voc usage...");
-        Map<Integer, Integer> vocTermUsage = XPUtils.loadVocUsage(vstatconf.getVocUsageFile());
-        Map<String, Integer> vocStatIndex = XPUtils.loadMAP(vstatconf.getVocIndex());
+    static void reduceSizeVectorRepresentations(String model_dir, String new_model_dir, int nbDimension) throws Exception {
 
-        logger.info("Computing coverage of labels associated to dimensions...");
-        Map<Integer, Double> dimensionLabelCoverage = new HashMap();
-        for (Map.Entry<String, Integer> e : dimensionIndex.entrySet()) {
+        ModelConf mConf = ModelConf.load(model_dir);
 
-            String dim_label = e.getKey();
-            int dim_id = e.getValue();
+        if (nbDimension > mConf.vec_size) {
+            throw new SLIB_Ex_Critic("Specified number higher than current dimension number " + mConf.vec_size);
+        }
 
-            if (!vocStatIndex.containsKey(dim_label)) {
-                throw new SLIB_Ex_Critic("Error cannot define the dimension id associated to the dimension '" + dim_label + "'. Are you sure that the statistics in use have been computed using the vocabulary used to compute the model?");
+        // 1 - count the number of time a specific dimension is used in a vector representation
+        int[] vec_using_dimension = new int[mConf.vec_size];
+
+        ModelAccessor_2D maccessor = new ModelAccessorPersistance_2D(mConf);
+        Iterator<IndexedVector> it = maccessor.iterator();
+        int c = 0;
+
+        logger.info("Detecting dimensions to select");
+        while (it.hasNext()) {
+
+            if (c % 1000 == 0) {
+                String p = Utils.format2digits((double) c * 100.0 / (double) mConf.entity_size);
+                System.out.print("processing... " + c + "/" + mConf.entity_size + "\t" + p + "% \r");
             }
+            c++;
+            double[] vec = it.next().values;
 
-            int dim_id_in_vocstat = vocStatIndex.get(dim_label);
-            double coverage = (double) vocTermUsage.get(dim_id_in_vocstat) / (double) vstatconf.nb_files;
-            dimensionLabelCoverage.put(dim_id, coverage);
-        }
-
-        logger.info("Loading original model");
-
-        ModelAccessorMemory_2D modelAccessor = new ModelAccessorMemory_2D(mconf);
-
-        Map<Integer, Double> dimensionLabelCoverage_sorted;
-
-        if (conf.USE_HIGH_COVERAGE) {
-            logger.info("Use dimensions with best coverage");
-            dimensionLabelCoverage_sorted = MapUtils.sortByValueDecreasing(dimensionLabelCoverage);
-        } else {
-            logger.info("Use dimensions with lower coverage");
-            dimensionLabelCoverage_sorted = MapUtils.sortByValue(dimensionLabelCoverage);
-        }
-
-        List<Integer> selected_dims = new ArrayList();
-//        Map<String, Integer> dimension_index_reduced = new HashMap();
-
-        if (conf.USE_K_APPROACH) {
-
-            Long nbDimensions = conf.k;
-
-            if (nbDimensions < 1 || nbDimensions > dimensionIndex.size() - 1) {
-                throw new SLIB_Ex_Critic("Incorrect number of dimensions, accepted [1," + (dimensionIndex.size() - 1) + "], initial model has " + dimensionIndex.size() + " dimensions");
-            }
-
-            logger.info("Identifying more relevant dimensions, k=" + nbDimensions);
-
-            // select the best dimensions
-            long k = nbDimensions;
-
-            int c = 0;
-            int dim_id;
-            String dim_label;
-            double dim_val;
-
-            for (Map.Entry<Integer, Double> e : dimensionLabelCoverage_sorted.entrySet()) {
-
-                dim_id = e.getKey();
-                dim_val = e.getValue();
-                dim_label = dimensionIndex_revert.get(dim_id);
-
-                logger.info(c + "\t" + dim_label + " (id entity=" + dim_id + ", id dimension=" + dim_id + ")\t" + dim_val);
-                selected_dims.add(dim_id);
-
-                k--;
-                c++;
-                if (k == 0) {
-                    break;
+            for (int i = 0; i < vec.length; i++) {
+                if (vec[i] != 0) {
+                    vec_using_dimension[i]++;
                 }
             }
-        } else { // AUTO SELECTION OF THE DIMENSIONS NUMBER
+        }
 
-            logger.info("Identifying reduced set of dimensions which generates no more null vectors");
+        // We select the best dimensions
+        RQueue<Integer, Integer> bestDimensionsResult = new RQueue(nbDimension);
+        for (int i = 0; i < vec_using_dimension.length; i++) {
+            bestDimensionsResult.add(i, vec_using_dimension[i]);
+        }
+        List<Integer> bestDimensions = bestDimensionsResult.getLabels();
 
-            logger.info("Building reverse model for computing <dimension,entities>");
+        // 2 reduce the model only considering the selected dimensions
+        ModelConf new_model_conf = new ModelConf(ModelType.TWO_D_TERM_DOC, mConf.name + " reduced", new_model_dir, mConf.entity_size, nbDimension, mConf.nb_files, mConf.format_version);
+        ModelConfUtils.initModel(new_model_conf);
 
-            // We built a matrix which will enable us a fast access of all the entity ids
-            // associated to a specified dimension, i.e., the value of the dimension of 
-            // the entity representation is not set to null
-            Map<Integer, Set<Integer>> reverse_matrix = new HashMap();
+        // We generate 
+        // (i)  the index in which information regarding the location of term vector representation will be specified 
+        // (ii) the binary index in which the binary representation of vectors will be saved
+        long start_binary_vec = 0;
+        byte[] sep_binary = {0};
+        File f_binary = new File(new_model_conf.getModelBinary());
 
-            // We also save the ids of the entities which are already associated to empty vectors
-            Set<Integer> entities_with_empty_vectors = new HashSet();
+        int null_vectors = 0; // number of generated vector representations that correspond to empty vectors
+        int id_word = 0;
+        
+        logger.info("Reducing vector representations");
 
-            int count = 1;
-            for (Integer id_entity : rowIndex.values()) {
+        byte[] compressed_vector_byte;
+        try (PrintWriter index_writer = new PrintWriter(new_model_conf.getModelIndex(), "UTF-8")) {
+            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
 
-                Set<Integer> nonnullDimensions = modelAccessor.getCompressedRepresentation(id_entity).keySet();
+                index_writer.println("ID_WORD\tSTART_POS\tLENGTH_DOUBLE_NON_NULL\tWORD");
 
-                if (nonnullDimensions.isEmpty()) { // empty vec
-                    entities_with_empty_vectors.add(id_entity);
-                } else {
-                    for (Integer dim_id : nonnullDimensions) {
-                        if (!reverse_matrix.containsKey(dim_id)) {
-                            reverse_matrix.put(dim_id, new HashSet());
-                        }
-                        reverse_matrix.get(dim_id).add(id_entity);
+                // We iterate over the words and create their reduced vector representation
+                it = maccessor.iterator();
+                while (it.hasNext()) {
+
+                    if (id_word % 1000 == 0) {
+                        String p = Utils.format2digits((double) id_word * 100.0 / (double) mConf.entity_size);
+                        System.out.print("processing... " + id_word + "/" + mConf.entity_size + "\t" + p + "% \r");
                     }
-                }
-                if (count % 100 == 0) {
-                    logger.info("..." + count + "/" + rowIndex.size());
-                }
-                count++;
-            }
-            modelAccessor = null;
+                    IndexedVector indexedVec = it.next();
 
-            // These are the entities for which the reduction will lead to 
-            // empty vectors if we only consider the dimensions specified 
-            // into selected_dims (we remove entities which are already associated to empty vectors)
-            Set<Integer> uncapturedEntities = new HashSet(rowIndex.values());
-            uncapturedEntities.removeAll(entities_with_empty_vectors);
-            logger.info("Non null vector expected " + uncapturedEntities.size() + " (" + entities_with_empty_vectors.size() + " already associated to null vectors)");
+                    String word = indexedVec.label;
+                    double[] vec = indexedVec.values;
 
-            logger.info("Selecting dimensions...");
+                    // all values that are not associated to selected dimensions are set to 0
+                    // the others are set to the original value
+                    Map<Integer, Double> compressedReducedVectorAsMap = new HashMap();
+                    int new_id = 0;
+                    for (Integer i : bestDimensions) {
+                        compressedReducedVectorAsMap.put(new_id, vec[i]);
+                        new_id++;
+                    }
 
-            count = 0;
+                    int nonNullValues = compressedReducedVectorAsMap.size();
+                    if (nonNullValues == 0) {
+                        null_vectors++;
+                    }
 
-            for (Map.Entry<Integer, Double> e : dimensionLabelCoverage_sorted.entrySet()) {
+                    // write the binary representation
+                    compressed_vector_byte = CompressionUtils.toByteArray(compressedReducedVectorAsMap);
+                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
+                    fo.write(sep_binary);
 
-                count++;
-                Integer dim_id = e.getKey();
+                    // write index info 
+                    index_writer.println(id_word + "\t" + start_binary_vec + "\t" + nonNullValues + "\t" + word);
 
-                if (!reverse_matrix.containsKey(dim_id)) {
-                    String dim_label = dimensionIndex_revert.get(dim_id);
-                    logger.info("skip dimension " + dim_label + " (id=" + dim_id + ") null dimension, i.e. all entities have null for this dimension\t");
-                    //continue; we could also exclude these dimensions but it will create inconsitencies if they are not excluded when k is set manualliy (see above)
-                } else {
-                    // we remove all the entities which have a non null value for this dimension
-                    uncapturedEntities.removeAll(reverse_matrix.get(dim_id));
-                }
-                selected_dims.add(dim_id);
+                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
 
-                if (count % 1000 == 0) {
-                    logger.info("\t dim:" + count + "/" + dimensionLabelCoverage_sorted.size() + " - added=" + selected_dims.size() + "\tmissing entities: " + uncapturedEntities.size() + "...");
-                }
-
-                if (uncapturedEntities.isEmpty()) {
-                    break;
+                    id_word++;
                 }
             }
-            if (!uncapturedEntities.isEmpty()) {
-                throw new SLIB_Ex_Critic("An error occured during model reduction, please report the problem... missing entities: " + uncapturedEntities.size());
-            }
-            logger.info("Number of dimensions selected " + selected_dims.size() + "/" + dimensionLabelCoverage_sorted.size());
         }
+        logger.info("number of empty vector representations : " + null_vectors + "/" + id_word);
+        logger.info("reduced model save at: " + new_model_conf.path);
 
-        if (conf.FLUSH_MODEL) {
-            Collections.sort(selected_dims);
-
-            // create new indexes
-            Map<String, Integer> newDimensionIndex = new HashMap();
-            Map<Integer, Integer> new_dimension_ids = new HashMap();
-
-            for (int new_id = 0; new_id < selected_dims.size(); new_id++) {
-                int old_id = selected_dims.get(new_id);
-                new_dimension_ids.put(old_id, new_id);
-                newDimensionIndex.put(dimensionIndex_revert.get(old_id), new_id);
-            }
-
-            // reduce the matrix
-            logger.info("Reducing model");
-            SparseMatrix newMatrix = SparseMatrixGenerator.buildSparseMatrix(rowIndex.size(), selected_dims.size());
-
-            int nb_entity = rowIndex.size();
-            int nb_entity_done = 0;
-
-            for (Integer entity_id : rowIndex.values()) {
-
-                if (nb_entity_done % 100 == 0) {
-                    logger.info("\t" + nb_entity_done + "/" + nb_entity);
-                }
-
-                double[] vec = modelAccessor.vectorRepresentationOf(entity_id);
-                for (Integer dim_id_old : selected_dims) {
-                    double dim_val = vec[dim_id_old];
-                    int dim_id_new = new_dimension_ids.get(dim_id_old);
-                    newMatrix.set(entity_id, dim_id_new, dim_val); // note that i = newIds.get(i) 
-                }
-                nb_entity_done++;
-            }
-
-            logger.info("flushing new model");
-
-            ModelConf newModelConf = new ModelConf(ModelType.TWO_D_TERM_MODEL, mconf.name, conf.NEW_MODEL_DIR, mconf.entity_size, selected_dims.size(), mconf.nb_files, mconf.format_version);
-            ConfUtils.initModel(newModelConf);
-            XPUtils.flushMAP(rowIndex, newModelConf.getEntityIndex());
-            XPUtils.flushMAP(newDimensionIndex, newModelConf.getDimensionIndex());
-            ConfUtils.buildIndex(newModelConf, rowIndex, newMatrix);
-            ConfUtils.buildModelBinary(newModelConf, rowIndex, newMatrix);
-        } else {
-            logger.info("Do not flush new model");
-        }
     }
 
 }

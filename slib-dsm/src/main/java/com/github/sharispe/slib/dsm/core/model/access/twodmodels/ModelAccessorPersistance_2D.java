@@ -31,19 +31,25 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-
 package com.github.sharispe.slib.dsm.core.model.access.twodmodels;
 
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVector;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.entityinfo.EntityInfo_2D_MODEL;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
+import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.channels.FileChannel;
-import java.util.Map;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -55,16 +61,11 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
 
-
     FileInputStream fis;
     FileChannel fchannel;
 
     public ModelAccessorPersistance_2D(ModelConf c) throws SLIB_Ex_Critic {
         super(c);
-    }
-
-    public ModelAccessorPersistance_2D(ModelConf c, Map<Integer, EntityInfo_2D_MODEL> index) throws SLIB_Ex_Critic {
-        super(c,index);
     }
 
     private void open() throws IOException {
@@ -82,13 +83,9 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
     }
 
     @Override
-    public double[] vectorRepresentationOf(int id_vector) throws SLIB_Ex_Critic {
+    public IndexedVector vectorRepresentationOf(IndexedVectorInfo vectorInfo) throws SLIB_Ex_Critic {
 
-        if (!index.containsKey(id_vector)) {
-            throw new SLIB_Ex_Critic("Does not contain a vector representation for id=" + id_vector);
-        }
-
-        int nb_val_vector = index.get(id_vector).length_double_non_null;
+        int nb_val_vector = vectorInfo.length_double_non_null;
         // we prepare the vector which will retrieve the compressed version of the vector
         double[] vector = new double[nb_val_vector * 2];
 
@@ -97,7 +94,7 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
             open();
 
             // we retrieve the starting position of the vector in the file
-            long start = index.get(id_vector).start_pos;
+            long start = vectorInfo.start_pos;
             // we compute the size of the array of bytes which will contain the double values in bytes
             long sizeBufferInByte = nb_val_vector * 2 * BinarytUtils.BYTE_PER_DOUBLE;
 
@@ -114,8 +111,57 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
         } catch (IOException e) {
             throw new SLIB_Ex_Critic("Error reading the index: " + e.getMessage());
         }
+        
         double[] uncompressed_vector = CompressionUtils.uncompressDoubleArray(vector, model.vec_size);
 
-        return uncompressed_vector;
+        return new IndexedVector(vectorInfo.id, vectorInfo.label, uncompressed_vector);
+    }
+
+    @Override
+    public Iterator<IndexedVector> iterator() {
+
+        try {
+            return new IndexedVectorIterator(model);
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+        return null;
+    }
+
+    private class IndexedVectorIterator implements Iterator<IndexedVector> {
+
+        BufferedReader br;
+        String line;
+
+        public IndexedVectorIterator(ModelConf model) throws IOException {
+
+            br = new BufferedReader(new FileReader(model.getModelIndex()));
+            line = br.readLine(); //skip header
+            line = br.readLine();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return line != null;
+        }
+
+        @Override
+        public IndexedVector next() {
+            if (line != null) {
+                String[] word_data = Utils.tab_pattern.split(line);
+                IndexedVectorInfo info = new IndexedVectorInfo(Integer.parseInt(word_data[0]), Integer.parseInt(word_data[1]), Integer.parseInt(word_data[2]), word_data[3]);
+                try {
+                    // try to close the file
+                    line = br.readLine();
+                    if (line == null) {
+                        br.close();
+                    }
+                    return vectorRepresentationOf(info);
+                } catch (Exception ex) {
+                    logger.error(ex.getMessage());
+                }
+            }
+            return null;
+        }
     }
 }

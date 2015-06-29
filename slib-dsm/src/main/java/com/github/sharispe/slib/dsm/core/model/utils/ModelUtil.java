@@ -31,22 +31,42 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.model.utils.entityinfo;
+package com.github.sharispe.slib.dsm.core.model.utils;
+
+import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
+import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class EntityInfo_2D_MODEL {
+public class ModelUtil {
 
-    public final int id;
-    public final long start_pos;
-    public final int length_double_non_null;
-
-    public EntityInfo_2D_MODEL(int id, long start_pos, int length_double_non_null) {
-        this.id = id;
-        this.start_pos = start_pos;
-        this.length_double_non_null = length_double_non_null;
+    /**
+     * TODO This MUST be replaced by an index. Return null if no entity with the
+     * associated label has been found
+     *
+     * @param mconf
+     * @param entityLabel
+     * @return
+     * @throws IOException
+     */
+    public static IndexedVectorInfo searchEntityVectorInfo(ModelConf mconf, String entityLabel) throws IOException {
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(mconf.getModelIndex()))) {
+            String line;
+            line = br.readLine(); //skip header
+            while ((line = br.readLine()) != null) {
+                String[] word_data = Utils.tab_pattern.split(line);
+                if (word_data[3].equals(entityLabel)) {
+                    return new IndexedVectorInfo(Integer.parseInt(word_data[0]), Integer.parseInt(word_data[1]), Integer.parseInt(word_data[2]),word_data[3]);
+                }
+            }
+        }
+        return null;
     }
-
+    
 }

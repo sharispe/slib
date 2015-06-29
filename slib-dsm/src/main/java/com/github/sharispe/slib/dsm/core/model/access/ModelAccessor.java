@@ -33,18 +33,18 @@
  */
 package com.github.sharispe.slib.dsm.core.model.access;
 
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVector;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import java.util.Map;
-import java.util.Set;
+import java.util.Iterator;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * Class used to access information which is stored into the model
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
- * @param <T>
  */
-public interface ModelAccessor<T> {
+public interface ModelAccessor {
 
     public ModelConf getConf();
 
@@ -52,22 +52,13 @@ public interface ModelAccessor<T> {
      * Extract the vector of double representation of the corresponding id from
      * the model. This representation is expected not to be compressed
      *
-     * @param id_vector
+     * @param vectorInfo
      * @return the vector representation of the entity
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public double[] vectorRepresentationOf(int id_vector) throws SLIB_Ex_Critic;
-
-    /**
-     * Access to some low level information related to the indexed element
-     *
-     * @return
-     */
-    public Map<Integer, T> getIndexedElementInfo();
-
-    /**
-     * @return the set of identifiers for which a representation is available into the model
-     */
-    public Set<Integer> getElementIds();
-
+    public IndexedVector vectorRepresentationOf(IndexedVectorInfo vectorInfo) throws SLIB_Ex_Critic;
+    
+    
+    public Iterator<IndexedVector> iterator();
+    
 }

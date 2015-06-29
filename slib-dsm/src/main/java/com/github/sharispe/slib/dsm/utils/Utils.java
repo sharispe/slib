@@ -40,6 +40,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -51,12 +52,22 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class Utils {
 
+    public static DecimalFormat numberFormatTwoDigit = new DecimalFormat("#.00");
+
     // Pattern used to extract tokens.
     public final static Pattern blank_pattern = Pattern.compile("\\s+");
     // Pattern used to load indexes.
     public final static Pattern tab_pattern = Pattern.compile("\t");
+    // Pattern used to key-value separated by a dash.
+    public final static Pattern dash_pattern = Pattern.compile("-");
+    // Pattern used values separated by a colon.
+    public final static Pattern colon_pattern = Pattern.compile(":");
 
-        /**
+    public static String format2digits(double n) {
+        return numberFormatTwoDigit.format(n);
+    }
+
+    /**
      * Flush the given map into the file by considering a key value entry per
      * line and a given key/value separator.
      *
@@ -78,7 +89,7 @@ public class Utils {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
     }
-    
+
     /**
      * Flush the given map into the file by considering a key value entry per
      * line and a given key/value separator.
@@ -108,7 +119,8 @@ public class Utils {
      *
      * @param filename the file that contains the index - one key-value entry
      * per line with key and value delimited by a value that can be parsed by
-     * the given pattern.
+     * the given pattern. If the entry contains more than two values only the
+     * first will be used as key and the second as value.
      * @param p
      * @return an in-memory Map.
      * @throws SLIB_Ex_Critic
@@ -125,8 +137,39 @@ public class Utils {
 
                 while (line != null) {
                     data = p.split(line);
-                    if (data.length == 2) {
+                    if (data.length >= 2) {
                         map.put(data[0], Integer.parseInt(data[1]));
+                    }
+                    line = br.readLine();
+                }
+            }
+
+        } catch (IOException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        }
+        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
+        return map;
+    }
+
+    public static Map<Integer, String> loadMap_IntString(String filename) throws SLIB_Ex_Critic {
+
+        return loadMap_IntString(filename, tab_pattern);
+    }
+
+    public static Map<Integer, String> loadMap_IntString(String filename, Pattern p) throws SLIB_Ex_Critic {
+
+        Map<Integer, String> map = new HashMap();
+        try {
+            String line;
+            String[] data;
+            try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+
+                line = br.readLine();
+
+                while (line != null) {
+                    data = p.split(line);
+                    if (data.length >= 2) {
+                        map.put(Integer.parseInt(data[0]), data[1]);
                     }
                     line = br.readLine();
                 }

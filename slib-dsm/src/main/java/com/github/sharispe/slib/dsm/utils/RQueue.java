@@ -37,25 +37,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Result Queue
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  * @param <V>
  * @param <L>
  */
-public class KBestQueue<L, V extends Number> {
+public class RQueue<L, V extends Number> {
 
     public final int capacity;
-    List<Double> values;
-    List<L> labels;
+    private List<Double> values;
+    private List<L> labels;
     int nbValues;
-    double lowestValue;
+    double extremeValue;
+    boolean maximize = true;
 
-    public KBestQueue(int capacity) {
+    public RQueue(int capacity) {
+        this(capacity, true);
+    }
+
+    public RQueue(int capacity, boolean maximize) {
+        this.maximize = maximize;
         this.capacity = capacity;
         this.values = new ArrayList(capacity + 1);
         this.labels = new ArrayList(capacity + 1);
         nbValues = 0;
     }
+    
+    
 
     /**
      *
@@ -66,9 +75,8 @@ public class KBestQueue<L, V extends Number> {
     public boolean add(L label, V value) {
 
         double v = value.doubleValue();
-        
-//        System.out.println(v+"/"+lowestValue);
 
+//        System.out.println(v+"/"+lowestValue);
         if (nbValues < capacity) {
 
             int id = getID(v);
@@ -76,27 +84,37 @@ public class KBestQueue<L, V extends Number> {
             labels.add(id, label);
             nbValues++;
 
-            lowestValue = values.get(nbValues-1);
-            
-//            System.out.println("id: " + id);
-            
-            return true;
-        } else if (v > lowestValue) {
-            
-//            System.out.println("pass");
+            extremeValue = values.get(nbValues - 1);
 
+//            System.out.println("id: " + id);
+            return true;
+        } else if (maximize && v > extremeValue) {
+
+//            System.out.println("pass");
             int id = getID(v);
             values.add(id, v);
             labels.add(id, label);
             values.remove(nbValues);
             labels.remove(nbValues);
-            lowestValue = values.get(nbValues-1);
-            
+            extremeValue = values.get(nbValues - 1);
+
 //            System.out.println("id: " + id);
-            
+            return true;
+
+        } else if (!maximize && v < extremeValue) { // minimize
+
+//            System.out.println("pass");
+            int id = getID(v);
+            values.add(id, v);
+            labels.add(id, label);
+            values.remove(nbValues);
+            labels.remove(nbValues);
+            extremeValue = values.get(nbValues - 1);
+
+//            System.out.println("id: " + id);
             return true;
         }
-        
+
         return false;
     }
 
@@ -104,47 +122,71 @@ public class KBestQueue<L, V extends Number> {
 
         for (int i = 0; i < nbValues; i++) {
 
-            if (value > values.get(i)) {
+            if (maximize && value > values.get(i)) {
+                return i;
+            } else if (!maximize && value < values.get(i)) {
                 return i;
             }
 
         }
         return nbValues;
     }
-    
+
     @Override
-    public String toString(){
-        String out = "values: "+nbValues+"/"+capacity+"\n";
-        
+    public String toString() {
+        String out = "values: " + nbValues + "/" + capacity + "\n";
+
         for (int i = 0; i < values.size(); i++) {
-            out += i+"\t"+values.get(i)+"\t"+labels.get(i)+"\n";
+            out += i + "\t" + values.get(i) + "\t" + labels.get(i) + "\n";
         }
         return out;
     }
-    
-    
-    public static void main(String[] args){
-        
-        KBestQueue<String, Double> kbestValues = new KBestQueue(3);
-        
+
+    public static void main(String[] args) {
+
+        RQueue<String, Double> kbestValues = new RQueue(3, false);
+
         System.out.println(kbestValues.toString());
-        
+
         kbestValues.add("King", 0.0);
-        
+        kbestValues.add("Camel2", 0.7);
+
         System.out.println(kbestValues.toString());
-        
+
         kbestValues.add("Queen", 1.0);
-        
+
         System.out.println(kbestValues.toString());
-        
+
         kbestValues.add("Monkey", 0.2);
-        
+
+        System.out.println(kbestValues.toString());
+
+        kbestValues.add("Camel", -0.7);
+
+        System.out.println(kbestValues.toString());
+
+        kbestValues.add("-0.5", -0.5);
+
         System.out.println(kbestValues.toString());
         
-        kbestValues.add("Camel", 0.7);
-        
+        kbestValues.add("0.5", 0.5);
+
         System.out.println(kbestValues.toString());
         
+        kbestValues.add("-100", -100.0);
+
+        System.out.println(kbestValues.toString());
+
     }
 
+    public List<Double> getValues() {
+        return values;
+    }
+
+   
+    public List<L> getLabels() {
+        return labels;
+    }
+
+   
 }

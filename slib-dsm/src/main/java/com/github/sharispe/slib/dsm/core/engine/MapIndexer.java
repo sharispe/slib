@@ -36,8 +36,11 @@ package com.github.sharispe.slib.dsm.core.engine;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -45,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
@@ -54,15 +58,15 @@ public class MapIndexer {
 
     String directory;
     String label;
-    Map<String, Integer> fileIds;
-    int nextFilesIds = 0;
+    Map<String, DataChunkInfo> dataChunkInfo;
+    int dataChunkCount = 0;
     final static Logger logger = LoggerFactory.getLogger(MapIndexer.class);
 
     public MapIndexer(String filepath, String label) {
 
         this.label = label;
         this.directory = filepath;
-        fileIds = new HashMap();
+        dataChunkInfo = new HashMap();
         logger.info("(" + this.label + ") map indexer: " + this.directory);
         new File(filepath).mkdirs();
     }
@@ -70,7 +74,7 @@ public class MapIndexer {
     public int computeVocabularySize() throws Exception {
 
         int vocSize = 0;
-        for (int i = 0; i < nextFilesIds; i++) {
+        for (int i = 0; i < dataChunkCount; i++) {
             Map<String, WordInfo> m = loadMapWordInfo(new File(directory + "/" + i));
             vocSize += m.size();
         }
@@ -111,43 +115,67 @@ public class MapIndexer {
         }
         flush(map_chunk, a, b);
 
-        Utils.flushMapKV(fileIds, "\t", this.directory + "/" + VocStatComputer.FILE_INDEX);
+        flushDataChunkInfoIndex(dataChunkInfo, this.directory + "/" + VocStatComputer.CHUNK_INDEX);
 
         logger.info("(" + label + ") add map size " + map.size() + " to index [done]");
 
     }
 
-    public void flush(Map<String, WordInfo> mapToAdd, char a, char b) throws Exception {
+    private void flush(Map<String, WordInfo> mapToAdd, char a, char b) throws Exception {
 
         if (mapToAdd.isEmpty()) {
             return;
         }
 
         File index_file;
+
         String key = a + "" + b;
 
-        if (!fileIds.containsKey(key)) {
-            index_file = new File(directory + "/" + nextFilesIds);
-            fileIds.put(key, nextFilesIds);
-            nextFilesIds++;
+        Map<String, WordInfo> mapWordInfoDataChunk;
+
+        // check if the data chunk exists
+        if (!dataChunkInfo.containsKey(key)) {
+            index_file = new File(directory + "/" + dataChunkCount);
+            dataChunkInfo.put(key, new DataChunkInfo(key, dataChunkCount, 0));
+            dataChunkCount++;
+            mapWordInfoDataChunk = new HashMap();
         } else {
-            index_file = new File(directory + "/" + fileIds.get(key));
+            index_file = new File(directory + "/" + dataChunkInfo.get(key).id);
+            mapWordInfoDataChunk = loadMapWordInfo(index_file);
         }
 
-        Map<String, WordInfo> map = loadMapWordInfo(index_file);
+        // add the new map of wordInfo to the new one
         String k;
         for (Map.Entry<String, WordInfo> e : mapToAdd.entrySet()) {
             k = e.getKey();
-            if (map.containsKey(k)) {
-                map.get(k).sumWordInfo(e.getValue());
+            if (mapWordInfoDataChunk.containsKey(k)) {
+                WordInfo existingWordInfo = mapWordInfoDataChunk.get(k);
+                existingWordInfo.sumWordInfo(e.getValue());
+                existingWordInfo.concatAdditionnalInfo(e.getValue().additionnalInfo);
             } else {
-                map.put(k, e.getValue());
+                mapWordInfoDataChunk.put(k, e.getValue());
             }
         }
 
+        // update the number of words associated to the data chunk
+        int nbWordsDataChunk = mapWordInfoDataChunk.size();
+        dataChunkInfo.get(key).number += nbWordsDataChunk;
+
 //        logger.info("("+id+") "+a + "" + b + "\tsize: " + map.size() + "\t"+index_file);
-        flushMapWordInfo(index_file, map);
+        flushMapWordInfo(index_file, mapWordInfoDataChunk);
         mapToAdd.clear();
+    }
+
+    public static <K, V> void flushDataChunkInfoIndex(Map<String, DataChunkInfo> dataChunkIndex, String filename) throws SLIB_Ex_Critic {
+
+        logger.info("Flushing index into " + filename + " (n=" + dataChunkIndex.size() + ")");
+        try (PrintWriter writer = new PrintWriter(filename, "UTF-8")) {
+            for (DataChunkInfo k : dataChunkIndex.values()) {
+                writer.println(k.prefix + "\t" + k.id + "\t" + k.number);
+            }
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
+            throw new SLIB_Ex_Critic(e.getMessage());
+        }
     }
 
     public static Map<String, WordInfo> loadMapWordInfo(File wordInfoFile) throws Exception {
@@ -165,8 +193,7 @@ public class MapIndexer {
             String[] data;
             while (line != null) {
                 data = Utils.tab_pattern.split(line);
-
-                map.put(data[0], new WordInfo(Integer.parseInt(data[1]), Integer.parseInt(data[2]),Integer.parseInt(data[3])));
+                map.put(data[0], new WordInfo(Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3]), data[4]));
                 line = br.readLine();
             }
 
@@ -180,9 +207,23 @@ public class MapIndexer {
         try (FileWriter file = new FileWriter(index_file)) {
             for (Map.Entry<String, WordInfo> e : map.entrySet()) {
                 WordInfo info = e.getValue();
-                file.write(e.getKey() + "\t" + info.ngramsize + "\t" + info.nbOccurrences + "\t" + info.nbFilesWithWord + "\n");
+                file.write(e.getKey() + "\t" + info.ngramsize + "\t" + info.nbOccurrences + "\t" + info.nbFilesWithWord + "\t" + info.additionnalInfo + "\n");
             }
         }
+    }
+
+    public class DataChunkInfo {
+
+        String prefix;
+        int id;
+        int number;
+
+        public DataChunkInfo(String prefix, int id, int number) {
+            this.prefix = prefix;
+            this.id = id;
+            this.number = number;
+        }
+
     }
 
 }
