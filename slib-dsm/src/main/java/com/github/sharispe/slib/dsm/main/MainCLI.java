@@ -38,21 +38,25 @@ import com.github.sharispe.slib.dsm.core.engine.VocStatComputerThreads;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
 import com.github.sharispe.slib.dsm.core.kb.EntityVectorRepresentationComputer;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
+import com.github.sharispe.slib.dsm.core.model.access.twodmodels.IndexedVectorInfoIterator;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorPersistance_2D;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessor_2D;
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVector;
 import com.github.sharispe.slib.dsm.core.model.utils.ModelUtil;
 import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
+import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.RQueue;
-import com.github.sharispe.slib.dsm.utils.Utils;
-import java.io.BufferedReader;
 import java.io.Console;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +94,8 @@ public class MainCLI {
         log("- merge_voc_index: merge voc indexes computed using voc_index");
         log("- compute_stat_voc: compute basic statistics on the given vocabulary");
         log("- compute_pmi: compute 2-gram PMI");
-        log("- reduce_voc: reduce a vocabulary based on the analysis of basic statistics");
+        log("- reduce_index_nb_occ: reduce a vocabulary based on the number of occurrences of words");
+        log("- reduce_index_using_voc: reduce a vocabulary index considering a given vocabulary");
         log("- build_model: build a Distributional Model (DM) of the terms considering a vocabulary and a directory of files");
         log("- normalize: normalize the vector representations contained into a model (locally in each vector using cross-multiplication)");
         log("- reduce_model: reduce a model to remove useless dimension");
@@ -144,8 +149,11 @@ public class MainCLI {
                     case "compute_pmi":
                         CMD_COMPUTE_PMI(argv);
                         break;
-                    case "reduce_voc":
-                        CMD_REDUCE_INDEX(argv);
+                    case "reduce_index_nb_occ":
+                        CMD_REDUCE_INDEX_NB_OCC(argv);
+                        break;
+                    case "reduce_index_using_voc":
+                        CMD_REDUCE_INDEX_USING_VOC(argv);
                         break;
                     case "build_model":
                         CMD_BUILD_MODEL(argv);
@@ -171,9 +179,9 @@ public class MainCLI {
 //                    case "bestsimdoctest":
 //                        CMD_BEST_SIM_DOC_ADVANCED(argv);
 //                        break;
-//                    case "show_vec":
-//                        CMD_SHOW_VEC(argv);
-//                        break;
+                    case "show_vec":
+                        CMD_SHOW_VEC(argv);
+                        break;
                     case "kb":
                         EntityVectorRepresentationComputer.main(argv);
                         break;
@@ -197,7 +205,7 @@ public class MainCLI {
 
         if (argv.length < 2 || argv.length > 3) {
             log("[1] directory which contains the distributional model");
-            log("[2] entity label A or -i if you want to use the interactive mode");
+            log("[2] entity label A|entity label B or -i if you want to use the interactive mode");
             log("[3] entity label B (if -i is not used)");
             System.exit(0);
         }
@@ -314,60 +322,80 @@ public class MainCLI {
 //            log("sim " + entityA + "/" + entityB + " = " + sim);
 //        }
 //    }
-//    private static void CMD_SHOW_VEC(String[] argv) throws SLIB_Ex_Critic, IOException {
-//
-//        if (argv.length != 2) {
-//            log("[1] directory which contains the distributional model");
-//            log("[2] label or id, e.g. using label=Paris or id=30");
-//            System.exit(0);
-//        }
-//
-//        String dm_dir = argv[0];
-//        String[] data = argv[1].split("=");
-//        String flag = data[0];
-//        if (!flag.equals("label") && !flag.equals("id")) {
-//            throw new SLIB_Ex_Critic("Please specify term or id, e.g. using label=Paris or id=30");
-//        }
-//        String val = "";
-//        for (int i = 1; i < data.length; i++) {
-//            if (i != 1) {
-//                val += "=";
-//            }
-//            val += data[i];
-//        }
-//
-//        int voc_id;
-//        if (flag.equals("id")) {
-//            voc_id = Integer.parseInt(val);
-//        } else {
-//            Map<String, Integer> entityIndex = XPUtils.loadMAP(ModelConf.load(dm_dir).getEntityIndex());
-//            log("Looking for vector representation of '" + val + "'");
-//            if (!entityIndex.containsKey(val)) {
-//                throw new SLIB_Ex_Critic("Index does not contain label: '" + val + "'");
-//            }
-//            voc_id = entityIndex.get(val);
-//        }
-//
-//        log("entity_id=" + voc_id);
-//        ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(ModelConf.load(dm_dir));
-//        EntityInfo_2D_MODEL 
-//        
-//        
-//        double[] uncompressed = modelAccessor.vectorRepresentationOf(voc_id);
-//        log("uncompressed size=" + uncompressed.length);
-//        double[] compressArray = CompressionUtils.compressDoubleArray(uncompressed);
-//        Map<Integer, Double> compressedVecAsMap = CompressionUtils.compressedDoubleArrayToMap(compressArray);
-//
-//        log("compressed size=" + compressedVecAsMap.size());
-//
-//        boolean show_compressed = getInput("Do you want to see a compressed representation? (y/n): ").toLowerCase().equals("y");
-//        if (show_compressed) {
-//            SortedSet<Integer> keys = new TreeSet(compressedVecAsMap.keySet());
-//            for (Integer k : keys) {
-//                log("(" + k + "," + compressedVecAsMap.get(k) + ")");
-//            }
-//        }
-//    }
+    private static void CMD_SHOW_VEC(String[] argv) throws SLIB_Ex_Critic, IOException {
+
+        if (argv.length != 2) {
+            log("[1] directory which contains the distributional model");
+            log("[2] label or id, e.g. using label=Paris or id=30");
+            System.exit(0);
+        }
+
+        String dm_dir = argv[0];
+        String[] data = argv[1].split("=");
+        String flag = data[0];
+
+        if (!flag.equals("label") && !flag.equals("id")) {
+            throw new SLIB_Ex_Critic("Please specify term or id, e.g. using label=Paris or id=30");
+        }
+
+        // retrieve the value 
+        // We rebuild it in case it was a label containing =
+        String val = "";
+        for (int i = 1; i < data.length; i++) {
+            if (i != 1) {
+                val += "=";
+            }
+            val += data[i];
+        }
+
+        int word_id = -1;
+        if (flag.equals("id")) {
+            word_id = Integer.parseInt(val);
+        }
+
+        ModelConf model = ModelConf.load(dm_dir);
+        ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(ModelConf.load(dm_dir));
+        Iterator<IndexedVectorInfo> it = new IndexedVectorInfoIterator(model);
+
+        IndexedVectorInfo query = null;
+
+        while (it.hasNext()) {
+
+            IndexedVectorInfo info = it.next();
+
+            if (word_id != -1) {
+                if (info.id == word_id) {
+                    query = info;
+                    break;
+                }
+            } else if (val.equals(info.label)) {
+                query = info;
+                break;
+            }
+        }
+
+        if (query == null) {
+            log("Cannot locate associated vector");
+        } else {
+            IndexedVector indexedVector = modelAccessor.vectorRepresentationOf(query);
+            log("uncompressed size=" + indexedVector.values.length);
+            double[] compressArray = CompressionUtils.compressDoubleArray(indexedVector.values);
+            Map<Integer, Double> compressedVecAsMap = CompressionUtils.compressedDoubleArrayToMap(compressArray);
+
+            log("compressed size=" + compressedVecAsMap.size());
+
+            boolean show_compressed = getInput("Do you want to see a compressed representation? (y/n): ").toLowerCase().equals("y");
+            if (show_compressed) {
+                log("compressed representation:");
+                SortedSet<Integer> keys = new TreeSet(compressedVecAsMap.keySet());
+                for (Integer k : keys) {
+                    log("(" + k + "," + compressedVecAsMap.get(k) + ")");
+                }
+            }
+        }
+
+    }
+
     static String getInput(String message) {
         Console c = System.console();
         if (c == null) {
@@ -379,16 +407,22 @@ public class MainCLI {
 
     private static void CMD_BEST_SIM(String[] argv) throws SLIB_Ex_Critic, IOException {
 
-        if (argv.length != 3) {
+        if (argv.length < 3) {
             log("[1] directory which contains the distributional model");
-            log("[2] entity label");
-            log("[3] number of results (integer)");
+            log("[2] number of results (integer)");
+            log("[3] entity label");
             System.exit(0);
         }
 
         String dm_dir = argv[0];
-        String entity_label = argv[1];
-        int k = Integer.parseInt(argv[2]);
+        int k = Integer.parseInt(argv[1]);
+
+        // retrieve multi token words
+        String entity_label = "";
+        for (int i = 2; i < argv.length; i++) {
+            entity_label += argv[i] + " ";
+        }
+        entity_label = entity_label.trim();
 
         ModelConf mConf = ModelConf.load(dm_dir);
         ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(mConf);
@@ -404,93 +438,6 @@ public class MainCLI {
 
         System.out.println(bestSim.toString());
 
-//        String outfile = argv.length == 5 ? argv[4] : null;
-//
-//        ModelAccessor_2D modelAccessor;
-//        if (modelAccessApproach == 0) {
-//            modelAccessor = new ModelAccessorFullMemory_2D(mConf);
-//        } else if (modelAccessApproach == 1) {
-//            modelAccessor = new ModelAccessorMemory_2D(mConf);
-//        } else if (modelAccessApproach == 2) {
-//            modelAccessor = new ModelAccessorPersistance_2D(mConf);
-//        } else {
-//            throw new SLIB_Ex_Critic("Invalid value please refer to the documentation");
-//        }
-//
-//        if (entity_label.equals("-i")) { // interactive mode
-//
-//            while (true) {
-//                log("---------------------------------------");
-//                String[] entity_labels = getInput("Please type a label (you can use mutliple labels using / separator) -- type quit() to stop: ").split("/");
-//                log("Entities: " + Arrays.toString(entity_labels));
-//
-//                if (entity_labels.length == 1) {
-//                    entity_label = entity_labels[0];
-//                    if (!entityIndex.containsKey(entity_label)) {
-//                        if (entity_label.equals("quit()")) {
-//                            break;
-//                        }
-//                        log("Index does not contain label : " + entity_label);
-//
-//                    } else {
-//                        SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_label, k, true);
-//                    }
-//                } else {
-//
-//                    boolean validLabels = true;
-//
-//                    for (int i = 0; i < entity_labels.length; i++) {
-//                        if (!entityIndex.containsKey(entity_labels[i])) {
-//                            log("Index does not contain label : " + entity_labels[i]);
-//                            validLabels = false;
-//                            break;
-//                        }
-//                    }
-//
-//                    if (validLabels) {
-//                        Map<String, Double> scores = new HashMap();
-//
-//                        for (int i = 0; i < entity_labels.length; i++) {
-//
-//                            logger.info("Computing results for: " + entity_labels[i]);
-//
-//                            Map<String, Double> scoresCurrenEntity = SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_labels[i], k, true);
-//
-//                            for (String key : scoresCurrenEntity.keySet()) {
-//                                if (scores.containsKey(key)) {
-//                                    scores.put(key, scores.get(key) + scoresCurrenEntity.get(key));
-//                                } else {
-//                                    scores.put(key, scoresCurrenEntity.get(key));
-//                                }
-//                            }
-//                        }
-//
-//                        logger.info("sorting results...");
-//
-//                        int id = 0;
-//
-//                        for (Map.Entry<String, Double> e : MapUtils.sortByValueDecreasing(scores).entrySet()) {
-//                            id++;
-//                            logger.info("\t" + id + "\t" + e.getKey() + "\t" + e.getValue());
-//                            if (id == 40) {
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        } else {
-//
-//            log("Looking for best sim " + entity_label + " (k=" + k + ")");
-//            if (!entityIndex.containsKey(entity_label)) {
-//                log("Index does not contain label : " + entity_label);
-//            }
-//            Map<String, Double> res = SlibDist_Wrapper.computeBestEntitySimilarity(entityIndex, modelAccessor, entity_label, k, outfile == null);
-//            if (outfile != null) {
-//                MapUtils.toFile(res, outfile);
-//                logger.info("result: " + outfile);
-//            }
-//        }
     }
 
 //    private static void CMD_BEST_SIM_DOC_ADVANCED(String[] argv) throws SLIB_Ex_Critic, IOException {
@@ -761,7 +708,7 @@ public class MainCLI {
         }
     }
 
-    private static void CMD_REDUCE_INDEX(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
+    private static void CMD_REDUCE_INDEX_NB_OCC(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
 
         logger.info("Reduce a given index only considering words that occurs more than k times");
 
@@ -776,7 +723,28 @@ public class MainCLI {
             String reduced_index = argv[1];
             int k = Integer.parseInt(argv[2]);
 
-            VocStatComputer.reduceIndex(index_to_reduce, reduced_index, k);
+            VocStatComputer.reduceIndexUsingNbOcc(index_to_reduce, reduced_index, k);
+            logger.info("Index reduced at " + reduced_index);
+        }
+
+    }
+    
+    private static void CMD_REDUCE_INDEX_USING_VOC(String[] argv) throws SLIB_Ex_Critic, IOException, SLIB_Exception {
+
+        logger.info("Reduce a given index only considering words that occurs more than k times");
+
+        if (argv.length != 3) {
+            log("[0] indexed vocabulary to reduce (e.g. generated by voc_index)");
+            log("[1] location of the reduced index");
+            log("[2] vocabulary to consider (one word per line)");
+            System.exit(0);
+        } else {
+
+            String index_to_reduce = argv[0];
+            String reduced_index = argv[1];
+            String vocabulary = argv[2];
+
+            VocStatComputer.reduceIndexUsingVoc(index_to_reduce, reduced_index, vocabulary);
             logger.info("Index reduced at " + reduced_index);
         }
 

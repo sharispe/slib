@@ -367,7 +367,8 @@ public class SlibDist_Wrapper {
                 for (Integer id_chunk : chunk_index.values()) {
 
                     chunk_done_count++;
-                    System.out.print("processing chunk " + chunk_done_count + "/" + chunk_index.size() + "    \r");
+                    String p = Utils.format2digits((double) chunk_done_count * 100.0 / chunk_index.size());
+                    System.out.print("processing chunk " + chunk_done_count + "/" + chunk_index.size() + "\t"+p+"%    \r");
 
                     // We iterate over the words of the chunk
                     // and create their vector representation
@@ -892,9 +893,9 @@ public class SlibDist_Wrapper {
         byte[] sep_binary = {0};
         File f_binary = new File(new_model_conf.getModelBinary());
 
-        int null_vectors = 0; // number of generated vector representations that correspond to empty vectors
+        int null_vectors = 0; // number of reduced vector representations that correspond to empty vectors
         int id_word = 0;
-        
+
         logger.info("Reducing vector representations");
 
         byte[] compressed_vector_byte;
@@ -921,7 +922,9 @@ public class SlibDist_Wrapper {
                     Map<Integer, Double> compressedReducedVectorAsMap = new HashMap();
                     int new_id = 0;
                     for (Integer i : bestDimensions) {
-                        compressedReducedVectorAsMap.put(new_id, vec[i]);
+                        if (vec[i] != 0) {
+                            compressedReducedVectorAsMap.put(new_id, vec[i]);
+                        }
                         new_id++;
                     }
 
@@ -945,7 +948,8 @@ public class SlibDist_Wrapper {
                 }
             }
         }
-        logger.info("number of empty vector representations : " + null_vectors + "/" + id_word);
+        String p = Utils.format2digits((double) null_vectors * 100.0 / (double) mConf.entity_size);
+        logger.info("number of empty vector representations : " + null_vectors + "/" + mConf.entity_size + "\t" + p + "%");
         logger.info("reduced model save at: " + new_model_conf.path);
 
     }

@@ -31,42 +31,55 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.model.utils;
+package com.github.sharispe.slib.dsm.core.model.access.twodmodels;
 
+import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
+import static slib.graph.io.loader.GraphLoaderGeneric.logger;
 
 /**
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class ModelUtil {
+public class IndexedVectorInfoIterator implements Iterator<IndexedVectorInfo> {
 
-    /**
-     * TODO This MUST be replaced by an index. Return null if no entity with the
-     * associated label has been found
-     *
-     * @param mconf
-     * @param entityLabel
-     * @return
-     * @throws IOException
-     */
-    public static IndexedVectorInfo searchEntityVectorInfo(ModelConf mconf, String entityLabel) throws IOException {
-        
-        try (BufferedReader br = new BufferedReader(new FileReader(mconf.getModelIndex()))) {
-            String line;
-            line = br.readLine(); //skip header
-            while ((line = br.readLine()) != null) {
-                String[] word_data = Utils.tab_pattern.split(line);
-                if (word_data[3].equals(entityLabel)) {
-                    return new IndexedVectorInfo(Integer.parseInt(word_data[0]), Long.parseLong(word_data[1]), Integer.parseInt(word_data[2]),word_data[3]);
+    BufferedReader br;
+    String line;
+
+    public IndexedVectorInfoIterator(ModelConf model) throws IOException {
+
+        br = new BufferedReader(new FileReader(model.getModelIndex()));
+        line = br.readLine(); //skip header
+        line = br.readLine();
+    }
+
+    @Override
+    public boolean hasNext() {
+        return line != null;
+    }
+
+    @Override
+    public IndexedVectorInfo next() {
+        if (line != null) {
+            String[] word_data = Utils.tab_pattern.split(line);
+            IndexedVectorInfo info = new IndexedVectorInfo(Integer.parseInt(word_data[0]), Long.parseLong(word_data[1]), Integer.parseInt(word_data[2]), word_data[3]);
+            try {
+                // try to close the file
+                line = br.readLine();
+                if (line == null) {
+                    br.close();
                 }
+                return info;
+            } catch (Exception ex) {
+                logger.error(ex.getMessage());
             }
         }
         return null;
     }
-    
+
 }

@@ -39,11 +39,11 @@ package com.github.sharispe.slib.dsm.core.model.utils;
  */
 public class IndexedVector {
 
-    public final int id;
+    public final long id;
     public final String label;
     public final double[] values;
 
-    public IndexedVector(int id, String label, double[] values) {
+    public IndexedVector(long id, String label, double[] values) {
         this.id = id;
         this.label = label;
         this.values = values;

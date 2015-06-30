@@ -38,11 +38,7 @@ import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtil
 import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
-import com.github.sharispe.slib.dsm.utils.Utils;
-import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
@@ -111,7 +107,7 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
         } catch (IOException e) {
             throw new SLIB_Ex_Critic("Error reading the index: " + e.getMessage());
         }
-        
+
         double[] uncompressed_vector = CompressionUtils.uncompressDoubleArray(vector, model.vec_size);
 
         return new IndexedVector(vectorInfo.id, vectorInfo.label, uncompressed_vector);
@@ -128,38 +124,29 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
         return null;
     }
 
+    
+
     private class IndexedVectorIterator implements Iterator<IndexedVector> {
 
-        BufferedReader br;
-        String line;
+        IndexedVectorInfoIterator indexIt;
 
         public IndexedVectorIterator(ModelConf model) throws IOException {
 
-            br = new BufferedReader(new FileReader(model.getModelIndex()));
-            line = br.readLine(); //skip header
-            line = br.readLine();
+            indexIt = new IndexedVectorInfoIterator(model);
         }
 
         @Override
         public boolean hasNext() {
-            return line != null;
+            return indexIt.hasNext();
         }
 
         @Override
         public IndexedVector next() {
-            if (line != null) {
-                String[] word_data = Utils.tab_pattern.split(line);
-                IndexedVectorInfo info = new IndexedVectorInfo(Integer.parseInt(word_data[0]), Integer.parseInt(word_data[1]), Integer.parseInt(word_data[2]), word_data[3]);
-                try {
-                    // try to close the file
-                    line = br.readLine();
-                    if (line == null) {
-                        br.close();
-                    }
-                    return vectorRepresentationOf(info);
-                } catch (Exception ex) {
-                    logger.error(ex.getMessage());
-                }
+
+            try {
+                return indexIt.hasNext() ? vectorRepresentationOf(indexIt.next()) : null;
+            } catch (SLIB_Ex_Critic ex) {
+                Logger.getLogger(ModelAccessorPersistance_2D.class.getName()).log(Level.SEVERE, null, ex);
             }
             return null;
         }

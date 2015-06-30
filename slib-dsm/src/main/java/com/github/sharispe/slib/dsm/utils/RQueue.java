@@ -63,8 +63,6 @@ public class RQueue<L, V extends Number> {
         this.labels = new ArrayList(capacity + 1);
         nbValues = 0;
     }
-    
-    
 
     /**
      *
@@ -75,7 +73,10 @@ public class RQueue<L, V extends Number> {
     public boolean add(L label, V value) {
 
         double v = value.doubleValue();
-
+        
+        if (Double.isNaN(v)) {
+            return false;
+        }
 //        System.out.println(v+"/"+lowestValue);
         if (nbValues < capacity) {
 
@@ -144,10 +145,12 @@ public class RQueue<L, V extends Number> {
 
     public static void main(String[] args) {
 
-        RQueue<String, Double> kbestValues = new RQueue(3, false);
+        RQueue<String, Double> kbestValues = new RQueue(3, true);
 
         System.out.println(kbestValues.toString());
 
+        
+        kbestValues.add("Nan", Double.NaN);
         kbestValues.add("King", 0.0);
         kbestValues.add("Camel2", 0.7);
 
@@ -168,11 +171,11 @@ public class RQueue<L, V extends Number> {
         kbestValues.add("-0.5", -0.5);
 
         System.out.println(kbestValues.toString());
-        
+
         kbestValues.add("0.5", 0.5);
 
         System.out.println(kbestValues.toString());
-        
+
         kbestValues.add("-100", -100.0);
 
         System.out.println(kbestValues.toString());
@@ -183,10 +186,8 @@ public class RQueue<L, V extends Number> {
         return values;
     }
 
-   
     public List<L> getLabels() {
         return labels;
     }
 
-   
 }

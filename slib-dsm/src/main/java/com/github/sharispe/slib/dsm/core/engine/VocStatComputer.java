@@ -226,18 +226,18 @@ public class VocStatComputer {
      * @throws SLIB_Ex_Critic
      * @throws IOException
      */
-    public static void reduceIndex(String indexToReduceLocation, String reducedIndexLocation, int minNbOcc) throws SLIB_Ex_Critic, IOException {
+    public static void reduceIndexUsingNbOcc(String indexToReduceLocation, String reducedIndexLocation, int minNbOcc) throws SLIB_Ex_Critic, IOException {
 
         logger.info("Reducing index " + indexToReduceLocation + "\t into " + reducedIndexLocation);
         logger.info("Only considering words with at least " + minNbOcc + " occurrences");
 
-        Map<String, Integer> indexIDs = loadMap(indexToReduceLocation + "/" + CHUNK_INDEX);
-
+        // prepare the new index
         File reducedIndex = new File(reducedIndexLocation);
         reducedIndex.mkdir();
 
-        List<String> indexes = new ArrayList(indexIDs.keySet());
-        Collections.sort(indexes, String.CASE_INSENSITIVE_ORDER);
+        Map<String, Integer> indexIDs = loadMap(indexToReduceLocation + "/" + CHUNK_INDEX);
+        List<String> chunk_index_keys = new ArrayList(indexIDs.keySet());
+        Collections.sort(chunk_index_keys, String.CASE_INSENSITIVE_ORDER);
 
         File reducedIndexFile = new File(reducedIndexLocation + "/" + CHUNK_INDEX);
         int nbWordsTested = 0;
@@ -248,13 +248,14 @@ public class VocStatComputer {
             int idFile = 0;
             int c = 0;
 
-            for (String indexKey : indexes) {
+            for (String indexKey : chunk_index_keys) {
 
+                long update_nb_word_chunk = 0;
                 c++;
 
                 if (c % 10 == 0) {
-                    double p = c * 100.0 / indexes.size();
-                    System.out.print("processing: " + c + "/" + indexes.size() + "\t" + Utils.format2digits(p) + "%" + "\r");
+                    double p = c * 100.0 / chunk_index_keys.size();
+                    System.out.print("processing: " + c + "/" + chunk_index_keys.size() + "\t" + Utils.format2digits(p) + "%" + "\r");
                 }
                 int indexID = indexIDs.get(indexKey);
                 BufferedReader br = new BufferedReader(new FileReader(indexToReduceLocation + "/" + indexID));
@@ -275,6 +276,7 @@ public class VocStatComputer {
                         int nbOccurrences = Integer.parseInt(data[2]);
 
                         if (nbOccurrences >= minNbOcc) {
+                            update_nb_word_chunk++;
                             nbWordsSelected++;
                             nbWords++;
                             fwReducedChunk.write(data[0] + "\t" + Integer.parseInt(data[1]) + "\t" + Integer.parseInt(data[2]) + "\t" + Integer.parseInt(data[3]) + "\t" + data[4] + "\n");
@@ -285,7 +287,7 @@ public class VocStatComputer {
                 if (nbWords == 0) {
                     reducedChunkFile.delete();
                 } else {
-                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\n");
+                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t"+update_nb_word_chunk+"\n");
                     idFile++;
                 }
             }
@@ -296,7 +298,107 @@ public class VocStatComputer {
             Files.copy(new File(indexToReduceLocation + "/" + CORPUS_INDEX).toPath(), new File(reducedIndexLocation + "/" + CORPUS_INDEX).toPath());
 
             VocInfo voc_info = new VocInfo(indexToReduceLocation + "/" + GENERAL_INFO);
-            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected,voc_info.nbFiles);
+            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected, voc_info.nbFiles);
+            voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
+        }
+    }
+
+    /**
+     * Build an index considering an existing one by only considering words
+     * specified into a given vocabulary. The vocabulary is a file with one word
+     * per line.
+     *
+     * @param indexToReduceLocation
+     * @param reducedIndexLocation
+     * @param vocabularyLocation
+     * @throws SLIB_Ex_Critic
+     * @throws IOException
+     */
+    public static void reduceIndexUsingVoc(String indexToReduceLocation, String reducedIndexLocation, String vocabularyLocation) throws SLIB_Ex_Critic, IOException {
+
+        logger.info("Reducing index " + indexToReduceLocation + "\t into " + reducedIndexLocation);
+        logger.info("Only considering words defined into vocabulary " + vocabularyLocation);
+
+        Set<String> vocabulary = new HashSet();
+
+        // Load the vocabulary
+        try (BufferedReader br = new BufferedReader(new FileReader(vocabularyLocation))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                vocabulary.add(line.trim());
+            }
+        }
+        logger.info("vocabulary size:" + vocabulary.size());
+
+        // prepare the new index
+        File reducedIndex = new File(reducedIndexLocation);
+        reducedIndex.mkdir();
+
+        Map<String, Integer> indexIDs = loadMap(indexToReduceLocation + "/" + CHUNK_INDEX);
+        List<String> chunk_index_keys = new ArrayList(indexIDs.keySet());
+        Collections.sort(chunk_index_keys, String.CASE_INSENSITIVE_ORDER);
+
+        File reducedIndexFile = new File(reducedIndexLocation + "/" + CHUNK_INDEX);
+        int nbWordsTested = 0;
+        int nbWordsSelected = 0;
+
+        try (FileWriter fwReducedIndexFile = new FileWriter(reducedIndexFile)) {
+
+            int idFile = 0;
+            int c = 0;
+
+            // We process the chunks
+            for (String indexKey : chunk_index_keys) {
+
+                int update_nb_word_chunk = 0;
+                c++;
+
+                if (c % 10 == 0) {
+                    double p = c * 100.0 / chunk_index_keys.size();
+                    System.out.print("processing: " + c + "/" + chunk_index_keys.size() + "\t" + Utils.format2digits(p) + "%" + "\r");
+                }
+                int indexID = indexIDs.get(indexKey);
+                BufferedReader br = new BufferedReader(new FileReader(indexToReduceLocation + "/" + indexID));
+
+                int nbWords = 0;
+
+                File reducedChunkFile = new File(reducedIndexLocation + "/" + idFile);
+
+                try (FileWriter fwReducedChunk = new FileWriter(reducedChunkFile)) {
+
+                    String line = br.readLine();
+
+                    String[] data;
+                    while (line != null) {
+
+                        nbWordsTested++;
+                        data = Utils.tab_pattern.split(line);
+                        String label = data[0];
+
+                        if (vocabulary.contains(label)) {
+                            update_nb_word_chunk++;
+                            nbWordsSelected++;
+                            nbWords++;
+                            fwReducedChunk.write(data[0] + "\t" + Integer.parseInt(data[1]) + "\t" + Integer.parseInt(data[2]) + "\t" + Integer.parseInt(data[3]) + "\t" + data[4] + "\n");
+                        }
+                        line = br.readLine();
+                    }
+                }
+                if (nbWords == 0) {
+                    reducedChunkFile.delete();
+                } else {
+                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t"+update_nb_word_chunk+"\n");
+                    idFile++;
+                }
+            }
+            double p = (double) nbWordsSelected * 100.0 / nbWordsTested;
+            logger.info(nbWordsSelected + "/" + nbWordsTested + " words selected (" + Utils.format2digits(p) + "%)");
+
+            // Copy other files 
+            Files.copy(new File(indexToReduceLocation + "/" + CORPUS_INDEX).toPath(), new File(reducedIndexLocation + "/" + CORPUS_INDEX).toPath());
+
+            VocInfo voc_info = new VocInfo(indexToReduceLocation + "/" + GENERAL_INFO);
+            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected, voc_info.nbFiles);
             voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
         }
     }
