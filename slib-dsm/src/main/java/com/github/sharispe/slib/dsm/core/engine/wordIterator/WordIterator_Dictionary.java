@@ -33,32 +33,104 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
+import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import static com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract.logger;
 import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- * Implementation of the interface {@link WordIterator} considering a maximal
- * word size - shorter words are also returned. As an example considering the
- * following sentence "Twenty years from now you will be more disappointed by
- * the things that you didn’t do than by the ones you did do, so throw off the
- * bowlines, sail away from safe harbor, catch the trade winds in your sails.
- * Explore, Dream, Discover. –Mark Twain" and considering a maximum word size of
- * 3 the iterator will return (1) Twenty, (2) Twenty years, (3) Twenty years
- * from, (4) years, (5) years from, (6) years from now, ...
+ * Implementation of the interface {@link WordIterator} considering a given
+ * vocabulary - only the words in the vocabulary will be returned. As an example
+ * considering the following sentence "Twenty years from now you will be more
+ * disappointed by the things that you didn’t do than by the ones you did do, so
+ * throw off the bowlines, sail away from safe harbor, catch the trade winds in
+ * your sails. Explore, Dream, Discover. –Mark Twain" and considering the
+ * following vocabulary [things, Mark Twain, years, random, safe, sail] word
+ * size of 3 the iterator will return five words: (1) years, (2) things, (3)
+ * sail, (4) safe, (5) Mark Twain.
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
+public class WordIterator_Dictionary implements WordIterator {
 
-    public WordIterator_Allow_Shorter(File f, int word_size_constraint) throws IOException {
-        super(f, word_size_constraint);
-        current_word_size = 1;
+    final Vocabulary vocabulary;
+    final int word_size_constraint;
+    BufferedReader br;
+    String[] array;
+    StringBuffer sbuffer;
+
+    String nextWord;
+
+    // internal variables used for algorithmic purpose
+    int current_loc_start_array = 0;
+    int current_word_size = 1;
+
+    public WordIterator_Dictionary(File f, Vocabulary vocabulary) throws IOException {
+        br = new BufferedReader(new FileReader(f));
+        this.vocabulary = vocabulary;
+        word_size_constraint = vocabulary.getMax_token_lenght();
+        array = loadNextNonEmptyLine();
+        computeNextWord();
+    }
+
+    public final String[] loadNextNonEmptyLine() throws IOException {
+
+        String line = br.readLine();
+        while (line != null) {
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                line = br.readLine();
+                continue;
+            }
+            return Utils.blank_pattern.split(line);
+        }
+        return null;
+    }
+
+    @Override
+    public WordIteratorConstraint getConstraint() {
+        return WordIteratorConstraint.FIXED_VOCABULARY;
     }
 
     @Override
     public String next() {
+        String next = nextWord;
+        try {
+            computeNextWord();
+        } catch (IOException ex) {
+            Logger.getLogger(WordIterator_Dictionary.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return next;
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (br != null) {
+            br.close();
+        }
+    }
+
+    @Override
+    public boolean hasNext() {
+        return nextWord != null;
+    }
+
+    private void computeNextWord() throws IOException {
+
+        if (array == null) {
+            nextWord = null;
+            close();
+            return;
+        }
+
+        nextWord = null;
 
 //        logger.info("loc_start: " + (current_loc_start_array + 1) + "/" + array.length);
 //        logger.info("word_size: " + current_word_size);
@@ -75,6 +147,9 @@ public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
         }
 
         String w = sbuffer.toString();
+        if (vocabulary.contains(w)) {
+            nextWord = w;
+        }
 
         // We prepare the setting for the next iteration
         // (1) we try to enlarge the word if possible. 
@@ -100,29 +175,10 @@ public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
                 }
             }
         }
-        return w;
-    }
 
-    @Override
-    public WordIteratorConstraint getConstraint() {
-        return WordIteratorConstraint.ALLOW_SHORTER_WORDS;
-    }
-
-    @Override
-    public String[] loadNextNonEmptyLine() throws IOException {
-
-        String line = br.readLine();
-        while (line != null) {
-
-            line = line.trim();
-
-            if (line.isEmpty()) {
-                line = br.readLine();
-                continue;
-            }
-            return Utils.blank_pattern.split(line);
+        if (nextWord == null) {
+            computeNextWord();
         }
-        return null;
     }
 
 }

@@ -33,7 +33,7 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract;
+import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAccessor;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
 import com.github.sharispe.slib.dsm.utils.Utils;
@@ -63,17 +63,18 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
     MapIndexer indexer;
     String rootPath;
     WordIteratorConstraint wordIteratorConstraint;
+    final Vocabulary vocabulary;
 
     public final static int DEFAULT_CACHE_MAP_SIZE = 1000000;
     final int cache_map_size;
 
     final static Logger logger = LoggerFactory.getLogger(VocStatComputerThreads.class);
 
-    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, String dir_root_index, WordIteratorConstraint wordIteratorConstraint) {
-        this(poolWorker, id, flist, max_size_word, dir_root_index, DEFAULT_CACHE_MAP_SIZE, wordIteratorConstraint);
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index) {
+        this(poolWorker, id, flist, max_size_word, wordIteratorConstraint, dir_root_index, DEFAULT_CACHE_MAP_SIZE);
     }
 
-    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, String dir_root_index, int cache_thread, WordIteratorConstraint wordIteratorConstraint) {
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index, int cache_thread) {
 
         this.poolWorker = poolWorker;
         this.id = id;
@@ -83,6 +84,18 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
         this.indexer = new MapIndexer(rootPath, id + "");
         this.cache_map_size = cache_thread;
         this.wordIteratorConstraint = wordIteratorConstraint;
+        this.vocabulary = null;
+    }
+
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, final Vocabulary vocabulary, String dir_root_index, int cache_thread) {
+
+        this.poolWorker = poolWorker;
+        this.id = id;
+        this.files = flist;
+        this.vocabulary = vocabulary;
+        this.rootPath = dir_root_index + "/t_" + id;
+        this.indexer = new MapIndexer(rootPath, id + "");
+        this.cache_map_size = cache_thread;
     }
 
     @Override
@@ -95,7 +108,7 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             logger.info("(" + id + ") files: " + files.size());
 
             int nbFileDone = 0, nbFileDoneLastIteration = 0;
-            WordIteratorAbstract wordIT;
+            WordIterator wordIT;
             Map<String, Integer> fileVoc;
             String w;
 
@@ -106,6 +119,8 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             try (FileWriter corpusIndexWriter = new FileWriter(corpus_index)) {
 
                 for (File f : files) {
+                    
+//                    logger.info("processing: "+f);
 
                     nbFileDoneLastIteration++;
 
@@ -116,7 +131,13 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
                         logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size);
                     }
 
-                    wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
+                    if(vocabulary != null){
+                        wordIT = WordIteratorAccessor.getWordIterator(f, vocabulary);
+                    }
+                    else{
+                        wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
+                    }
+                    
 
                     fileVoc = new HashMap();
 

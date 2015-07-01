@@ -33,17 +33,23 @@
  */
 package com.github.sharispe.slib.dsm.utils;
 
-import static com.github.sharispe.slib.dsm.utils.XPUtils.logger;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
+import org.slf4j.LoggerFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -66,6 +72,8 @@ public class Utils {
     public static String format2digits(double n) {
         return numberFormatTwoDigit.format(n);
     }
+    
+    public static org.slf4j.Logger logger = LoggerFactory.getLogger(Utils.class);
 
     /**
      * Flush the given map into the file by considering a key value entry per
@@ -225,4 +233,45 @@ public class Utils {
 //        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
 //        return map;
 //    }
+    
+    public static Set<String> loadWords(String f) throws IOException {
+
+        
+        Set<String> words = new HashSet();
+
+        // Load the vocabulary
+        try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                words.add(line.trim());
+            }
+        }
+
+        return words;
+    }
+    
+    public static int countNbFiles(String corpusDir) throws IOException {
+        return countNbFiles(FileSystems.getDefault().getPath(corpusDir));
+    }
+    
+    /**
+     * Counts the number of files located into a given directory.
+     *
+     * @param corpusDir location of the corpus
+     * @return the number of files the corpus contains
+     * @throws IOException
+     */
+    private static int countNbFiles(Path corpusDir) throws IOException {
+
+        int count = 0;
+        try (DirectoryStream<Path> ds = Files.newDirectoryStream(corpusDir)) {
+            for (Path p : ds) {
+                count++;
+                if (Files.isDirectory(p)) {
+                    count += countNbFiles(p);
+                }
+            }
+        }
+        return count;
+    }
 }

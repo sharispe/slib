@@ -38,11 +38,11 @@ import java.util.Iterator;
 
 /**
  *
- * WordIterator can be used to iterate over words located in a text. Because of
- * the way data is processed tokens separated by multiple spaces will be
- * implicitly converted to a sequence of tokens separated by a single space,
- * e.g. machine~~~learning (~ represents a space) will be converted by "machine
- * learning"
+ * WordIterator can be used to iterate over words located in a text considering
+ * specific constraints. Because of the way data is processed tokens separated
+ * by multiple spaces will be implicitly converted to a sequence of tokens
+ * separated by a single space, e.g. machine~~~learning (~ represents a space)
+ * will be converted by "machine learning".
  *
  * token are considered to be sequences of characters that do not contains
  * spaces, e.g. the cat represents two tokens.
@@ -52,17 +52,16 @@ import java.util.Iterator;
 public interface WordIterator extends Iterator<String> {
 
     /**
-     * Close the underlying file. 
-     * Must always be called to properly close the iterator that has not be fully traversed (cf. hasNext).
+     * Close the underlying file. Must always be called to properly close the
+     * iterator that has not be fully traversed (cf. hasNext).
      *
      * @throws IOException
      */
     public void close() throws IOException;
-    
+
     /**
      * @return the strategy considered to iterate over the words
      */
     public WordIteratorConstraint getConstraint();
-    
-    
+
 }

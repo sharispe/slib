@@ -40,5 +40,6 @@ package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 public enum WordIteratorConstraint {
 
     ALLOW_SHORTER_WORDS,
-    FIXED_SIZE
+    FIXED_SIZE,
+    FIXED_VOCABULARY;
 }

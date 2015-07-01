@@ -33,47 +33,60 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConfUtils;
-import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
-import com.github.sharispe.slib.dsm.utils.XPUtils;
-import java.io.File;
+import com.github.sharispe.slib.dsm.utils.Utils;
+import static com.github.sharispe.slib.dsm.utils.Utils.logger;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Collection;
-import org.apache.commons.io.FileUtils;
-
-
-import slib.utils.ex.SLIB_Exception;
+import java.util.Set;
 
 /**
  *
- * Distributional Model Engine. Class used to build distributional models
- *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class DMEngine {
+public class Vocabulary {
 
-    public static void build_distributional_model_TERM_TO_TERM(String corpusDir, String vocabularyFile, String model_dir, int nbThreads) throws SLIB_Exception, IOException {
+    private final Set<String> elements;
+    private int size;
+    private int max_token_lenght;
 
-        Vocabulary vocabulary = new Vocabulary(vocabularyFile);
-        VocabularyIndex vocabularyIndex = new VocabularyIndex(vocabulary);
-        CoOcurrenceEngine engine = new CoOcurrenceEngine(vocabularyIndex);
-        SparseMatrix wordCoocurences = engine.computeCoOcurrence(corpusDir, nbThreads);
-//        build_distributional_model_TERM_TO_TERM(vocIndex, wordCoocurences, model);
+    public Vocabulary(Set<String> vocabulary) {
+        this.elements = vocabulary;
+        this.size = vocabulary.size();
+        prepare();
     }
 
-//    public static void build_distributional_model_TERM_TO_TERM(Voc vocIndex, SparseMatrix matrix, ModelConf model) throws SLIB_Exception, IOException {
-//
-//        ModelConfUtils.initModel(model);
-//        ModelConfUtils.buildIndex(model, vocIndex.getIndex(), matrix);
-//
-//        // We flush the index for entities and the dimensions
-//        XPUtils.flushMAP(vocIndex.getIndex(), model.getEntityIndex());
-//        FileUtils.copyFile(new File(model.getEntityIndex()), new File(model.getDimensionIndex()));
-//        
-//        
-//        ModelConfUtils.buildModelBinary(model, vocIndex.getIndex(), matrix);
-//    }
+    public Vocabulary(String vocabularyFile) throws IOException {
+        logger.info("loading vocabulary from: " + vocabularyFile);
+        this.elements = Utils.loadWords(vocabularyFile);
+        prepare();
+    }
+
+    public boolean contains(String s) {
+        return elements.contains(s);
+    }
+
+    public Set<String> getElements() {
+        return elements;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public int getMax_token_lenght() {
+        return max_token_lenght;
+    }
+
+    private void prepare() {
+        logger.info("preparing vocabulary");
+
+        for (String s : elements) {
+            int nbTokens = Utils.blank_pattern.split(s).length;
+            if (nbTokens > max_token_lenght) {
+                max_token_lenght = nbTokens;
+            }
+        }
+        logger.info("vocabulary size: " + elements.size());
+        logger.info("max token length: " + max_token_lenght);
+    }
+
 }

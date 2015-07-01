@@ -33,8 +33,10 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
+import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -60,7 +62,7 @@ public class WordIteratorAccessor {
      * @throws SLIB_Ex_Critic
      * @throws IOException
      */
-    public static WordIteratorAbstract getWordIterator(File f, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
+    public static WordIterator getWordIterator(File f, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
         switch (c) {
             case ALLOW_SHORTER_WORDS:
                 return new WordIterator_Allow_Shorter(f, word_size_constraint);
@@ -69,6 +71,10 @@ public class WordIteratorAccessor {
             default:
                 throw new SLIB_Ex_Critic(c + " is not a supported word constraint");
         }
+    }
+
+    public static WordIterator getWordIterator(File f, Vocabulary vocabulary) throws IOException {
+        return new WordIterator_Dictionary(f, vocabulary);
     }
 
 }

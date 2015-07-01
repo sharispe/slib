@@ -36,9 +36,15 @@ package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
+ * Implementation of the interface {@link WordIterator} considering a fixed word
+ * size. As an example considering the following sentence "Twenty years from now
+ * you will be more disappointed by the things that you didn’t do than by the
+ * ones you did do, so throw off the bowlines, sail away from safe harbor, catch
+ * the trade winds in your sails. Explore, Dream, Discover. –Mark Twain"
+ * considering a fixed size of 2 the iterator will return (1) Twenty years, (2)
+ * years from, (3) from now, (4) now you ...
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */

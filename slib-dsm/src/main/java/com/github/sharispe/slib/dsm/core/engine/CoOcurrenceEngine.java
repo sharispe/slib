@@ -37,6 +37,7 @@ import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads.CooccEn
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
+import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -44,6 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -57,6 +59,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,11 +78,10 @@ public class CoOcurrenceEngine {
     public static final int WINDOW_SIZE_LEFT = 30;
     public static final int WINDOW_SIZE_RIGHT = 30;
 
-    private Voc vocIndex;
-    Pattern blank_pattern = Pattern.compile("\\s+");
+    private VocabularyIndex vocabularyIndex;
 
-    public CoOcurrenceEngine(Voc voc_index) {
-        this.vocIndex = voc_index;
+    public CoOcurrenceEngine(VocabularyIndex voc) {
+        this.vocabularyIndex = voc;
     }
 
     
@@ -202,9 +205,9 @@ public class CoOcurrenceEngine {
      * @return
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public SparseMatrix computeCoOcurrence(Collection<File> files, int nbThreads) throws SLIB_Exception {
+    public SparseMatrix computeCoOcurrence(String corpusDir, int nbThreads) throws SLIB_Exception, IOException {
 
-        int vocsize = vocIndex.size();
+        int vocsize = vocabularyIndex.getVocabulary().getSize();
         // The word cocccurence matrix will be access by numerous threads
         SparseMatrix wordCoocurences = SparseMatrixGenerator.buildConcurrentSparseMatrix(vocsize, vocsize);
 
@@ -212,14 +215,14 @@ public class CoOcurrenceEngine {
         CompletionService<CooccEngineResult> taskCompletionService = new ExecutorCompletionService(threadPool);
 
         List<Future<CooccEngineResult>> futures = new ArrayList();
+        
+        int count_files = Utils.countNbFiles(corpusDir);
 
-        logger.info("Number of files: " + files.size());
+        logger.info("Number of files: " + count_files);
         logger.info("Vocabulary contains: " + vocsize);
 
-        logger.info("processing " + files.size() + " files");
-
         List<File> flist = new ArrayList();
-        int chunk_size = files.size() / nbThreads;
+        int chunk_size = count_files / nbThreads;
         if (chunk_size > 10000) {
             chunk_size = 10000;
         }
@@ -227,13 +230,16 @@ public class CoOcurrenceEngine {
         logger.info("chunk size " + chunk_size);
 
         int count_chunk = 0;
+        Iterator<File> fileIterator = FileUtils.iterateFiles(new File(corpusDir), TrueFileFilter.TRUE, TrueFileFilter.INSTANCE);
 
-        for (File f : files) {
-
+        while(fileIterator.hasNext()) {
+            
+            File f = fileIterator.next();
+        
             flist.add(f);
 
             if (flist.size() == chunk_size) {
-                Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocIndex, wordCoocurences);
+                Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, wordCoocurences);
                 futures.add(taskCompletionService.submit(worker));
                 flist = new ArrayList();
                 count_chunk++;
@@ -241,13 +247,13 @@ public class CoOcurrenceEngine {
 
         }
         if (!flist.isEmpty()) {
-            Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocIndex, wordCoocurences);
+            Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, wordCoocurences);
             futures.add(taskCompletionService.submit(worker));
             count_chunk++;
         }
         threadPool.shutdown();
 
-        ResultProcessor resultProcessor = new ResultProcessor(futures.size(), taskCompletionService, files.size());
+        ResultProcessor resultProcessor = new ResultProcessor(futures.size(), taskCompletionService, count_files);
         Thread result_thread = new Thread(resultProcessor);
         result_thread.start();
 
@@ -258,7 +264,7 @@ public class CoOcurrenceEngine {
             throw new SLIB_Ex_Critic("Error compute matrix coocurrence: " + e.getMessage());
         }
 
-        logger.info("Number of errors detect: " + resultProcessor.file_processing_errors + "/" + files.size());
+        logger.info("Number of errors detect: " + resultProcessor.file_processing_errors + "/" + count_files);
         if (resultProcessor.critical_errors != 0) {
             throw new SLIB_Ex_Critic("An error occured processing the corpus... please consult the log");
         }

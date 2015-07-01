@@ -33,14 +33,18 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
-import com.github.sharispe.slib.dsm.core.engine.Voc;
-import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
-import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract;
-import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator_Allow_Shorter;
-import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator_FixedSize;
+import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads;
+import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
+import com.github.sharispe.slib.dsm.core.engine.VocabularyIndex;
+import com.github.sharispe.slib.dsm.core.engine.VocabularyIndex.Node;
+import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
+import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import slib.utils.impl.UtilDebug;
 
 /**
@@ -51,128 +55,243 @@ public class Test {
 
     public static void main(String[] args) throws Exception {
 
-        File f = new File("//home/seb/data/OANC/data/written_2/non-fiction/OUP/Castro/chL.txt");
-        WordIteratorAbstract w;
-//        w = new WordIterator_Allow_Shorter(f, 2);
-//        while (w.hasNext()) {
-//            System.out.println(w.next());
-//        }
+        File f = new File("/home/seb/data/OANC/data/written_2/non-fiction/OUP/Castro/chL.txt");
+        String vocPath = "/tmp/voc";//"/data/englishNouns.txt";
 
-        System.out.println("FIXED SIZE");
-        w = new WordIterator_FixedSize(f, 2);
-        while (w.hasNext()) {
-            System.out.println(w.next());
-        }
+        String t = "/tmp/test";
+        String terror = "/data/english-corpus/OANC/data/spoken/telephone/switchboard/27/sw2789-ms98-a-trans.txt";
+        String tvoc = "/tmp/testvoc";
+
+        Set<String> set = new HashSet();
+        set.add("machine");
+        set.add("machine learning");
+        set.add("Machine learning");
+        set.add("artificial");
+        set.add("artificial intelligence");
+
+        Vocabulary voc = new Vocabulary("/data/englishNouns.txt");
+//        Vocabulary voc = new Vocabulary(set);
+        VocabularyIndex index = new VocabularyIndex(voc);
+
+        String text = "This is a test about machine learning  and computer science and other techhniques great "
+                + " Machine learning is a subfield of computer science that evolved from the study of pattern recognition and computational learning theory in artificial intelligence"
+                + " Machine learning explores the construction and study of algorithms that can learn from and make predictions on data";
+        int[] ids = CoOccurrenceEngineTheads.tokenArrayToIDArray(Utils.blank_pattern.split(text), index);
+        System.out.println(Arrays.toString(ids));
+        process(ids, index);
 
         UtilDebug.exit();
 
-        List<Integer> list = new ArrayList();
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        System.out.println(list.toString());
-        list.add(1, 5);
-
-        System.out.println(list.toString());
-
-        String[] arguments = {"/data/xp/dsm", "/tmp/voc", "6", "2"};
-        MainCLI.CMD_VOC_INDEX(arguments);
-        VocStatComputer.computeStat("/tmp/voc", 50);
-
-        System.exit(0);
-
-        Voc index = new Voc("/tmp/voc");
-        System.out.println(index.size());
-
-        System.exit(0);
-
-        String input = "  ( king ) + ( man ) ";
-
-        new Test().process(input);
-
     }
 
-    private void process(String input) throws Exception {
+    static void process(int[] text, VocabularyIndex index) {
 
-        String[] elements = input.split("\\s");
+        int window_size_right = 10;
+        int window_size_left = 10;
 
-        Node current = null;
+        int start_focal_word = 0;
+        int size_focal_word = 1;
 
-        for (String e : elements) {
+        Node current_node = null;
 
-            if (e.trim().isEmpty()) {
-                continue;
+        
+        
+        List<Node> sequenceToken = null;
+        int start_previous = 0;
+
+        Result result = getNextWord(text, start_focal_word, sequenceToken, index);
+        
+        while (result != null) {
+            
+            if (result.nodeHistory == null) {
+                start_focal_word++;
+                sequenceToken = null;
             }
-
-            if (e.equals("+") || e.equals("-")) {
-                // do something
-                System.out.println("Operation: " + e);
-                Node n = new Node(e);
-                n.setOperation(e);
-                n.setLeftPart(current);
-                current = n;
-            } else if (e.equals("(")) {
-
-            } else {
-                System.out.println("Create Node: " + e);
-                Node n = new Node(e);
-
-                if (current == null) {
-                    current = n;
-                } else if (current.getOperation() == null) {
-                    throw new Exception("Maformed Expression");
-                } else {
-                    current.setRightPart(n);
-                }
-
+            else{
+                sequenceToken = result.nodeHistory;
+                start_focal_word = result.start_loc;
             }
+            result = getNextWord(text, start_focal_word, sequenceToken, index);
         }
-        System.out.println(current);
+
+    }
+    
+    private static class Result{
+        List<Node> nodeHistory;
+        int start_loc;
+        
+        public Result(List<Node> nodeHistory, int start_loc){
+            this.nodeHistory = nodeHistory;
+            this.start_loc = start_loc;
+        }
     }
 
-    private class Node {
+    private static Result getNextWord(int[] text, int start, List<Node> nodeHistory, VocabularyIndex index) {
 
-        String label;
-        String operation;
-        Node leftPart, rightPart;
-
-        public Node(String label) {
-            this.label = label;
+        if (start >= text.length) {
+            return null;
         }
 
-        public String getOperation() {
-            return operation;
+        int id_start_token = text[start];
+
+        System.out.println("start and id token: " + start + "\t" + id_start_token+"\thas history: "+(nodeHistory!=null));
+
+        if (id_start_token == -1) { // means that the token is not indexed we iterate
+            System.out.println("next token not indexed iterate");
+            return getNextWord(text, start + 1, null, index);
         }
 
-        public void setOperation(String operation) {
-            this.operation = operation;
-        }
+        Node next_node;
 
-        public Node getLeftPart() {
-            return leftPart;
-        }
+        if (nodeHistory == null) { // we are starting a new word 
 
-        public void setLeftPart(Node leftPart) {
-            this.leftPart = leftPart;
-        }
+            System.out.println("looking for new word");
+            next_node = index.getTree_root().getChild(id_start_token);
 
-        public Node getRightPart() {
-            return rightPart;
-        }
+            if (next_node == null) { // current position is not a node we iterate
+                System.out.println("iterate");
+                return getNextWord(text, start + 1, null, index);
 
-        public void setRightPart(Node rightPart) {
-            this.rightPart = rightPart;
-        }
+            } else if (next_node.isWordEnd()) { // current position is a node corresponding to a word
 
-        @Override
-        public String toString() {
+                nodeHistory = new ArrayList();
+                nodeHistory.add(next_node);
+                String word = createWord(nodeHistory, index);
+                System.out.println("found word: " + next_node + "\t" + word);
 
-            if (this.operation != null) {
-                return "(" + this.leftPart.toString() + this.operation + this.rightPart + ")";
-            } else {
-                return this.label;
+                return new Result(nodeHistory,start);
+
+            } else { // current position is a node that does not correspond to a word
+
+                nodeHistory = new ArrayList();
+                nodeHistory.add(next_node);
+                System.out.println("extending");
+                return getNextWord(text, start, nodeHistory, index);
             }
+        } else {  // we try to extend the current word 
 
+            System.out.println("looking for word extension\thistory size:"+nodeHistory.size());
+            int token_sequence_size = nodeHistory.size();
+            if (start + token_sequence_size >= text.length) {
+                return getNextWord(text, start + 1, null, index);
+            }
+            Node last_node = nodeHistory.get(token_sequence_size - 1);
+            next_node = last_node.getChild(text[start + token_sequence_size]);
+
+            if (next_node == null) { // word cannot be extended we iterate
+
+                System.out.println("iterate");
+                return getNextWord(text, start + 1, null, index);
+
+            } else if (next_node.isWordEnd()) { // word extension is a node corresponding to a word
+
+                nodeHistory.add(next_node);
+                String word = createWord(nodeHistory, index);
+                System.out.println("found word extension: " + next_node + "\t" + word);
+
+                return new Result(nodeHistory,start);
+
+            } else { // word extension is a node that does not correspond to a word
+                nodeHistory.add(next_node);
+                System.out.println("extending");
+                return getNextWord(text, start, nodeHistory, index);
+            }
         }
     }
+
+    private static String createWord(List<Node> nodeHistory, VocabularyIndex index) {
+        String word = "";
+        for (int i = 0; i < nodeHistory.size(); i++) {
+            if (i != 0) {
+                word += " ";
+            }
+            word += index.getToken(nodeHistory.get(i).getId());
+        }
+        return word;
+    }
+
+//    private void process(String input) throws Exception {
+//
+//        String[] elements = input.split("\\s");
+//
+//        Node current = null;
+//
+//        for (String e : elements) {
+//
+//            if (e.trim().isEmpty()) {
+//                continue;
+//            }
+//
+//            if (e.equals("+") || e.equals("-")) {
+//                // do something
+//                System.out.println("Operation: " + e);
+//                Node n = new Node(e);
+//                n.setOperation(e);
+//                n.setLeftPart(current);
+//                current = n;
+//            } else if (e.equals("(")) {
+//
+//            } else {
+//                System.out.println("Create Node: " + e);
+//                Node n = new Node(e);
+//
+//                if (current == null) {
+//                    current = n;
+//                } else if (current.getOperation() == null) {
+//                    throw new Exception("Maformed Expression");
+//                } else {
+//                    current.setRightPart(n);
+//                }
+//
+//            }
+//        }
+//        System.out.println(current);
+//
+//    }
 }
+
+//    private class Node {
+//
+//    String label;
+//    String operation;
+//    Node leftPart, rightPart;
+//
+//    public Node(String label) {
+//        this.label = label;
+//    }
+//
+//    public String getOperation() {
+//        return operation;
+//    }
+//
+//    public void setOperation(String operation) {
+//        this.operation = operation;
+//    }
+//
+//    public Node getLeftPart() {
+//        return leftPart;
+//    }
+//
+//    public void setLeftPart(Node leftPart) {
+//        this.leftPart = leftPart;
+//    }
+//
+//    public Node getRightPart() {
+//        return rightPart;
+//    }
+//
+//    public void setRightPart(Node rightPart) {
+//        this.rightPart = rightPart;
+//    }
+//
+//    @Override
+//    public String toString() {
+//
+//        if (this.operation != null) {
+//            return "(" + this.leftPart.toString() + this.operation + this.rightPart + ")";
+//        } else {
+//            return this.label;
+//        }
+//
+//    }
+

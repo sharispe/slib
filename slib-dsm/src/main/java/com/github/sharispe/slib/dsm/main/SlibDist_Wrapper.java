@@ -614,8 +614,8 @@ public class SlibDist_Wrapper {
 //
 //        return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 //    }
-    public static void buildTerm2TermDM(ModelConf conf, Collection<File> files, Voc vocIndex, int nbThreads) throws SLIB_Exception, IOException {
-        DMEngine.build_distributional_model_TERM_TO_TERM(files, vocIndex, conf, nbThreads);
+    public static void buildTerm2TermDM(String corpusDir, String voc_file, String model_dir, int nbThreads) throws SLIB_Exception, IOException {
+        DMEngine.build_distributional_model_TERM_TO_TERM(corpusDir, voc_file, model_dir, nbThreads);
     }
 
 //    static void reduceModelWithTermsAsDimensions(VocStatConf vstatconf, ModelConf mconf, ActionConf_ReduceTerm2Term conf) throws SLIB_Ex_Critic {

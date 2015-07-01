@@ -35,6 +35,7 @@ package com.github.sharispe.slib.dsm.utils;
 
 import com.github.sharispe.slib.dsm.core.engine.Voc;
 import com.github.sharispe.slib.dsm.core.engine.WordInfo;
+import static com.github.sharispe.slib.dsm.utils.Utils.logger;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -53,7 +54,6 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class XPUtils {
 
-    static org.slf4j.Logger logger = LoggerFactory.getLogger(XPUtils.class);
 
     public static double[] sumVectors(double[] a, double[] b) throws SLIB_Ex_Critic {
 

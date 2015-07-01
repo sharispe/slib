@@ -41,10 +41,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,14 +58,13 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     Collection<File> files;
     SparseMatrix globalCoocurences;
     Logger logger = LoggerFactory.getLogger(CoOccurrenceEngineTheads.class);
-    Voc vocIndex;
+    VocabularyIndex vocabularyIndex;
     int fileErrors = 0;
     int nbFileDone = 0;
 
     int window_size_right = CoOcurrenceEngine.WINDOW_SIZE_RIGHT;
     int window_size_left = CoOcurrenceEngine.WINDOW_SIZE_LEFT;
 
-    int window_size_total = CoOcurrenceEngine.WINDOW_SIZE_LEFT + 1 + CoOcurrenceEngine.WINDOW_SIZE_RIGHT;
 
     public class CooccEngineResult {
 
@@ -89,11 +86,11 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     }
 
-    public CoOccurrenceEngineTheads(int id, Collection<File> files, Voc vocIndex, SparseMatrix globalCoocurences) {
+    public CoOccurrenceEngineTheads(int id, Collection<File> files, VocabularyIndex vocabularyIndex, SparseMatrix globalCoocurences) {
         this.id = id;
         this.files = files;
         this.globalCoocurences = globalCoocurences;
-        this.vocIndex = vocIndex;
+        this.vocabularyIndex = vocabularyIndex;
     }
 
     @Override
@@ -115,19 +112,19 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     private void loadWordCooccurrenceFromFile(File file) throws SLIB_Ex_Critic {
 
-        if (vocIndex == null || vocIndex.size() < 2) {
-            throw new SLIB_Ex_Critic("You must first load or specify a vocabulary");
+        if (vocabularyIndex == null || vocabularyIndex.getVocabulary().getSize() < 2) {
+            throw new SLIB_Ex_Critic("You must first load or specify a vocabulary of size larger than 2");
         }
 
         try {
             String s = FileUtils.readFileToString(file);
             String[] stab = Utils.blank_pattern.split(s);
-            int[] text = textToArrayIDs(stab);
+            int[] text = tokenArrayToIDArray(stab, vocabularyIndex);
 
             if (nbFileDone % 100 == 0) {
                 logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath() + "\t word ex:" + (stab.length - text.length) + "/" + stab.length);
             }
-            
+
             List<Integer> window = new ArrayList();
             int wsize = 1 + window_size_right < text.length ? 1 + window_size_right : text.length;
             for (int i = 0; i < wsize; i++) {
@@ -200,23 +197,20 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
      * process (but no specific marker will specify that the element has been
      * omitted).
      *
-     * @param vocabulary
-     * @param s
+     * @param vocabularyIndex
+     * @param tokenArray
      * @return
      */
-    private int[] textToArrayIDs(String[] s) {
-        ArrayList<Integer> list = new ArrayList();
-        for (String ss : s) {
-            Integer id = vocIndex.getID(ss);
-            if (id == null) {
-//                logger.info("skip='"+ss+"'");
-                continue;
+    public static int[] tokenArrayToIDArray(String[] tokenArray, VocabularyIndex vocabularyIndex) {
+        int[] IDArray = new int[tokenArray.length];
+        for (int i = 0; i < tokenArray.length; i++) {
+            Integer k = vocabularyIndex.getTokenID(tokenArray[i]);
+            if (k == null) {
+                k = -1;
             }
-            list.add(vocIndex.getID(ss));
+            IDArray[i] = k;
         }
-        return ArrayUtils.toPrimitive(list.toArray(new Integer[list.size()]));
+        return IDArray;
     }
-    
-    
 
 }

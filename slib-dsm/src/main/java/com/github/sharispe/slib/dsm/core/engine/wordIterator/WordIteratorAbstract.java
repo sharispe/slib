@@ -66,7 +66,7 @@ public abstract class WordIteratorAbstract implements WordIterator {
 
         this.word_size_constraint = word_size_constraint;
         br = new BufferedReader(new FileReader(f));
-        array = loadNextNonEmptyLine();
+        array = loadNextNonEmptyLine(); 
     }
 
     /**

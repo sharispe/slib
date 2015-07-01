@@ -42,11 +42,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.CopyOption;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -119,23 +115,43 @@ public class VocStatComputer {
      * @param cache_thread the number of values stored into memory in each
      * threads before being flushed into the disk. This parameters improves
      * computational performances by increasing memory consumption.
+     * @param wordIteratorConstraint
      * @return the vocabulary and associated statistics.
      * @throws IOException
      * @throws SLIB_Ex_Critic
      * @throws Exception
      */
-    public static synchronized Voc computeVocStats(String corpusDir, String outputDir, int wordSizeConstraint, int nbThreads, int file_per_threads, int cache_thread, WordIteratorConstraint wordIteratorConstraint) throws IOException, SLIB_Ex_Critic, Exception {
+    public static synchronized void computeVocStats(String corpusDir, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
+        computeVocStats_inner(corpusDir, outputDir, wordSizeConstraint, wordIteratorConstraint, null, nbThreads, file_per_threads, cache_thread);
+    }
+
+    public static synchronized void computeVocStats(String corpusDir, String outputDir, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
+        computeVocStats_inner(corpusDir, outputDir, 0, null, vocabularyFile, nbThreads, file_per_threads, cache_thread);
+    }
+
+    private static synchronized void computeVocStats_inner(String corpusDir, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
 
         logger.info("Computing statistics for directory: " + corpusDir);
-        logger.info("word size constraint (token): " + wordSizeConstraint);
-        logger.info("word iterator constraint: " + wordIteratorConstraint);
+
+        boolean use_vocabulary = vocabularyFile != null;
+        Vocabulary vocabulary = null;
+        
+        if (use_vocabulary) {
+            logger.info("vocabulary already defined: "+vocabularyFile);
+            vocabulary = new Vocabulary(vocabularyFile);
+        } else {
+            logger.info("vocabulary will be extracted considering following constraint");
+            logger.info("word size constraint (token): " + wordSizeConstraint);
+            logger.info("word iterator constraint: " + wordIteratorConstraint);
+        }
+
         logger.info("nb threads: " + nbThreads);
         logger.info("file per threads: " + file_per_threads);
         logger.info("cache per threads: " + cache_thread);
 
-        nb_files_to_analyse = countNbFiles(corpusDir);
+        nb_files_to_analyse = Utils.countNbFiles(corpusDir);
 
-        logger.info("vocabulary output: " + outputDir);
+        logger.info("vocabulary index output: " + outputDir);
         logger.info("Number of files: " + nb_files_to_analyse);
 
         nb_files_processed = 0;
@@ -167,7 +183,12 @@ public class VocStatComputer {
                 flist.add(n);
             }
             poolWorker.addTask();
-            Callable<VocStatResult> worker = new VocStatComputerThreads(poolWorker, count_chunk, flist, wordSizeConstraint, outputDir + "/tmp", cache_thread, wordIteratorConstraint);
+            Callable<VocStatResult> worker;
+            if (use_vocabulary) {
+                worker = new VocStatComputerThreads(poolWorker, count_chunk, flist, vocabulary, outputDir + "/tmp", cache_thread);
+            } else {
+                worker = new VocStatComputerThreads(poolWorker, count_chunk, flist, wordSizeConstraint, wordIteratorConstraint, outputDir + "/tmp", cache_thread);
+            }
             count_chunk++;
             poolWorker.getPool().submit(worker);
         }
@@ -199,7 +220,6 @@ public class VocStatComputer {
         logger.info("Removing tmp directory");
         FileUtils.deleteDirectory(new File(outputDir + "/tmp/"));
         logger.info("Index computed.");
-        return null;
     }
 
     /**
@@ -287,7 +307,7 @@ public class VocStatComputer {
                 if (nbWords == 0) {
                     reducedChunkFile.delete();
                 } else {
-                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t"+update_nb_word_chunk+"\n");
+                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t" + update_nb_word_chunk + "\n");
                     idFile++;
                 }
             }
@@ -302,6 +322,8 @@ public class VocStatComputer {
             voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
         }
     }
+
+    
 
     /**
      * Build an index considering an existing one by only considering words
@@ -319,16 +341,7 @@ public class VocStatComputer {
         logger.info("Reducing index " + indexToReduceLocation + "\t into " + reducedIndexLocation);
         logger.info("Only considering words defined into vocabulary " + vocabularyLocation);
 
-        Set<String> vocabulary = new HashSet();
-
-        // Load the vocabulary
-        try (BufferedReader br = new BufferedReader(new FileReader(vocabularyLocation))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                vocabulary.add(line.trim());
-            }
-        }
-        logger.info("vocabulary size:" + vocabulary.size());
+        Set<String> vocabulary = Utils.loadWords(vocabularyLocation);
 
         // prepare the new index
         File reducedIndex = new File(reducedIndexLocation);
@@ -387,7 +400,7 @@ public class VocStatComputer {
                 if (nbWords == 0) {
                     reducedChunkFile.delete();
                 } else {
-                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t"+update_nb_word_chunk+"\n");
+                    fwReducedIndexFile.write(indexKey + "\t" + idFile + "\t" + update_nb_word_chunk + "\n");
                     idFile++;
                 }
             }
@@ -788,31 +801,6 @@ public class VocStatComputer {
 
         }
         return list;
-    }
-
-    public static int countNbFiles(String corpusDir) throws IOException {
-        return countNbFiles(FileSystems.getDefault().getPath(corpusDir));
-    }
-
-    /**
-     * Counts the number of files located into a given directory.
-     *
-     * @param corpusDir location of the corpus
-     * @return the number of files the corpus contains
-     * @throws IOException
-     */
-    private static int countNbFiles(Path corpusDir) throws IOException {
-
-        int count = 0;
-        try (DirectoryStream<Path> ds = Files.newDirectoryStream(corpusDir)) {
-            for (Path p : ds) {
-                count++;
-                if (Files.isDirectory(p)) {
-                    count += countNbFiles(p);
-                }
-            }
-        }
-        return count;
     }
 
 }
