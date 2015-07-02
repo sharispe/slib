@@ -53,6 +53,7 @@ public class SparseMatrix {
     int nbElements;
     int nbDimensions;
     Map<Integer, Map<Integer, Double>> m;
+    int storedValue;
 
     /**
      *
@@ -87,6 +88,9 @@ public class SparseMatrix {
         }
         if (!m.containsKey(elementId)) {
             m.put(elementId, mgenerator.newMap());
+            storedValue++;
+        } else if (!m.get(elementId).containsKey(dimensionID)) {
+            storedValue++;
         }
         m.get(elementId).put(dimensionID, value);
     }
@@ -105,7 +109,10 @@ public class SparseMatrix {
         double cval = 0;
         if (!m.containsKey(elementId)) {
             m.put(elementId, mgenerator.newMap());
-        } else if (m.get(elementId).containsKey(dimensionID)) {
+            storedValue++;
+        } else if (!m.get(elementId).containsKey(dimensionID)) {
+            storedValue++;
+        } else {
             cval = m.get(elementId).get(dimensionID);
         }
         m.get(elementId).put(dimensionID, cval + toadd);
@@ -136,14 +143,15 @@ public class SparseMatrix {
     }
 
     /**
-     * return -1 if the element does not exists
+     * also return 0 if the element does not exist
+     *
      * @param elementID
-     * @return 
+     * @return
      */
     public int getNbNonNullValuesInElementVector(int elementID) {
-        
+
         if (!m.containsKey(elementID)) {
-            return -1;
+            return 0;
         }
         // For this to be correct the matrix must never store 0 values
         return m.get(elementID).size();
@@ -205,6 +213,21 @@ public class SparseMatrix {
         m.add(0, 0, 1);
         System.out.println(m.get(0, 0));
         System.out.println(m.get(4, 9));
+    }
+
+    /**
+     * @return the number of values that have been stored
+     */
+    public int storedValues() {
+        return storedValue;
+    }
+
+    /**
+     * Empty the matrix
+     */
+    public void clear() {
+        m.clear();
+        storedValue=0;
     }
 
 }

@@ -40,8 +40,10 @@ import com.github.sharispe.slib.dsm.utils.FileUtility;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -75,22 +77,26 @@ public class CoOcurrenceEngine {
 
     Logger logger = LoggerFactory.getLogger(CoOcurrenceEngine.class);
 
-    public static final int WINDOW_SIZE_LEFT = 30;
-    public static final int WINDOW_SIZE_RIGHT = 30;
+    public static final int WINDOW_TOKEN_SIZE = 30;
 
-    private VocabularyIndex vocabularyIndex;
+    private final VocabularyIndex vocabularyIndex;
+    private long fileProcessed;
 
     public CoOcurrenceEngine(VocabularyIndex voc) {
         this.vocabularyIndex = voc;
     }
 
-    
+    public long getNumberFileProcessed() {
+        return fileProcessed;
+    }
+
     /**
      *
      * @param directory
      * @param admittedExtensions
      * @return
      * @throws IOException
+     * @deprecated
      */
     public Map<String, Map<String, Double>> computeMatrixTermIDFDocFromDir(String directory, List<String> admittedExtensions) throws IOException {
 
@@ -193,33 +199,31 @@ public class CoOcurrenceEngine {
         return mat_tfidf;
     }
 
-    
-    
     /**
      * Compute the cooccurrence between the terms contained in the texts located
      * in a specified directory. The vocabulary and vocabulary usage is expected
      * to be loaded in the object prior to computation.
      *
-     * @param files
+     * @param corpusDir
      * @param nbThreads
-     * @return
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public SparseMatrix computeCoOcurrence(String corpusDir, int nbThreads) throws SLIB_Exception, IOException {
+    public void computeCoOcurrence(String corpusDir, String output_dir_path, int nbThreads, int max_size_matrix) throws SLIB_Exception, IOException {
 
-        int vocsize = vocabularyIndex.getVocabulary().getSize();
+        int vocsize = vocabularyIndex.getVocabulary().size();
         // The word cocccurence matrix will be access by numerous threads
-        SparseMatrix wordCoocurences = SparseMatrixGenerator.buildConcurrentSparseMatrix(vocsize, vocsize);
-
         ExecutorService threadPool = Executors.newFixedThreadPool(nbThreads);
         CompletionService<CooccEngineResult> taskCompletionService = new ExecutorCompletionService(threadPool);
 
         List<Future<CooccEngineResult>> futures = new ArrayList();
-        
+
         int count_files = Utils.countNbFiles(corpusDir);
 
         logger.info("Number of files: " + count_files);
         logger.info("Vocabulary contains: " + vocsize);
+
+        File output_dir = new File(output_dir_path);
+        output_dir.mkdirs();
 
         List<File> flist = new ArrayList();
         int chunk_size = count_files / nbThreads;
@@ -232,14 +236,14 @@ public class CoOcurrenceEngine {
         int count_chunk = 0;
         Iterator<File> fileIterator = FileUtils.iterateFiles(new File(corpusDir), TrueFileFilter.TRUE, TrueFileFilter.INSTANCE);
 
-        while(fileIterator.hasNext()) {
-            
+        while (fileIterator.hasNext()) {
+
             File f = fileIterator.next();
-        
+
             flist.add(f);
 
             if (flist.size() == chunk_size) {
-                Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, wordCoocurences);
+                Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, output_dir + "/t_" + count_chunk, max_size_matrix);
                 futures.add(taskCompletionService.submit(worker));
                 flist = new ArrayList();
                 count_chunk++;
@@ -247,7 +251,7 @@ public class CoOcurrenceEngine {
 
         }
         if (!flist.isEmpty()) {
-            Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, wordCoocurences);
+            Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, output_dir + "/t_" + count_chunk, max_size_matrix);
             futures.add(taskCompletionService.submit(worker));
             count_chunk++;
         }
@@ -264,13 +268,104 @@ public class CoOcurrenceEngine {
             throw new SLIB_Ex_Critic("Error compute matrix coocurrence: " + e.getMessage());
         }
 
+        fileProcessed += count_files;
         logger.info("Number of errors detect: " + resultProcessor.file_processing_errors + "/" + count_files);
         if (resultProcessor.critical_errors != 0) {
             throw new SLIB_Ex_Critic("An error occured processing the corpus... please consult the log");
         }
 
+        // do merge tmp matrices
+        logger.info("merging tmp matrices");
+
+        try (PrintWriter matrixWriter = new PrintWriter(output_dir_path + "/matrix", "UTF-8")) {
+
+            int nbWords = vocabularyIndex.vocabulary.size();
+            int c = 0;
+
+            for (Integer wordId : vocabularyIndex.wordIdToWord.keySet()) {
+                
+                c++;
+                
+                if(c % 1000 == 0){
+                    double p = c * 100.0 / nbWords;
+                    System.out.print("\t"+c+"/"+nbWords+"   "+Utils.format2digits(p)+"%\t\r");
+                }
+
+                Map<Integer, Double> vec_word = new HashMap();
+
+                for (int i = 0; i < count_chunk; i++) {
+
+                    Map<Integer, Double> vec_chunk = getCompressedVector(wordId, output_dir + "/t_" + i + "/matrix");
+                    
+                    if (vec_chunk != null) {
+
+                        for (Map.Entry<Integer, Double> e : vec_chunk.entrySet()) {
+
+                            int wid = e.getKey();
+
+                            if (vec_word.containsKey(wid)) {
+                                vec_word.put(wid, vec_word.get(wid) + vec_chunk.get(wid));
+                            } else {
+                                vec_word.put(wid, vec_chunk.get(wid));
+                            }
+                        }
+                    }
+                }
+                matrixWriter.write(CoOccurrenceEngineTheads.convertVectorMapToString(wordId, vec_word));
+            }
+        }
+
         logger.info("done");
-        return wordCoocurences;
+    }
+
+    /**
+     * return null if either the matrix file is empty or the matrix does not
+     * contain the vector
+     *
+     * @param id
+     * @param matrix_path
+     * @return
+     * @throws IOException
+     */
+    private final Map<Integer, Double> getCompressedVector(int id, String matrix_path) throws IOException {
+
+        Map<Integer, Double> map = null;
+
+        File matrix_file = new File(matrix_path);
+
+        if (matrix_file.exists()) {
+
+            // search corresponding vector
+            try (BufferedReader br = new BufferedReader(new FileReader(matrix_file))) {
+
+                String line;
+                String[] data, data2;
+                int word_id, word_id_c;
+                double occ, old_occ;
+
+                // format 
+                // word_id:word_id_1-nb_coccurences_word_id_word_id_1::word_id_2-nb_coccurences_word_id_word_id_2:...
+                // e.g. 156:30-456:45-2
+                // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
+                while ((line = br.readLine()) != null) {
+
+                    data = Utils.colon_pattern.split(line.trim());
+                    word_id = Integer.parseInt(data[0]);
+
+                    if (word_id == id) {
+
+                        map = new HashMap();
+                        for (int i = 1; i < data.length; i++) {
+                            data2 = Utils.dash_pattern.split(data[i]);// 30-456
+                            word_id_c = Integer.parseInt(data2[0]);
+                            occ = Double.parseDouble(data2[1]);
+                            map.put(word_id_c, occ);
+                        }
+                    }
+                }
+            }
+        }
+        return map;
     }
 
     class ResultProcessor implements Runnable {

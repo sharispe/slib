@@ -35,13 +35,23 @@ package com.github.sharispe.slib.dsm.core.engine;
 
 import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads.CooccEngineResult;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
+import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
 import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,47 +66,33 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     int id;
     Collection<File> files;
-    SparseMatrix globalCoocurences;
     Logger logger = LoggerFactory.getLogger(CoOccurrenceEngineTheads.class);
     VocabularyIndex vocabularyIndex;
+    SparseMatrix matrix;
+    File matrix_dir;
     int fileErrors = 0;
     int nbFileDone = 0;
+    int max_matrix_size;
 
-    int window_size_right = CoOcurrenceEngine.WINDOW_SIZE_RIGHT;
-    int window_size_left = CoOcurrenceEngine.WINDOW_SIZE_LEFT;
+    int window_token_size = CoOcurrenceEngine.WINDOW_TOKEN_SIZE;
 
-
-    public class CooccEngineResult {
-
-        int file_processed;
-        int errors;
-
-        public CooccEngineResult(int file_processed, int errors) {
-            this.file_processed = file_processed;
-            this.errors = errors;
-        }
-
-        public int getFile_processed() {
-            return file_processed;
-        }
-
-        public int getNbErrors() {
-            return errors;
-        }
-
-    }
-
-    public CoOccurrenceEngineTheads(int id, Collection<File> files, VocabularyIndex vocabularyIndex, SparseMatrix globalCoocurences) {
+    public CoOccurrenceEngineTheads(int id, Collection<File> files, VocabularyIndex vocabularyIndex, String dir_path, int max_matrix_size) {
         this.id = id;
         this.files = files;
-        this.globalCoocurences = globalCoocurences;
         this.vocabularyIndex = vocabularyIndex;
+        this.max_matrix_size = max_matrix_size;
+
+        matrix_dir = new File(dir_path);
+        matrix_dir.mkdirs();
     }
 
     @Override
     public CooccEngineResult call() {
 
+        matrix = SparseMatrixGenerator.buildSparseMatrix(vocabularyIndex.vocabulary.size(), vocabularyIndex.vocabulary.size());
+
         for (File f : files) {
+
             nbFileDone++;
 
             try {
@@ -106,13 +102,22 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 fileErrors++;
             }
 
+            if (matrix.storedValues() > max_matrix_size) {
+                flushMatrix();
+                matrix.clear();
+            }
+
+        }
+        if (matrix.storedValues() > max_matrix_size) {
+            flushMatrix();
+            matrix.clear();
         }
         return new CooccEngineResult(nbFileDone, fileErrors);
     }
 
     private void loadWordCooccurrenceFromFile(File file) throws SLIB_Ex_Critic {
 
-        if (vocabularyIndex == null || vocabularyIndex.getVocabulary().getSize() < 2) {
+        if (vocabularyIndex == null || vocabularyIndex.getVocabulary().size() < 2) {
             throw new SLIB_Ex_Critic("You must first load or specify a vocabulary of size larger than 2");
         }
 
@@ -122,72 +127,41 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             int[] text = tokenArrayToIDArray(stab, vocabularyIndex);
 
             if (nbFileDone % 100 == 0) {
-                logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath() + "\t word ex:" + (stab.length - text.length) + "/" + stab.length);
+                logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath());
             }
 
-            List<Integer> window = new ArrayList();
-            int wsize = 1 + window_size_right < text.length ? 1 + window_size_right : text.length;
-            for (int i = 0; i < wsize; i++) {
-                window.add(text[i]);
-            }
-            int pointer_right = 1 + window_size_right;
+            List<Word> leftWords = new ArrayList();
 
-            int focalWordID = 0;
-            boolean shrink_left, expend_right;
+            Word word = getNextWord(text, 0, null, vocabularyIndex);
 
-            for (int i = 0; i < text.length; i++) {
+            while (word != null) {
 
-                shrink_left = false;
-                expend_right = false;
+                int idWord = word.wordID;
+                int startWindowLeft = word.start_loc - window_token_size;
 
-                processWindowForward(focalWordID, window);
+                // remove words that are not in the window
+                Iterator<Word> i = leftWords.iterator();
+                while (i.hasNext()) {
+                    Word w = i.next();
+                    if (w.start_loc < startWindowLeft) {
+                        i.remove();
+                    } else {
+                        // add cooccurence between current word and left window words
+                        matrix.add(idWord, w.wordID, 1);
 
-                if (window.size() >= window_size_total) { // shrink left
-                    shrink_left = true;
-                }
-
-                if (pointer_right < text.length) { // expend right
-                    expend_right = true;
-                } else {
-                    if (window.size() > window_size_left + 1) {
-                        shrink_left = true;
+                        // and cooccurence between left window words and current word as well
+                        if (w.start_loc + window_token_size >= word.end_loc) {
+                            matrix.add(w.wordID, idWord, 1);
+                        }
                     }
                 }
+                leftWords.add(word);
 
-                if (shrink_left) {
-                    window.remove(0);
-                }
-                if (expend_right) {
-                    window.add(text[pointer_right]);
-
-                }
-
-                if (!(shrink_left && expend_right)) {
-                    if (focalWordID < window_size_left) {
-                        focalWordID++;// expending right
-                    } else if (focalWordID > window_size_left) {
-                        focalWordID--;
-                    }
-                }
-                pointer_right++;
+                word = getNextWord(text, word.start_loc, word.tokens, vocabularyIndex);
             }
 
         } catch (IOException ex) {
             new SLIB_Ex_Critic(ex.getMessage());
-        }
-    }
-
-    /**
-     * No need to process backward
-     *
-     * @param focalWordID
-     * @param window
-     */
-    private void processWindowForward(int focalWordID, List<Integer> window) {
-
-        for (int i = focalWordID + 1; i < window.size(); i++) {
-            globalCoocurences.add(window.get(focalWordID), window.get(i), 1);
-            globalCoocurences.add(window.get(i), window.get(focalWordID), 1);
         }
     }
 
@@ -211,6 +185,212 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             IDArray[i] = k;
         }
         return IDArray;
+    }
+
+    private void flushMatrix() {
+
+        try {
+
+            logger.info("Flushing matrix size: " + matrix.storedValues() + " (limit "+max_matrix_size+") into " + matrix_dir);
+
+            File matrix_file = new File(matrix_dir + "/matrix");
+            File new_matrix_file = new File(matrix_file.getPath() + ".new");
+
+            if (!matrix_file.exists()) { // first time the matrix is flushed
+
+                try (PrintWriter matrixWriter = new PrintWriter(matrix_file, "UTF-8")) {
+
+                    Map<Integer, Double> currentVector;
+
+                    for (Integer word_id : matrix.getElementIDs()) {
+                        // get vector associated to this word
+                        currentVector = matrix.getDimensionValuesForElement(word_id);
+                        // flush the vector into the file
+                        matrixWriter.write(convertVectorMapToString(word_id, currentVector));
+                    }
+                }
+
+            } else { // add to existing matrix
+
+                try (PrintWriter matrixWriter = new PrintWriter(new_matrix_file, "UTF-8")) {
+
+                    Set<Integer> id_vectors = matrix.getElementIDs();
+                    Map<Integer, Double> currentVector;
+
+                    // update existing vectors 
+                    try (BufferedReader br = new BufferedReader(new FileReader(matrix_file))) {
+
+                        String line;
+                        String[] data, data2;
+                        int word_id, word_id_c;
+                        double add_occ, old_occ;
+
+                    // format 
+                        // word_id:word_id_1-nb_coccurences_word_id_word_id_1::word_id_2-nb_coccurences_word_id_word_id_2:...
+                        // e.g. 156:30-456:45-2
+                        // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
+                        while ((line = br.readLine()) != null) {
+
+                            data = Utils.colon_pattern.split(line.trim());
+                            word_id = Integer.parseInt(data[0]);
+                            id_vectors.remove(word_id);
+
+                            // get vector associated to this word
+                            currentVector = matrix.getDimensionValuesForElement(word_id);
+
+                            if (currentVector != null) { // add new occurrences
+                                for (int i = 1; i < data.length; i++) {
+                                    data2 = Utils.dash_pattern.split(data[i]);// 30-456
+                                    word_id_c = Integer.parseInt(data2[0]);
+                                    add_occ = Double.parseDouble(data2[1]);
+                                    old_occ = currentVector.containsKey(word_id_c) ? currentVector.get(word_id_c) : 0;
+                                    currentVector.put(word_id_c, old_occ + add_occ);
+                                }
+                                // flush the vector into the file
+                                matrixWriter.write(convertVectorMapToString(word_id, currentVector));
+                            } else { // no changes to this vector
+                                matrixWriter.write(line);
+                            }
+
+                        }
+                    }
+                    // process other vectors (new ones)
+                    for (Integer id : id_vectors) {
+                        currentVector = matrix.getDimensionValuesForElement(id);
+                        matrixWriter.write(convertVectorMapToString(id, currentVector));
+                    }
+                }
+                // replace old matrix by new
+                Files.move(new_matrix_file.toPath(), matrix_file.toPath(), REPLACE_EXISTING);
+            }
+            logger.info("matrix flushed into " + matrix_dir);
+
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(CoOccurrenceEngineTheads.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    // format // word_id:word_id_1-nb_coccurences_word_id_word_id_1::word_id_2-nb_coccurences_word_id_word_id_2:...
+    // e.g. 156:30-456:45-2
+    // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
+    protected static String convertVectorMapToString(int vectorID, Map<Integer, Double> vector) {
+        StringBuilder vectorAsString;
+        vectorAsString = new StringBuilder();
+        vectorAsString.append(vectorID);
+        for (Map.Entry<Integer, Double> e : vector.entrySet()) {
+            vectorAsString.append(':');
+            vectorAsString.append(e.getKey());
+            vectorAsString.append('-');
+            vectorAsString.append(e.getValue());
+        }
+        vectorAsString.append('\n');
+        return vectorAsString.toString();
+    }
+
+    public class CooccEngineResult {
+
+        int file_processed;
+        int errors;
+
+        public CooccEngineResult(int file_processed, int errors) {
+            this.file_processed = file_processed;
+            this.errors = errors;
+        }
+
+        public int getFile_processed() {
+            return file_processed;
+        }
+
+        public int getNbErrors() {
+            return errors;
+        }
+
+    }
+
+    private static class Word {
+
+        List<VocabularyIndex.TokenNode> tokens;
+        int start_loc;
+        int end_loc;
+        int wordID;
+
+        public Word(int wordID, List<VocabularyIndex.TokenNode> tokens, int start_loc) {
+            this.wordID = wordID;
+            this.tokens = tokens;
+            this.start_loc = start_loc;
+            this.end_loc = start_loc + tokens.size() - 1;
+        }
+    }
+
+    /**
+     * Return the next word, as a sequence of node, which correspond to the next
+     * indexed word considering the given context, that is: text sequence, start
+     * location, previous word (as a list of Node).
+     *
+     * @param text
+     * @param start
+     * @param tokenNodeHistory
+     * @param index
+     * @return
+     */
+    private static Word getNextWord(int[] text, int start, List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
+
+        if (start >= text.length) {
+            return null;
+        }
+
+        int id_start_token = text[start];
+
+        VocabularyIndex.TokenNode next_node;
+
+        if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word and the current token is indexed
+
+            if (id_start_token == -1) { // the current token is not indexed in all cases we iterate trying to start a new word
+                return getNextWord(text, start + 1, null, index);
+            }
+
+            next_node = index.getTree_root().getChild(id_start_token);
+
+            // we test if the indexed token starts or is a word
+            if (next_node == null) { // does not a start word and is not word we iterate trying to start a new word
+                return getNextWord(text, start + 1, null, index);
+
+            } else if (next_node.isWordEnd()) { // indexed token is a word
+
+                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory.add(next_node); // we store the token into the history
+                return new Word(next_node.getWordID(), tokenNodeHistory, start); // and we return the result
+
+            } else { // indexed token is a not word but starts a word
+
+                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory.add(next_node);
+                return getNextWord(text, start, tokenNodeHistory, index);
+            }
+        } else {  // history is not null - we try to extend the current word 
+
+            int token_sequence_size = tokenNodeHistory.size();
+            if (start + token_sequence_size >= text.length) { // word cannot be extended we iterate trying to start a new word
+                return getNextWord(text, start + 1, null, index);
+            }
+            // we try to extend the current word
+            VocabularyIndex.TokenNode last_node = tokenNodeHistory.get(token_sequence_size - 1); // last token of the current word
+            next_node = last_node.getChild(text[start + token_sequence_size]);
+
+            if (next_node == null) { // word cannot be extended we iterate
+
+                return getNextWord(text, start + 1, null, index);
+
+            } else if (next_node.isWordEnd()) { // adding the next token to the current created a word
+
+                tokenNodeHistory.add(next_node);
+                return new Word(next_node.getWordID(), tokenNodeHistory, start);
+
+            } else { // adding the next token extend a potential word but does not create a word yet
+                tokenNodeHistory.add(next_node);
+                return getNextWord(text, start, tokenNodeHistory, index);
+            }
+        }
     }
 
 }

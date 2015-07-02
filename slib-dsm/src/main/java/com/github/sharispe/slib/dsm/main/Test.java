@@ -36,13 +36,15 @@ package com.github.sharispe.slib.dsm.main;
 import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads;
 import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import com.github.sharispe.slib.dsm.core.engine.VocabularyIndex;
-import com.github.sharispe.slib.dsm.core.engine.VocabularyIndex.Node;
+import com.github.sharispe.slib.dsm.core.engine.VocabularyIndex.TokenNode;
+import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
+import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
-import static java.lang.reflect.Array.set;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import slib.utils.impl.UtilDebug;
@@ -74,8 +76,7 @@ public class Test {
         VocabularyIndex index = new VocabularyIndex(voc);
 
         String text = "This is a test about machine learning  and computer science and other techhniques great "
-                + " Machine learning is a subfield of computer science that evolved from the study of pattern recognition and computational learning theory in artificial intelligence"
-                + " Machine learning explores the construction and study of algorithms that can learn from and make predictions on data";
+                + " machine learning is a subfield of computer science that evolved from the study of pattern recognition and computational learning theory in artificial intelligence";
         int[] ids = CoOccurrenceEngineTheads.tokenArrayToIDArray(Utils.blank_pattern.split(text), index);
         System.out.println(Arrays.toString(ids));
         process(ids, index);
@@ -86,47 +87,83 @@ public class Test {
 
     static void process(int[] text, VocabularyIndex index) {
 
-        int window_size_right = 10;
-        int window_size_left = 10;
+        SparseMatrix matrix = SparseMatrixGenerator.buildSparseMatrix(index.getVocabulary().size(), index.getVocabulary().size());
+        int window_token_size = 10;
 
-        int start_focal_word = 0;
-        int size_focal_word = 1;
 
-        Node current_node = null;
+        List<Word> leftWords = new ArrayList();
 
-        
-        
-        List<Node> sequenceToken = null;
-        int start_previous = 0;
+        Word word = getNextWord(text, 0, null, index);
 
-        Result result = getNextWord(text, start_focal_word, sequenceToken, index);
-        
-        while (result != null) {
-            
-            if (result.nodeHistory == null) {
-                start_focal_word++;
-                sequenceToken = null;
+        while (word != null) {
+
+            int idWord = word.wordID;
+            int startWindowLeft = word.start_loc - window_token_size;
+
+//            System.out.println("----------------------");
+//            System.out.println(index.getWord(word.wordID) + " (" + word.start_loc + ")");
+            // remove words that are not in the window
+            Iterator<Word> i = leftWords.iterator();
+            while (i.hasNext()) {
+                Word w = i.next();
+                if (w.start_loc < startWindowLeft) {
+                    i.remove();
+                } else {
+                    // add cooccurence between current word and left window words
+                    matrix.add(idWord, w.wordID, 1);
+//                    System.out.println(index.getWord(idWord) + "\t" + index.getWord(w.wordID));
+
+                    // and cooccurence between left window words and current word as well
+                    if (w.start_loc + window_token_size >= word.end_loc) {
+                        matrix.add(w.wordID, idWord, 1);
+//                        System.out.println(index.getWord(w.wordID) + "\t" + index.getWord(idWord));
+                    }
+                }
             }
-            else{
-                sequenceToken = result.nodeHistory;
-                start_focal_word = result.start_loc;
-            }
-            result = getNextWord(text, start_focal_word, sequenceToken, index);
+//            for (Word w : leftWords) {
+//                System.out.print(index.getWord(w.wordID) + " (" + w.start_loc + ")  : ");
+//            }
+//            System.out.println("");
+
+            leftWords.add(word);
+
+            word = getNextWord(text, word.start_loc, word.tokens, index);
         }
 
+        int word1 = index.getWordID("machine learning");
+        int word2 = index.getWordID("computer science");
+
+        double nbOcc = matrix.get(word1, word2);
+        System.out.println("cooccurence " + nbOcc);
     }
-    
-    private static class Result{
-        List<Node> nodeHistory;
+
+    private static class Word {
+
+        List<TokenNode> tokens;
         int start_loc;
-        
-        public Result(List<Node> nodeHistory, int start_loc){
-            this.nodeHistory = nodeHistory;
+        int end_loc;
+        int wordID;
+
+        public Word(int wordID, List<TokenNode> tokens, int start_loc) {
+            this.wordID = wordID;
+            this.tokens = tokens;
             this.start_loc = start_loc;
+            this.end_loc = start_loc+tokens.size()-1;
         }
     }
 
-    private static Result getNextWord(int[] text, int start, List<Node> nodeHistory, VocabularyIndex index) {
+    /**
+     * Return the next word, as a sequence of node, which correspond to the next
+     * indexed word considering the given context, that is: text sequence, start
+     * location, previous word (as a list of Node).
+     *
+     * @param text
+     * @param start
+     * @param tokenNodeHistory
+     * @param index
+     * @return
+     */
+    private static Word getNextWord(int[] text, int start, List<TokenNode> tokenNodeHistory, VocabularyIndex index) {
 
         if (start >= text.length) {
             return null;
@@ -134,80 +171,67 @@ public class Test {
 
         int id_start_token = text[start];
 
-        System.out.println("start and id token: " + start + "\t" + id_start_token+"\thas history: "+(nodeHistory!=null));
+//        System.out.println("start: " + start + "\ttoken: " + id_start_token + "\thas history: " + (nodeHistory != null));
+        TokenNode next_node;
 
-        if (id_start_token == -1) { // means that the token is not indexed we iterate
-            System.out.println("next token not indexed iterate");
-            return getNextWord(text, start + 1, null, index);
-        }
+        if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word and the current token is indexed
 
-        Node next_node;
+            if (id_start_token == -1) { // the current token is not indexed in all cases we iterate trying to start a new word
+//                System.out.println("current token not indexed -> iterate trying to start a new word");
+                return getNextWord(text, start + 1, null, index);
+            }
 
-        if (nodeHistory == null) { // we are starting a new word 
-
-            System.out.println("looking for new word");
+//            System.out.print("current token indexed: ");
             next_node = index.getTree_root().getChild(id_start_token);
 
-            if (next_node == null) { // current position is not a node we iterate
-                System.out.println("iterate");
+            // we test if the indexed token starts or is a word
+            if (next_node == null) { // does not a start word and is not word we iterate trying to start a new word
+//                System.out.println(" but does not a start word and is not word -> iterate trying to start a new word");
                 return getNextWord(text, start + 1, null, index);
 
-            } else if (next_node.isWordEnd()) { // current position is a node corresponding to a word
+            } else if (next_node.isWordEnd()) { // indexed token is a word
 
-                nodeHistory = new ArrayList();
-                nodeHistory.add(next_node);
-                String word = createWord(nodeHistory, index);
-                System.out.println("found word: " + next_node + "\t" + word);
+                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory.add(next_node); // we store the token into the history
+//                System.out.println("found word: " + next_node + "\t" + inde(nodeHistory, index));
+                return new Word(next_node.getWordID(), tokenNodeHistory, start); // and we return the result
 
-                return new Result(nodeHistory,start);
+            } else { // indexed token is a not word but starts a word
 
-            } else { // current position is a node that does not correspond to a word
-
-                nodeHistory = new ArrayList();
-                nodeHistory.add(next_node);
-                System.out.println("extending");
-                return getNextWord(text, start, nodeHistory, index);
+                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory.add(next_node);
+//                System.out.println("starts a  word -> extending");
+                return getNextWord(text, start, tokenNodeHistory, index);
             }
-        } else {  // we try to extend the current word 
+        } else {  // history is not null - we try to extend the current word 
 
-            System.out.println("looking for word extension\thistory size:"+nodeHistory.size());
-            int token_sequence_size = nodeHistory.size();
-            if (start + token_sequence_size >= text.length) {
+//            System.out.print("looking for word extension\thistory size:" + nodeHistory.size() + ": ");
+            int token_sequence_size = tokenNodeHistory.size();
+            if (start + token_sequence_size >= text.length) { // word cannot be extended we iterate trying to start a new word
+//                System.out.println(" out of space, abort extension, iterate trying to start a new word");
                 return getNextWord(text, start + 1, null, index);
             }
-            Node last_node = nodeHistory.get(token_sequence_size - 1);
+            // we try to extend the current word
+            TokenNode last_node = tokenNodeHistory.get(token_sequence_size - 1); // last token of the current word
             next_node = last_node.getChild(text[start + token_sequence_size]);
 
             if (next_node == null) { // word cannot be extended we iterate
 
-                System.out.println("iterate");
+//                System.out.println("next token does not extend the current word, iterate trying to start a new word");
                 return getNextWord(text, start + 1, null, index);
 
-            } else if (next_node.isWordEnd()) { // word extension is a node corresponding to a word
+            } else if (next_node.isWordEnd()) { // adding the next token to the current created a word
 
-                nodeHistory.add(next_node);
-                String word = createWord(nodeHistory, index);
-                System.out.println("found word extension: " + next_node + "\t" + word);
+                tokenNodeHistory.add(next_node);
+//                System.out.println("found word extension: " + next_node + "\t" + createWord(nodeHistory, index));
+                return new Word(next_node.getWordID(), tokenNodeHistory, start);
 
-                return new Result(nodeHistory,start);
-
-            } else { // word extension is a node that does not correspond to a word
-                nodeHistory.add(next_node);
-                System.out.println("extending");
-                return getNextWord(text, start, nodeHistory, index);
+            } else { // adding the next token extend a potential word but does not create a word yet
+                tokenNodeHistory.add(next_node);
+//                System.out.println("extending existing word");
+                return getNextWord(text, start, tokenNodeHistory, index);
             }
         }
-    }
-
-    private static String createWord(List<Node> nodeHistory, VocabularyIndex index) {
-        String word = "";
-        for (int i = 0; i < nodeHistory.size(); i++) {
-            if (i != 0) {
-                word += " ";
-            }
-            word += index.getToken(nodeHistory.get(i).getId());
-        }
-        return word;
     }
 
 //    private void process(String input) throws Exception {

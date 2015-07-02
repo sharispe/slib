@@ -57,6 +57,7 @@ public class Vocabulary {
     public Vocabulary(String vocabularyFile) throws IOException {
         logger.info("loading vocabulary from: " + vocabularyFile);
         this.elements = Utils.loadWords(vocabularyFile);
+        size = elements.size();
         prepare();
     }
 
@@ -68,7 +69,7 @@ public class Vocabulary {
         return elements;
     }
 
-    public int getSize() {
+    public int size() {
         return size;
     }
 

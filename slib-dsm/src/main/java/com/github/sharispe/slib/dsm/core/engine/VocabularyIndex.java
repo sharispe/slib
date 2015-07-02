@@ -46,14 +46,18 @@ import org.slf4j.LoggerFactory;
 public class VocabularyIndex {
 
     Vocabulary vocabulary;
+    Map<String, Integer> wordToWordId;
+    Map<Integer, String> wordIdToWord;
+
     Map<String, Integer> tokenIDIndex;
-    Map<Integer,String> tokenIndex;
-    Node tree_root;
+    Map<Integer, String> tokenIndex;
+    TokenNode tree_root;
 
     Logger logger = LoggerFactory.getLogger(VocabularyIndex.class);
 
     public VocabularyIndex(Vocabulary voc) {
         this.vocabulary = voc;
+
         buildIndex();
     }
 
@@ -68,13 +72,29 @@ public class VocabularyIndex {
     public Integer getTokenID(String token) {
         return tokenIDIndex.get(token);
     }
-    
+
     /**
      * @param id
      * @return null if the token is not indexed
      */
-    public String getToken(Integer id) {
+    public String getToken(int id) {
         return tokenIndex.get(id);
+    }
+
+    /**
+     * @param word
+     * @return null if the word is not indexed
+     */
+    public Integer getWordID(String word) {
+        return wordToWordId.get(word);
+    }
+
+    /**
+     * @param id
+     * @return null if the word is not indexed
+     */
+    public String getWord(int id) {
+        return wordIdToWord.get(id);
     }
 
     private void buildIndex() {
@@ -83,17 +103,23 @@ public class VocabularyIndex {
 
         tokenIDIndex = new HashMap();
         tokenIndex = new HashMap();
-        tree_root = new Node(-1, null);
+        wordIdToWord = new HashMap();
+        wordToWordId = new HashMap();
 
+        tree_root = new TokenNode(-1, null);
+
+        int wordID = 0;
         int tokenID = 0;
         int nodeNumber = 0;
 
         for (String w : vocabulary.getElements()) {
 
+            wordToWordId.put(w, wordID);
+            wordIdToWord.put(wordID, w);
             String[] tokens = Utils.blank_pattern.split(w);
-            Node current_token_node;
+            TokenNode current_token_node;
             int current_token_node_id;
-            Node parentNode = null;
+            TokenNode parentNode = null;
 
             for (int i = 0; i < tokens.length; i++) {
 
@@ -114,14 +140,14 @@ public class VocabularyIndex {
                     // check if the root node does not exist
                     current_token_node = tree_root.getChild(current_token_node_id);
                     if (current_token_node == null) {
-                        current_token_node = new Node(current_token_node_id, tree_root);
+                        current_token_node = new TokenNode(current_token_node_id, tree_root);
                         tree_root.addChild(current_token_node);
                         nodeNumber++;
                     }
                 } else { // processing inner tree node
-                    Node existingChild = parentNode.getChild(current_token_node_id);
+                    TokenNode existingChild = parentNode.getChild(current_token_node_id);
                     if (existingChild == null) { // the node does not exist
-                        current_token_node = new Node(current_token_node_id, parentNode);
+                        current_token_node = new TokenNode(current_token_node_id, parentNode);
                         nodeNumber++;
                         parentNode.addChild(current_token_node);
                     } else {
@@ -132,32 +158,43 @@ public class VocabularyIndex {
 
                 if (i == tokens.length - 1) { // word processed
                     current_token_node.isWordEnd(true);
+                    current_token_node.setWordID(wordID);
                 }
             }
+            wordID++;
         }
         logger.info("Index completed, token: " + tokenIDIndex.size() + "\tnodes: " + nodeNumber);
     }
 
-    public Node getTree_root() {
+    public TokenNode getTree_root() {
         return tree_root;
     }
 
+    public Map<String, Integer> getWordToWordId() {
+        return wordToWordId;
+    }
+
+    public Map<Integer, String> getWordIdToWord() {
+        return wordIdToWord;
+    }
     
     
     
-    public class Node {
+
+    public class TokenNode {
 
         int id;
         boolean isWordEnd;
-        Node parent;
-        Map<Integer, Node> children;
+        int wordID;
+        TokenNode parent;
+        Map<Integer, TokenNode> children;
 
-        public Node(int id, Node parent) {
+        public TokenNode(int id, TokenNode parent) {
             this.id = id;
             this.parent = parent;
         }
 
-        public Node getChild(Integer id) {
+        public TokenNode getChild(Integer id) {
             if (children == null) {
                 return null;
             } else {
@@ -173,7 +210,7 @@ public class VocabularyIndex {
             }
         }
 
-        private void addChild(Node childNode) {
+        private void addChild(TokenNode childNode) {
             if (children == null) {
                 children = new HashMap();
             }
@@ -183,7 +220,7 @@ public class VocabularyIndex {
         public void isWordEnd(boolean b) {
             isWordEnd = b;
         }
-        
+
         public boolean isWordEnd() {
             return isWordEnd;
         }
@@ -191,8 +228,15 @@ public class VocabularyIndex {
         public int getId() {
             return id;
         }
-        
-        
+
+        public void setWordID(int wordID) {
+            this.wordID = wordID;
+        }
+
+        public int getWordID() {
+            return wordID;
+        }
+
     }
 
 }
