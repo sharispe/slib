@@ -46,10 +46,10 @@ import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
@@ -72,14 +72,15 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     File matrix_dir;
     int fileErrors = 0;
     int nbFileDone = 0;
-    int max_matrix_size;
+    int nbFileDoneLastIteration = 0;
+    final int max_matrix_size;
+    final int window_token_size;
 
-    int window_token_size = CoOcurrenceEngine.WINDOW_TOKEN_SIZE;
-
-    public CoOccurrenceEngineTheads(int id, Collection<File> files, VocabularyIndex vocabularyIndex, String dir_path, int max_matrix_size) {
+    public CoOccurrenceEngineTheads(int id, Collection<File> files, VocabularyIndex vocabularyIndex, int window_token_size, String dir_path, int max_matrix_size) {
         this.id = id;
         this.files = files;
         this.vocabularyIndex = vocabularyIndex;
+        this.window_token_size = window_token_size;
         this.max_matrix_size = max_matrix_size;
 
         matrix_dir = new File(dir_path);
@@ -106,12 +107,16 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 flushMatrix();
                 matrix.clear();
             }
+        }
+        flushMatrix();
+        matrix.clear();
 
-        }
-        if (matrix.storedValues() > max_matrix_size) {
-            flushMatrix();
-            matrix.clear();
-        }
+        CoOcurrenceEngine.incrementProcessedFiles(nbFileDoneLastIteration);
+        nbFileDoneLastIteration = 0;
+        double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
+        String ps = Utils.format2digits(p);
+        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%");
+
         return new CooccEngineResult(nbFileDone, fileErrors);
     }
 
@@ -127,7 +132,11 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             int[] text = tokenArrayToIDArray(stab, vocabularyIndex);
 
             if (nbFileDone % 100 == 0) {
-                logger.info("(thread=" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + file.getPath());
+                CoOcurrenceEngine.incrementProcessedFiles(nbFileDoneLastIteration);
+                nbFileDoneLastIteration = 0;
+                double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
+                String ps = Utils.format2digits(p);
+                logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%");
             }
 
             List<Word> leftWords = new ArrayList();
@@ -160,6 +169,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 word = getNextWord(text, word.start_loc, word.tokens, vocabularyIndex);
             }
 
+            nbFileDoneLastIteration++;
         } catch (IOException ex) {
             new SLIB_Ex_Critic(ex.getMessage());
         }
@@ -191,18 +201,21 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         try {
 
-            logger.info("Flushing matrix size: " + matrix.storedValues() + " (limit "+max_matrix_size+") into " + matrix_dir);
+            logger.info("Flushing matrix size: " + matrix.storedValues() + " (limit " + max_matrix_size + ") into " + matrix_dir);
 
             File matrix_file = new File(matrix_dir + "/matrix");
             File new_matrix_file = new File(matrix_file.getPath() + ".new");
+
+            List<Integer> sorted_ids_matrix = new ArrayList(matrix.getElementIDs());
+            Collections.sort(sorted_ids_matrix);
+
+            Map<Integer, Double> currentVector;
 
             if (!matrix_file.exists()) { // first time the matrix is flushed
 
                 try (PrintWriter matrixWriter = new PrintWriter(matrix_file, "UTF-8")) {
 
-                    Map<Integer, Double> currentVector;
-
-                    for (Integer word_id : matrix.getElementIDs()) {
+                    for (Integer word_id : sorted_ids_matrix) {
                         // get vector associated to this word
                         currentVector = matrix.getDimensionValuesForElement(word_id);
                         // flush the vector into the file
@@ -214,8 +227,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
                 try (PrintWriter matrixWriter = new PrintWriter(new_matrix_file, "UTF-8")) {
 
-                    Set<Integer> id_vectors = matrix.getElementIDs();
-                    Map<Integer, Double> currentVector;
+                    int id_matrix = 0;
 
                     // update existing vectors 
                     try (BufferedReader br = new BufferedReader(new FileReader(matrix_file))) {
@@ -225,7 +237,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                         int word_id, word_id_c;
                         double add_occ, old_occ;
 
-                    // format 
+                        // format 
                         // word_id:word_id_1-nb_coccurences_word_id_word_id_1::word_id_2-nb_coccurences_word_id_word_id_2:...
                         // e.g. 156:30-456:45-2
                         // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
@@ -233,12 +245,24 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
                             data = Utils.colon_pattern.split(line.trim());
                             word_id = Integer.parseInt(data[0]);
-                            id_vectors.remove(word_id);
 
-                            // get vector associated to this word
+                            // while the matrix contains vectors with a lower id
+                            // than the id of the vector currently processed (i.e. strored into the file)
+                            // we process it (i means that it has never been seen) - the aim is to keep a sorted matrix
+                            while (id_matrix < sorted_ids_matrix.size() && sorted_ids_matrix.get(id_matrix) < word_id) {
+                                int i = sorted_ids_matrix.get(id_matrix);
+                                String v = convertVectorMapToString(i, matrix.getDimensionValuesForElement(i));
+                                matrixWriter.write(v);
+                                id_matrix++;
+                            }
+
+                            // try to get the vector associated to this word in the matrix
                             currentVector = matrix.getDimensionValuesForElement(word_id);
 
-                            if (currentVector != null) { // add new occurrences
+                            if (currentVector != null) { // information about the vector is stored in the matrix - add new occurrences
+
+                                id_matrix++;
+
                                 for (int i = 1; i < data.length; i++) {
                                     data2 = Utils.dash_pattern.split(data[i]);// 30-456
                                     word_id_c = Integer.parseInt(data2[0]);
@@ -248,16 +272,17 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                                 }
                                 // flush the vector into the file
                                 matrixWriter.write(convertVectorMapToString(word_id, currentVector));
-                            } else { // no changes to this vector
+                            } else { // new vector
                                 matrixWriter.write(line);
                             }
 
                         }
                     }
-                    // process other vectors (new ones)
-                    for (Integer id : id_vectors) {
-                        currentVector = matrix.getDimensionValuesForElement(id);
-                        matrixWriter.write(convertVectorMapToString(id, currentVector));
+                    // process new vectors that have an id bigger than the one of the last vector stored in the matrix
+                    for (; id_matrix < sorted_ids_matrix.size(); id_matrix++) {
+                        int id = sorted_ids_matrix.get(id_matrix);
+                        String v = convertVectorMapToString(id, matrix.getDimensionValuesForElement(id));
+                        matrixWriter.write(v);
                     }
                 }
                 // replace old matrix by new
@@ -281,7 +306,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             vectorAsString.append(':');
             vectorAsString.append(e.getKey());
             vectorAsString.append('-');
-            vectorAsString.append(e.getValue());
+            vectorAsString.append((int) (double) e.getValue());
         }
         vectorAsString.append('\n');
         return vectorAsString.toString();

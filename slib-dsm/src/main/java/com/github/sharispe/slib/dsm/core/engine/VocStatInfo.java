@@ -42,17 +42,23 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
-public class VocInfo {
+public class VocStatInfo {
 
     private final static String NB_FILES_FLAG = "NB_FILES";
-    private final static String NB_WORDS_FLAG = "NB_WORDS";
+    private final static String NB_WORDS_FLAG = "SIZE_VOC";
+    private final static String NB_SCANNED_WORDS = "NB_SCANNED_WORDS";
+    private final static String NB_VALIDATED_SCANNED_WORDS = "NB_VALIDATED_SCANNED_WORDS";
 
-    public final int nbWords;
+    public final int vocSize;
     public final int nbFiles;
+    public final long nbScannedWords;
+    public final long nbValidatedScannedWords;
 
-    public VocInfo(int nbWords, int nbFiles) {
-        this.nbWords = nbWords;
+    public VocStatInfo(int vocSize, long nbScannedWords, long nbValidatedScannedWords, int nbFiles) {
+        this.vocSize = vocSize;
         this.nbFiles = nbFiles;
+        this.nbScannedWords = nbScannedWords;
+        this.nbValidatedScannedWords = nbValidatedScannedWords;
     }
 
     /**
@@ -64,26 +70,32 @@ public class VocInfo {
     public void flush(String filepath) throws SLIB_Ex_Critic {
 
         Map<String, String> vocInfo = new HashMap();
-        vocInfo.put("NB_FILES", nbFiles + "");
-        vocInfo.put("NB_WORDS", nbWords + "");
+        vocInfo.put(NB_FILES_FLAG, nbFiles + "");
+        vocInfo.put(NB_WORDS_FLAG, vocSize + "");
+        vocInfo.put(NB_SCANNED_WORDS, nbScannedWords + "");
+        vocInfo.put(NB_VALIDATED_SCANNED_WORDS, nbValidatedScannedWords + "");
 
         Utils.flushMapKV(vocInfo, "=", filepath);
     }
 
     /**
      * Build a VocInfo object considering the specified file.
+     *
      * @param filepath of the following form NB_FILES=X NB_WORDS=Y
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public VocInfo(String filepath) throws SLIB_Ex_Critic {
+    public VocStatInfo(String filepath) throws SLIB_Ex_Critic {
 
-        Map<String, Integer> map = Utils.loadMap(filepath, "=");
+        Map<String, Long> map = Utils.loadMapStringLong(filepath, "=");
 
-        if (!map.containsKey(NB_WORDS_FLAG) || !map.containsKey(NB_FILES_FLAG)) {
+        if (!map.containsKey(NB_WORDS_FLAG) || !map.containsKey(NB_FILES_FLAG) || !map.containsKey(NB_SCANNED_WORDS) || !map.containsKey(NB_VALIDATED_SCANNED_WORDS)) {
             throw new SLIB_Ex_Critic("Cannot load voc statistics from: " + filepath + ", please consult the documentation");
         }
 
-        nbWords = map.get(NB_WORDS_FLAG);
-        nbFiles = map.get(NB_FILES_FLAG);
+        vocSize = (int) (long) map.get(NB_WORDS_FLAG);
+        nbFiles = (int) (long) map.get(NB_FILES_FLAG);
+        nbScannedWords = map.get(NB_SCANNED_WORDS);
+        nbValidatedScannedWords = map.get(NB_VALIDATED_SCANNED_WORDS);
+
     }
 }

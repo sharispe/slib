@@ -143,7 +143,7 @@ public class MainCLI {
                         break;
                     case "voc_index_dictionary":
                         CMD_VOC_INDEX_DICTIONNARY(argv);
-                        break;                        
+                        break;
                     case "merge_voc_index":
                         CMD_MERGE_VOC_INDEX(argv);
                         break;
@@ -596,23 +596,56 @@ public class MainCLI {
             log(dist_error);
         } else if (argv[0].equals("term/term")) {
 
-
             argv = shift(argv);
 
-            if (argv.length != 4) {
-                log("[0] directory which contains the files to consider");
-                log("[1] vocabulary file (one word per line) - an index of this vocabulary will be loaded into memory");
-                log("[2] output model directory");
-                log("[3] nb Threads");
-                System.exit(0);
-            } else {
-                String corpus_dir = argv[0];
-                String voc_file = argv[1];
-                String model_dir = argv[2];
-                int nbThreads = Integer.parseInt(argv[3]);
+            dist_error
+                    = "- compute_coocc: build a distributional model for comparing terms\n"
+                    + "- compute_pmi : compute pmi using a cooccurence matrix";
 
-                SlibDist_Wrapper.buildTerm2TermDM(corpus_dir, voc_file, model_dir, nbThreads);
+            if (argv.length > 0 && argv[0].equals("compute_coocc")) {
+
+                argv = shift(argv);
+                if (argv.length < 3 || argv.length > 7) {
+                    log("[0] directory which contains the files to consider");
+                    log("[1] vocabulary file (one word per line) - an index of this vocabulary will be loaded into memory");
+                    log("[2] output model directory");
+                    log("[3] size left/right windows (optional, default 30)");
+                    log("[4] nb Threads (optional, default 2)");
+                    log("[5] nb files per chunk (optional, default 10000)");
+                    log("[6] max matrice size per thread (optional, default 1000000)");
+                    System.exit(0);
+                } else {
+                    String corpus_dir = argv[0];
+                    String voc_file = argv[1];
+                    String model_dir = argv[2];
+                    int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
+                    int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
+                    int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
+                    int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
+
+                    SlibDist_Wrapper.buildTerm2TermDM(corpus_dir, voc_file, model_dir, window_size_token, nbThreads, nbFilesPerChunk, max_matrix_size);
+                }
             }
+            else if (argv.length > 0 && argv[0].equals("compute_pmi")) {
+
+                argv = shift(argv);
+                if (argv.length != 3) {
+                    log("[0] directory which contains the model with cooccurences");
+                    log("[1] statistics about the vocabulary");
+                    log("[2] output model directory");
+                    System.exit(0);
+                } else {
+                    String cooccurence_model = argv[0];
+                    String voc_dir = argv[1];
+                    String model_dir = argv[2];
+
+                    SlibDist_Wrapper.buildTerm2Term_PMI_DM(cooccurence_model, voc_dir, model_dir);
+                }
+            }
+            else{
+                log(dist_error);
+            }
+
         } else if (argv[0].equals("term/doc")) {
 
             argv = shift(argv);

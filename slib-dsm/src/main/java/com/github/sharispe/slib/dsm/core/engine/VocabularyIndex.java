@@ -116,6 +116,7 @@ public class VocabularyIndex {
 
             wordToWordId.put(w, wordID);
             wordIdToWord.put(wordID, w);
+            
             String[] tokens = Utils.blank_pattern.split(w);
             TokenNode current_token_node;
             int current_token_node_id;
@@ -163,7 +164,7 @@ public class VocabularyIndex {
             }
             wordID++;
         }
-        logger.info("Index completed, token: " + tokenIDIndex.size() + "\tnodes: " + nodeNumber);
+        logger.info("Index completed, token: " + tokenIDIndex.size() + "\tnodes: " + nodeNumber+"\twords: "+wordIdToWord.size());
     }
 
     public TokenNode getTree_root() {

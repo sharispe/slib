@@ -52,6 +52,8 @@ import java.io.IOException;
  */
 public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
 
+    long nbScannedWords;
+
     public WordIterator_Allow_Shorter(File f, int word_size_constraint) throws IOException {
         super(f, word_size_constraint);
         current_word_size = 1;
@@ -100,6 +102,7 @@ public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
                 }
             }
         }
+        nbScannedWords++;
         return w;
     }
 
@@ -123,6 +126,16 @@ public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
             return Utils.blank_pattern.split(line);
         }
         return null;
+    }
+
+    @Override
+    public long nbScannedWords() {
+        return nbScannedWords;
+    }
+
+    @Override
+    public long nbValidScannedWords() {
+        return nbScannedWords;
     }
 
 }

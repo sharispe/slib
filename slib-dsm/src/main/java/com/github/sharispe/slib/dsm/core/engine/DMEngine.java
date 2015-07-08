@@ -48,8 +48,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.apache.commons.io.FileUtils;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 import slib.utils.ex.SLIB_Exception;
@@ -62,13 +64,13 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class DMEngine {
 
-    public static void build_distributional_model_TERM_TO_TERM(String corpusDir, String vocabularyFile, String model_dir, int nbThreads, int max_size_matrix) throws SLIB_Exception, IOException {
+    public static void build_distributional_model_TERM_TO_TERM(String corpusDir, String vocabularyFile, String model_dir, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException {
 
         Vocabulary vocabulary = new Vocabulary(vocabularyFile);
         VocabularyIndex vocabularyIndex = new VocabularyIndex(vocabulary);
         CoOcurrenceEngine engine = new CoOcurrenceEngine(vocabularyIndex);
-        engine.computeCoOcurrence(corpusDir, model_dir, nbThreads, max_size_matrix);
-        ModelConf modelConf = new ModelConf(ModelType.TWO_D_TERM_DOC, "TERM x TERM model", model_dir, vocabulary.size(), vocabulary.size(), engine.getNumberFileProcessed(), "0.1");
+        engine.computeCoOcurrence(corpusDir, model_dir, window_token_size, nbThreads, nbFilesPerChunk, max_size_matrix);
+        ModelConf modelConf = new ModelConf(ModelType.TWO_D_TERM_DOC, "TERM x TERM model", model_dir, vocabulary.size(), vocabulary.size(), engine.getNbFilesProcessed(), "0.1");
         buildModel(modelConf, vocabularyIndex, model_dir + "/matrix");
 
     }
@@ -82,6 +84,7 @@ public class DMEngine {
      */
     private static void buildModel(ModelConf model, VocabularyIndex index, String matrix_file) throws SLIB_Ex_Critic, IOException {
 
+        logger.info("Matrix " + matrix_file);
         logger.info("Writting model index to " + model.getModelIndex());
         logger.info("Writting the model binary into " + model.getModelBinary());
 
@@ -111,17 +114,12 @@ public class DMEngine {
                     Map<Integer, Double> vectorAsMap = null;
                     byte[] compressed_vector_byte;
 
-                    Set<Integer> id_vectors = index.wordIdToWord.keySet();
+                    Set<Integer> id_vectors = new HashSet(index.wordIdToWord.keySet());
 
                     // create the vector representations that are specified into the matrix file
                     while ((line = br.readLine()) != null) {
 
                         c++;
-
-                        if (c % 1000 == 0) {
-                            double p = c * 100.0 / c_total;
-                            System.out.println("processing " + c + "/" + c_total + "\t" + Utils.format2digits(p) + "%\t");
-                        }
 
                         // extract the vector representation and associated word id
                         data = Utils.colon_pattern.split(line.trim());
@@ -147,13 +145,18 @@ public class DMEngine {
                         compressed_vector_byte = CompressionUtils.toByteArray(vectorAsMap);
                         fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
                         fo.write(sep);
+
+                        if (c % 1000 == 0) {
+                            double p = c * 100.0 / c_total;
+                            System.out.print("processing " + c + "/" + c_total + "\t" + Utils.format2digits(p) + "%\t\r");
+                        }
                     }
                     // process words that do not have a vector representation 
                     // into the matrix file
 
                     compressed_vector_byte = BinarytUtils.toByteArray(new double[0]);
-                    for (Integer id : id_vectors) {
 
+                    for (Integer id : id_vectors) {
                         nonNullValues = 0;
                         indexWriter.println(id + "\t" + current_start_pos + "\t" + nonNullValues + "\t" + index.getWord(id));
                         current_start_pos += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
@@ -167,6 +170,10 @@ public class DMEngine {
                                 + "This can lead to incoherent results performing some treatments.");
                         warning++;
 
+                        if (c % 1000 == 0) {
+                            double p = c * 100.0 / c_total;
+                            System.out.print("processing " + c + "/" + c_total + "\t" + Utils.format2digits(p) + "%\t\r");
+                        }
                     }
 
                 }
@@ -176,7 +183,10 @@ public class DMEngine {
                 if (warning != 0) {
                     logger.info(warning + " warnings (null vectors)");
                 }
+                FileUtils.deleteQuietly(new File(matrix_file));
+                logger.info("Writting model index to " + model.getModelIndex());
                 logger.info("Model built at " + model.path);
+
             }
         }
     }

@@ -58,6 +58,9 @@ import java.util.logging.Logger;
  */
 public class WordIterator_Dictionary implements WordIterator {
 
+    long nbScannedWords;
+    long nbValidScannedWords;
+
     final Vocabulary vocabulary;
     final int word_size_constraint;
     BufferedReader br;
@@ -149,7 +152,9 @@ public class WordIterator_Dictionary implements WordIterator {
         String w = sbuffer.toString();
         if (vocabulary.contains(w)) {
             nextWord = w;
+            nbValidScannedWords++;
         }
+        nbScannedWords++;
 
         // We prepare the setting for the next iteration
         // (1) we try to enlarge the word if possible. 
@@ -179,6 +184,16 @@ public class WordIterator_Dictionary implements WordIterator {
         if (nextWord == null) {
             computeNextWord();
         }
+    }
+
+    @Override
+    public long nbScannedWords() {
+        return nbScannedWords;
+    }
+
+    @Override
+    public long nbValidScannedWords() {
+        return nbValidScannedWords;
     }
 
 }

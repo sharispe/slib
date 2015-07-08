@@ -72,7 +72,7 @@ public class Utils {
     public static String format2digits(double n) {
         return numberFormatTwoDigit.format(n);
     }
-    
+
     public static org.slf4j.Logger logger = LoggerFactory.getLogger(Utils.class);
 
     /**
@@ -158,6 +158,44 @@ public class Utils {
         logger.info("map " + filename + " loaded (n=" + map.size() + ")");
         return map;
     }
+    
+     /**
+     * Load into memory a key-value String,Long map that is defined into a
+     * file.
+     *
+     * @param filename the file that contains the index - one key-value entry
+     * per line with key and value delimited by a value that can be parsed by
+     * the given pattern. If the entry contains more than two values only the
+     * first will be used as key and the second as value.
+     * @param p
+     * @return an in-memory Map.
+     * @throws SLIB_Ex_Critic
+     */
+    public static Map<String, Long> loadMapStringLong(String filename, Pattern p) throws SLIB_Ex_Critic {
+
+        Map<String, Long> map = new HashMap();
+        try {
+            String line;
+            String[] data;
+            try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+
+                line = br.readLine();
+
+                while (line != null) {
+                    data = p.split(line);
+                    if (data.length >= 2) {
+                        map.put(data[0], Long.parseLong(data[1]));
+                    }
+                    line = br.readLine();
+                }
+            }
+
+        } catch (IOException ex) {
+            throw new SLIB_Ex_Critic(ex.getMessage());
+        }
+        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
+        return map;
+    }
 
     public static Map<Integer, String> loadMap_IntString(String filename) throws SLIB_Ex_Critic {
 
@@ -206,6 +244,10 @@ public class Utils {
         return loadMap(filename, Pattern.compile(pattern));
     }
 
+    public static Map<String, Long> loadMapStringLong(String filename, String pattern) throws SLIB_Ex_Critic {
+        return loadMapStringLong(filename, Pattern.compile(pattern));
+    }
+
 //    public static Map<String, Integer> loadMAP(String filename, String separator) throws SLIB_Ex_Critic {
 //
 //        Pattern split_pattern = Pattern.compile(separator);
@@ -233,10 +275,8 @@ public class Utils {
 //        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
 //        return map;
 //    }
-    
     public static Set<String> loadWords(String f) throws IOException {
 
-        
         Set<String> words = new HashSet();
 
         // Load the vocabulary
@@ -249,11 +289,11 @@ public class Utils {
 
         return words;
     }
-    
+
     public static int countNbFiles(String corpusDir) throws IOException {
         return countNbFiles(FileSystems.getDefault().getPath(corpusDir));
     }
-    
+
     /**
      * Counts the number of files located into a given directory.
      *

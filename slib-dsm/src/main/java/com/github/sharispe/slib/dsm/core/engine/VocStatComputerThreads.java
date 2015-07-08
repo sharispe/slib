@@ -107,6 +107,9 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             logger.info("(" + id + ") computation initiated " + dateFormat.format(new Date()));
             logger.info("(" + id + ") files: " + files.size());
 
+            long wordScanned = 0;
+            long validateWordScanned = 0;
+
             int nbFileDone = 0, nbFileDoneLastIteration = 0;
             WordIterator wordIT;
             Map<String, Integer> fileVoc;
@@ -119,25 +122,26 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             try (FileWriter corpusIndexWriter = new FileWriter(corpus_index)) {
 
                 for (File f : files) {
-                    
-//                    logger.info("processing: "+f);
 
+//                    logger.info("processing: "+f);
                     nbFileDoneLastIteration++;
 
                     int file_id = nbFileDone;
                     corpusIndexWriter.write(file_id + "\t" + f.getPath() + "\n");
 
                     if (nbFileDone % 1000 == 0) {
-                        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size);
+                        VocStatComputer.incrementProcessedFiles(nbFileDoneLastIteration);
+                        nbFileDoneLastIteration = 0;
+                        double p = VocStatComputer.getNbFilesProcessed() * 100.0 / VocStatComputer.getNbFilesToAnalyse();
+                        String ps = Utils.format2digits(p);
+                        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
                     }
 
-                    if(vocabulary != null){
+                    if (vocabulary != null) {
                         wordIT = WordIteratorAccessor.getWordIterator(f, vocabulary);
-                    }
-                    else{
+                    } else {
                         wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
                     }
-                    
 
                     fileVoc = new HashMap();
 
@@ -158,6 +162,9 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
                         wordOccurences.get(w).addOccurrence();
                     }
 
+                    wordScanned += wordIT.nbScannedWords();
+                    validateWordScanned += wordIT.nbValidScannedWords();
+
                     // add a file occurrence to each word
                     for (String word : fileVoc.keySet()) {
                         WordInfo winfo = wordOccurences.get(word);
@@ -167,10 +174,8 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
                     if (wordOccurences.size() >= cache_map_size) {
                         indexer.addToIndex(wordOccurences);
-                        VocStatComputer.incrementProcessedFiles(nbFileDoneLastIteration);
                         logger.info("(" + id + ") * File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
                         wordOccurences.clear();
-                        nbFileDoneLastIteration = 0;
                     }
                     nbFileDone++;
                 }
@@ -180,11 +185,12 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             wordOccurences.clear();
 
             // compute vocabulary size
-            VocInfo info = new VocInfo(indexer.computeVocabularySize(), nbFileDone);
+            VocStatInfo info = new VocStatInfo(indexer.computeVocabularySize(), wordScanned, validateWordScanned, nbFileDone);
             info.flush(this.rootPath + "/" + VocStatComputer.GENERAL_INFO);
 
-            logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
-            logger.info("(" + id + ") computation finished");
+            double p = VocStatComputer.getNbFilesProcessed() * 100.0 / VocStatComputer.getNbFilesToAnalyse();
+            String ps = Utils.format2digits(p);
+            logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
         } catch (Exception e) {
             logger.error("An error occured in thread: " + id);
             e.printStackTrace();

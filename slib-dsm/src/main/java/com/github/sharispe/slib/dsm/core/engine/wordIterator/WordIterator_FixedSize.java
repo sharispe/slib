@@ -49,6 +49,8 @@ import java.io.IOException;
  * @author Sébastien Harispe <sebastien.harispe@gmail.com>
  */
 public class WordIterator_FixedSize extends WordIteratorAbstract {
+    
+    long nbScannedWords;
 
     public WordIterator_FixedSize(File f, int word_size_constraint) throws IOException {
         super(f, word_size_constraint);
@@ -120,6 +122,16 @@ public class WordIterator_FixedSize extends WordIteratorAbstract {
     @Override
     public WordIteratorConstraint getConstraint() {
         return WordIteratorConstraint.FIXED_SIZE;
+    }
+    
+    @Override
+    public long nbScannedWords() {
+        return nbScannedWords;
+    }
+
+    @Override
+    public long nbValidScannedWords() {
+        return nbScannedWords;
     }
 
 }

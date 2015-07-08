@@ -64,4 +64,16 @@ public interface WordIterator extends Iterator<String> {
      */
     public WordIteratorConstraint getConstraint();
 
+    /**
+     * @return the number of words that have been scanned so far (words may not
+     * respect the constrain)
+     */
+    public long nbScannedWords();
+
+    /**
+     * @return the number of words that respect the constrain that have been
+     * scanned so far
+     */
+    public long nbValidScannedWords();
+
 }

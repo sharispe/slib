@@ -135,9 +135,9 @@ public class VocStatComputer {
 
         boolean use_vocabulary = vocabularyFile != null;
         Vocabulary vocabulary = null;
-        
+
         if (use_vocabulary) {
-            logger.info("vocabulary already defined: "+vocabularyFile);
+            logger.info("vocabulary already defined: " + vocabularyFile);
             vocabulary = new Vocabulary(vocabularyFile);
         } else {
             logger.info("vocabulary will be extracted considering following constraint");
@@ -197,6 +197,7 @@ public class VocStatComputer {
 
         logger.info("number of files processed: " + nb_files_processed);
 
+        // Build the Final index
         if (count_chunk == 1) { // we only move the content
             File dstDir = new File(outputDir);
             for (File srcFile : new File(outputDir + "/tmp/t_0").listFiles()) {
@@ -317,13 +318,11 @@ public class VocStatComputer {
             // Copy other files 
             Files.copy(new File(indexToReduceLocation + "/" + CORPUS_INDEX).toPath(), new File(reducedIndexLocation + "/" + CORPUS_INDEX).toPath());
 
-            VocInfo voc_info = new VocInfo(indexToReduceLocation + "/" + GENERAL_INFO);
-            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected, voc_info.nbFiles);
+            VocStatInfo voc_info = new VocStatInfo(indexToReduceLocation + "/" + GENERAL_INFO);
+            VocStatInfo voc_info_reduced = new VocStatInfo(nbWordsSelected, voc_info.nbScannedWords, voc_info.nbValidatedScannedWords, voc_info.nbFiles);
             voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
         }
     }
-
-    
 
     /**
      * Build an index considering an existing one by only considering words
@@ -410,8 +409,8 @@ public class VocStatComputer {
             // Copy other files 
             Files.copy(new File(indexToReduceLocation + "/" + CORPUS_INDEX).toPath(), new File(reducedIndexLocation + "/" + CORPUS_INDEX).toPath());
 
-            VocInfo voc_info = new VocInfo(indexToReduceLocation + "/" + GENERAL_INFO);
-            VocInfo voc_info_reduced = new VocInfo(nbWordsSelected, voc_info.nbFiles);
+            VocStatInfo voc_info = new VocStatInfo(indexToReduceLocation + "/" + GENERAL_INFO);
+            VocStatInfo voc_info_reduced = new VocStatInfo(nbWordsSelected, voc_info.nbScannedWords, voc_info.nbValidatedScannedWords, voc_info.nbFiles);
             voc_info_reduced.flush(reducedIndexLocation + "/" + GENERAL_INFO);
         }
     }
@@ -443,7 +442,9 @@ public class VocStatComputer {
         // retrieve all the key indexes
         Set<String> chunkKeys = new HashSet();
 
-        int totalWordNumbers = 0;
+        int voc_size = 0;
+        long totalScanWords = 0;
+        long totalValidatedScanWords = 0;
         int totalFile = 0;
 
         // In each index file numbering starts from 0
@@ -463,8 +464,10 @@ public class VocStatComputer {
                 Map<String, Integer> chunksToMerge = Utils.loadMap(idx + "/" + CHUNK_INDEX);
                 chunkKeys.addAll(chunksToMerge.keySet());
 
-                VocInfo idxInfo = new VocInfo(idx + "/" + GENERAL_INFO);
+                VocStatInfo idxInfo = new VocStatInfo(idx + "/" + GENERAL_INFO);
                 totalFile += idxInfo.nbFiles;
+                totalScanWords += idxInfo.nbScannedWords;
+                totalValidatedScanWords += idxInfo.nbValidatedScannedWords;
 
                 Map<Integer, String> fileIdsToMerge = Utils.loadMap_IntString(idx + "/" + CORPUS_INDEX);
 
@@ -553,11 +556,11 @@ public class VocStatComputer {
                         file.write(e.getKey() + "\t" + Utils.blank_pattern.split(e.getKey()).length + "\t" + e.getValue().nbOccurrences + "\t" + e.getValue().nbFilesWithWord + "\t" + e.getValue().additionnalInfo + "\n");
                     }
                 }
-                totalWordNumbers += mergedIdxKeyWordsInfo.size();
+                voc_size += mergedIdxKeyWordsInfo.size();
             }
         }
 
-        VocInfo mergedInfo = new VocInfo(totalWordNumbers, totalFile);
+        VocStatInfo mergedInfo = new VocStatInfo(voc_size, totalScanWords, totalValidatedScanWords, totalFile);
         mergedInfo.flush(mergedIndexLocation + "/" + GENERAL_INFO);
 
         if (deleteMerged) {

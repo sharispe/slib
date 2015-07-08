@@ -57,6 +57,39 @@ public class Test {
 
     public static void main(String[] args) throws Exception {
 
+        int count_chunk = 100;
+        int nb_new_matrices = 0;
+
+        int limit_file_open = 30;
+
+        int last_id = count_chunk ; // original id start at 0
+        int id_matrix = 0;
+        do {
+            while (count_chunk != 0) {
+                
+                for (int i = 0; i < limit_file_open && count_chunk > 0; i++) {
+                    
+                    count_chunk--;
+                    System.out.println("processing id matrix: " + id_matrix + "\t matrix:" + (i+1)+"/"+ limit_file_open + "\t merged in:" + last_id+"\t chunk to process: "+count_chunk);
+                    id_matrix++;
+                }
+                nb_new_matrices++;
+                System.out.println(nb_new_matrices+" merged at matrix " + last_id);
+                System.out.println("-----------------------------");
+                last_id += 1;
+            }
+            
+            System.out.println("======================================");
+            System.out.println(nb_new_matrices+" new matrix generated");
+            System.out.println("======================================");
+            
+            count_chunk = nb_new_matrices;
+            nb_new_matrices = 0;
+
+        } while (count_chunk != 1);
+
+        UtilDebug.exit();
+
         File f = new File("/home/seb/data/OANC/data/written_2/non-fiction/OUP/Castro/chL.txt");
         String vocPath = "/tmp/voc";//"/data/englishNouns.txt";
 
@@ -89,7 +122,6 @@ public class Test {
 
         SparseMatrix matrix = SparseMatrixGenerator.buildSparseMatrix(index.getVocabulary().size(), index.getVocabulary().size());
         int window_token_size = 10;
-
 
         List<Word> leftWords = new ArrayList();
 
@@ -148,7 +180,7 @@ public class Test {
             this.wordID = wordID;
             this.tokens = tokens;
             this.start_loc = start_loc;
-            this.end_loc = start_loc+tokens.size()-1;
+            this.end_loc = start_loc + tokens.size() - 1;
         }
     }
 
