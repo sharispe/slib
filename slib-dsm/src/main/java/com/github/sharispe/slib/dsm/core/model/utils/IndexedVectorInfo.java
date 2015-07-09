@@ -51,4 +51,11 @@ public class IndexedVectorInfo {
         this.label = label;
     }
 
+    @Override
+    public String toString() {
+        return "IndexedVectorInfo{" + "id=" + id + ", start_pos=" + start_pos + ", length_double_non_null=" + length_double_non_null + ", label=" + label + '}';
+    }
+    
+    
+
 }

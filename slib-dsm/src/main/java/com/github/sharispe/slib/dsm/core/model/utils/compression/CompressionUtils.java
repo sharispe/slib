@@ -34,9 +34,7 @@
 package com.github.sharispe.slib.dsm.core.model.utils.compression;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import java.util.Arrays;
@@ -56,16 +54,24 @@ public class CompressionUtils {
      * @return
      */
     public static double[] compressDoubleArray(double[] arr) {
-        List<Double> l = new ArrayList();
+        
+        // count the number of non null values
+        int nonnull = 0;
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] != 0) {
-                l.add((double) i);
-                l.add((double) arr[i]);
+                nonnull++;
             }
         }
-        double[] r = new double[l.size()];
-        for (int i = 0; i < l.size(); i++) {
-            r[i] = l.get(i);
+        
+        // we fill the vector
+        double[] r = new double[nonnull*2];
+        int c = 0;
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] != 0) {
+                r[c] = i;
+                r[c+1] = arr[i];
+                c+=2;
+            }
         }
         return r;
     }
@@ -80,12 +86,14 @@ public class CompressionUtils {
      * @throws slib.utils.ex.SLIB_Ex_Critic
      */
     public static double[] uncompressDoubleArray(double[] arr, int size) throws SLIB_Ex_Critic {
+        
+
         double[] u = new double[size];
 
         for (int i = 0; i < arr.length; i += 2) {
 
-            if (arr[i] >= size) {
-                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + size + "): it contains an entry id=" + arr[i] + " val=" + arr[i + 1]+"\n"+Arrays.toString(arr));
+            if (arr[i] < 0 || arr[i] >= size) {
+                throw new SLIB_Ex_Critic("Critical error, the index is corrupted (according to the specified size:" + size + "): entry specified in cell "+i+" is not valid id=" + arr[i] + " val=" + arr[i + 1] + "\n" + Arrays.toString(arr));
             }
             u[(int) arr[i]] = arr[i + 1];
         }
@@ -125,11 +133,11 @@ public class CompressionUtils {
         double[] vec = new double[sizeVector];
         double k;
         for (Map.Entry<Integer, Double> e : sparserow.entrySet()) {
-            
+
             k = e.getKey();
             if (k >= sizeVector || k < 0) {
-                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + sizeVector + "): it contains an entry id=" + e.getKey() + " val=" + e.getValue()+"\nArray: "+sparserow);
-            
+                throw new SLIB_Ex_Critic("The index seems corrupted (according to the specified size:" + sizeVector + "): it contains an entry id=" + e.getKey() + " val=" + e.getValue() + "\nArray: " + sparserow);
+
             }
             vec[e.getKey()] = e.getValue();
         }
@@ -138,7 +146,6 @@ public class CompressionUtils {
 
     /**
      * Convert an array of double values into an array of byte
-     *
      *
      * @param doubleMap
      * @return the corresponding array of byte
@@ -153,5 +160,33 @@ public class CompressionUtils {
         }
 
         return bytes;
+    }
+
+    /**
+     * Convert an array of double values into an array of byte
+     *
+     * @param doubleMap
+     * @return the corresponding array of byte
+     */
+    public static byte[] toByteArray(double[] doubleMap) {
+        
+        byte[] bytes = new byte[doubleMap.length/2 * 2 * BinarytUtils.BYTE_PER_DOUBLE];
+        
+        for (int i = 0; i < doubleMap.length; i ++) {
+            ByteBuffer.wrap(bytes, i * BinarytUtils.BYTE_PER_DOUBLE, BinarytUtils.BYTE_PER_DOUBLE).putDouble(doubleMap[i]);
+        }
+        return bytes;
+    }
+    
+    public static void main(String[] a) throws SLIB_Ex_Critic{
+        
+        Map<Integer,Double> m = new HashMap();
+        m.put(0, 0.1);
+        m.put(1, 3.0);
+        System.out.println(Arrays.toString(toByteArray(m)));
+        
+        double[] t = {0,0.1,1,3.0};
+        System.out.println(Arrays.toString(toByteArray(t)));
+        
     }
 }

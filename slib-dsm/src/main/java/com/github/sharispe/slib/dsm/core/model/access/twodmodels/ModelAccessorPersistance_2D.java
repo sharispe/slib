@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.DoubleBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,7 +82,10 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
     @Override
     public IndexedVector vectorRepresentationOf(IndexedVectorInfo vectorInfo) throws SLIB_Ex_Critic {
 
+        
         int nb_val_vector = vectorInfo.length_double_non_null;
+        
+        
         // we prepare the vector which will retrieve the compressed version of the vector
         double[] vector = new double[nb_val_vector * 2];
 
@@ -103,8 +107,8 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
             // we convert the buffer into a double buffer for convenience
             DoubleBuffer dbf = bbf.asDoubleBuffer();
             dbf.get(vector); // we read the buffer to fill the vector 
-
         } catch (IOException e) {
+            e.printStackTrace();
             throw new SLIB_Ex_Critic("Error reading the index: " + e.getMessage());
         }
 
@@ -123,8 +127,6 @@ public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
         }
         return null;
     }
-
-    
 
     private class IndexedVectorIterator implements Iterator<IndexedVector> {
 

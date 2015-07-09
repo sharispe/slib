@@ -47,10 +47,12 @@ import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
 import com.github.sharispe.slib.dsm.core.model.utils.modelconf.ModelConf;
 import com.github.sharispe.slib.dsm.utils.RQueue;
+import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.Console;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -62,6 +64,7 @@ import org.slf4j.LoggerFactory;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
+import slib.utils.impl.Timer;
 
 /**
  *
@@ -103,8 +106,9 @@ public class MainCLI {
         log("- show_vec output: the compressed representation of a vector");
         log("- check_null_vec: check the number of vectors which are null");
         log("- sim: compute the similarity between two terms or two documents considering a DM");
-        log("- simdoctest: compute the similarity between two documents using an approach based on a term/term DM and a doc/term DM");
         log("- bestsim: compute the terms/docs which are the most similar to the given term/doc");
+        log("- get_sim: access to the similarity between two terms or two documents considering a result matrix");
+        log("- get_bestsim: compute the terms/docs which are the most similar to the given term/doc considering a result matrix");
         log("- bestsimdoctest: compute the terms/docs which are the most similar to the given term/doc using the approach tested in simdoctest");
         log("- kb: for egc");
         log("- dist_mat: compute the distance matrix between all the entities of the model");
@@ -174,11 +178,17 @@ public class MainCLI {
                     case "sim":
                         CMD_SIM(argv);
                         break;
+                    case "get_sim":
+                        CMD_GET_SIM(argv);
+                        break;
 //                    case "simdoctest":
 //                        CMD_SIM_DOC_ADVANCED(argv);
 //                        break;
                     case "bestsim":
                         CMD_BEST_SIM(argv);
+                        break;
+                    case "get_bestsim":
+                        CMD_GET_BEST_SIM(argv);
                         break;
 //                    case "bestsimdoctest":
 //                        CMD_BEST_SIM_DOC_ADVANCED(argv);
@@ -260,6 +270,76 @@ public class MainCLI {
                 log("Index does not contain label : " + entityB);
             } else {
                 double sim = SlibDist_Wrapper.computeEntitySimilarity(modelAccessor, entityA_vecInfo, entityB_vecInfo);
+                log("sim " + entityA + "/" + entityB + " = " + sim);
+            }
+        }
+    }
+
+    private static void CMD_GET_SIM(String[] argv) throws SLIB_Ex_Critic, IOException {
+
+        if (argv.length < 2 || argv.length > 3) {
+            log("[1] directory which contains the similarity results");
+            log("[2] entity label A|entity label B or -i if you want to use the interactive mode");
+            log("[3] entity label B (if -i is not used)");
+            System.exit(0);
+        }
+        String dm_dir = argv[0];
+        ModelConf modelConf = ModelConf.load(dm_dir);
+        Iterator<IndexedVectorInfo> itIndexedVectorInfo = new IndexedVectorInfoIterator(modelConf);
+        Map<String, IndexedVectorInfo> index = new HashMap();
+        logger.info("Loading index into memory");
+        while (itIndexedVectorInfo.hasNext()) {
+            IndexedVectorInfo i = itIndexedVectorInfo.next();
+            index.put(i.label, i);
+        }
+
+        ModelAccessor modelAccessor = new ModelAccessorPersistance_2D(modelConf);
+
+        if (argv[1].toLowerCase().equals("-i")) { // interactive mode
+
+            while (true) {
+                log("---------------------------------------");
+                String entityA = getInput("Please type a label for entity A -- type quit() to stop: ");
+                if (entityA.equals("quit()")) {
+                    break;
+                }
+                String entityB = getInput("Please type a label for entity B -- type quit() to stop: ");
+
+                IndexedVectorInfo entityA_vecInfo = index.get(entityA);
+                IndexedVectorInfo entityB_vecInfo = index.get(entityB);
+
+                log(entityA + ":" + entityA_vecInfo);
+                log(entityB + ":" + entityB_vecInfo);
+
+                if (entityA_vecInfo == null) {
+                    log("Index does not contain label : " + entityA);
+                } else if (entityB_vecInfo == null) {
+                    log("Index does not contain label : " + entityB);
+                } else {
+                    double[] vec_sim = modelAccessor.vectorRepresentationOf(entityA_vecInfo).values;
+                    double sim = vec_sim[entityB_vecInfo.id];
+                    log("sim " + entityA + "/" + entityB + " = " + sim);
+                }
+            }
+        } else {
+
+            String entityA = argv[1];
+            String entityB = argv[2];
+
+            log("Comparing " + entityA + "/" + entityB);
+            IndexedVectorInfo entityA_vecInfo = index.get(entityA);
+            IndexedVectorInfo entityB_vecInfo = index.get(entityB);
+
+            log(entityA + ":" + entityA_vecInfo);
+            log(entityB + ":" + entityB_vecInfo);
+
+            if (entityA_vecInfo == null) {
+                log("Index does not contain label : " + entityA);
+            } else if (entityB_vecInfo == null) {
+                log("Index does not contain label : " + entityB);
+            } else {
+                double[] vec_sim = modelAccessor.vectorRepresentationOf(entityA_vecInfo).values;
+                double sim = vec_sim[entityB_vecInfo.id];
                 log("sim " + entityA + "/" + entityB + " = " + sim);
             }
         }
@@ -381,7 +461,10 @@ public class MainCLI {
         if (query == null) {
             log("Cannot locate associated vector");
         } else {
+            logger.info("query: "+query.toString());
+            logger.info("Loading vector result");
             IndexedVector indexedVector = modelAccessor.vectorRepresentationOf(query);
+            logger.info(Arrays.toString(indexedVector.values));
             log("uncompressed size=" + indexedVector.values.length);
             double[] compressArray = CompressionUtils.compressDoubleArray(indexedVector.values);
             Map<Integer, Double> compressedVecAsMap = CompressionUtils.compressedDoubleArrayToMap(compressArray);
@@ -408,7 +491,7 @@ public class MainCLI {
         }
         return c.readLine(message);
     }
-
+    
     private static void CMD_BEST_SIM(String[] argv) throws SLIB_Ex_Critic, IOException {
 
         if (argv.length < 3) {
@@ -444,63 +527,84 @@ public class MainCLI {
 
     }
 
-//    private static void CMD_BEST_SIM_DOC_ADVANCED(String[] argv) throws SLIB_Ex_Critic, IOException {
-//
-//        if (!(argv.length == 4 || argv.length == 5)) {
-//            log("[1] directory which contains the term/term distributional model");
-//            log("[2] directory which contains the doc/term distributional model");
-//            log("[3] doc label or type -i for interactive mode");
-//            log("[4] number of results (integer)");
-//            log("[5] output file (optional, not considered in interactive mode) ");
-//            System.exit(0);
-//        }
-//
-//        String dm_term_dir = argv[0];
-//        String dm_doc_dir = argv[1];
-//        String doc_label = argv[2];
-//
-//        int k = Integer.parseInt(argv[3]);
-//
-//        String outfile = argv.length == 5 ? argv[4] : null;
-//
-//        ModelConf model_doc_conf = ModelConf.load(dm_doc_dir);
-//        ModelConf model_term_conf = ModelConf.load(dm_term_dir);
-//        Map<String, Integer> docIndex = XPUtils.loadMAP(model_doc_conf.getEntityIndex());
-//        Map<String, Integer> termIndex = XPUtils.loadMAP(model_term_conf.getEntityIndex());
-//
-//        ModelAccessor_2D modelDocAccessor = new ModelAccessorMemory_2D(model_doc_conf);
-//        ModelAccessor_2D modelTermAccessor = new ModelAccessorMemory_2D(model_term_conf);
-//
-//        if (doc_label.equals("-i")) { // interactive mode
-//
-//            while (true) {
-//                log("---------------------------------------");
-//                doc_label = getInput("Please type a doc label -- type quit() to stop: ");
-//                if (!docIndex.containsKey(doc_label)) {
-//                    if (doc_label.equals("quit()")) {
-//                        break;
-//                    }
-//                    log("Index does not contain label : " + doc_label);
-//
-//                } else {
-//                    SlibDist_Wrapper.computeBestDocSimilarity_Advanced(doc_label, docIndex, modelDocAccessor, termIndex, modelTermAccessor, k, true);
-//                }
-//            }
-//
-//        } else {
-//
-//            log("Looking for best sim " + doc_label + " (k=" + k + ")");
-//            if (!docIndex.containsKey(doc_label)) {
-//                log("Index does not contain label : " + doc_label);
-//            }
-//            Map<String, Double> res = SlibDist_Wrapper.computeBestDocSimilarity_Advanced(doc_label, docIndex, modelDocAccessor, termIndex, modelTermAccessor, k, outfile == null);
-//            if (outfile != null) {
-//                MapUtils.toFile(res, outfile);
-//                logger.info("result: " + outfile);
-//            }
-//        }
-//
-//    }
+    private static void CMD_GET_BEST_SIM(String[] argv) throws SLIB_Ex_Critic, IOException {
+
+        if (argv.length < 4) {
+            log("[1] directory which contains the result matrix");
+            log("[2] number of results (integer)");
+            log("[3] consider 0 value as min value, e.g. model compression technique may use this trick to reduce the number of values stored into the model (e.g. pmi results) (1 = yes)");
+            log("[4] entity label");
+            System.exit(0);
+        }
+
+        String dm_dir = argv[0];
+        int k = Integer.parseInt(argv[1]);
+        boolean changeNilToMin = Integer.parseInt(argv[2]) == 1; 
+        
+        logger.info("results: "+dm_dir);
+        logger.info("k: "+k);
+        logger.info("change 0 values: "+changeNilToMin);
+        
+        // retrieve multi token words
+        String entity_label = "";
+        for (int i = 3; i < argv.length; i++) {
+            entity_label += argv[i] + " ";
+        }
+        entity_label = entity_label.trim();
+
+        ModelConf modelConf = ModelConf.load(dm_dir);
+        ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(modelConf);
+        
+        Iterator<IndexedVectorInfo> itIndexedVectorInfo = new IndexedVectorInfoIterator(modelConf);
+        Map<String, IndexedVectorInfo> index = new HashMap();
+        Map<Integer, String> index_id = new HashMap();
+        logger.info("Loading index into memory");
+        while (itIndexedVectorInfo.hasNext()) {
+            IndexedVectorInfo i = itIndexedVectorInfo.next();
+            index.put(i.label, i);
+            index_id.put(i.id, i.label);
+        }
+
+        IndexedVectorInfo queryVectorInfo = index.get(entity_label);
+
+        if (queryVectorInfo == null) {
+            log("Cannot find vecto associated to " + entity_label);
+            return;
+        }
+        
+        logger.info(queryVectorInfo.toString());
+
+
+        Timer t = new Timer();
+        t.start();
+
+        double[] vector_result = modelAccessor.vectorRepresentationOf(queryVectorInfo).values;
+
+        RQueue<String, Double> bestSim = new RQueue(k);
+
+
+        for (int i = 0; i < vector_result.length; i++) {
+            
+            String label = index_id.get(i);
+            if(changeNilToMin && vector_result[i] == 0){
+                vector_result[i] = -Double.MAX_VALUE;
+            }
+            bestSim.add(label, vector_result[i]);
+
+            i++;
+            if (i % 1000 == 0) {
+                String p = Utils.format2digits((double) i * 100.0 / vector_result.length);
+                System.out.print(i + "/" + vector_result.length + "  " + p + "% \r");
+            }
+        }
+        t.stop();
+        t.elapsedTime();
+        
+        
+        System.out.println(bestSim.toString());
+
+    }
+
     private static void CMD_LEM(String[] argv) throws IOException {
 
         if (argv.length < 2) {
@@ -585,7 +689,7 @@ public class MainCLI {
         VocStatComputer.mergeIndexes(indexToMerge, delete, new_index);
     }
 
-    private static void CMD_BUILD_MODEL(String[] argv) throws SLIB_Exception, IOException {
+    private static void CMD_BUILD_MODEL(String[] argv) throws SLIB_Exception, IOException, Exception {
 
         String dist_error
                 = "- term/term: build a distributional model for comparing terms\n"
@@ -625,8 +729,7 @@ public class MainCLI {
 
                     SlibDist_Wrapper.buildTerm2TermDM(corpus_dir, voc_file, model_dir, window_size_token, nbThreads, nbFilesPerChunk, max_matrix_size);
                 }
-            }
-            else if (argv.length > 0 && argv[0].equals("compute_pmi")) {
+            } else if (argv.length > 0 && argv[0].equals("compute_pmi")) {
 
                 argv = shift(argv);
                 if (argv.length != 3) {
@@ -641,8 +744,7 @@ public class MainCLI {
 
                     SlibDist_Wrapper.buildTerm2Term_PMI_DM(cooccurence_model, voc_dir, model_dir);
                 }
-            }
-            else{
+            } else {
                 log(dist_error);
             }
 

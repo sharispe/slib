@@ -41,7 +41,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,10 +48,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.sml.sm.core.measures.vector.CosineSimilarity;
 import com.github.sharispe.slib.dsm.core.engine.DMEngine;
-import com.github.sharispe.slib.dsm.core.engine.Voc;
+import com.github.sharispe.slib.dsm.core.engine.MapIndexer;
 import com.github.sharispe.slib.dsm.core.engine.VocStatInfo;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
+import com.github.sharispe.slib.dsm.core.engine.WordInfo;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
+import com.github.sharispe.slib.dsm.core.model.access.twodmodels.IndexedVectorInfoIterator;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorPersistance_2D;
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
 import com.github.sharispe.slib.dsm.core.model.utils.IndexedVectorInfo;
@@ -66,11 +67,14 @@ import com.github.sharispe.slib.dsm.utils.RQueue;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
+import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -239,17 +243,149 @@ public class SlibDist_Wrapper {
         DMEngine.build_distributional_model_TERM_TO_TERM(corpusDir, vocFile, model_dir, window_token_size, nbThreads, nbFilesPerChunk, max_matrix_size);
     }
 
-    static void buildTerm2Term_PMI_DM(String cooccurence_model, String voc_dir, String model_dir) {
-        
-        //load word ids 
-        
-        // foreach word id 
-        //  load the corresponding vector
-        //  foreach word id
-        //      retrieve stat ; compute pmi ; create model
-        //      
-                
-                
+    static void buildTerm2Term_PMI_DM(String cooccurence_model_dir, String voc_stat_dir, String pmi_model_dir) throws SLIB_Ex_Critic, Exception {
+
+        // loading the model that contains the cooccurences 
+        ModelConf cocc_model_conf = ModelConf.load(cooccurence_model_dir);
+
+        // prepare new model 
+        ModelConf new_model_conf = new ModelConf(ModelType.TWO_D_TERM_DOC, "PMI model", pmi_model_dir, cocc_model_conf.entity_size, cocc_model_conf.vec_size, cocc_model_conf.nb_files, cocc_model_conf.format_version);
+        ModelConfUtils.initModel(new_model_conf);
+
+        // load basic stats dir
+        // we generate the new corpus index
+        // and we retrive all the chunk keys
+        logger.info("Loading voc stats into memory");
+        String voc_stat_chunk_index = voc_stat_dir + "/" + VocStatComputer.CHUNK_INDEX;
+        String voc_stat_info = voc_stat_dir + "/" + VocStatComputer.GENERAL_INFO;
+        logger.info("Loading index: " + voc_stat_chunk_index);
+        Map<String, Integer> chunksToMerge = Utils.loadMap(voc_stat_chunk_index);
+
+        VocStatInfo idxInfo = new VocStatInfo(voc_stat_info);
+        long nb_word_corpus = idxInfo.nbScannedWords;
+
+        Map<String, WordInfo> wordStat = new HashMap();
+
+        int c = 0;
+
+        for (Integer chunkID : chunksToMerge.values()) {
+            c++;
+            System.out.print("loading chunk " + c + "/" + chunksToMerge.size() + "   \r");
+            wordStat.putAll(MapIndexer.loadMapWordInfo(new File(voc_stat_dir + "/" + chunkID)));
+        }
+        logger.info("voc stat loaded: size=" + wordStat.size());
+
+        ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(cocc_model_conf);
+
+        long nb_word_vectors = cocc_model_conf.entity_size;
+
+        Iterator<IndexedVector> idxVectorIterator = modelAccessor.iterator();
+
+        // Load the labels associated to the dimension
+        Iterator<IndexedVectorInfo> it = new IndexedVectorInfoIterator(cocc_model_conf);
+        Map<Integer, String> idToLabel = new HashMap();
+
+        while (it.hasNext()) {
+            IndexedVectorInfo info = it.next();
+            idToLabel.put(info.id, info.label);
+        }
+
+        logger.info("id correspondances loaded: " + idToLabel.size());
+
+        // 
+        long start_binary_vec = 0;
+        byte[] sep_binary = {0};
+        File f_binary = new File(new_model_conf.getModelBinary());
+        byte[] compressed_vector_byte;
+
+        long id_a;
+        long occ_a, occ_b, occ_ab, den;
+        String word_b;
+
+        long warning = 0, nb_values = 0;
+        c = 0;
+
+        try (PrintWriter index_writer = new PrintWriter(new_model_conf.getModelIndex(), "UTF-8")) {
+            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
+
+                index_writer.println("ID_WORD\tSTART_POS\tLENGTH_DOUBLE_NON_NULL\tWORD");
+
+                while (idxVectorIterator.hasNext()) {
+
+                    c++;
+
+                    if (c % 100 == 0) {
+                        double p = c * 100.0 / nb_word_vectors;
+                        System.out.print("processing vector " + c + "/" + nb_word_vectors + "\t" + Utils.format2digits(p) + "%\r");
+                    }
+
+                    IndexedVector v = idxVectorIterator.next();
+
+                    id_a = v.id;
+                    String word_a = v.label;
+                    double[] cooccurences_a = v.values;
+
+                    if (!wordStat.containsKey(word_a)) {
+                        occ_a = 0;
+                    } else {
+                        occ_a = wordStat.get(word_a).nbOccurrences;
+                    }
+
+                    double[] pmi = new double[cooccurences_a.length];
+                    int nonNullValues = 0;
+
+                    for (int id_b = 0; id_b < cooccurences_a.length; id_b++) {
+
+                        word_b = idToLabel.get(id_b);
+                        if (!wordStat.containsKey(word_b)) {
+                            occ_b = 0;
+                        } else {
+                            occ_b = wordStat.get(word_b).nbOccurrences;
+                        }
+                        occ_ab = (long) cooccurences_a[id_b];
+
+                        den = (occ_a * occ_b);
+
+                        if (den != 0 && occ_ab != 0) {
+                            pmi[id_b] = Math.log((occ_ab * nb_word_corpus) / den);
+                            if (pmi[id_b] == 0) {
+                                pmi[id_b] = 0.01; // since 0 value is the minimal value
+                            } else {
+                                pmi[id_b] = (double) Math.round(pmi[id_b] * 100) / 100; // round to 2 decimal
+                            }
+                        } else {
+                            pmi[id_b] = 0;
+                        }
+
+                        if (pmi[id_b] != 0) {
+                            nonNullValues++;
+                        }
+
+                        if (occ_a == 0 || occ_b == 0) {
+                            warning++;
+                        }
+                        nb_values++;
+                    }
+
+                    double[] compressArray = CompressionUtils.compressDoubleArray(pmi);
+                    compressed_vector_byte = CompressionUtils.toByteArray(compressArray);
+                    
+                    // write the binary representation
+                    fo.write(compressed_vector_byte);
+                    fo.write(sep_binary);
+
+                    // write index info 
+                    index_writer.println(id_a + "\t" + start_binary_vec + "\t" + nonNullValues + "\t" + word_a);
+
+                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
+                }
+            }
+        }
+        if (warning != 0) {
+            logger.info("[Warning] " + warning + "/" + nb_values + " pmi values have bee set to 0 due to missing frequency observation on word a or b");
+        }
+        logger.info("reduced model save at: " + new_model_conf.path);
     }
 
     /**

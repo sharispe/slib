@@ -45,6 +45,7 @@ import java.io.IOException;
  */
 public class ModelUtil {
 
+
     /**
      * TODO This MUST be replaced by an index. Return null if no entity with the
      * associated label has been found

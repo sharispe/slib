@@ -6,3 +6,7 @@ Creation du vocabulaire / extraction des NGRAMS de taille 1 & 2
 Reduction du vocabulaire en ne considerant que les NGRAMS qui apparaissent au moins 5 fois
 
 	java -jar target/sml-dsm.jar reduce_voc /data/english-corpus/OANC_VOC_NGRAM_2/ /data/english-corpus/OANC_VOC_NGRAM_2_NBOCC_5 5
+
+
+ Extract vocabulary from a stat directory 
+    cat /tmp/voc_stats/[0-9]* | awk '{print $1}'

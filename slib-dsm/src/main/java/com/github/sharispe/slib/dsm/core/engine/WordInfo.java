@@ -40,19 +40,19 @@ package com.github.sharispe.slib.dsm.core.engine;
 public class WordInfo {
 
     public int ngramsize;
-    public int nbOccurrences;
-    public int nbFilesWithWord;
+    public long nbOccurrences;
+    public long nbFilesWithWord;
     public String additionnalInfo;
 
-    public WordInfo(int ngramsize, int nbOccurrences, int nbFilesWithWord, String additionnalInfo) {
+    public WordInfo(int ngramsize, long nbOccurrences, long nbFilesWithWord, String additionnalInfo) {
         this.ngramsize = ngramsize;
         this.nbOccurrences = nbOccurrences;
         this.nbFilesWithWord = nbFilesWithWord;
         this.additionnalInfo = additionnalInfo;
     }
 
-    public WordInfo(int size) {
-        ngramsize = size;
+    public WordInfo(int ngramsize) {
+        this.ngramsize = ngramsize;
         nbOccurrences = 0;
         nbFilesWithWord = 0;
     }
@@ -65,11 +65,11 @@ public class WordInfo {
         nbFilesWithWord++;
     }
 
-    public int getNbOccurrences() {
+    public long getNbOccurrences() {
         return nbOccurrences;
     }
 
-    public int getNbFilesWithWord() {
+    public long getNbFilesWithWord() {
         return nbFilesWithWord;
     }
 
