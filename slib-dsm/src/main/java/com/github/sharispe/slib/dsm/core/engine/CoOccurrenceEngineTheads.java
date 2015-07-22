@@ -115,7 +115,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         nbFileDoneLastIteration = 0;
         double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
         String ps = Utils.format2digits(p);
-        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%");
+        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  "+Utils.getCurrentDateAsString());
 
         return new CooccEngineResult(nbFileDone, fileErrors);
     }
@@ -136,7 +136,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 nbFileDoneLastIteration = 0;
                 double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
                 String ps = Utils.format2digits(p);
-                logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%");
+                logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  "+Utils.getCurrentDateAsString());
             }
 
             List<Word> leftWords = new ArrayList();
@@ -171,6 +171,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
             nbFileDoneLastIteration++;
         } catch (IOException ex) {
+            ex.printStackTrace();
+            fileErrors++;
             new SLIB_Ex_Critic(ex.getMessage());
         }
     }
@@ -360,6 +362,28 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
      */
     private static Word getNextWord(int[] text, int start, List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
 
+        Word r = null;
+
+        while (start <= text.length && r == null) {
+            r = getNextWordInner(text, start, tokenNodeHistory, index);
+            tokenNodeHistory = null;
+            start++;
+        }
+        return r;
+    }
+
+    /**
+     * Return the next token considering the given parameters. The method return
+     * null if no word can be created considering the given configuration.
+     *
+     * @param text
+     * @param start
+     * @param tokenNodeHistory
+     * @param index
+     * @return
+     */
+    private static Word getNextWordInner(int[] text, int start, List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
+
         if (start >= text.length) {
             return null;
         }
@@ -371,14 +395,14 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word and the current token is indexed
 
             if (id_start_token == -1) { // the current token is not indexed in all cases we iterate trying to start a new word
-                return getNextWord(text, start + 1, null, index);
+                return null;
             }
 
             next_node = index.getTree_root().getChild(id_start_token);
 
             // we test if the indexed token starts or is a word
             if (next_node == null) { // does not a start word and is not word we iterate trying to start a new word
-                return getNextWord(text, start + 1, null, index);
+                return null;
 
             } else if (next_node.isWordEnd()) { // indexed token is a word
 
@@ -396,7 +420,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
             int token_sequence_size = tokenNodeHistory.size();
             if (start + token_sequence_size >= text.length) { // word cannot be extended we iterate trying to start a new word
-                return getNextWord(text, start + 1, null, index);
+                return null;
             }
             // we try to extend the current word
             VocabularyIndex.TokenNode last_node = tokenNodeHistory.get(token_sequence_size - 1); // last token of the current word
@@ -404,7 +428,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
             if (next_node == null) { // word cannot be extended we iterate
 
-                return getNextWord(text, start + 1, null, index);
+                return null;
 
             } else if (next_node.isWordEnd()) { // adding the next token to the current created a word
 

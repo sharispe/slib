@@ -43,7 +43,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -158,10 +161,9 @@ public class Utils {
         logger.info("map " + filename + " loaded (n=" + map.size() + ")");
         return map;
     }
-    
-     /**
-     * Load into memory a key-value String,Long map that is defined into a
-     * file.
+
+    /**
+     * Load into memory a key-value String,Long map that is defined into a file.
      *
      * @param filename the file that contains the index - one key-value entry
      * per line with key and value delimited by a value that can be parsed by
@@ -313,5 +315,11 @@ public class Utils {
             }
         }
         return count;
+    }
+
+    public static String getCurrentDateAsString() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

@@ -100,6 +100,7 @@ public class MainCLI {
         log("- compute_pmi: compute 2-gram PMI");
         log("- reduce_index_nb_occ: reduce a vocabulary based on the number of occurrences of words");
         log("- reduce_index_using_voc: reduce a vocabulary index considering a given vocabulary");
+        log("- compute_word_cocc: compute the coocurences between words of a specific vocabulary considering a specific window size");
         log("- build_model: build a Distributional Model (DM) of the terms considering a vocabulary and a directory of files");
         log("- normalize: normalize the vector representations contained into a model (locally in each vector using cross-multiplication)");
         log("- reduce_model: reduce a model to remove useless dimension");
@@ -162,6 +163,12 @@ public class MainCLI {
                         break;
                     case "reduce_index_using_voc":
                         CMD_REDUCE_INDEX_USING_VOC(argv);
+                        break;
+                    case "compute_word_cocc":
+                        CMD_COMPUTE_WORD_COOCC(argv);
+                        break;
+                    case "reduce_word_cocc_matrix":
+                        CMD_REDUCE_WORD_COOCC_MATRIX(argv);
                         break;
                     case "build_model":
                         CMD_BUILD_MODEL(argv);
@@ -446,7 +453,7 @@ public class MainCLI {
         while (it.hasNext()) {
 
             IndexedVectorInfo info = it.next();
-
+ 
             if (word_id != -1) {
                 if (info.id == word_id) {
                     query = info;
@@ -461,10 +468,10 @@ public class MainCLI {
         if (query == null) {
             log("Cannot locate associated vector");
         } else {
-            logger.info("query: "+query.toString());
+            logger.info("query: " + query.toString());
             logger.info("Loading vector result");
             IndexedVector indexedVector = modelAccessor.vectorRepresentationOf(query);
-            logger.info(Arrays.toString(indexedVector.values));
+//            logger.info(Arrays.toString(indexedVector.values));
             log("uncompressed size=" + indexedVector.values.length);
             double[] compressArray = CompressionUtils.compressDoubleArray(indexedVector.values);
             Map<Integer, Double> compressedVecAsMap = CompressionUtils.compressedDoubleArrayToMap(compressArray);
@@ -491,7 +498,7 @@ public class MainCLI {
         }
         return c.readLine(message);
     }
-    
+
     private static void CMD_BEST_SIM(String[] argv) throws SLIB_Ex_Critic, IOException {
 
         if (argv.length < 3) {
@@ -539,12 +546,12 @@ public class MainCLI {
 
         String dm_dir = argv[0];
         int k = Integer.parseInt(argv[1]);
-        boolean changeNilToMin = Integer.parseInt(argv[2]) == 1; 
-        
-        logger.info("results: "+dm_dir);
-        logger.info("k: "+k);
-        logger.info("change 0 values: "+changeNilToMin);
-        
+        boolean changeNilToMin = Integer.parseInt(argv[2]) == 1;
+
+        logger.info("results: " + dm_dir);
+        logger.info("k: " + k);
+        logger.info("change 0 values: " + changeNilToMin);
+
         // retrieve multi token words
         String entity_label = "";
         for (int i = 3; i < argv.length; i++) {
@@ -554,7 +561,7 @@ public class MainCLI {
 
         ModelConf modelConf = ModelConf.load(dm_dir);
         ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(modelConf);
-        
+
         Iterator<IndexedVectorInfo> itIndexedVectorInfo = new IndexedVectorInfoIterator(modelConf);
         Map<String, IndexedVectorInfo> index = new HashMap();
         Map<Integer, String> index_id = new HashMap();
@@ -571,9 +578,8 @@ public class MainCLI {
             log("Cannot find vecto associated to " + entity_label);
             return;
         }
-        
-        logger.info(queryVectorInfo.toString());
 
+        logger.info(queryVectorInfo.toString());
 
         Timer t = new Timer();
         t.start();
@@ -582,11 +588,10 @@ public class MainCLI {
 
         RQueue<String, Double> bestSim = new RQueue(k);
 
-
         for (int i = 0; i < vector_result.length; i++) {
-            
+
             String label = index_id.get(i);
-            if(changeNilToMin && vector_result[i] == 0){
+            if (changeNilToMin && vector_result[i] == 0) {
                 vector_result[i] = -Double.MAX_VALUE;
             }
             bestSim.add(label, vector_result[i]);
@@ -599,8 +604,7 @@ public class MainCLI {
         }
         t.stop();
         t.elapsedTime();
-        
-        
+
         System.out.println(bestSim.toString());
 
     }
@@ -702,34 +706,9 @@ public class MainCLI {
 
             argv = shift(argv);
 
-            dist_error
-                    = "- compute_coocc: build a distributional model for comparing terms\n"
-                    + "- compute_pmi : compute pmi using a cooccurence matrix";
+            dist_error = "- compute_pmi : compute pmi using a cooccurence matrix";
 
-            if (argv.length > 0 && argv[0].equals("compute_coocc")) {
-
-                argv = shift(argv);
-                if (argv.length < 3 || argv.length > 7) {
-                    log("[0] directory which contains the files to consider");
-                    log("[1] vocabulary file (one word per line) - an index of this vocabulary will be loaded into memory");
-                    log("[2] output model directory");
-                    log("[3] size left/right windows (optional, default 30)");
-                    log("[4] nb Threads (optional, default 2)");
-                    log("[5] nb files per chunk (optional, default 10000)");
-                    log("[6] max matrice size per thread (optional, default 1000000)");
-                    System.exit(0);
-                } else {
-                    String corpus_dir = argv[0];
-                    String voc_file = argv[1];
-                    String model_dir = argv[2];
-                    int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
-                    int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
-                    int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
-                    int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
-
-                    SlibDist_Wrapper.buildTerm2TermDM(corpus_dir, voc_file, model_dir, window_size_token, nbThreads, nbFilesPerChunk, max_matrix_size);
-                }
-            } else if (argv.length > 0 && argv[0].equals("compute_pmi")) {
+            if (argv.length > 0 && argv[0].equals("compute_pmi")) {
 
                 argv = shift(argv);
                 if (argv.length != 3) {
@@ -1053,4 +1032,52 @@ public class MainCLI {
 //        }
 //        w.close();
 //    }
+    private static void CMD_COMPUTE_WORD_COOCC(String[] argv) throws SLIB_Exception, IOException, InterruptedException {
+
+        if (argv.length < 3 || argv.length > 7) {
+            log("[0] directory which contains the files to consider");
+            log("[1] vocabulary file (one word per line) - an index of this vocabulary will be loaded into memory");
+            log("[2] output model directory");
+            log("[3] size left/right windows (optional, default 30)");
+            log("[4] nb Threads (optional, default 2)");
+            log("[5] nb files per chunk (optional, default 10000)");
+            log("[6] max matrice size per thread (optional, default 1000000)");
+            System.exit(0);
+        } else {
+            String corpus_dir = argv[0];
+            String voc_file = argv[1];
+            String model_dir = argv[2];
+            int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
+            int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
+            int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
+            int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
+
+            SlibDist_Wrapper.buildTerm2TermDM(corpus_dir, voc_file, model_dir, window_size_token, nbThreads, nbFilesPerChunk, max_matrix_size);
+        }
+    }
+
+    /**
+     * This method generate a word cooccurence matrix considering a specific vocabulary. 
+     * It has been developed in order to extract a specific submatrix of a given matrix.
+     * @param argv 
+     */
+    private static void CMD_REDUCE_WORD_COOCC_MATRIX(String[] argv) {
+
+        if (argv.length != 3) {
+            log("[0] vocabulary file (one word per line) - an index of this vocabulary will be loaded into memory");
+            log("[1] original cooccurence matrix to reduce");
+            log("[2] output matrix directory directory");
+            System.exit(0);
+        } else {
+            String voc_file = argv[0];
+            String model_dir = argv[1];
+            String output_dir = argv[2];
+            int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
+            int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
+            int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
+            int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
+
+            SlibDist_Wrapper.reduceWordOccMatrix(voc_file, model_dir, output_dir);
+        }
+    }
 }

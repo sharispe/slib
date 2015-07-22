@@ -67,14 +67,11 @@ import com.github.sharispe.slib.dsm.utils.RQueue;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Iterator;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -238,7 +235,7 @@ public class SlibDist_Wrapper {
 
     }
 
-    public static void buildTerm2TermDM(String corpusDir, String vocFile, String model_dir, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_matrix_size) throws SLIB_Exception, IOException {
+    public static void buildTerm2TermDM(String corpusDir, String vocFile, String model_dir, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_matrix_size) throws SLIB_Exception, IOException, InterruptedException {
 
         DMEngine.build_distributional_model_TERM_TO_TERM(corpusDir, vocFile, model_dir, window_token_size, nbThreads, nbFilesPerChunk, max_matrix_size);
     }
@@ -259,7 +256,7 @@ public class SlibDist_Wrapper {
         String voc_stat_chunk_index = voc_stat_dir + "/" + VocStatComputer.CHUNK_INDEX;
         String voc_stat_info = voc_stat_dir + "/" + VocStatComputer.GENERAL_INFO;
         logger.info("Loading index: " + voc_stat_chunk_index);
-        Map<String, Integer> chunksToMerge = Utils.loadMap(voc_stat_chunk_index);
+        Map<String, Integer> chunkStats = Utils.loadMap(voc_stat_chunk_index);
 
         VocStatInfo idxInfo = new VocStatInfo(voc_stat_info);
         long nb_word_corpus = idxInfo.nbScannedWords;
@@ -268,9 +265,9 @@ public class SlibDist_Wrapper {
 
         int c = 0;
 
-        for (Integer chunkID : chunksToMerge.values()) {
+        for (Integer chunkID : chunkStats.values()) {
             c++;
-            System.out.print("loading chunk " + c + "/" + chunksToMerge.size() + "   \r");
+            System.out.print("loading chunk " + c + "/" + chunkStats.size() + "   \r");
             wordStat.putAll(MapIndexer.loadMapWordInfo(new File(voc_stat_dir + "/" + chunkID)));
         }
         logger.info("voc stat loaded: size=" + wordStat.size());
@@ -518,6 +515,10 @@ public class SlibDist_Wrapper {
         logger.info("number of empty vector representations : " + null_vectors + "/" + mConf.entity_size + "\t" + p + "%");
         logger.info("reduced model save at: " + new_model_conf.path);
 
+    }
+
+    static void reduceWordOccMatrix(String voc_file, String model_dir, String output_dir) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

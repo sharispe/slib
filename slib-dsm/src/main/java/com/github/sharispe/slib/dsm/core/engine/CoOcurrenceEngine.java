@@ -56,6 +56,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
@@ -218,10 +219,15 @@ public class CoOcurrenceEngine {
      * to be loaded in the object prior to computation.
      *
      * @param corpusDir
+     * @param output_dir_path
+     * @param window_token_size
      * @param nbThreads
+     * @param nbFilesPerChunk
+     * @param max_size_matrix
      * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @throws java.io.IOException
      */
-    public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException {
+    public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
 
         logger.info("Computing cooccurences");
         logger.info("corpus dir: " + corpusDir);
@@ -235,9 +241,6 @@ public class CoOcurrenceEngine {
         logger.info("Vocabulary size: " + vocsize);
         // The word cocccurence matrix will be access by numerous threads
         ExecutorService threadPool = Executors.newFixedThreadPool(nbThreads);
-        CompletionService<CooccEngineResult> taskCompletionService = new ExecutorCompletionService(threadPool);
-
-        List<Future<CooccEngineResult>> futures = new ArrayList();
 
         nb_files_to_analyse += Utils.countNbFiles(corpusDir);
 
@@ -251,39 +254,44 @@ public class CoOcurrenceEngine {
         int count_chunk = 0;
         Iterator<File> fileIterator = FileUtils.iterateFiles(new File(corpusDir), TrueFileFilter.TRUE, TrueFileFilter.INSTANCE);
 
+        CompletionService<CooccEngineResult> taskCompletionService = new ExecutorCompletionService(threadPool);
+        ResultProcessor resultProcessor = new ResultProcessor(taskCompletionService);
+        resultProcessor.setActive(true);
+        new Thread(resultProcessor).start();
+
         while (fileIterator.hasNext()) {
 
+            while(resultProcessor.nbServicesRunning == nbThreads){
+                logger.info("WAITING COMPLETION TO PROCESS NEW CHUNK: "+resultProcessor.nbServicesRunning+" THREADS RUNNING");
+                Thread.sleep(20000);
+            }
+            
             File f = fileIterator.next();
-
             flist.add(f);
 
-            if (flist.size() == nbFilesPerChunk) {
+            if (flist.size() == nbFilesPerChunk || !fileIterator.hasNext()) {
+                
                 Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, window_token_size, output_dir + "/t_" + count_chunk, max_size_matrix);
-                futures.add(taskCompletionService.submit(worker));
+                resultProcessor.add(worker);
+                logger.info("RUNNING THREAD TO PROCESS CHUNK: "+resultProcessor.nbServicesRunning+" THREADS RUNNING");
+                
                 flist = new ArrayList();
                 count_chunk++;
             }
 
         }
-        if (!flist.isEmpty()) {
-            Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, window_token_size, output_dir + "/t_" + count_chunk, max_size_matrix);
-            futures.add(taskCompletionService.submit(worker));
-            count_chunk++;
-        }
+        resultProcessor.setActive(false);
         threadPool.shutdown();
-
-        ResultProcessor resultProcessor = new ResultProcessor(futures.size(), taskCompletionService);
-        Thread result_thread = new Thread(resultProcessor);
-        result_thread.start();
 
         try {
             threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             threadPool.shutdownNow();
-            throw new SLIB_Ex_Critic("Error compute matrix coocurrence: " + e.getMessage());
+            throw new SLIB_Ex_Critic("Error computing matrix coocurrence: " + e.getMessage());
         }
 
         logger.info("Number of errors detect: " + resultProcessor.file_processing_errors + "/" + nb_files_to_analyse);
+        logger.info("Number of critical errors: " + resultProcessor.critical_errors);
         if (resultProcessor.critical_errors != 0) {
             throw new SLIB_Ex_Critic("An error occured processing the corpus... please consult the log");
         }
@@ -291,7 +299,6 @@ public class CoOcurrenceEngine {
         // -----------------------------------------------------------------
         // MERGE tmp matrices
         // -----------------------------------------------------------------
-        
         logger.info("merging " + count_chunk + " tmp matrices");
 
         // We merge matrix per group of limited size  until no more 
@@ -299,7 +306,6 @@ public class CoOcurrenceEngine {
         int nb_new_matrices = 0;
         int limit_file_open = 100; // must be > 1 !
 
-        
         int next_new_matrix_id = count_chunk; // the id of the next matrix
         int id_matrix = 0;
 
@@ -314,7 +320,7 @@ public class CoOcurrenceEngine {
             while (count_chunk != 0) {
 
                 File merged_matrix_dir = new File(output_dir_path + "/t_" + next_new_matrix_id);
-                logger.info("next merged matrix: "+merged_matrix_dir);
+                logger.info("next merged matrix: " + merged_matrix_dir);
                 merged_matrix_dir.mkdirs();
 
                 // We process a group of matrices an generate associated merged matrix
@@ -342,7 +348,7 @@ public class CoOcurrenceEngine {
                         id_matrix++;
                         matrix_group_size++;
                     }
-                    logger.info("group size: "+matrix_group_size);
+                    logger.info("group size: " + matrix_group_size);
 
                     // we merge the matrices using the readers
                     // that have been loaded
@@ -390,7 +396,7 @@ public class CoOcurrenceEngine {
                         // info processing
                         if (word_count % 1000 == 0) {
                             double p = word_count * 100.0 / nbWords;
-                            System.out.print("\t" + word_count + "/" + nbWords + "   " + Utils.format2digits(p) + "%\t nb matrices left "+(count_chunk+nb_new_matrices)+"\r");
+                            System.out.print("\t" + word_count + "/" + nbWords + "   " + Utils.format2digits(p) + "%\t nb matrices left " + (count_chunk + nb_new_matrices) + "\r");
                         }
                     }
                     System.out.print("\t" + word_count + "/" + nbWords + "   100%\t \r");
@@ -401,13 +407,14 @@ public class CoOcurrenceEngine {
                     }
 
                     // delete associated files
-                    for (int i = id_matrix-matrix_group_size; i < id_matrix; i++) {
+//                     TODO REMOVE COMMENTS
+                    for (int i = id_matrix - matrix_group_size; i < id_matrix; i++) {
                         //ls System.out.println(" delete matrix at matrix " + output_dir + "/t_" + i);
                         FileUtils.deleteDirectory(new File(output_dir + "/t_" + i));
                     }
 
                     nb_new_matrices++;
-                    System.out.println(" matrices have been merged at matrix " + next_new_matrix_id+" (number of matrices created this iteration: "+nb_new_matrices +")");
+                    System.out.println(" matrices have been merged at matrix " + next_new_matrix_id + " (number of matrices created this iteration: " + nb_new_matrices + ")");
                     System.out.println("-----------------------------");
                     next_new_matrix_id += 1;
                 }
@@ -421,11 +428,11 @@ public class CoOcurrenceEngine {
             nb_new_matrices = 0;
 
         } while (count_chunk != 1);
-        
+
         // Finally we move the last matrix 
-        FileUtils.moveFile(new File(output_dir+"/t_"+(next_new_matrix_id-1)+"/matrix"), new File(output_dir+"/matrix"));
-        new File(output_dir+"/t_"+(next_new_matrix_id-1)).delete();
-        
+        FileUtils.moveFile(new File(output_dir + "/t_" + (next_new_matrix_id - 1) + "/matrix"), new File(output_dir + "/matrix"));
+        new File(output_dir + "/t_" + (next_new_matrix_id - 1)).delete();
+
         logger.info("\nmerging done");
     }
 
@@ -438,7 +445,6 @@ public class CoOcurrenceEngine {
         if (line != null) {
 
             String[] data = Utils.colon_pattern.split(line.trim());
-
 
             int word_id = Integer.parseInt(data[0]);
 
@@ -527,38 +533,60 @@ public class CoOcurrenceEngine {
 
     class ResultProcessor implements Runnable {
 
-        private final int nbServices;
-        private final CompletionService<CooccEngineResult> services;
+        private int nbServicesRunning;
+        private final CompletionService<CooccEngineResult> taskCompletionService;
         int file_processing_errors = 0;
         int critical_errors = 0;
+        int nbServicesFinished = 0;
 
-        public ResultProcessor(int nbServices, CompletionService<CooccEngineResult> services) {
-            this.nbServices = nbServices;
-            this.services = services;
+        List<Future<CooccEngineResult>> futures = new ArrayList();
+        private boolean isActive;
+
+        public ResultProcessor(CompletionService<CooccEngineResult> taskCompletionService) {
+            this.taskCompletionService = taskCompletionService;
         }
 
         @Override
         public void run() {
 
-            int performed = 0;
             int file_processed = 0;
 
-            CompletionService<CooccEngineResult> this_service = this.services;
+            while (isActive) {
 
-            while (performed < nbServices) {
+                while (nbServicesRunning > 0) {
 
+                    try {
+                        logger.info(nbServicesRunning + " processes running" + "\t" + nbServicesFinished + " done");
+                        CooccEngineResult result = taskCompletionService.take().get();
+                        file_processed += result.file_processed;
+                        file_processing_errors += result.errors;
+                        nbServicesFinished++;
+                        nbServicesRunning--;
+                        logger.info("*** " + file_processed + "/" + CoOcurrenceEngine.nb_files_processed + ", errors=" + file_processing_errors + "\t(processes running: " + nbServicesRunning + ")");
+
+                    } catch (InterruptedException | ExecutionException e) {
+                        logger.error("**** CRITICAL ERROR DETECTED " + e.getMessage());
+                        e.printStackTrace();
+                        critical_errors++;
+                    }
+                }
                 try {
-                    logger.info("Waiting for new results, performed " + performed + "/" + nbServices);
-                    CooccEngineResult result = this_service.take().get();
-                    file_processed += result.file_processed;
-                    file_processing_errors += result.errors;
-                    performed++;
-                    logger.info("*** " + file_processed + "/" + CoOcurrenceEngine.nb_files_processed + ", errors=" + file_processing_errors + "\t(" + performed + "/" + nbServices + ")");
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    critical_errors++;
+                    logger.info("WAITING COMPLETION OF RUNNING PROCESSES ("+nbServicesRunning+") TO PROCESS NEW RESULTS");
+                    Thread.sleep(5000);
+                } catch (InterruptedException ex) {
+                    logger.error(ex.getMessage());
                 }
             }
+        }
+
+        private void add(Callable<CooccEngineResult> worker) {
+            nbServicesRunning++;
+            futures.add(taskCompletionService.submit(worker));
+            
+        }
+
+        private void setActive(boolean b) {
+            isActive = b;
         }
 
     }

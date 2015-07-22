@@ -64,7 +64,7 @@ import slib.utils.ex.SLIB_Exception;
  */
 public class DMEngine {
 
-    public static void build_distributional_model_TERM_TO_TERM(String corpusDir, String vocabularyFile, String model_dir, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException {
+    public static void build_distributional_model_TERM_TO_TERM(String corpusDir, String vocabularyFile, String model_dir, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
 
         Vocabulary vocabulary = new Vocabulary(vocabularyFile);
         VocabularyIndex vocabularyIndex = new VocabularyIndex(vocabulary);
