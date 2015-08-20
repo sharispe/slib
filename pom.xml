@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.sharispe</groupId>
     <artifactId>slib</artifactId>
-    <version>0.9.3</version>
+    <version>0.9.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>${project.artifactId}</name>
     <description>Slib is a JAVA library dedicated to semantic data analysis. The project currently focuses on semantic data represented as semantic graphs (networks). The Semantic Measures Library (SML) is a sub-project of the Slib. </description>
