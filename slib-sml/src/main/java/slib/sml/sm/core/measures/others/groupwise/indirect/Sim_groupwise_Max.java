@@ -44,7 +44,7 @@ import slib.utils.impl.MatrixDouble;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_Max extends Sim_Groupwise_Indirect {
 

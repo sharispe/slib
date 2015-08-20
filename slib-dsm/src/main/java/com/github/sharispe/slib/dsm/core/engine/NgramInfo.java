@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.engine;
 
 /**
  * Used to store information about a n-gram
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 class NgramInfo {
 

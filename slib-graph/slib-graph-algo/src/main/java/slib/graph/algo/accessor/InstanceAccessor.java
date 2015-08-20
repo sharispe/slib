@@ -39,7 +39,7 @@ import org.openrdf.model.URI;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface InstanceAccessor {
 

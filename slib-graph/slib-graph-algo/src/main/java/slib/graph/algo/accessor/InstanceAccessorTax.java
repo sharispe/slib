@@ -43,7 +43,7 @@ import slib.graph.model.graph.utils.Direction;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class InstanceAccessorTax implements InstanceAccessor {
 

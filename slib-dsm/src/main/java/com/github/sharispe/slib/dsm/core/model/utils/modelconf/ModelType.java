@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.model.utils.modelconf;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum ModelType {
     TWO_D_TERM_MODEL, TWO_D_DOC_MODEL, TWO_D_TERM_DOC;

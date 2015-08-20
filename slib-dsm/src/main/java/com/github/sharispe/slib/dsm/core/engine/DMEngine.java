@@ -60,7 +60,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * Distributional Model Engine. Class used to build distributional models
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class DMEngine {
 

@@ -54,7 +54,7 @@ import java.util.logging.Logger;
  * size of 3 the iterator will return five words: (1) years, (2) things, (3)
  * sail, (4) safe, (5) Mark Twain.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_Dictionary implements WordIterator {
 

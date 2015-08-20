@@ -41,7 +41,7 @@ import slib.sml.sm.core.measures.ISim_Pairwise;
  * semantic similarity of two classes/concepts structured in a Directed Acyclic
  * Graph (DAG).
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface IDist_Pairwise_DAG extends IDist_Pairwise {
 }

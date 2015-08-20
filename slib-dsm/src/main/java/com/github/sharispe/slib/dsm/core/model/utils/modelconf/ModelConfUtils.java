@@ -57,7 +57,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * Utility class used to build a distributional model
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ModelConfUtils {
 

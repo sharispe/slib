@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
  * defined in a taxonomy.
  *
  * <p>
- * SYMMETRIC = YES <br/>
+ * SYMMETRIC = YES 
  * VALUE : [0,1]
  * </p>
  *
@@ -60,14 +60,14 @@ import slib.utils.ex.SLIB_Exception;
  * relies on a ratio between the IC of the Most Specific Common Ancestor of the
  * compared concepts and the sum of their IC. The MICA is therefore the common
  * ancestor of the compared concepts which maximizes the selected IC function.
- * If multiple MICAs are found only one will be considered. <br/> <br/>
+ * If multiple MICAs are found only one will be considered.  
  *
- * The measure is therefore defined by: <br/><br/>
+ * The measure is therefore defined by: 
  *
  * <code>
  * sim(u,v) = 2 x IC(MICA(u,v)) / (IC(u) + IC(v))
  * </code>
- * <br/><br/>
+ * 
  * Note that originally, the formulation proposed by Lin considered <code>IC(u) =
  * log(p(u))</code> which is equivalent to considering the IC formulation
  * proposed by Resnik <code>IC(u) = -log(p(u))</code>. However, in this
@@ -75,7 +75,7 @@ import slib.utils.ex.SLIB_Exception;
  * from the leaves to the root(s) of the taxonomy.
  * </p>
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_pairwise_DAG_node_Lin_1998 extends  Sim_DAG_node_abstract {
 

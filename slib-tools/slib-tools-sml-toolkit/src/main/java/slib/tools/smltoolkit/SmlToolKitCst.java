@@ -39,7 +39,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Constant of the Semantic Framework Module
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class SmlToolKitCst extends ModuleCst {

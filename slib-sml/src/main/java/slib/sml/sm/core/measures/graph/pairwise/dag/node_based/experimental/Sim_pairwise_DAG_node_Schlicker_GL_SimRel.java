@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_pairwise_DAG_node_Schlicker_GL_SimRel extends Sim_DAG_node_abstract {
 

@@ -41,7 +41,7 @@ import slib.graph.model.repo.GraphRepository;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphRepositoryMemory implements GraphRepository {
 

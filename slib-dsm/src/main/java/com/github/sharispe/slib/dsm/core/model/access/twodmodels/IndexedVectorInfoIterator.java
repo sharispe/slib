@@ -44,7 +44,7 @@ import static slib.graph.io.loader.GraphLoaderGeneric.logger;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class IndexedVectorInfoIterator implements Iterator<IndexedVectorInfo> {
 

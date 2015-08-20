@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Those measures rely on the aggregation of the scores produced by pairwise
  * measures and are therefore considered as indirect in the literature.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public abstract class Sim_Groupwise_Indirect extends Sim_Groupwise {
     

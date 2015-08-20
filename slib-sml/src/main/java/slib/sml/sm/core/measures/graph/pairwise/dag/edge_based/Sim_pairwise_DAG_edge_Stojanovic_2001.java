@@ -50,7 +50,7 @@ import slib.utils.impl.SetUtils;
  * Developing SEmantic PortALs. In Proceedings of the International Conference
  * on Knowl- edge Capture. , 2097/2001,.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_edge_Stojanovic_2001 extends Sim_DAG_edge_abstract {

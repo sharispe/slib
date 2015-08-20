@@ -59,14 +59,14 @@ import slib.utils.impl.SetUtils;
 
 /**
  * Algorithm used to extract a subgraph from a DAG (Directed Acyclic Graph)
- * <br/> Implementation of Ranwez et al. 2011 algorithm. <br/>
- * original paper: <br/>
+ * Implementation of Ranwez et al. 2011 algorithm. 
+ * original paper: 
  *
  * ﻿Ranwez V, Ranwez S, Janaqi S: Sub-Ontology Extraction Using Hyponym and
  * Hypernym Closure on is-a Directed Acyclic Graphs. IEEE Transactions on
  * Knowledge and Data Engineering 2011, 99:1-14.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphReduction_DAG_Ranwez_2011 {
 
@@ -87,7 +87,7 @@ public class GraphReduction_DAG_Ranwez_2011 {
      * Method used to perform the subGraph extraction of an acyclic graph based
      * on top-down and bottom-up transitive closures.
      *
-     * The reduction is performed considering: <br/>
+     * The reduction is performed considering: 
      * <ul>
      * <li>
      * A set of URIs corresponding to the vertices on which must be based the

@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
  *
  * Class used to facilitate the use of WalkConstraint over graph.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WalkConstraintGeneric implements WalkConstraint {
 

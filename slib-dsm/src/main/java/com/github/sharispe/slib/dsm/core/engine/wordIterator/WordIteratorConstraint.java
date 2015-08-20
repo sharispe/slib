@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum WordIteratorConstraint {
 

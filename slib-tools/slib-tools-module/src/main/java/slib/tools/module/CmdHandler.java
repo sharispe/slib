@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Abstract command handler
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public abstract class CmdHandler {

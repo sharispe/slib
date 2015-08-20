@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Exception;
  * improve the GO-based similarity measure between proteins. Bo Li, James Z.
  * Wang, F. Alex Feltus, Jizhong Zhou, Feng Luo
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_node_Sim_IC_2010 extends Sim_DAG_node_abstract {

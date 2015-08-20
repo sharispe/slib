@@ -35,7 +35,7 @@ package slib.sml.sm.core.measures.corpus;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum MatrixType {
     WORD_WORD, WORD_DOC;

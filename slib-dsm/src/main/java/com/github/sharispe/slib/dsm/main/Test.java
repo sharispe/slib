@@ -51,7 +51,7 @@ import slib.utils.impl.UtilDebug;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Test {
 

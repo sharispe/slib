@@ -69,7 +69,7 @@ import slib.utils.impl.Timer;
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root
  * element, change value="INFO" to value="DEBUG"
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SMComputationGO_groupwise {
 

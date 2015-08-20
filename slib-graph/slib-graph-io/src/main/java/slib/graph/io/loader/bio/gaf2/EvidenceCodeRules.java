@@ -70,7 +70,7 @@ import java.util.Set;
  * Curator Statement Evidence Codes IC: Inferred by Curator ND: No biological
  * Data available
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class EvidenceCodeRules {
 

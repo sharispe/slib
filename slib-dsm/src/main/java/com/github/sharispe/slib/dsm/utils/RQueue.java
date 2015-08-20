@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Result Queue
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  * @param <V>
  * @param <L>
  */

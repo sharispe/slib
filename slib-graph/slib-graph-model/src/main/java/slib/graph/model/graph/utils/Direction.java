@@ -36,14 +36,14 @@ package slib.graph.model.graph.utils;
 /**
  * Enumeration used to characterized the Direction of an edge.
  * <ul>
- * <li>IN: an edge x -> y is an IN edge of y, i.e. the edge is an incoming edge
+ * <li>IN: an edge x - y is an IN edge of y, i.e. the edge is an incoming edge
  * of y </li>
- * <li>OUT: an edge x -> y is an OUT edge of x, i.e. the edge is an out coming
+ * <li>OUT: an edge x - y is an OUT edge of x, i.e. the edge is an out coming
  * edge of x </li>
  * <li>BOTH: both IN and OUT direction are considered</li>
  * </ul>
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum Direction {
 

@@ -71,7 +71,7 @@ import slib.utils.threads.ThreadManager;
  * vocabulary... The statistics associated to a vocabulary are therefore always
  * associated to those corpora informations.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class VocStatComputer {
 
@@ -116,7 +116,6 @@ public class VocStatComputer {
      * threads before being flushed into the disk. This parameters improves
      * computational performances by increasing memory consumption.
      * @param wordIteratorConstraint
-     * @return the vocabulary and associated statistics.
      * @throws IOException
      * @throws SLIB_Ex_Critic
      * @throws Exception

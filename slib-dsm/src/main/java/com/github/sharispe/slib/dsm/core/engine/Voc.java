@@ -41,7 +41,7 @@ import org.mapdb.DBMaker;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 @Deprecated
 public class Voc {

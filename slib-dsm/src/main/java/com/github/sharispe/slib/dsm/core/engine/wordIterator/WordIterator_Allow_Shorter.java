@@ -48,7 +48,7 @@ import java.io.IOException;
  * 3 the iterator will return (1) Twenty, (2) Twenty years, (3) Twenty years
  * from, (4) years, (5) years from, (6) years from now, ...
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
 

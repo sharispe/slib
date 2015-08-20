@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphAccessor {
 
@@ -78,26 +78,27 @@ public class GraphAccessor {
         }
         for (E e : graph.getE(RDF.TYPE)) {
             classes.add(e.getTarget());
-            if(e.getTarget().equals(OWL.CLASS) || e.getTarget().equals(RDFS.CLASS)){
+            if (e.getTarget().equals(OWL.CLASS) || e.getTarget().equals(RDFS.CLASS)) {
                 classes.add(e.getSource());
             }
         }
 
-        logger.debug("Classes detected " + classes.size()+"/"+graph.getV().size());
+        logger.debug("Classes detected " + classes.size() + "/" + graph.getV().size());
         return classes;
     }
 
     /**
      * Return a set of URI corresponding to the instances of the graph, note
-     * that instance. A vertex v of the graph is considered as an instance if the
-     * graph do not contains a statement of the form :
+     * that instance. A vertex v of the graph is considered as an instance if
+     * the graph do not contains a statement of the form :
      * <ul>
      * <li> v RFD.TYPE ? with ? not equals to
      * RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL or OWL.CLASS
      * </li>
+     * </ul>
      * Those restrictions do not cover all cases e.g. RDF instance of
      * RDFS.CONTAINER will be considered as instance...
-     * </ul>
+     *
      *
      * @param graph the graph
      * @return a set of URI corresponding to the classes of the graph
@@ -124,7 +125,6 @@ public class GraphAccessor {
     }
 
     public static Set<URI> getV_NoEdgeType(G g, Set<URI> edgeTypes, Direction dir) {
-
 
         Set<URI> valid = new HashSet();
 

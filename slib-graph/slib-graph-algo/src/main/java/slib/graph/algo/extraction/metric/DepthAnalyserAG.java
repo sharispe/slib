@@ -55,7 +55,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Class used to analyze depth of vertices composing an acyclic graph
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class DepthAnalyserAG {

@@ -43,7 +43,7 @@ import slib.sml.sm.core.utils.SMconf;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SMProxResultStorage {
 

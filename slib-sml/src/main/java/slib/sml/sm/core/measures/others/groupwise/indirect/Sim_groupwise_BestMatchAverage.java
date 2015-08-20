@@ -49,7 +49,7 @@ import slib.utils.impl.MatrixDouble;
  * 
  * Also called funSim in the literature.
  * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_BestMatchAverage extends Sim_Groupwise_Indirect {
 

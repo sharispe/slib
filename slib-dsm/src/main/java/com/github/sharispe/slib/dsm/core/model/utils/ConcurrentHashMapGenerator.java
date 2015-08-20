@@ -38,7 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ConcurrentHashMapGenerator<K, V> implements MapGenerator<K, V> {
 

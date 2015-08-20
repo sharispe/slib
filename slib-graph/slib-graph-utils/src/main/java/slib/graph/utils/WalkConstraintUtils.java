@@ -41,7 +41,7 @@ import slib.graph.model.graph.utils.WalkConstraint;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WalkConstraintUtils {
 
@@ -53,7 +53,7 @@ public class WalkConstraintUtils {
      * <ul>
      * <li>Accepted Predicate are unchanged</li>
      * <li>Direction associated to accepted predicate are the inverse of those
-     * defined: IN -> OUT, OUT -> IN, BOTH -> BOTH (if boolean
+     * defined: IN - OUT, OUT - IN, BOTH - BOTH (if boolean
      * includeBOTHpredicate is set to true)
      * </li>
      * </ul>

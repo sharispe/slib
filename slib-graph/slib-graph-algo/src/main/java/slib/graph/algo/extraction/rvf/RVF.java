@@ -53,7 +53,7 @@ import slib.graph.model.graph.utils.WalkConstraint;
  * constraints e.g. type of relationships (i.e. set of predicate URI) particular
  * vertex restriction applied to the walk.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class RVF {
 

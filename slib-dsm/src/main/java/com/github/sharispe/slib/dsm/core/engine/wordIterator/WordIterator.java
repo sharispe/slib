@@ -47,7 +47,7 @@ import java.util.Iterator;
  * token are considered to be sequences of characters that do not contains
  * spaces, e.g. the cat represents two tokens.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface WordIterator extends Iterator<String> {
 

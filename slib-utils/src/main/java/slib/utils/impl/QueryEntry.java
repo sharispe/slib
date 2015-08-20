@@ -37,7 +37,7 @@ import java.util.Map;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public final class QueryEntry implements Map.Entry<String, String> {
 

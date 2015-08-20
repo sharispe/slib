@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SlidingWindowTest {
 

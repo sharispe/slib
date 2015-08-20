@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * Simple sparse matrix representation used to store a distributional model into
  * memory
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SparseMatrix {
 

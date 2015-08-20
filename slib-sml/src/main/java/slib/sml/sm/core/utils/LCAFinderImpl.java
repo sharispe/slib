@@ -59,7 +59,7 @@ import slib.utils.impl.SetUtils;
  * Dummy implementation of the LCAFinder interface. The algorithmic complexity
  * of this implementation can easily be reduced.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class LCAFinderImpl implements LCAFinder {
 

@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.main;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 class ActionConf_ReduceTerm2Term {
 

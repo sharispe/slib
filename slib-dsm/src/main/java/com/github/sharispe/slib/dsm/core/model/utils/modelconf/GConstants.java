@@ -37,7 +37,7 @@ package com.github.sharispe.slib.dsm.core.model.utils.modelconf;
  *
  * General constants All constant are kept here for easy access
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GConstants {
 

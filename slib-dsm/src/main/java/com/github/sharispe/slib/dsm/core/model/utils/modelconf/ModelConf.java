@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Class used to store the configuration of a model
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ModelConf {
 

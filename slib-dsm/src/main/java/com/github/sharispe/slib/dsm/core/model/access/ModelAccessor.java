@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Class used to access information which is stored into the model
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface ModelAccessor {
 

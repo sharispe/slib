@@ -52,7 +52,7 @@ import static slib.utils.FileUtils.readFile;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Lemmatizer {
     

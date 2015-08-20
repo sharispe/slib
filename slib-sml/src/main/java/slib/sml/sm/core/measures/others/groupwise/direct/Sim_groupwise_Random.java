@@ -44,7 +44,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  * Random measure (used for test)
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_Random extends Sim_Groupwise_Direct {
 

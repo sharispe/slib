@@ -54,7 +54,7 @@ import slib.utils.impl.SetUtils;
  *
  * We understand the depth of the deepest lca of each entity couples.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_DAG_LP extends Sim_groupwise_DAG_abstract {
 

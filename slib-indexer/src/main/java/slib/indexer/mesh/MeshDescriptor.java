@@ -39,7 +39,7 @@ import java.util.Set;
 /**
  * Simple representation of a Mesh Descriptor
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MeshDescriptor {
 

@@ -46,7 +46,7 @@ import java.io.IOException;
  * considering a fixed size of 2 the iterator will return (1) Twenty years, (2)
  * years from, (3) from now, (4) now you ...
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_FixedSize extends WordIteratorAbstract {
     

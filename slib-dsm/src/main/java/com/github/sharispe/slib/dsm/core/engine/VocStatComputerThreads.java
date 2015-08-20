@@ -52,7 +52,7 @@ import slib.utils.threads.PoolWorker;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class VocStatComputerThreads implements Callable<VocStatResult> {
 

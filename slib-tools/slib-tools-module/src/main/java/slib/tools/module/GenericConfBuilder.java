@@ -46,14 +46,15 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GenericConfBuilder {
 
     static final Pattern patternRgx = Pattern.compile("\\{([^\\{^\\}]*)\\}");
 
     /**
-     * Apply loaded patterns to a string (see {@link GlobalConfPattern} ) <br/>
+     * Apply loaded patterns to a string (see {@link GlobalConfPattern} )
+     * 
      * if a pattern {@link XmlTags#VARIABLE_TAG} HOME is set to /tmp the method
      * will return /tmp/test/graph if {HOME}/test/graph is set as input
      *

@@ -64,67 +64,12 @@ import slib.utils.impl.OBOconstants;
 
 /**
  * <a href="http://www.geneontology.org/GO.format.obo-1_2.shtml">OBO
- * specification</a> <br/>
+ * specification</a> 
  *
- * Compatibility with other format-version than 1.2 is not supported. <br/>
+ * Compatibility with other format-version than 1.2 is not supported. 
  *
- * <b> The mapping consider </b> <br/> <ul> <li>[Term] as RDF/OWL class mapping
- * to build vertices </li> <li>[Typedef] as relationships definitions between
- * nodes </li> <li>"is_a" as the only predefined relationType </li>
- * <li>[instance] are not loaded </li> </ul> Meta informations: <br/> <ul> <li>
- * format-version : Only required argument of the specification expect 1.2 throw
- * non warning exception (<SGTK_Exception_Warning>) if 1.2 version is not
- * detected </li> <li> default-namespace: the graph URI </li> </ul>
  *
- * <b> [Term] </b>	<br/>
- *
- * Each Term are loaded as a specific vertex in the graph. <br/> A Term is then
- * mapped as a <Vertex> of <IVertexType> equals to <Constants> V_TYPE_CLASS.
- * <br/> Note that obsolete Terms/Typedefs are excluded during graph
- * construction (see below is_obsolete). <br/> <br/>
- *
- * Flag considered : <br/>
- *
- * <ul> <li> id: <URI> Loaded as the URI of the current [Term/Class/Vertex]
- * specification </li> <li> is a: <URI> Loaded as an <Edge> of <EdgeType>
- * <Constants> IS_A with currently defined Vertex as source and specified <URI>
- * as target Vertex </li> <li> relationships: <EdgeType> <URI> Loaded as an
- * <Edge> of specified <EdgeType> with source as current Vertex and target
- * specified by the precise <URI> The EdgeType have to be defined by a [TypeDef]
- * specification to be taken into account. </li>
- *
- * <li> is_obsolete: <boolean> Specifying the validity of the current Term
- * specification </li> <li> intersection_of/XREF...: These information are not
- * loaded. </li> </ul>
- *
- * <b>	[Typedef] as <EdgeType> </b> <br/>
- *
- * Every Typedef definition is loaded as an <EdgeType>. <br/> This definition is
- * used to specify the type authorized for <Edge> specification <br/>
- *
- * <ul> <li> id: <URI> the URI of the <EdgeType> </li>
- *
- * <li> is_transitive: <boolean> Specifying if the relationship have to be
- * considered as transitive </li>
- *
- * <li> inverse_of <URI> Used to defined the URI of the <EdgeType> to consider
- * as the inverse of the current specified EdgeType e.g if an edge type X is
- * defined as the inverse of Y, a relationship of type X defined between A and B
- * will lead to the creation of: <ul> <li> an edge of type X betwween v(A) ->
- * v(B) </li> <li> an edge of type Y betwween v(B) -> v(A) </li> </ul> </li>
- *
- * <li> is_symmetric <boolean> Used to defined an EdgeType as the inverse of
- * itself e.g if an edge type X is transitive, a relationship defined as an edge
- * of type X betwween v(A) -> v(B) is defined will imply the creation of an edge
- * of type X as v(B) -> v(A) </li>
- *
- * <li> is_obsolete: <boolean> Specifying the validity of the current Typedef
- * specification </li>
- *
- * <li> transitive_over/XREF...: These information are not loaded. </li> </ul>
- * TODO : load instances
- *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphLoader_OBO_1_2 implements GraphLoader {
 

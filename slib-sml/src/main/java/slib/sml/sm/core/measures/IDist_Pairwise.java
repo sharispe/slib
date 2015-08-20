@@ -37,6 +37,6 @@ package slib.sml.sm.core.measures;
  * Interface used to represent a pairwise measure which can be used to compute
  * the semantic similarity of a pair of concepts/classes.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface IDist_Pairwise extends Measure_Pairwise {}

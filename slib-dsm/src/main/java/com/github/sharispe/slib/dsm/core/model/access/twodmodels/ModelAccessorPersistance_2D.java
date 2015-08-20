@@ -54,7 +54,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * TODO Do not open a new file channel each time you load a vector.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ModelAccessorPersistance_2D extends ModelAccessor_2D {
 

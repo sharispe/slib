@@ -41,10 +41,10 @@ package slib.sml.sm.core.measures.string;
  * "Binary codes capable of correcting deletions, insertions, and reversals". 
  * Soviet Physics Doklady 10: 707–10.
  * 
- * Normalized = distance(a,b) / (b.length() > a.length() ? b.length() : a.length());
+ * Normalized = distance(a,b) / (b.length() greater than a.length() ? b.length() : a.length());
  * i.e. distance divided by the length of the longer String
  * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class LevenshteinDistance {
 

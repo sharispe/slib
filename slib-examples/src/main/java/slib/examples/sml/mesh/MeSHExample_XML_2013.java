@@ -62,14 +62,12 @@ import slib.utils.impl.Timer;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MeSHExample_XML_2013 {
 
     /**
-     * Remove the cycles from the MeSH Graph see
-     * http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh 
-     * for more information
+     * Remove the cycles from the MeSH Graph - refer to <a href="http://semantic-measures-library.org/sml/index.php?q=doc&page=mesh"> the documentation for more information </a>.
      *
      * @param meshGraph the graph associated to the MeSH
      *
