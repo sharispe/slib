@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib-tools</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9.2-SNAPSHOT</version>
+        <version>0.9.3</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-tools-module</artifactId>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.9.2-SNAPSHOT</version>
+            <version>0.9.3</version>
         </dependency>
         
         <dependency>
