@@ -584,7 +584,7 @@ public class VocStatComputer {
             c++;
 
             File chunkFile = new File(dir + "/" + i);
-            System.out.print("\tprocessing chunk " + c + "/" + indexFiles.size() + "\t" + chunkFile + "\r");
+            logger.info("processing chunk " + c + "/" + indexFiles.size() + "\t" + chunkFile + "\r");
             List<NgramInfo> ngramInfo = loadListNgramInfo(chunkFile);
 
             for (NgramInfo info : ngramInfo) {
@@ -793,7 +793,7 @@ public class VocStatComputer {
             while (line != null) {
                 data = Utils.tab_pattern.split(line);
 
-                if (data.length != 4) {
+                if (data.length != 5) {
                     logger.info("skip: " + line);
                 } else {
                     list.add(new NgramInfo(data[0], Integer.parseInt(data[1]), Integer.parseInt(data[2]), Integer.parseInt(data[3])));

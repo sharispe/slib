@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.main;
 
 import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
-import com.github.sharispe.slib.dsm.utils.Lemmatizer;
+import com.github.sharispe.slib.dsm.utils.StanfordLemmatizer;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -67,7 +67,10 @@ import com.github.sharispe.slib.dsm.utils.RQueue;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
+import java.util.Random;
 
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
@@ -89,8 +92,9 @@ public class SlibDist_Wrapper {
      * @param skipExisting
      * @throws IOException
      */
-    public static void lemmatize(String indir, String outdir, boolean skipExisting) throws IOException {
+    public static void lemmatize(String indir, String outdir, String pathPOSmodel, boolean skipExisting) throws IOException {
 
+        logger.info("Lemmatize: '" + indir + "'");
         List<File> files = FileUtility.listFilesFromFolder(indir, null);
 
         logger.info("Processing " + files.size() + " files (skip existing=" + skipExisting + ")");
@@ -103,7 +107,7 @@ public class SlibDist_Wrapper {
             String fname = outdir + "/" + f.getName() + ".lem";
 
             if (!skipExisting || !new File(fname).exists()) {
-                Lemmatizer.lemmatize(f.getAbsolutePath(), fname);
+                StanfordLemmatizer.lemmatize(f.getAbsolutePath(), fname, pathPOSmodel);
             }
         }
         logger.info("done");
@@ -366,7 +370,7 @@ public class SlibDist_Wrapper {
 
                     double[] compressArray = CompressionUtils.compressDoubleArray(pmi);
                     compressed_vector_byte = CompressionUtils.toByteArray(compressArray);
-                    
+
                     // write the binary representation
                     fo.write(compressed_vector_byte);
                     fo.write(sep_binary);
@@ -406,7 +410,7 @@ public class SlibDist_Wrapper {
         return encodedResult;
     }
 
-    static void reduceSizeVectorRepresentations(String model_dir, String new_model_dir, int nbDimension) throws Exception {
+    static void reduceSizeVectorRepresentations_K_MostUsedDimensions(String model_dir, String new_model_dir, int nbDimension) throws Exception {
 
         ModelConf mConf = ModelConf.load(model_dir);
 
@@ -438,7 +442,7 @@ public class SlibDist_Wrapper {
             }
         }
 
-        // We select the best dimensions
+        // We select the best dimensions, i.e. the dimensions that are the most often used
         RQueue<Integer, Integer> bestDimensionsResult = new RQueue(nbDimension);
         for (int i = 0; i < vec_using_dimension.length; i++) {
             bestDimensionsResult.add(i, vec_using_dimension[i]);
@@ -513,6 +517,160 @@ public class SlibDist_Wrapper {
         }
         String p = Utils.format2digits((double) null_vectors * 100.0 / (double) mConf.entity_size);
         logger.info("number of empty vector representations : " + null_vectors + "/" + mConf.entity_size + "\t" + p + "%");
+        logger.info("reduced model save at: " + new_model_conf.path);
+    }
+
+    static void reduceSizeVectorRepresentations_K_Random_Process(String model_dir, String new_model_dir, int nbDimensions, int nbIterations, boolean log_factors) throws Exception {
+
+        logger.info("model to reduce     : " + model_dir);
+        logger.info("new model           : " + new_model_dir);
+        logger.info("new dimension number: " + nbDimensions);
+        logger.info("nb Iterations       : " + nbIterations);
+        logger.info("log used factors    : " + log_factors);
+
+        ModelConf mConf = ModelConf.load(model_dir);
+
+        if (nbDimensions > mConf.vec_size) {
+            throw new SLIB_Ex_Critic("Specified number higher than current dimension number " + mConf.vec_size);
+        }
+
+        // 1 - generates the factors that will be used to reduce the matrix
+        int group_size = mConf.vec_size / nbDimensions; // each new dimensions will summarize group_size old dimensions (a least dimension can be added).
+        Integer[][][] all_params = new Integer[nbIterations][nbDimensions][group_size]; // stores the original dimensions that will be used to compute the new ones for each iteration.
+        List<Integer>[] unused_dimensions = new ArrayList[nbDimensions];
+
+        System.out.println("Building reduction factor matrices: n=" + mConf.vec_size + "\tk=" + nbDimensions + "\titerations=" + nbIterations + "\tgroup size: " + group_size);
+        Random randomGenerator = new Random();
+
+        for (int it = 0; it < nbIterations; it++) {
+
+            logger.info("Generating factor for iteration " + (it + 1) + " \r");
+
+            unused_dimensions[it] = new ArrayList(mConf.vec_size);
+
+            for (int i = 0; i < mConf.vec_size; i++) {
+                unused_dimensions[it].add(i);
+            }
+
+            Integer[][] params_iteration = all_params[it];
+
+            for (Integer[] param_group : params_iteration) {
+
+                for (int i = 0; i < param_group.length; i++) {
+
+                    int randomInt = randomGenerator.nextInt(unused_dimensions[it].size());
+                    int dim_id = unused_dimensions[it].get(randomInt);
+                    unused_dimensions[it].remove(randomInt);
+                    param_group[i] = dim_id;
+                }
+            }
+
+            if (log_factors) {
+
+                logger.info("Generating log for factors");
+
+                StringBuilder matrix_string = new StringBuilder();
+                for (Integer[] param_group : params_iteration) {
+                    for (int i = 0; i < param_group.length; i++) {
+                        matrix_string.append("\t").append(param_group[i]);
+                    }
+                    matrix_string.append("\n");
+                }
+                logger.info(matrix_string.toString());
+
+                logger.info("last dimension (if required): " + unused_dimensions[it]);
+            }
+        }
+
+        int final_vec_size = nbDimensions;
+        boolean addExtraDimension = false;
+        if (!unused_dimensions[0].isEmpty()) { // only the parameters generated for one dimension have to be tested
+            final_vec_size++;
+            addExtraDimension = true;
+        }
+
+        logger.info("vector size is set to: " + final_vec_size);
+
+        // 2 reduce the model only considering the selected dimensions
+        ModelConf new_model_conf = new ModelConf(ModelType.TWO_D_TERM_DOC, mConf.name + " reduced", new_model_dir, mConf.entity_size, final_vec_size, mConf.nb_files, mConf.format_version);
+        ModelConfUtils.initModel(new_model_conf);
+
+        // We generate 
+        // (i)  the index in which information regarding the location of term vector representation will be specified 
+        // (ii) the binary index in which the binary representation of vectors will be saved
+        long start_binary_vec = 0;
+        byte[] sep_binary = {0};
+        File f_binary = new File(new_model_conf.getModelBinary());
+
+        int id_word = 0;
+
+        logger.info("Reducing vector representations");
+
+        ModelAccessor_2D maccessor = new ModelAccessorPersistance_2D(mConf);
+
+        byte[] compressed_vector_byte;
+        try (PrintWriter index_writer = new PrintWriter(new_model_conf.getModelIndex(), "UTF-8")) {
+            try (FileOutputStream fo = new FileOutputStream(f_binary)) {
+
+                index_writer.println("ID_WORD\tSTART_POS\tLENGTH_DOUBLE_NON_NULL\tWORD");
+
+                // We iterate over the existing vector representations and we reduce them
+                Iterator<IndexedVector> it = maccessor.iterator();
+
+                while (it.hasNext()) {
+
+                    if (id_word % 1000 == 0) {
+                        String p = Utils.format2digits((double) id_word * 100.0 / (double) mConf.entity_size);
+                        System.out.print("processing... " + id_word + "/" + mConf.entity_size + "\t" + p + "% \r");
+                    }
+                    IndexedVector indexedVec = it.next();
+
+                    String word = indexedVec.label;
+                    double[] old_vec = indexedVec.values;
+
+                    double[] new_vec = new double[final_vec_size];
+
+                    // Conceptually specking the following process consists of 
+                    // (i)  generating a new reduced vector considering the set of parameters generated for this specific iteration
+                    // (ii) summing this vector to the vectors already generated for the previous iterations
+                    for (int i = 0; i < nbIterations; i++) {
+
+                        for (int j = 0; j < all_params[i].length; j++) {
+                            for (int k = 0; k < all_params[i][j].length; k++) {
+                                new_vec[j] += old_vec[all_params[i][j][k]];
+                            }
+                        }
+                        if (addExtraDimension) { // we process the extra dimension if any
+                            for (int j = 0; j < unused_dimensions[i].size(); j++) {
+                                new_vec[new_vec.length - 1] += old_vec[unused_dimensions[i].get(j)];
+                            }
+                        }
+                    }
+
+                    // We compute the number of non null values 
+                    int nonNullValues = 0;
+                    for (int i = 0; i < new_vec.length; i++) {
+                        if (new_vec[i] != 0) {
+                            nonNullValues++;
+                        }
+                    }
+
+                    // write the binary representation
+                    double[] compressed_double_array = CompressionUtils.compressDoubleArray(new_vec);
+                    compressed_vector_byte = CompressionUtils.toByteArray(compressed_double_array);
+                    fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
+                    fo.write(sep_binary);
+
+                    // write index info 
+                    index_writer.println(id_word + "\t" + start_binary_vec + "\t" + nonNullValues + "\t" + word);
+
+                    start_binary_vec += nonNullValues * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
+                    start_binary_vec += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
+
+                    id_word++;
+                }
+            }
+        }
         logger.info("reduced model save at: " + new_model_conf.path);
 
     }

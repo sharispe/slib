@@ -54,7 +54,7 @@ import static slib.utils.FileUtils.readFile;
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public class Lemmatizer {
+public class StanfordLemmatizer {
     
     /**
      * Lemmatize a document and save the result in another file
@@ -62,7 +62,7 @@ public class Lemmatizer {
      * @param outputFile the result 
      * @throws IOException 
      */     
-    public static void lemmatize(String inputFile, String outputFile) throws IOException {
+    public static void lemmatize(String inputFile, String outputFile, String path_to_pos_model) throws IOException {
 
         // https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
         String[] pennTags = {"NN", "NNS", "NNP", "VB"};
@@ -74,7 +74,9 @@ public class Lemmatizer {
         RedwoodConfiguration.empty().capture(System.err).apply();
         
         Properties props = new Properties();
+        props.put("pos.model", path_to_pos_model);
         props.put("annotators", "tokenize, ssplit, pos, lemma");
+        
         StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
 
         // create an empty Annotation just with the given text
@@ -84,10 +86,10 @@ public class Lemmatizer {
         pipeline.annotate(document);
 
         List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-        String sentenceLem = "";
+        
+        String sentenceLem;
 
         for (CoreMap sentence : sentences) {
-//            System.out.println(sentence.toString());
             sentenceLem = "";
 
             boolean f = true;
@@ -104,19 +106,11 @@ public class Lemmatizer {
                     f = false;
                 }
             }
-
-//            System.out.println(sentence.toString());
-//            System.out.println("Lem: " + sentenceLem);
             textContentProcess += sentenceLem + "\n";
         }
         // enable log
         RedwoodConfiguration.current().clear().apply();
-
-//        System.out.println("----------------------------------------------------");
-//        System.out.println(textContentProcess);
-//        System.out.println("----------------------------------------------------");
         FileUtils.writeStringToFile(new File(outputFile), textContentProcess, false);
-//        System.out.println("Results: " + output);
     }
     
 }

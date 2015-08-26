@@ -37,6 +37,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import slib.utils.ex.SLIB_Exception;
 
 /**
@@ -44,6 +46,8 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class FileUtility {
+    
+    static Logger logger = LoggerFactory.getLogger(FileUtility.class);
 
     public static boolean createDir(String dir) throws SLIB_Exception {
 
@@ -51,7 +55,7 @@ public class FileUtility {
         boolean result = false;
         
         if (!theDir.exists()) {
-            System.out.println("creating directory: " + dir);
+            logger.info("creating directory: " + dir);
         
             try {
                 theDir.mkdir();
@@ -64,7 +68,7 @@ public class FileUtility {
     }
 
     public static List<File> listFilesForFolder(String folder) {
-        System.out.println("List Folder from: " + folder);
+        logger.info("List Folder from: " + folder);
         return listFilesForFolderInner(new File(folder), (List<String>) null, new ArrayList<File>());
     }
 
@@ -79,13 +83,16 @@ public class FileUtility {
      * @return a list of File
      */
     public static List<File> listFilesFromFolder(String folder, List<String> admittedExtensions) {
-        System.out.println("List Folder from: " + folder);
+        logger.info("List Folder from: " + folder);
         return listFilesForFolderInner(new File(folder), admittedExtensions, new ArrayList<File>());
     }
 
     private static List<File> listFilesForFolderInner(final File folder, List<String> admittedExtensions, List<File> files) {
         
-        if(!folder.exists()) return files;
+        if(!folder.exists() || !folder.canRead()){
+            logger.info("Cannot access: "+folder.getPath());
+            return files;
+        }
         for (final File fileEntry : folder.listFiles()) {
             if (fileEntry.isDirectory()) {
                 listFilesForFolderInner(fileEntry, admittedExtensions, files);

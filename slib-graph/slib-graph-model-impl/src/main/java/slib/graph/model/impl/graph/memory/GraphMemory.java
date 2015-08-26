@@ -289,7 +289,7 @@ public class GraphMemory implements G {
             return;
         }
 
-        Set<E> toRemove = new HashSet<E>();
+        Set<E> toRemove = new HashSet();
 
         if (vertexOutEdges.containsKey(v)) {
             toRemove.addAll(vertexOutEdges.get(v));

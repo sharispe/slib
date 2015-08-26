@@ -33,6 +33,7 @@
  */
 package slib.examples.sml.general;
 
+import java.util.HashSet;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
@@ -119,6 +120,25 @@ public class GraphExample {
         
         // Retrieve all the vertices and edges associated to a graph
         
+        showVerticesAndEdges(graph);
+        
+        
+        System.out.println("- Graph, edges and vertices removed");
+        // Remove the vertices and the edges
+        Set<URI> verticesToRemove = new HashSet();
+        verticesToRemove.add(vA);
+        verticesToRemove.add(vD);
+        graph.removeV(verticesToRemove); // associated edges are also removed
+        graph.removeE(e);
+        
+        
+        System.out.println(graph.toString());
+        showVerticesAndEdges(graph);
+    }
+
+    private static void showVerticesAndEdges(G graph) {
+        
+        
         Set<URI> vertices = graph.getV();
         Set<E> edges = graph.getE();
         
@@ -131,15 +151,6 @@ public class GraphExample {
         for(E edge : edges){
             System.out.println("\t"+edge);
         }
-        
-        
-        System.out.println("- Graph, edges and vertices removed");
-        // Remove the vertices and the edges
-        graph.removeV(vertices); // associated edges are also removed
-        graph.removeE(edges);
-        
-        
-        System.out.println(graph.toString());
     }
     
 }

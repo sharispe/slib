@@ -165,15 +165,15 @@ public class CompressionUtils {
     /**
      * Convert an array of double values into an array of byte
      *
-     * @param doubleMap
+     * @param array
      * @return the corresponding array of byte
      */
-    public static byte[] toByteArray(double[] doubleMap) {
+    public static byte[] toByteArray(double[] array) {
         
-        byte[] bytes = new byte[doubleMap.length/2 * 2 * BinarytUtils.BYTE_PER_DOUBLE];
+        byte[] bytes = new byte[array.length * BinarytUtils.BYTE_PER_DOUBLE];
         
-        for (int i = 0; i < doubleMap.length; i ++) {
-            ByteBuffer.wrap(bytes, i * BinarytUtils.BYTE_PER_DOUBLE, BinarytUtils.BYTE_PER_DOUBLE).putDouble(doubleMap[i]);
+        for (int i = 0; i < array.length; i ++) {
+            ByteBuffer.wrap(bytes, i * BinarytUtils.BYTE_PER_DOUBLE, BinarytUtils.BYTE_PER_DOUBLE).putDouble(array[i]);
         }
         return bytes;
     }

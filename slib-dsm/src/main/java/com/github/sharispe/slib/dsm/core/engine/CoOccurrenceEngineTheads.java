@@ -50,6 +50,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
@@ -115,7 +116,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         nbFileDoneLastIteration = 0;
         double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
         String ps = Utils.format2digits(p);
-        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  "+Utils.getCurrentDateAsString());
+        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  " + Utils.getCurrentDateAsString());
 
         return new CooccEngineResult(nbFileDone, fileErrors);
     }
@@ -129,6 +130,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         try {
             String s = FileUtils.readFileToString(file);
             String[] stab = Utils.blank_pattern.split(s);
+
             int[] text = tokenArrayToIDArray(stab, vocabularyIndex);
 
             if (nbFileDone % 100 == 0) {
@@ -136,7 +138,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 nbFileDoneLastIteration = 0;
                 double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
                 String ps = Utils.format2digits(p);
-                logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  "+Utils.getCurrentDateAsString());
+                logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  " + Utils.getCurrentDateAsString());
             }
 
             List<Word> leftWords = new ArrayList();
@@ -178,10 +180,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     }
 
     /**
-     * Convert a String to an array of IDs considering the given index. If a
-     * word is not defined into the index, it will not be considered in the
-     * process (but no specific marker will specify that the element has been
-     * omitted).
+     * Convert an array of String to an array of IDs considering the given
+     * index. If a word is not defined into the index the value -1 is set.
      *
      * @param vocabularyIndex
      * @param tokenArray
@@ -189,6 +189,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
      */
     public static int[] tokenArrayToIDArray(String[] tokenArray, VocabularyIndex vocabularyIndex) {
         int[] IDArray = new int[tokenArray.length];
+
         for (int i = 0; i < tokenArray.length; i++) {
             Integer k = vocabularyIndex.getTokenID(tokenArray[i]);
             if (k == null) {
@@ -211,7 +212,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             List<Integer> sorted_ids_matrix = new ArrayList(matrix.getElementIDs());
             Collections.sort(sorted_ids_matrix);
 
-            Map<Integer, Double> currentVector;
+            Map<Integer, Double> new_matrix_current_word_compressed_vector;
 
             if (!matrix_file.exists()) { // first time the matrix is flushed
 
@@ -219,24 +220,23 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
                     for (Integer word_id : sorted_ids_matrix) {
                         // get vector associated to this word
-                        currentVector = matrix.getDimensionValuesForElement(word_id);
+                        new_matrix_current_word_compressed_vector = matrix.getDimensionValuesForElement(word_id);
                         // flush the vector into the file
-                        matrixWriter.write(convertVectorMapToString(word_id, currentVector));
+                        matrixWriter.write(convertVectorMapToString(word_id, new_matrix_current_word_compressed_vector));
                     }
                 }
 
-            } else { // add to existing matrix
+            } else { // add to existing matrix and update existing vectors if needed
 
                 try (PrintWriter matrixWriter = new PrintWriter(new_matrix_file, "UTF-8")) {
 
-                    int id_matrix = 0;
+                    int nb_words_new_matrix_processed = 0;
 
-                    // update existing vectors 
                     try (BufferedReader br = new BufferedReader(new FileReader(matrix_file))) {
 
                         String line;
-                        String[] data, data2;
-                        int word_id, word_id_c;
+                        String[] old_matrix_current_word_vector, data2;
+                        Integer old_matrix_current_word_id, word_id_c;
                         double add_occ, old_occ;
 
                         // format 
@@ -245,44 +245,47 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                         // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
                         while ((line = br.readLine()) != null) {
 
-                            data = Utils.colon_pattern.split(line.trim());
-                            word_id = Integer.parseInt(data[0]);
+                            old_matrix_current_word_vector = Utils.colon_pattern.split(line.trim());
+                            old_matrix_current_word_id = Integer.parseInt(old_matrix_current_word_vector[0]);
 
                             // while the matrix contains vectors with a lower id
                             // than the id of the vector currently processed (i.e. strored into the file)
                             // we process it (i means that it has never been seen) - the aim is to keep a sorted matrix
-                            while (id_matrix < sorted_ids_matrix.size() && sorted_ids_matrix.get(id_matrix) < word_id) {
-                                int i = sorted_ids_matrix.get(id_matrix);
-                                String v = convertVectorMapToString(i, matrix.getDimensionValuesForElement(i));
+                            while (nb_words_new_matrix_processed < sorted_ids_matrix.size() && sorted_ids_matrix.get(nb_words_new_matrix_processed) < old_matrix_current_word_id) {
+                                Integer current_word_id_new_matrix = sorted_ids_matrix.get(nb_words_new_matrix_processed);
+                                String v = convertVectorMapToString(current_word_id_new_matrix, matrix.getDimensionValuesForElement(current_word_id_new_matrix));
+
                                 matrixWriter.write(v);
-                                id_matrix++;
+                                nb_words_new_matrix_processed++;
+                                
                             }
+                            // all the vectors of the new matrix associated to an id lower than the one of the old matrix currently processed have been processed
 
                             // try to get the vector associated to this word in the matrix
-                            currentVector = matrix.getDimensionValuesForElement(word_id);
+                            new_matrix_current_word_compressed_vector = matrix.getDimensionValuesForElement(old_matrix_current_word_id);
 
-                            if (currentVector != null) { // information about the vector is stored in the matrix - add new occurrences
+                            if (new_matrix_current_word_compressed_vector != null) { // information about the vector is stored in the matrix - add new occurrences
 
-                                id_matrix++;
-
-                                for (int i = 1; i < data.length; i++) {
-                                    data2 = Utils.dash_pattern.split(data[i]);// 30-456
+                                for (int i = 1; i < old_matrix_current_word_vector.length; i++) {
+                                    data2 = Utils.dash_pattern.split(old_matrix_current_word_vector[i]);// 30-456
                                     word_id_c = Integer.parseInt(data2[0]);
                                     add_occ = Double.parseDouble(data2[1]);
-                                    old_occ = currentVector.containsKey(word_id_c) ? currentVector.get(word_id_c) : 0;
-                                    currentVector.put(word_id_c, old_occ + add_occ);
+                                    old_occ = new_matrix_current_word_compressed_vector.containsKey(word_id_c) ? new_matrix_current_word_compressed_vector.get(word_id_c) : 0;
+                                    new_matrix_current_word_compressed_vector.put(word_id_c, old_occ + add_occ);
                                 }
-                                // flush the vector into the file
-                                matrixWriter.write(convertVectorMapToString(word_id, currentVector));
-                            } else { // new vector
-                                matrixWriter.write(line);
-                            }
 
+                                // flush the vector into the file
+                                matrixWriter.write(convertVectorMapToString(old_matrix_current_word_id, new_matrix_current_word_compressed_vector));
+                            } else { // new vector
+                                matrixWriter.write(line+"\n");
+                            }
+                            nb_words_new_matrix_processed++; // in both case a word of the new matrix is processed 
                         }
                     }
                     // process new vectors that have an id bigger than the one of the last vector stored in the matrix
-                    for (; id_matrix < sorted_ids_matrix.size(); id_matrix++) {
-                        int id = sorted_ids_matrix.get(id_matrix);
+                    for (; nb_words_new_matrix_processed < sorted_ids_matrix.size(); nb_words_new_matrix_processed++) {
+                        int id = sorted_ids_matrix.get(nb_words_new_matrix_processed);
+
                         String v = convertVectorMapToString(id, matrix.getDimensionValuesForElement(id));
                         matrixWriter.write(v);
                     }
@@ -300,17 +303,24 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     // format // word_id:word_id_1-nb_coccurences_word_id_word_id_1::word_id_2-nb_coccurences_word_id_word_id_2:...
     // e.g. 156:30-456:45-2
     // means that the word with id 156 cooccurred 456 times with word 30 and 2 times with word 45
+    // note that the map are sorted according to the word_ids for which cooccurrences are stored
     protected static String convertVectorMapToString(int vectorID, Map<Integer, Double> vector) {
         StringBuilder vectorAsString;
         vectorAsString = new StringBuilder();
+
         vectorAsString.append(vectorID);
-        for (Map.Entry<Integer, Double> e : vector.entrySet()) {
+        
+        Map<Integer,Double> sortedMap = new TreeMap();
+        sortedMap.putAll(vector);
+
+        for (Map.Entry<Integer, Double> e : sortedMap.entrySet()) {
             vectorAsString.append(':');
             vectorAsString.append(e.getKey());
             vectorAsString.append('-');
             vectorAsString.append((int) (double) e.getValue());
         }
         vectorAsString.append('\n');
+        
         return vectorAsString.toString();
     }
 

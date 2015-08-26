@@ -56,7 +56,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
@@ -227,7 +226,7 @@ public class CoOcurrenceEngine {
      * @throws slib.utils.ex.SLIB_Ex_Critic
      * @throws java.io.IOException
      */
-    public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
+public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
 
         logger.info("Computing cooccurences");
         logger.info("corpus dir: " + corpusDir);
@@ -410,7 +409,7 @@ public class CoOcurrenceEngine {
 //                     TODO REMOVE COMMENTS
                     for (int i = id_matrix - matrix_group_size; i < id_matrix; i++) {
                         //ls System.out.println(" delete matrix at matrix " + output_dir + "/t_" + i);
-                        FileUtils.deleteDirectory(new File(output_dir + "/t_" + i));
+                        //FileUtils.deleteDirectory(new File(output_dir + "/t_" + i));
                     }
 
                     nb_new_matrices++;

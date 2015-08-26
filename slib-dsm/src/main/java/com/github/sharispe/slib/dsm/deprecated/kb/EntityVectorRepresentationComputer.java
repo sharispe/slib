@@ -31,7 +31,7 @@
  *  The fact that you are presently reading this means that you have had
  *  knowledge of the CeCILL license and that you accept its terms.
  */
-package com.github.sharispe.slib.dsm.core.kb;
+package com.github.sharispe.slib.dsm.deprecated.kb;
 
 import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
 import java.util.HashMap;

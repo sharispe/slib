@@ -36,7 +36,6 @@ package com.github.sharispe.slib.dsm.main;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputerThreads;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
-import com.github.sharispe.slib.dsm.core.kb.EntityVectorRepresentationComputer;
 import com.github.sharispe.slib.dsm.core.model.access.ModelAccessor;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.IndexedVectorInfoIterator;
 import com.github.sharispe.slib.dsm.core.model.access.twodmodels.ModelAccessorPersistance_2D;
@@ -91,29 +90,32 @@ public class MainCLI {
 
     public static void showdoc() throws IOException {
 
+        log("---------------------------------------------------------------------");
         log("Please use one of the following tools: ");
-        log("- lem: lemmatize the files contained in a directory");
+        log("---------------------------------------------------------------------");
+        log("---------------------------------------------------------------------");
+        log("Tools used for computing the similarities using a model (word representation)");
+        log("---------------------------------------------------------------------");
+        log("- sim: compute the similarity between two elements considering a model");
+        log("- bestsim: compute the elements which are the most similar to the given one");
+        log("- get_sim: access to the similarity between two elements considering a result matrix");
+        log("- get_bestsim: compute the terms/docs which are the most similar to the given elements considering a result matrix");
+        log("---------------------------------------------------------------------");
+        log("---------------------------------------------------------------------");
+        log("Tools used for computing models (e.g. word representation)");
+        log("---------------------------------------------------------------------");
+        log("- lem: use StanfordCoreNLP library to lemmatize the files contained into a directory - only words tagged with NN,NNS, NNP and VB  penn tags are conserved.");
         log("- voc_index: analyse a corpus by extracting the vocabulary considering specified constraint and create an index - basic statistics are also computed");
         log("- voc_index_dictionary: analyse a corpus to create an index of the given vocabulary- basic statistics are also computed");
         log("- merge_voc_index: merge voc indexes computed using voc_index");
-        log("- compute_stat_voc: compute basic statistics on the given vocabulary");
-        log("- compute_pmi: compute 2-gram PMI");
+        log("- compute_stat_voc: compute basic statistics on the given vocabulary - for each n-gram size x this command computes (1) the n-grams with the maximal number of occurrences and (2) the distributions (a): number of occurrences / number of ngram of size x, (b) number of occurrences / number of words with a number of occurrences lower or equal than the number of occurrence (percentage is also printed). ");
         log("- reduce_index_nb_occ: reduce a vocabulary based on the number of occurrences of words");
         log("- reduce_index_using_voc: reduce a vocabulary index considering a given vocabulary");
         log("- compute_word_cocc: compute the coocurences between words of a specific vocabulary considering a specific window size");
         log("- build_model: build a Distributional Model (DM) of the terms considering a vocabulary and a directory of files");
-        log("- normalize: normalize the vector representations contained into a model (locally in each vector using cross-multiplication)");
-        log("- reduce_model: reduce a model to remove useless dimension");
+        log("- reduce_model: reduce the number of dimensions of a model");
         log("- show_vec output: the compressed representation of a vector");
         log("- check_null_vec: check the number of vectors which are null");
-        log("- sim: compute the similarity between two terms or two documents considering a DM");
-        log("- bestsim: compute the terms/docs which are the most similar to the given term/doc");
-        log("- get_sim: access to the similarity between two terms or two documents considering a result matrix");
-        log("- get_bestsim: compute the terms/docs which are the most similar to the given term/doc considering a result matrix");
-        log("- bestsimdoctest: compute the terms/docs which are the most similar to the given term/doc using the approach tested in simdoctest");
-        log("- kb: for egc");
-        log("- dist_mat: compute the distance matrix between all the entities of the model");
-        log("---------------------------------------------------------------------");
         log("An example of use can be:\n"
                 + "\tlem to lemmatize a set of documents\n"
                 + "\tvoc_index to extract the vocabulary\n"
@@ -122,6 +124,10 @@ public class MainCLI {
                 + "\tshow_vec output the compressed representation of a vector\n"
                 + "\tsim to compute the similarity between terms or entities\n"
                 + "\tbestsim to distinguish the k entities which are the more similar to the given one\n");
+        log("---------------------------------------------------------------------");
+        log("Experimental:\n");
+        log("- compute_pmi: compute 2-gram PMI");
+        log("- normalize: normalize the vector representations contained into a model (locally in each vector using cross-multiplication)");
         log("---------------------------------------------------------------------");
     }
 
@@ -155,9 +161,6 @@ public class MainCLI {
                     case "compute_stat_voc":
                         CMD_COMPUTE_VOC_STAT(argv);
                         break;
-                    case "compute_pmi":
-                        CMD_COMPUTE_PMI(argv);
-                        break;
                     case "reduce_index_nb_occ":
                         CMD_REDUCE_INDEX_NB_OCC(argv);
                         break;
@@ -167,48 +170,37 @@ public class MainCLI {
                     case "compute_word_cocc":
                         CMD_COMPUTE_WORD_COOCC(argv);
                         break;
-                    case "reduce_word_cocc_matrix":
-                        CMD_REDUCE_WORD_COOCC_MATRIX(argv);
-                        break;
                     case "build_model":
                         CMD_BUILD_MODEL(argv);
                         break;
-//                    case "normalize":
-//                        CMD_NORMALIZE(argv);
-//                        break;
                     case "reduce_model":
                         CMD_REDUCE_MODEL(argv);
                         break;
-//                    case "check_null_vec":
-//                        CMD_CHECK_NULL_VEC(argv);
-//                        break;
                     case "sim":
                         CMD_SIM(argv);
                         break;
                     case "get_sim":
                         CMD_GET_SIM(argv);
                         break;
-//                    case "simdoctest":
-//                        CMD_SIM_DOC_ADVANCED(argv);
-//                        break;
                     case "bestsim":
                         CMD_BEST_SIM(argv);
                         break;
                     case "get_bestsim":
                         CMD_GET_BEST_SIM(argv);
                         break;
-//                    case "bestsimdoctest":
-//                        CMD_BEST_SIM_DOC_ADVANCED(argv);
-//                        break;
+
+                    // UTILS
                     case "show_vec":
                         CMD_SHOW_VEC(argv);
                         break;
-                    case "kb":
-                        EntityVectorRepresentationComputer.main(argv);
+
+                    // EXPERIMENTAL
+                    case "reduce_word_cocc_matrix":
+                        CMD_REDUCE_WORD_COOCC_MATRIX(argv);
                         break;
-//                    case "dist_mat":
-//                        CMD_DIST_MAT(argv);
-//                        break;
+                    case "compute_pmi":
+                        CMD_COMPUTE_PMI(argv);
+                        break;
                     default:
                         showdoc();
                         break;
@@ -352,67 +344,6 @@ public class MainCLI {
         }
     }
 
-//    private static void CMD_SIM_DOC_ADVANCED(String[] argv) throws SLIB_Ex_Critic, IOException {
-//
-//        if (argv.length < 2 || argv.length > 4) {
-//            log("[1] directory which contains the term/term distributional model");
-//            log("[2] directory which contains the doc/term distributional model");
-//            log("[3] entity label A or -i if you want to use the interactive mode");
-//            log("[4] entity label B (if -i is not used)");
-//            System.exit(0);
-//        }
-//        String dm_term_dir = argv[0];
-//        String dm_doc_dir = argv[1];
-//        ModelConf modelConf_TERM = ModelConf.load(dm_term_dir);
-//        ModelConf modelConf_DOC = ModelConf.load(dm_doc_dir);
-//
-//        Map<String, Integer> docIndex = XPUtils.loadMAP(modelConf_DOC.getEntityIndex());
-//        ModelAccessor modelAccessor_doc = new ModelAccessorMemory_2D(modelConf_DOC);
-//        ModelAccessor modelAccessor_term = new ModelAccessorMemory_2D(modelConf_TERM);
-//
-//        Map<String, Integer> termIndex = XPUtils.loadMAP(modelConf_TERM.getEntityIndex());
-//
-//        if (argv[2].toLowerCase().equals("-i")) { // interactive mode
-//
-//            while (true) {
-//                log("---------------------------------------");
-//                String docA_label = getInput("Please type a label for doc A -- type quit() to stop: ");
-//                if (docA_label.equals("quit()")) {
-//                    break;
-//                }
-//                String docB_label = getInput("Please type a label for entity B -- type quit() to stop: ");
-//                if (!docIndex.containsKey(docA_label)) {
-//
-//                    log("Index does not contain label : " + docA_label);
-//
-//                } else if (!docIndex.containsKey(docB_label)) {
-//
-//                    log("Index does not contain label : " + docB_label);
-//
-//                } else {
-//                    double[] docA = modelAccessor_doc.vectorRepresentationOf(docIndex.get(docA_label));
-//                    double[] docB = modelAccessor_doc.vectorRepresentationOf(docIndex.get(docB_label));
-//
-//                    double sim = SlibDist_Wrapper.computeDocSimNewApproach(docA, docB, termIndex, modelAccessor_term);
-//                    log("sim " + docA_label + "/" + docB_label + " = " + sim);
-//                }
-//            }
-//        } else {
-//
-//            String entityA = argv[2];
-//            String entityB = argv[3];
-//
-//            log("Comparing " + entityA + "/" + entityB);
-//            if (!docIndex.containsKey(entityA)) {
-//                throw new SLIB_Ex_Critic("Index " + modelConf_DOC.getEntityIndex() + " does not contain entity label : " + entityA);
-//            }
-//            if (!docIndex.containsKey(entityB)) {
-//                throw new SLIB_Ex_Critic("Index " + modelConf_DOC.getEntityIndex() + " does not contain entity label : " + entityB);
-//            }
-//            double sim = SlibDist_Wrapper.computeEntitySimilarity(docIndex, modelAccessor_doc, entityA, entityB);
-//            log("sim " + entityA + "/" + entityB + " = " + sim);
-//        }
-//    }
     private static void CMD_SHOW_VEC(String[] argv) throws SLIB_Ex_Critic, IOException {
 
         if (argv.length != 2) {
@@ -453,7 +384,7 @@ public class MainCLI {
         while (it.hasNext()) {
 
             IndexedVectorInfo info = it.next();
- 
+
             if (word_id != -1) {
                 if (info.id == word_id) {
                     query = info;
@@ -611,14 +542,15 @@ public class MainCLI {
 
     private static void CMD_LEM(String[] argv) throws IOException {
 
-        if (argv.length < 2) {
+        if (argv.length < 3) {
             log("[0] directory which contains the files to lemmatize");
             log("[1] directory where to put the lemmatized files");
-            log("[2] skip=true to skip process if the lemmatized file already exists (optional)");
+            log("[2] path to stanford POS model, e.g. stanford-corenlp-3.4-models/edu/stanford/nlp/models/pos-tagger/english-bidirectional/english-bidirectional-distsim.tagger - models are available at http://nlp.stanford.edu/software/tagger.shtml");
+            log("[3] skip=true to skip process if the lemmatized file already exists (optional)");
             System.exit(0);
         } else {
-            boolean skip_existing = argv.length == 3 && argv[2].toLowerCase().equals("skip=true");
-            SlibDist_Wrapper.lemmatize(argv[0], argv[1], skip_existing);
+            boolean skip_existing = argv.length == 4 && argv[3].toLowerCase().equals("skip=true");
+            SlibDist_Wrapper.lemmatize(argv[0], argv[1], argv[2], skip_existing);
         }
     }
 
@@ -697,9 +629,7 @@ public class MainCLI {
 
         String dist_error
                 = "- term/term: build a distributional model for comparing terms\n"
-                + "- term/doc: build a distributional model for comparing terms\n"
-                + "- doc/term_2: build a distributional model for comparing document (e.g. Term vectors * TF-IDF vectors)";
-
+                + "- term/doc: build a distributional model for comparing terms\n";
         if (argv.length == 0) {
             log(dist_error);
         } else if (argv[0].equals("term/term")) {
@@ -713,7 +643,7 @@ public class MainCLI {
                 argv = shift(argv);
                 if (argv.length != 3) {
                     log("[0] directory which contains the model with cooccurences");
-                    log("[1] statistics about the vocabulary");
+                    log("[1] vocabulary index");
                     log("[2] output model directory");
                     System.exit(0);
                 } else {
@@ -744,24 +674,6 @@ public class MainCLI {
 //
                 SlibDist_Wrapper.build_model_term_doc_classic(dir_voc, model_dir);
             }
-        } else if (argv[0].equals("doc/term_2")) {
-
-            throw new UnsupportedOperationException();
-
-//            argv = shift(argv);
-//            if (argv.length != 4) {
-//                log("[1] term/term distributional model");
-//                log("[2] doc/term distributional model");
-//                log("[3] k threashold, i.e. number of values to consider, type null to avoid applying the threashold");
-//                log("[4] output directory");
-//                System.exit(0);
-//            } else {
-//                String term_dm = argv[0];
-//                String doc_dm = argv[1];
-//                Integer k_threashold = argv[2].toLowerCase().equals("null") ? null : Integer.parseInt(argv[2]);
-//                String new_dm = argv[3];
-//                SlibDist_Wrapper.build_DM_doc_refined(term_dm, doc_dm, k_threashold, new_dm);
-//            }
         } else {
             log(dist_error);
         }
@@ -771,59 +683,79 @@ public class MainCLI {
 
         log("Params: " + Arrays.toString(argv));
 
-        if (argv.length != 3) {
-
-            log("[1] distributional model to reduce. It must have term reference as dimensions");
-            log("[2] new model directory");
-            log("[3] number of dimension to consider (k)");
+        if (argv.length < 1) {
+            log("Please precise the name of the reduction technique you want to use.");
+            log("k_most_used: select the dimensions by selecting the k most frequently used dimensions. This approach can for instance be used to reduce a model based on cooccurrence values.");
+            log("k_random_process: build new vector representations by randomly mixing existing dimensions into a vector of size k. This approach can also be used to reduce a model based on cooccurrence values.");
+            log("--------------------------------------------------------------------------------------------------------");
+            log("Note that widely used matrix techniques not available in this toolkit can also be applied (e.g. SVD).");
+            log("The approaches proposed below are just quick & dirty solutions compared to traditional reduction techniques.");
             System.exit(0);
-
         } else {
+            String reduction_technique = argv[0];
 
-            String model_dir = argv[0];
-            String new_model_dir = argv[1];
-            Integer nbDimension = Integer.parseInt(argv[2]);
+            log("reduction technique: " + reduction_technique);
+            argv = shift(argv);
 
-            SlibDist_Wrapper.reduceSizeVectorRepresentations(model_dir, new_model_dir, nbDimension);
+            switch (reduction_technique) {
 
+                case "k_most_used":
+
+                    if (argv.length != 3) {
+
+                        log("[1] Model to reduce.");
+                        log("[2] new model directory");
+                        log("[3] number of dimension to consider (k)");
+                        System.exit(0);
+
+                    } else {
+
+                        String model_dir = argv[0];
+                        String new_model_dir = argv[1];
+                        Integer nbDimension = Integer.parseInt(argv[2]);
+
+                        SlibDist_Wrapper.reduceSizeVectorRepresentations_K_MostUsedDimensions(model_dir, new_model_dir, nbDimension);
+
+                    }
+                    break;
+
+                case "k_random_process":
+
+                    if (argv.length < 3) {
+
+                        log("[1] Model to reduce.");
+                        log("[2] new model directory");
+                        log("[3] number of dimension to consider (k) - an additionnal dimension may be used");
+                        log("[4] number of iteration to consider (optional default 10)");
+                        log("[5] log the factors used to reduce the vectors true/false (optional default 10)");
+                        System.exit(0);
+
+                    } else {
+
+                        String model_dir = argv[0];
+                        String new_model_dir = argv[1];
+                        Integer nbDimension = Integer.parseInt(argv[2]);
+                        Integer nbIterations = argv.length >= 4 ? Integer.parseInt(argv[3]) : 10;
+                        boolean logFactors = argv.length >= 5 ? argv[4].toLowerCase().equals("true") : false;
+
+                        SlibDist_Wrapper.reduceSizeVectorRepresentations_K_Random_Process(model_dir, new_model_dir, nbDimension, nbIterations, logFactors);
+                    }
+                    break;
+
+                default:
+                    log("unknown reduction technique");
+            }
         }
+
     }
 
-//    private static void CMD_CHECK_NULL_VEC(String[] argv) throws SLIB_Ex_Critic {
-//
-//        String dist_error = "[1] term distributional model to reduce (generated by dist term/term)\n";
-//
-//        if (argv.length != 1) {
-//            log(dist_error);
-//        } else {
-//
-//            String model_dir = argv[0];
-//
-//            ModelConf mconf = ModelConf.load(model_dir);
-//            Map<Integer, String> vocIndex = MapUtils.revert(XPUtils.loadMAP(mconf.getEntityIndex()));
-//
-//            logger.info("Load in-memory model accessor for " + mconf.name);
-//            ModelAccessorMemory_2D modelAccessor = new ModelAccessorMemory_2D(mconf);
-//
-//            int nb_vectors = modelAccessor.getElementIds().size();
-//            int emptyVectorsCount = 0;
-//            for (Integer i : modelAccessor.getElementIds()) {
-//
-//                if (modelAccessor.getCompressedRepresentation(i).isEmpty()) {
-//                    logger.info("- null vector: id: " + i + "\tlabel: " + vocIndex.get(i));
-//                    emptyVectorsCount++;
-//                }
-//            }
-//            logger.info("Empty vectors: " + emptyVectorsCount + "/" + nb_vectors);
-//        }
-//    }
     private static void CMD_COMPUTE_VOC_STAT(String[] argv) throws Exception {
 
         logger.info("Compute Statistics");
 //
         if (argv.length != 2) {
             log("[0] directory which contains the index to consider");
-            log("[1] number of results");
+            log("[1] the number of results with best number of occurrences to show per n-gram size");
             System.exit(0);
         } else {
             String voc_dir = argv[0];
@@ -886,152 +818,6 @@ public class MainCLI {
         }
     }
 
-//    private static void CMD_NORMALIZE(String[] argv) throws SLIB_Ex_Critic, IOException {
-//
-//        if (argv.length != 2) {
-//
-//            log("[1] distributional model to reduce.");
-//            log("[2] new model directory");
-//            System.exit(0);
-//
-//        } else {
-//
-//            String model_dir = argv[0];
-//            String new_model_dir = argv[1];
-//
-//            ModelConf mconf = ModelConf.load(model_dir);
-//
-//            logger.info("Initialize nnormalized model");
-//            ModelConf mconfNorm = new ModelConf(ModelType.TWO_D_DOC_MODEL, new_model_dir, new_model_dir, mconf.entity_size, mconf.vec_size, mconf.getNBFiles(), new_model_dir);
-//            ConfUtils.initModel(mconfNorm);
-//
-//            FileUtils.copyFile(new File(mconf.getDimensionIndex()), new File(mconfNorm.getDimensionIndex()));
-//            FileUtils.copyFile(new File(mconf.getEntityIndex()), new File(mconfNorm.getEntityIndex()));
-//
-//            logger.info("Normalizing");
-//
-//            ModelAccessorMemory_2D modelAccessor = new ModelAccessorMemory_2D(mconf);
-//
-//            int size = modelAccessor.getElementIds().size();
-//            int c = 0;
-//
-//            File f = new File(mconfNorm.getModelBinary());
-//            byte[] sep = {0};
-//
-//            try (PrintWriter indeWriter = new PrintWriter(mconfNorm.getModelIndex(), "UTF-8")) {
-//
-//                indeWriter.println("ID_ENT\tSTART_POS\tLENGTH_DOUBLE_NON_NULL");
-//                long current = 0;
-//
-//                try (FileOutputStream fo = new FileOutputStream(f)) {
-//
-//                    for (Integer id : modelAccessor.getElementIds()) {
-//
-//                        c++;
-//                        logger.info("Normalizing " + c + "/" + size);
-//
-//                        Map<Integer, Double> m_compressed = modelAccessor.getCompressedRepresentation(id);
-//                        // search max
-//                        Collection<Double> set = m_compressed.values();
-//                        Double max = null;
-//
-//                        for (Double d : set) {
-//                            if (max == null || d > max) {
-//                                max = d;
-//                            }
-//                        }
-//
-//                        double val;
-//                        Map<Integer, Double> m_norm_compressed = new HashMap<>(m_compressed.size());
-//                        for (Integer d : m_compressed.keySet()) {
-//                            val = m_compressed.get(d) / max;
-//                            m_norm_compressed.put(d, val);
-//                        }
-//
-//                        // here we retrieve the number of pair we will have in the compressed vector
-//                        // i.e. [(1,0.4),(30,0.6),(5,0.7)...] refer to the doc
-//                        byte[] compressed_vector_byte;
-//                        compressed_vector_byte = CompressionUtils.toByteArray(m_norm_compressed);
-//                        fo.write(compressed_vector_byte, 0, compressed_vector_byte.length);
-//                        fo.write(sep);
-//
-//                        indeWriter.println(id + "\t" + current + "\t" + m_norm_compressed.size());
-//
-//                        current += m_norm_compressed.size() * 2.0 * BinarytUtils.BYTE_PER_DOUBLE;
-//                        current += GConstants.STORAGE_FORMAT_SEPARATOR_SIZE; // separator
-//                    }
-//                }
-//                logger.info("Normalized vesion of model " + mconf.name + " has been built at " + mconfNorm.path);
-//                indeWriter.close();
-//            }
-//        }
-//    }
-//    private static void CMD_DIST_MAT(String[] argv) throws SLIB_Ex_Critic, FileNotFoundException {
-//
-//        if (argv.length != 2) {
-//
-//            log("[1] directory of the model to consider.");
-//            log("[2] File in which the distance matrix has to be saved");
-//            System.exit(0);
-//        }
-//
-//        String dm_dir = argv[0];
-//        String distmat_file = argv[1];
-//
-//        logger.info("Loading model");
-//        ModelConf mConf = ModelConf.load(dm_dir);
-//
-//        logger.info("Computing distance matrix");
-//        Map<Integer, String> entityIndex = XPUtils.loadIndexRevert(mConf.getEntityIndex());
-//
-//        ModelAccessor_2D modelAccessor = new ModelAccessorFullMemory_2D(mConf);
-//        Map<Integer, Map<Integer, Double>> distmat = new HashMap();
-//        double[] v_a, v_b;
-//        List<Integer> orderedIds = new ArrayList(modelAccessor.getElementIds());
-//        Collections.sort(orderedIds);
-//
-//        for (int i = 0; i < orderedIds.size(); i++) {
-//
-//            logger.info(i + "/" + orderedIds.size());
-//
-//            int a = orderedIds.get(i);
-//
-//            if (!distmat.containsKey(a)) {
-//                distmat.put(a, new HashMap<Integer, Double>());
-//            }
-//
-//            v_a = modelAccessor.vectorRepresentationOf(a);
-//
-//            for (int j = i; j < orderedIds.size(); j++) {
-//
-//                int b = orderedIds.get(j);
-//
-//                v_b = modelAccessor.vectorRepresentationOf(b);
-//                double dist = 1 - CosineSimilarity.sim(v_a, v_b);
-//
-//                if (!distmat.containsKey(b)) {
-//                    distmat.put(b, new HashMap<Integer, Double>());
-//                }
-//                distmat.get(a).put(b, dist);
-//                distmat.get(b).put(a, dist);
-//            }
-//        }
-//
-//        logger.info("Ploting distance matrix");
-//
-//        PrintWriter w = new PrintWriter(distmat_file);
-//        w.println(orderedIds.size());
-//
-//        for (Integer i : orderedIds) {
-//            StringBuilder l = new StringBuilder();
-//            l.append(i).append("_").append(entityIndex.get(i));
-//            for (Integer j : orderedIds) {
-//                l.append("\t").append(distmat.get(i).get(j));
-//            }
-//            w.println(l.toString());
-//        }
-//        w.close();
-//    }
     private static void CMD_COMPUTE_WORD_COOCC(String[] argv) throws SLIB_Exception, IOException, InterruptedException {
 
         if (argv.length < 3 || argv.length > 7) {
@@ -1057,9 +843,11 @@ public class MainCLI {
     }
 
     /**
-     * This method generate a word cooccurence matrix considering a specific vocabulary. 
-     * It has been developed in order to extract a specific submatrix of a given matrix.
-     * @param argv 
+     * This method generate a word cooccurence matrix considering a specific
+     * vocabulary. It has been developed in order to extract a specific
+     * submatrix of a given matrix.
+     *
+     * @param argv
      */
     private static void CMD_REDUCE_WORD_COOCC_MATRIX(String[] argv) {
 
