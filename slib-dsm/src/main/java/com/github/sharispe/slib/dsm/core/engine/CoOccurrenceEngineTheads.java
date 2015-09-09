@@ -91,37 +91,48 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
     @Override
     public CooccEngineResult call() {
 
-        matrix = SparseMatrixGenerator.buildSparseMatrix(vocabularyIndex.vocabulary.size(), vocabularyIndex.vocabulary.size());
+        try {
 
-        for (File f : files) {
+            matrix = SparseMatrixGenerator.buildSparseMatrix(vocabularyIndex.vocabulary.size(), vocabularyIndex.vocabulary.size());
 
-            nbFileDone++;
+            for (File f : files) {
 
-            try {
-                loadWordCooccurrenceFromFile(f);
-            } catch (SLIB_Ex_Critic ex) {
-                logger.error("Critical error " + ex.getMessage());
-                fileErrors++;
+                nbFileDone++;
+
+                try {
+                    loadWordCooccurrenceFromFile(f);
+                } catch (SLIB_Ex_Critic ex) {
+                    logger.error("Critical error " + ex.getMessage());
+                    fileErrors++;
+                }
+
+                if (matrix.storedValues() > max_matrix_size) {
+                    flushMatrix();
+                    matrix.clear();
+                }
             }
+            flushMatrix();
+            matrix.clear();
 
-            if (matrix.storedValues() > max_matrix_size) {
-                flushMatrix();
-                matrix.clear();
-            }
+            CoOcurrenceEngine.incrementProcessedFiles(nbFileDoneLastIteration);
+            nbFileDoneLastIteration = 0;
+            double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
+            String ps = Utils.format2digits(p);
+
+            logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  " + Utils.getCurrentDateAsString());
+
+            return new CooccEngineResult(nbFileDone, fileErrors);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new CooccEngineResult(nbFileDone, fileErrors);
         }
-        flushMatrix();
-        matrix.clear();
-
-        CoOcurrenceEngine.incrementProcessedFiles(nbFileDoneLastIteration);
-        nbFileDoneLastIteration = 0;
-        double p = CoOcurrenceEngine.getNbFilesProcessed() * 100.0 / CoOcurrenceEngine.getNbFilesToAnalyse();
-        String ps = Utils.format2digits(p);
-        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  " + Utils.getCurrentDateAsString());
-
-        return new CooccEngineResult(nbFileDone, fileErrors);
     }
 
     private void loadWordCooccurrenceFromFile(File file) throws SLIB_Ex_Critic {
+
+        // TODO REMOVE THIS LOG
+//        logger.info("(" + id + ") processing " + nbFileDone + "/" + files.size() + ": " + file.getPath());
 
         if (vocabularyIndex == null || vocabularyIndex.getVocabulary().size() < 2) {
             throw new SLIB_Ex_Critic("You must first load or specify a vocabulary of size larger than 2");
@@ -150,10 +161,14 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 int idWord = word.wordID;
                 int startWindowLeft = word.start_loc - window_token_size;
 
+//                System.out.println("w" + idWord + ": " + vocabularyIndex.getWord(word.wordID));
+
                 // remove words that are not in the window
                 Iterator<Word> i = leftWords.iterator();
                 while (i.hasNext()) {
+
                     Word w = i.next();
+
                     if (w.start_loc < startWindowLeft) {
                         i.remove();
                     } else {
@@ -177,6 +192,10 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             fileErrors++;
             new SLIB_Ex_Critic(ex.getMessage());
         }
+
+        // TODO REMOVE THIS LOG
+        logger.info("(" + id + ") done " + nbFileDone + "/" + files.size() + ": " + file.getPath());
+
     }
 
     /**
@@ -257,7 +276,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
                                 matrixWriter.write(v);
                                 nb_words_new_matrix_processed++;
-                                
+
                             }
                             // all the vectors of the new matrix associated to an id lower than the one of the old matrix currently processed have been processed
 
@@ -277,7 +296,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                                 // flush the vector into the file
                                 matrixWriter.write(convertVectorMapToString(old_matrix_current_word_id, new_matrix_current_word_compressed_vector));
                             } else { // new vector
-                                matrixWriter.write(line+"\n");
+                                matrixWriter.write(line + "\n");
                             }
                             nb_words_new_matrix_processed++; // in both case a word of the new matrix is processed 
                         }
@@ -309,8 +328,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         vectorAsString = new StringBuilder();
 
         vectorAsString.append(vectorID);
-        
-        Map<Integer,Double> sortedMap = new TreeMap();
+
+        Map<Integer, Double> sortedMap = new TreeMap();
         sortedMap.putAll(vector);
 
         for (Map.Entry<Integer, Double> e : sortedMap.entrySet()) {
@@ -320,7 +339,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             vectorAsString.append((int) (double) e.getValue());
         }
         vectorAsString.append('\n');
-        
+
         return vectorAsString.toString();
     }
 
@@ -374,12 +393,34 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         Word r = null;
 
-        while (start <= text.length && r == null) {
+        while (start < text.length && r == null) {
+
+//            if (r == null) {
+//                System.out.println("\tstill looking");
+//            }
+//            System.out.println("\tlooking at : " + start + "/"+text.length+" token: "+index.getToken(text[start])+"\ttoken history: " + showTokenNodeHistory(tokenNodeHistory, index));
             r = getNextWordInner(text, start, tokenNodeHistory, index);
+            
+            
             tokenNodeHistory = null;
             start++;
         }
+
+//        System.out.println("\tfound: "+r);
+//        if(r != null) System.out.println("\tfound " + index.getWord(r.wordID));
         return r;
+    }
+
+    private static String showTokenNodeHistory(List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
+        if (tokenNodeHistory == null) {
+            return "null";
+        } else {
+            String s = "";
+            for (VocabularyIndex.TokenNode t : tokenNodeHistory) {
+                s += " " + index.getToken(t.id);
+            }
+            return s;
+        }
     }
 
     /**
@@ -400,31 +441,32 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         int id_start_token = text[start];
 
-        VocabularyIndex.TokenNode next_node;
+        VocabularyIndex.TokenNode next_token;
 
-        if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word and the current token is indexed
+        if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word 
 
             if (id_start_token == -1) { // the current token is not indexed in all cases we iterate trying to start a new word
                 return null;
             }
 
-            next_node = index.getTree_root().getChild(id_start_token);
+            // We are starting a new word the first token is therefore attached to the root
+            next_token = index.getTree_root().getChild(id_start_token);
 
             // we test if the indexed token starts or is a word
-            if (next_node == null) { // does not a start word and is not word we iterate trying to start a new word
+            if (next_token == null) { // does not a start word and is not word by itself we iterate trying to start a new word
                 return null;
 
-            } else if (next_node.isWordEnd()) { // indexed token is a word
+            } else if (next_token.isWordEnd()) { // indexed token is a word
 
                 tokenNodeHistory = new ArrayList();
-                tokenNodeHistory.add(next_node); // we store the token into the history
-                return new Word(next_node.getWordID(), tokenNodeHistory, start); // and we return the result
+                tokenNodeHistory.add(next_token); // we store the token into the history
+                return new Word(next_token.getWordID(), tokenNodeHistory, start); // and we return the result
 
-            } else { // indexed token is a not word but starts a word
+            } else { // indexed token is a not word but starts a word we therefore try to extend it
 
                 tokenNodeHistory = new ArrayList();
-                tokenNodeHistory.add(next_node);
-                return getNextWord(text, start, tokenNodeHistory, index);
+                tokenNodeHistory.add(next_token);
+                return getNextWordInner(text, start, tokenNodeHistory, index);
             }
         } else {  // history is not null - we try to extend the current word 
 
@@ -434,20 +476,20 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             }
             // we try to extend the current word
             VocabularyIndex.TokenNode last_node = tokenNodeHistory.get(token_sequence_size - 1); // last token of the current word
-            next_node = last_node.getChild(text[start + token_sequence_size]);
+            next_token = last_node.getChild(text[start + token_sequence_size]);
 
-            if (next_node == null) { // word cannot be extended we iterate
+            if (next_token == null) { // word cannot be extended we iterate
 
                 return null;
 
-            } else if (next_node.isWordEnd()) { // adding the next token to the current created a word
+            } else if (next_token.isWordEnd()) { // adding the next token to the current created a word
 
-                tokenNodeHistory.add(next_node);
-                return new Word(next_node.getWordID(), tokenNodeHistory, start);
+                tokenNodeHistory.add(next_token);
+                return new Word(next_token.getWordID(), tokenNodeHistory, start);
 
             } else { // adding the next token extend a potential word but does not create a word yet
-                tokenNodeHistory.add(next_node);
-                return getNextWord(text, start, tokenNodeHistory, index);
+                tokenNodeHistory.add(next_token);
+                return getNextWordInner(text, start, tokenNodeHistory, index);
             }
         }
     }

@@ -220,26 +220,26 @@ public class CoOcurrenceEngine {
      * @param corpusDir
      * @param output_dir_path
      * @param window_token_size
-     * @param nbThreads
+     * @param nbThreadsLimit
      * @param nbFilesPerChunk
      * @param max_size_matrix
      * @throws slib.utils.ex.SLIB_Ex_Critic
      * @throws java.io.IOException
      */
-public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreads, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
+public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreadsLimit, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
 
         logger.info("Computing cooccurences");
         logger.info("corpus dir: " + corpusDir);
         logger.info("model dir: " + output_dir_path);
         logger.info("windows size left/right: " + window_token_size);
-        logger.info("threads: " + nbThreads);
+        logger.info("thread limit: " + nbThreadsLimit);
         logger.info("Number of files per chunk: " + nbFilesPerChunk);
         logger.info("Matrix size per thread: " + max_size_matrix);
 
         int vocsize = vocabularyIndex.getVocabulary().size();
         logger.info("Vocabulary size: " + vocsize);
         // The word cocccurence matrix will be access by numerous threads
-        ExecutorService threadPool = Executors.newFixedThreadPool(nbThreads);
+        ExecutorService threadPool = Executors.newFixedThreadPool(nbThreadsLimit);
 
         nb_files_to_analyse += Utils.countNbFiles(corpusDir);
 
@@ -260,8 +260,8 @@ public void computeCoOcurrence(String corpusDir, String output_dir_path, int win
 
         while (fileIterator.hasNext()) {
 
-            while(resultProcessor.nbServicesRunning == nbThreads){
-                logger.info("WAITING COMPLETION TO PROCESS NEW CHUNK: "+resultProcessor.nbServicesRunning+" THREADS RUNNING");
+            while(resultProcessor.nbServicesRunning == nbThreadsLimit){
+                logger.info(resultProcessor.nbServicesRunning+"/"+nbThreadsLimit+" threads running (master waiting for new resources)");
                 Thread.sleep(20000);
             }
             
@@ -270,29 +270,30 @@ public void computeCoOcurrence(String corpusDir, String output_dir_path, int win
 
             if (flist.size() == nbFilesPerChunk || !fileIterator.hasNext()) {
                 
+                logger.info("Create thread to process chunk: "+count_chunk);
                 Callable<CooccEngineResult> worker = new CoOccurrenceEngineTheads(count_chunk, flist, vocabularyIndex, window_token_size, output_dir + "/t_" + count_chunk, max_size_matrix);
                 resultProcessor.add(worker);
-                logger.info("RUNNING THREAD TO PROCESS CHUNK: "+resultProcessor.nbServicesRunning+" THREADS RUNNING");
                 
                 flist = new ArrayList();
                 count_chunk++;
             }
 
         }
-        resultProcessor.setActive(false);
         threadPool.shutdown();
 
         try {
             threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+            resultProcessor.setActive(false);
         } catch (InterruptedException e) {
             threadPool.shutdownNow();
             throw new SLIB_Ex_Critic("Error computing matrix coocurrence: " + e.getMessage());
         }
 
-        logger.info("Number of errors detect: " + resultProcessor.file_processing_errors + "/" + nb_files_to_analyse);
+        logger.info("Number of errors detected: " + resultProcessor.file_processing_errors + "/" + nb_files_to_analyse);
         logger.info("Number of critical errors: " + resultProcessor.critical_errors);
         if (resultProcessor.critical_errors != 0) {
-            throw new SLIB_Ex_Critic("An error occured processing the corpus... please consult the log");
+            logger.error("An error occured processing the corpus... please consult the log");
+            logger.info("We will try to complete the process...");
         }
 
         // -----------------------------------------------------------------
