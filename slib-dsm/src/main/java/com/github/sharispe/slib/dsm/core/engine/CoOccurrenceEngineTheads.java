@@ -33,7 +33,6 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads.CooccEngineResult;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
 import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrixGenerator;
 import com.github.sharispe.slib.dsm.utils.Utils;
@@ -140,10 +139,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         try {
             String s = FileUtils.readFileToString(file);
-            String[] stab = Utils.blank_pattern.split(s);
-
-            int[] text = tokenArrayToIDArray(stab, vocabularyIndex);
-
+            
             if (nbFileDone % 100 == 0) {
                 CoOcurrenceEngine.incrementProcessedFiles(nbFileDoneLastIteration);
                 nbFileDoneLastIteration = 0;
@@ -151,40 +147,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
                 String ps = Utils.format2digits(p);
                 logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + matrix.storedValues() + "/" + max_matrix_size + "\t corpus: " + CoOcurrenceEngine.getNbFilesProcessed() + "/" + CoOcurrenceEngine.getNbFilesToAnalyse() + "\t" + ps + "%  " + Utils.getCurrentDateAsString());
             }
-
-            List<Word> leftWords = new ArrayList();
-
-            Word word = getNextWord(text, 0, null, vocabularyIndex);
-
-            while (word != null) {
-
-                int idWord = word.wordID;
-                int startWindowLeft = word.start_loc - window_token_size;
-
-//                System.out.println("w" + idWord + ": " + vocabularyIndex.getWord(word.wordID));
-
-                // remove words that are not in the window
-                Iterator<Word> i = leftWords.iterator();
-                while (i.hasNext()) {
-
-                    Word w = i.next();
-
-                    if (w.start_loc < startWindowLeft) {
-                        i.remove();
-                    } else {
-                        // add cooccurence between current word and left window words
-                        matrix.add(idWord, w.wordID, 1);
-
-                        // and cooccurence between left window words and current word as well
-                        if (w.start_loc + window_token_size >= word.end_loc) {
-                            matrix.add(w.wordID, idWord, 1);
-                        }
-                    }
-                }
-                leftWords.add(word);
-
-                word = getNextWord(text, word.start_loc, word.tokens, vocabularyIndex);
-            }
+            
+            CoocurenceComputer.compute(s,vocabularyIndex,window_token_size,matrix);
 
             nbFileDoneLastIteration++;
         } catch (IOException ex) {
@@ -198,26 +162,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
     }
 
-    /**
-     * Convert an array of String to an array of IDs considering the given
-     * index. If a word is not defined into the index the value -1 is set.
-     *
-     * @param vocabularyIndex
-     * @param tokenArray
-     * @return
-     */
-    public static int[] tokenArrayToIDArray(String[] tokenArray, VocabularyIndex vocabularyIndex) {
-        int[] IDArray = new int[tokenArray.length];
-
-        for (int i = 0; i < tokenArray.length; i++) {
-            Integer k = vocabularyIndex.getTokenID(tokenArray[i]);
-            if (k == null) {
-                k = -1;
-            }
-            IDArray[i] = k;
-        }
-        return IDArray;
-    }
+ 
 
     private void flushMatrix() {
 
@@ -342,156 +287,4 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         return vectorAsString.toString();
     }
-
-    public class CooccEngineResult {
-
-        int file_processed;
-        int errors;
-
-        public CooccEngineResult(int file_processed, int errors) {
-            this.file_processed = file_processed;
-            this.errors = errors;
-        }
-
-        public int getFile_processed() {
-            return file_processed;
-        }
-
-        public int getNbErrors() {
-            return errors;
-        }
-
-    }
-
-    private static class Word {
-
-        List<VocabularyIndex.TokenNode> tokens;
-        int start_loc;
-        int end_loc;
-        int wordID;
-
-        public Word(int wordID, List<VocabularyIndex.TokenNode> tokens, int start_loc) {
-            this.wordID = wordID;
-            this.tokens = tokens;
-            this.start_loc = start_loc;
-            this.end_loc = start_loc + tokens.size() - 1;
-        }
-    }
-
-    /**
-     * Return the next word, as a sequence of node, which correspond to the next
-     * indexed word considering the given context, that is: text sequence, start
-     * location, previous word (as a list of Node).
-     *
-     * @param text
-     * @param start
-     * @param tokenNodeHistory
-     * @param index
-     * @return
-     */
-    private static Word getNextWord(int[] text, int start, List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
-
-        Word r = null;
-
-        while (start < text.length && r == null) {
-
-//            if (r == null) {
-//                System.out.println("\tstill looking");
-//            }
-//            System.out.println("\tlooking at : " + start + "/"+text.length+" token: "+index.getToken(text[start])+"\ttoken history: " + showTokenNodeHistory(tokenNodeHistory, index));
-            r = getNextWordInner(text, start, tokenNodeHistory, index);
-            
-            
-            tokenNodeHistory = null;
-            start++;
-        }
-
-//        System.out.println("\tfound: "+r);
-//        if(r != null) System.out.println("\tfound " + index.getWord(r.wordID));
-        return r;
-    }
-
-    private static String showTokenNodeHistory(List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
-        if (tokenNodeHistory == null) {
-            return "null";
-        } else {
-            String s = "";
-            for (VocabularyIndex.TokenNode t : tokenNodeHistory) {
-                s += " " + index.getToken(t.id);
-            }
-            return s;
-        }
-    }
-
-    /**
-     * Return the next token considering the given parameters. The method return
-     * null if no word can be created considering the given configuration.
-     *
-     * @param text
-     * @param start
-     * @param tokenNodeHistory
-     * @param index
-     * @return
-     */
-    private static Word getNextWordInner(int[] text, int start, List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
-
-        if (start >= text.length) {
-            return null;
-        }
-
-        int id_start_token = text[start];
-
-        VocabularyIndex.TokenNode next_token;
-
-        if (tokenNodeHistory == null || tokenNodeHistory.isEmpty()) { // we are starting a new word 
-
-            if (id_start_token == -1) { // the current token is not indexed in all cases we iterate trying to start a new word
-                return null;
-            }
-
-            // We are starting a new word the first token is therefore attached to the root
-            next_token = index.getTree_root().getChild(id_start_token);
-
-            // we test if the indexed token starts or is a word
-            if (next_token == null) { // does not a start word and is not word by itself we iterate trying to start a new word
-                return null;
-
-            } else if (next_token.isWordEnd()) { // indexed token is a word
-
-                tokenNodeHistory = new ArrayList();
-                tokenNodeHistory.add(next_token); // we store the token into the history
-                return new Word(next_token.getWordID(), tokenNodeHistory, start); // and we return the result
-
-            } else { // indexed token is a not word but starts a word we therefore try to extend it
-
-                tokenNodeHistory = new ArrayList();
-                tokenNodeHistory.add(next_token);
-                return getNextWordInner(text, start, tokenNodeHistory, index);
-            }
-        } else {  // history is not null - we try to extend the current word 
-
-            int token_sequence_size = tokenNodeHistory.size();
-            if (start + token_sequence_size >= text.length) { // word cannot be extended we iterate trying to start a new word
-                return null;
-            }
-            // we try to extend the current word
-            VocabularyIndex.TokenNode last_node = tokenNodeHistory.get(token_sequence_size - 1); // last token of the current word
-            next_token = last_node.getChild(text[start + token_sequence_size]);
-
-            if (next_token == null) { // word cannot be extended we iterate
-
-                return null;
-
-            } else if (next_token.isWordEnd()) { // adding the next token to the current created a word
-
-                tokenNodeHistory.add(next_token);
-                return new Word(next_token.getWordID(), tokenNodeHistory, start);
-
-            } else { // adding the next token extend a potential word but does not create a word yet
-                tokenNodeHistory.add(next_token);
-                return getNextWordInner(text, start, tokenNodeHistory, index);
-            }
-        }
-    }
-
 }

@@ -33,7 +33,6 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
-import com.github.sharispe.slib.dsm.core.engine.CoOccurrenceEngineTheads.CooccEngineResult;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
