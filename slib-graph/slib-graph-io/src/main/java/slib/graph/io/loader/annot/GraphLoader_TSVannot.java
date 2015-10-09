@@ -59,13 +59,13 @@ import slib.utils.impl.Util;
  *
  * To each line is associated an entry defining a key and a set of annotations
  * separated by ';'. As an example the first line XXXX1[TAB]c1;c2;c3 will lead
- * to the creation of three statements: XXXXX1 RDF.TYPE c1 <br/>
- * XXXXX1 RDF.TYPE c2 <br/>
- * XXXXX1 RDF.TYPE c3 <br/>
+ * to the creation of three statements: XXXXX1 RDF.TYPE c1 <br>
+ * XXXXX1 RDF.TYPE c2 <br>
+ * XXXXX1 RDF.TYPE c3 <br>
  * By default the semantic relationship is RDF.TYPE. Prefixes can also be
  * defined for the subjects and the objects of the statements created.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphLoader_TSVannot implements GraphLoader {
 

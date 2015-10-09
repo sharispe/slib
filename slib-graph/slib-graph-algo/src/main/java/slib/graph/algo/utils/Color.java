@@ -38,7 +38,7 @@ package slib.graph.algo.utils;
  * Enumeration used to represent colors.
  * Used for graph algorithms.
  * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum Color {
 

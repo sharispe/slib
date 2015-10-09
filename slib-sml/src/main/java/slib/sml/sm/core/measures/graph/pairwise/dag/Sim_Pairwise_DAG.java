@@ -37,7 +37,7 @@ import slib.sml.sm.core.measures.Sim_Pairwise;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public abstract class Sim_Pairwise_DAG extends Sim_Pairwise implements ISim_Pairwise_DAG {
 

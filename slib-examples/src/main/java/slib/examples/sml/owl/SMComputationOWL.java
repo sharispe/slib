@@ -60,7 +60,7 @@ import slib.utils.impl.Timer;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SMComputationOWL {
 

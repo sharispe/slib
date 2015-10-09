@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
  * Tversky A: Features of similarity. Psychological Review 1977, 84:327-352.
  * Implementation of the contrast model in a set-based manner.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_Framework_DAG_Set_Tversky_1977 extends Sim_Framework_DAG_Set_abstract {
 

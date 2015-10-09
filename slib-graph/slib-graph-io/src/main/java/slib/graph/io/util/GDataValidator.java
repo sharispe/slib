@@ -37,7 +37,7 @@ import slib.graph.io.conf.GDataConf;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GDataValidator {
 

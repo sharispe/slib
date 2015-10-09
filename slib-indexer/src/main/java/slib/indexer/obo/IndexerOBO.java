@@ -50,7 +50,7 @@ import slib.utils.impl.OBOconstants;
 /**
  * Class used to build an index for the terms specified in an OBO ontology
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class IndexerOBO {
 

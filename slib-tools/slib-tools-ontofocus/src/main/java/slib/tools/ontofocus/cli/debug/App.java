@@ -37,7 +37,7 @@ import slib.tools.ontofocus.cli.OntoFocusCmdHandler;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class App {
 

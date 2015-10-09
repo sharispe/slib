@@ -44,7 +44,7 @@ import slib.utils.impl.SetUtils;
  * ﻿Mistry M, Pavlidis P: Gene Ontology term overlap as a measure of gene
  * functional similarity. BMC bioinformatics 2008, 9:327.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_groupwise_DAG_NTO extends Sim_groupwise_DAG_abstract {

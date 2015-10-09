@@ -41,7 +41,7 @@ import slib.graph.model.graph.elements.E;
  *
  * Simple representation of a path in a graph.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Path {
 

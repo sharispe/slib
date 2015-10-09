@@ -39,7 +39,7 @@ import slib.utils.impl.ParametrableImpl;
 /**
  * Class used to represent an action which is applicable to a graph.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GAction extends ParametrableImpl implements CheckableValidity {
 

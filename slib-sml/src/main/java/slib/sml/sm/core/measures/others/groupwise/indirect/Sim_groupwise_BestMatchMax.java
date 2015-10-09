@@ -49,7 +49,7 @@ import slib.utils.impl.MatrixDouble;
  * Bioinformatics 2006, 7:302.
  *
  * Also called funSim in the literature.
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_BestMatchMax extends Sim_Groupwise_Indirect {
 

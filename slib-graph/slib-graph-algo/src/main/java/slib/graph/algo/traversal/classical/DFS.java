@@ -56,7 +56,7 @@ import slib.utils.impl.SetUtils;
  * creation. The iteration is then made on the stored topological sort. The
  * topological sort can also be retrieve.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class DFS implements GraphTraversal {

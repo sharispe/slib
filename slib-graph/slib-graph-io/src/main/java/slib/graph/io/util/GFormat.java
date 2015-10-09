@@ -35,7 +35,7 @@ package slib.graph.io.util;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum GFormat {
 

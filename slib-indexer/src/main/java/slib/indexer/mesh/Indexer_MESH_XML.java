@@ -35,7 +35,7 @@ package slib.indexer.mesh;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 import java.io.IOException;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * Class used to build an index for the descriptors specified in the MeSH XML.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Indexer_MESH_XML {
 

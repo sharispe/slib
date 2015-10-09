@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Ex_Warning;
  * Artificial Intelligence IJCAI. 1995, 1:448-453.
  *
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_node_Resnik_1995_Descendants extends Sim_DAG_node_abstract {

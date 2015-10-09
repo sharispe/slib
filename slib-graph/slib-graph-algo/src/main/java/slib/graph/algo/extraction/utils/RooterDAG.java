@@ -49,14 +49,14 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Object used to root a graph taking into consideration edge types defining
  * roots.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class RooterDAG {
 
     /**
      * Add a unique root to a DAG (underlying DAG) composed of multiple roots.
-     * <br/> The processed graph must be/contains a DAG according to a specified
+     * <br> The processed graph must be/contains a DAG according to a specified
      * set of edge type here called EtypeDAG. In other words the reduction of
      * the given graph build only considering the edges (and the involved nodes)
      * of a type contained in EtypeDAG must be a DAG. This reduction of the
@@ -68,17 +68,17 @@ public class RooterDAG {
      * href="http://en.wikipedia.org/wiki/Connectivity_(graph_theory)"> (more
      * about) </a> after processing if uDAG is already rooted no treatment
      * performed, specified root is not added and the current root URI is
-     * returned <br/> <br/>
+     * returned <br> <br>
      *
-     * Example <br/> <br/> input G a cyclic graph containing multiple taxonomic
-     * graphs (DAG considering SUPERCLASSOF/SUBCLASSOF relationships) <br/>
-     * EtypeDAG = SUPERCLASSOF <br/>
+     * Example <br> <br> input G a cyclic graph containing multiple taxonomic
+     * graphs (DAG considering SUPERCLASSOF/SUBCLASSOF relationships) <br>
+     * EtypeDAG = SUPERCLASSOF <br>
      *
      * uDAG the unconnected graph composed of the underlying taxonomic graphs
-     * <br/> invEtypeDAG = SUBCLASSOF <br/> roots : all uDAG graphs which are
-     * not subsumed by a vertex <br/> process -> add a subsuming vertex
+     * <br> invEtypeDAG = SUBCLASSOF <br> roots : all uDAG graphs which are
+     * not subsumed by a vertex <br> process → add a subsuming vertex
      * (rootURI) for each vertices in roots if the set of root is upper than 1
-     * (no unique root) <br/>
+     * (no unique root) <br>
      *
      * @param g the graph to root
      * @param wc the constraints associated to the walk.

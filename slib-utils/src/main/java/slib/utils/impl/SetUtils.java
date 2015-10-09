@@ -41,7 +41,7 @@ import java.util.Set;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SetUtils {
 
@@ -93,12 +93,12 @@ public class SetUtils {
     }
 
     /**
-     * Build a Set<X> containing the given object of type X. If the object is
-     * null, null is returned
+     * Build a {@code Set<X>} containing the given object of type X. If the
+     * object is null, null is returned
      *
      * @param <X>
      * @param o
-     * @return a Set<X> containing the given object of type X or null
+     * @return a {@code Set<X>} containing the given object of type X or null
      */
     public static <X> Set<X> buildSet(X o) {
         if (o == null) {

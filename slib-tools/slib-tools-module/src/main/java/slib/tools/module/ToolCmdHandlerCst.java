@@ -39,7 +39,7 @@ import org.apache.commons.cli.Option;
 /**
  * Abstract class defining the default constants of a tool command handler.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public abstract class ToolCmdHandlerCst {

@@ -48,7 +48,7 @@ import slib.sml.sm.core.engine.SM_Engine;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class VectorWeight_Chabalier_2007 {
 

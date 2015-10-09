@@ -37,7 +37,7 @@ import slib.sml.sm.core.measures.Dist_Pairwise;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public abstract class Dist_Pairwise_DAG extends Dist_Pairwise implements IDist_Pairwise_DAG {
 

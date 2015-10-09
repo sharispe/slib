@@ -45,7 +45,7 @@ import slib.utils.impl.SetUtils;
  *
  * Class used to defined static methods utility.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class IcUtils {
 

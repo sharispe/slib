@@ -39,7 +39,7 @@ import slib.sml.sm.core.measures.graph.pairwise.dag.Sim_Pairwise_DAG;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public abstract class Sim_DAG_node_abstract extends Sim_Pairwise_DAG{
 	

@@ -37,7 +37,7 @@ package slib.graph.io.loader.utils.filter.graph.metrics;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class FilterGraph_Metrics_cst{
 

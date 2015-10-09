@@ -40,7 +40,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Interface defining a Factory which must be used to create the URIs or namespace.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public interface URIFactory{

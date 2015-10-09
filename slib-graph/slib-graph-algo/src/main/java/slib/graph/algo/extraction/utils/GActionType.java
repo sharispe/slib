@@ -37,7 +37,7 @@ package slib.graph.algo.extraction.utils;
  * Enumeration used to represent the various types of actions which can be
  * applied to a graph.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public enum GActionType {
 

@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  * @param <R>
  * @param <C>
  */

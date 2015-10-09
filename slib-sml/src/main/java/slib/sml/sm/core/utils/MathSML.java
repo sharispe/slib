@@ -36,7 +36,7 @@ package slib.sml.sm.core.utils;
 /**
  * Class used to define some utility method for mathematical treatments.
  * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MathSML {
 

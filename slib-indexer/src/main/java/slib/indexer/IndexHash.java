@@ -42,7 +42,7 @@ import org.openrdf.model.URI;
  * as String values. This class is therefore mainly used to store labels or
  * string descriptions of a resource identified by an URI.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class IndexHash {
 

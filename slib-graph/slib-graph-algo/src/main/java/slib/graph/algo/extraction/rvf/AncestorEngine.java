@@ -45,7 +45,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Class used to provide an easy way to retrieve the ancestors of a concept
  * (super classes of a class).
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class AncestorEngine extends RVF_TAX {
 

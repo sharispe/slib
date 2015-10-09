@@ -44,7 +44,7 @@ import slib.sml.sm.core.utils.SMconf;
  * Conference of the IEEE Engineering in Medicine and Biology Society. IEEE
  * Engineering in Medicine and Biology Society. Conference 2006, 1:2713-7.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  *
  *

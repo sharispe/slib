@@ -66,7 +66,7 @@ import slib.utils.impl.Util;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sm_XMLConfLoader extends XML_ModuleConfLoader {
 

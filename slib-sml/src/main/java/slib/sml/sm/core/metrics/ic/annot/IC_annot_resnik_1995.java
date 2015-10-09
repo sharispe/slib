@@ -68,7 +68,7 @@ import slib.utils.ex.SLIB_Exception;
  * is a concept which does not subsumes any concept.
  * </p>
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class IC_annot_resnik_1995 extends LogBasedMetric implements ICcorpus {

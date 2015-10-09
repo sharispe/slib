@@ -38,7 +38,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class FilterGraph extends Filter{
 
