@@ -35,7 +35,7 @@ package slib.utils.i;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface CheckableValidity {
 

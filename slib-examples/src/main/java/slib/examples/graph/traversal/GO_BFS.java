@@ -55,7 +55,7 @@ import slib.utils.ex.SLIB_Exception;
  * Basic example which shows how to perform a Breadth-First Search on the Gene
  * Ontology.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GO_BFS {
 

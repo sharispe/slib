@@ -88,7 +88,7 @@ import slib.utils.impl.SetUtils;
 /**
  * This class defines a Semantic Measures Engine which gives access to several
  * methods commonly used to define ontology-based semantic measures.
- * <br/>
+ * <br>
  * The engine distinguished two types of vertices in the graph:
  * <ul>
  * <li>
@@ -115,7 +115,7 @@ import slib.utils.impl.SetUtils;
  * an ancestors is any class which is link by a path composed of RDFS.SUBCLASSOF
  * relationships.
  *
- * <br/><b>Important</b>:<br/>
+ * <br><b>Important</b>:<br>
  * Note that the graph associated to the engine is expected to be immutable even
  * if this condition will not be checked during the process. Indeed, the engine
  * expects the graph not to be modified and will not work on a copy of the given
@@ -133,7 +133,7 @@ import slib.utils.impl.SetUtils;
  * The engine stores commonly accessed results (e.g. ancestors of a class) which
  * can lead to high memory consumption dealing with large graphs.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SM_Engine {
 
@@ -293,7 +293,7 @@ public class SM_Engine {
     /**
      * Get the parents of a class, that is to say its direct ancestors.
      *
-     * <br/><b>Important</b>:<br/>
+     * <br><b>Important</b>:<br>
      *
      * The direct parent of a class are all classes x linked to the given class
      * c to a an edge x RDFS.SUBLASSOF c. The result is not cached by the
@@ -1061,7 +1061,7 @@ public class SM_Engine {
      * Set the configuration of the engine regarding pairwise semantic measure
      * score caching.
      *
-     * <br/><b>Important</b>:<br/>
+     * <br><b>Important</b>:<br>
      *
      * Storing the results can be very useful in specific cases. However,
      * storing the results can also lead to high memory consumption and
@@ -1132,8 +1132,9 @@ public class SM_Engine {
     }
 
     /**
-     * TODO store the weighting scheme in a Map<String,GWS> Provide a way to
-     * load edge weight from file or to compute them using specific methods
+     * TODO store the weighting scheme in a {@code Map<String,GWS>}, provide a
+     * way to load edge weight from file or to compute them using specific
+     * methods
      *
      * @param param the key corresponding to the id of the weighting scheme to
      * retrieve

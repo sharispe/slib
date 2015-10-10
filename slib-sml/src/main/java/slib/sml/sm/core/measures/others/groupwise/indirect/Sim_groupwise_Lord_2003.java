@@ -55,7 +55,7 @@ import slib.utils.impl.MatrixDouble;
  * 
  * Corresponds to the Average Strategy
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_groupwise_Lord_2003 extends Sim_Groupwise_Indirect {
 

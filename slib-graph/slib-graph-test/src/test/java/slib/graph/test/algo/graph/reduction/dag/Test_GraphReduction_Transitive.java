@@ -63,7 +63,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Test_GraphReduction_Transitive {
 

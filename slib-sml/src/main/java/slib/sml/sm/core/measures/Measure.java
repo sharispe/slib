@@ -37,7 +37,7 @@ package slib.sml.sm.core.measures;
  *
  * Generic interface of a measure which can be used to compare two objects.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface Measure {
 

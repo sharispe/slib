@@ -44,7 +44,7 @@ import slib.graph.model.graph.weight.GWS;
 /**
  * In memory Graph Weighting Scheme (GWS) implementation of {@link GWS}
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class GWS_impl implements GWS {

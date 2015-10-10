@@ -36,7 +36,7 @@ package slib.sml.sm.core.measures.vector;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class CosineSimilarity {
     

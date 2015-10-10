@@ -40,7 +40,7 @@ import slib.utils.i.Conf;
 /**
  * Representation of the configuration of a semantic measure.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SMconf extends Conf {
 

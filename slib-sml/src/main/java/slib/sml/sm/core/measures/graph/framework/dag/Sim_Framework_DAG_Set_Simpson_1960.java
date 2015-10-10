@@ -43,7 +43,7 @@ import slib.utils.impl.SetUtils;
  * Simpson GG: Notes on the measurement of faunal resemblance. American
  * Journal of Science 1960, 258A:300-311.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Sim_Framework_DAG_Set_Simpson_1960 extends Sim_Framework_DAG_Set_abstract {
 

@@ -36,7 +36,7 @@ package slib.sml.sm.core.measures;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MConstant {
     

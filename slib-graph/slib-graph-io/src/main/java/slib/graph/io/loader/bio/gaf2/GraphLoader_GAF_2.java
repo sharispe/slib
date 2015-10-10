@@ -62,7 +62,7 @@ import slib.utils.impl.BigFileReader;
  *
  * TODO - Manage multiple organism specification : taxon:1|taxon:1000
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphLoader_GAF_2 implements GraphLoader {
 

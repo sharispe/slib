@@ -42,7 +42,7 @@ import slib.utils.impl.ParametrableImpl;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphConf extends ParametrableImpl implements CheckableValidity, Comparable<Object> {
 

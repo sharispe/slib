@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 /**
  * Interface defining the methods representing an IC computer.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface IC {
 

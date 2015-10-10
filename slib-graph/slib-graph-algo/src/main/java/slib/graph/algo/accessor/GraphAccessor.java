@@ -48,7 +48,7 @@ import slib.utils.impl.SetUtils;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphAccessor {
 
@@ -58,11 +58,11 @@ public class GraphAccessor {
      * Return a set of URI corresponding to the classes of the graph. A vertex v
      * of the graph is considered as a class if the graph contains a statement
      * of the form :
-     * <ul>
-     * <li> v RFDS.SUBCLASSOF ? </li>
-     * <li> ? RDFS.SUBCLASSOF v </li>
-     * <li> ? RDF.TYPE v </li>
-     * </ul>
+       <ul>
+       <li> v RFDS.SUBCLASSOF ? </li>
+       <li> ? RDFS.SUBCLASSOF v </li>
+       <li> ? RDF.TYPE v </li>
+       </ul>
      *
      * @param graph the graph
      * @return a set of URI corresponding to the classes of the graph
@@ -91,13 +91,13 @@ public class GraphAccessor {
      * Return a set of URI corresponding to the instances of the graph, note
      * that instance. A vertex v of the graph is considered as an instance if the
      * graph do not contains a statement of the form :
-     * <ul>
-     * <li> v RFD.TYPE ? with ? not equals to
-     * RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL or OWL.CLASS
-     * </li>
-     * Those restrictions do not cover all cases e.g. RDF instance of
-     * RDFS.CONTAINER will be considered as instance...
-     * </ul>
+       <ul>
+       <li> v RFD.TYPE ? with ? not equals to
+       RDFS.RESOURCE/CLASS/LITERAL/DATATYPE/PROPERTY/XMLLITERAL or OWL.CLASS
+       </li>
+       </ul>
+       Those restrictions do not cover all cases e.g. RDF instance of
+       RDFS.CONTAINER will be considered as instance...
      *
      * @param graph the graph
      * @return a set of URI corresponding to the classes of the graph

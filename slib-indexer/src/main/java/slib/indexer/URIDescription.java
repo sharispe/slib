@@ -43,7 +43,7 @@ import org.openrdf.model.URI;
  * are mainly used to store and access the labels or descriptions associated to
  * a resource.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public interface URIDescription {
 

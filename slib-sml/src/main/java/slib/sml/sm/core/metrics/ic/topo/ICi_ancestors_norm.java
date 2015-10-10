@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  * Basic definition of an estimator of specificity based on the number of ancestors.
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ICi_ancestors_norm implements ICtopo{
 

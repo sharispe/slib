@@ -43,7 +43,7 @@ import slib.utils.impl.SetUtils;
  * Dice LR: Measures of the Amount of Ecologic Association Between Species.
  * Ecology 1945, 26:297-302.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_Framework_DAG_Set_Dice_1945 extends Sim_Framework_DAG_Set_abstract {

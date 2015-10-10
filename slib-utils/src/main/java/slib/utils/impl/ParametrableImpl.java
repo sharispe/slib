@@ -38,7 +38,7 @@ import java.util.Map;
 import slib.utils.i.Parametrable;
 
 /**
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ParametrableImpl implements Parametrable {
 

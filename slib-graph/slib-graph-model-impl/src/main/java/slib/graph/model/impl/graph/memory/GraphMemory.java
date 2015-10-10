@@ -49,7 +49,7 @@ import slib.graph.model.impl.graph.elements.Edge;
 /**
  * In memory implementation of {@link G}
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphMemory implements G {
 

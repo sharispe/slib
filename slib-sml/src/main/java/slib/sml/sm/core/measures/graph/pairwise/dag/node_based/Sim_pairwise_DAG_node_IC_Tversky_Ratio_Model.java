@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Exception;
 /**
  * IC formulation of Tversky Ratio Model
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_node_IC_Tversky_Ratio_Model extends Sim_DAG_node_abstract {

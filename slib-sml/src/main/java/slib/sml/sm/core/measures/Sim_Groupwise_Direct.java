@@ -37,6 +37,6 @@ package slib.sml.sm.core.measures;
  * Interface used to represent direct groupwise measures. Those measures do not
  * rely on a pairwise measure to compute the likeness of two group of concepts.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public abstract class Sim_Groupwise_Direct extends Sim_Groupwise {}

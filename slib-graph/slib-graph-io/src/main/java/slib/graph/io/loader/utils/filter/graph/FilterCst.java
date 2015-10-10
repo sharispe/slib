@@ -38,7 +38,7 @@ import slib.graph.io.loader.utils.filter.graph.metrics.FilterGraph_Metrics_cst;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class FilterCst {
 

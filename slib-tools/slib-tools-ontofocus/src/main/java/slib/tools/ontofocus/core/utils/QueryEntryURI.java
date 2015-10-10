@@ -40,7 +40,7 @@ import org.openrdf.model.URI;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public final class QueryEntryURI implements Map.Entry<String, Set<URI> > {
 	

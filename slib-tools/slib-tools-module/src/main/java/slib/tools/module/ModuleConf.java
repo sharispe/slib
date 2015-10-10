@@ -40,7 +40,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Interface defining the methods a module configuration
  * must implements.
  * 
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public interface ModuleConf {

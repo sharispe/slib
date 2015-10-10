@@ -35,7 +35,7 @@ package slib.utils.ex;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SLIB_Ex_Warning extends SLIB_Exception {
 

@@ -54,7 +54,7 @@ import slib.utils.impl.SetUtils;
 /**
  * Used to validate if a graph is directed and acyclic (DAG)
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ValidatorDAG {
 
@@ -234,7 +234,7 @@ public class ValidatorDAG {
 
     /**
      * Root vertices (terminal vertices) are those of type CLASS which respect
-     * the following restrictions :<br/> <ul> <li> must not contains an edges of
+     * the following restrictions :<br> <ul> <li> must not contains an edges of
      * the given types and direction </li> </ul>
      *
      * Do not check if the graph is a DAG

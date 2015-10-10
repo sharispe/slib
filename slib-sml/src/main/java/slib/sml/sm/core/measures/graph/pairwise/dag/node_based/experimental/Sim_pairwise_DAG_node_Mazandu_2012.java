@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Exception;
  * vol. 2012, Article ID 975783, 17 pages, 2012. doi:10.1155/2012/975783
  *
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_node_Mazandu_2012 extends Sim_DAG_node_abstract {

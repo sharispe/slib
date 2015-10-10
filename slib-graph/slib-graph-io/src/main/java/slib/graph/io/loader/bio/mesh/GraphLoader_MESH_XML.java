@@ -35,7 +35,7 @@ package slib.graph.io.loader.bio.mesh;
 
 /**
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 import java.io.IOException;
 import java.util.HashMap;
@@ -72,7 +72,7 @@ import slib.utils.ex.SLIB_Exception;
  * The loader was designed for the 2013 XML version of the MeSH, coherency with
  * prior or older version hasn't been tested.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class GraphLoader_MESH_XML implements GraphLoader {
 

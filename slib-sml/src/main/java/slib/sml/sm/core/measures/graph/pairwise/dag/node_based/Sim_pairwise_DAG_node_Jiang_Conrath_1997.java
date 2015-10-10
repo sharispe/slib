@@ -43,7 +43,7 @@ import slib.utils.ex.SLIB_Exception;
  * Lexical Taxonomy. In International Conference Research on Computational
  * Linguistics (ROCLING X). 1997, cmp-lg/970:15.
  *
- * @author Sébastien Harispe <sebastien.harispe@gmail.com>
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  *
  */
 public class Sim_pairwise_DAG_node_Jiang_Conrath_1997 extends Sim_DAG_node_abstract {
