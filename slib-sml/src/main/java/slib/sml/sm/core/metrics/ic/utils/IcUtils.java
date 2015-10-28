@@ -83,7 +83,7 @@ public class IcUtils {
 
 
             if (intersec.isEmpty()) {
-                throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compare concepts are locate under the specified root...");
+                throw new SLIB_Ex_Critic("Error detecting the common ancestors with the maximal IC\nSearching a max from an empty collection, be sure the compared concepts are locate under the specified root... setA"+setA+"\tsetB"+setB);
             } else if (icScores == null) {
                 throw new SLIB_Ex_Critic("Empty IC result stack... Treatment cannot be performed");
             }

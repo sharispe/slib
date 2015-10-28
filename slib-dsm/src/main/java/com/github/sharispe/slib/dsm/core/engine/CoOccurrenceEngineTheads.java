@@ -95,6 +95,9 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             matrix = SparseMatrixGenerator.buildSparseMatrix(vocabularyIndex.vocabulary.size(), vocabularyIndex.vocabulary.size());
 
             for (File f : files) {
+                
+                // TODO remove log
+                logger.info("(" + id + ") " + nbFileDone + "/" + files.size()+"  "+f.getPath());
 
                 nbFileDone++;
 
@@ -158,7 +161,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
         }
 
         // TODO REMOVE THIS LOG
-        logger.info("(" + id + ") done " + nbFileDone + "/" + files.size() + ": " + file.getPath());
+//        logger.info("(" + id + ") done " + nbFileDone + "/" + files.size() + ": " + file.getPath());
 
     }
 
