@@ -33,10 +33,13 @@
  */
 package com.github.sharispe.slib.dsm.utils;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.DirectoryStream;
@@ -158,7 +161,7 @@ public class Utils {
         } catch (IOException ex) {
             throw new SLIB_Ex_Critic(ex.getMessage());
         }
-        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
+//        logger.info("map " + filename + " loaded (n=" + map.size() + ")");
         return map;
     }
 
@@ -292,7 +295,7 @@ public class Utils {
         return words;
     }
 
-    public static int countNbFiles(String corpusDir) throws IOException {
+    public static long countNbFiles(String corpusDir) throws IOException {
         return countNbFiles(FileSystems.getDefault().getPath(corpusDir));
     }
 
@@ -303,14 +306,16 @@ public class Utils {
      * @return the number of files the corpus contains
      * @throws IOException
      */
-    private static int countNbFiles(Path corpusDir) throws IOException {
+    private static long countNbFiles(Path corpusDir) throws IOException {
 
-        int count = 0;
+        long count = 0;
         try (DirectoryStream<Path> ds = Files.newDirectoryStream(corpusDir)) {
             for (Path p : ds) {
-                count++;
+
                 if (Files.isDirectory(p)) {
                     count += countNbFiles(p);
+                } else {
+                    count++;
                 }
             }
         }
@@ -321,5 +326,27 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    // copy paste http://stackoverflow.com/questions/453018/number-of-lines-in-a-file-in-java
+    public static long countLines(String filename) throws IOException {
+        InputStream is = new BufferedInputStream(new FileInputStream(filename));
+        try {
+            byte[] c = new byte[1024];
+            int count = 0;
+            int readChars = 0;
+            boolean empty = true;
+            while ((readChars = is.read(c)) != -1) {
+                empty = false;
+                for (int i = 0; i < readChars; ++i) {
+                    if (c[i] == '\n') {
+                        ++count;
+                    }
+                }
+            }
+            return (count == 0 && !empty) ? 1 : count;
+        } finally {
+            is.close();
+        }
     }
 }

@@ -33,10 +33,12 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import static com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract.logger;
 import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,16 +56,15 @@ import java.util.logging.Logger;
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public class WordIterator_Dictionary implements WordIterator {
+public class WordIterator_DictionaryFromFile implements WordIterator {
 
     long nbScannedWords;
     long nbValidScannedWords;
 
     final Vocabulary vocabulary;
     final int word_size_constraint;
-    String[] array_line;
-    String[] lines;
-    int idCurrentLine = 0;
+    BufferedReader br;
+    String[] array;
     StringBuffer sbuffer;
 
     String nextWord;
@@ -72,24 +73,26 @@ public class WordIterator_Dictionary implements WordIterator {
     int current_loc_start_array = 0;
     int current_word_size = 1;
 
-    public WordIterator_Dictionary(Document d, Vocabulary vocabulary) throws IOException {
-        
-        lines = d.getContent().split("\n");
-        
+    public WordIterator_DictionaryFromFile(File f, Vocabulary vocabulary) throws IOException {
+        br = new BufferedReader(new FileReader(f));
         this.vocabulary = vocabulary;
         word_size_constraint = vocabulary.getMax_token_lenght();
-        array_line = loadNextNonEmptyLine();
-
+        array = loadNextNonEmptyLine();
         computeNextWord();
     }
 
     public final String[] loadNextNonEmptyLine() throws IOException {
 
-        if(idCurrentLine < lines.length){
-            idCurrentLine++;
-            String[] line = Utils.blank_pattern.split(lines[idCurrentLine-1]);
-            if(line.length == 0) return loadNextNonEmptyLine();
-            return line;
+        String line = br.readLine();
+        while (line != null) {
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                line = br.readLine();
+                continue;
+            }
+            return Utils.blank_pattern.split(line);
         }
         return null;
     }
@@ -105,13 +108,16 @@ public class WordIterator_Dictionary implements WordIterator {
         try {
             computeNextWord();
         } catch (IOException ex) {
-            Logger.getLogger(WordIterator_Dictionary.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(WordIterator_DictionaryFromFile.class.getName()).log(Level.SEVERE, null, ex);
         }
         return next;
     }
 
     @Override
     public void close() throws IOException {
+        if (br != null) {
+            br.close();
+        }
     }
 
     @Override
@@ -121,7 +127,7 @@ public class WordIterator_Dictionary implements WordIterator {
 
     private void computeNextWord() throws IOException {
 
-        if (array_line == null) {
+        if (array == null) {
             nextWord = null;
             close();
             return;
@@ -129,8 +135,7 @@ public class WordIterator_Dictionary implements WordIterator {
 
         nextWord = null;
 
-//        logger.info("current line: [["+Arrays.toString(array_line)+"]]");
-//        logger.info("loc_start: " + (current_loc_start_array + 1) + "/" + array_line.length);
+//        logger.info("loc_start: " + (current_loc_start_array + 1) + "/" + array.length);
 //        logger.info("word_size: " + current_word_size);
 //        logger.info("word_size cst: " + word_size_constraint);
         sbuffer = new StringBuffer();
@@ -141,7 +146,7 @@ public class WordIterator_Dictionary implements WordIterator {
             if (i != current_loc_start_array) {
                 sbuffer.append(' ');
             }
-            sbuffer.append(array_line[i]);
+            sbuffer.append(array[i]);
         }
 
         String w = sbuffer.toString();
@@ -158,17 +163,17 @@ public class WordIterator_Dictionary implements WordIterator {
         // - (ii) there is no more space to build such a larger word (but a shorter one could be possible).
         current_word_size++;
 
-        if (current_word_size > word_size_constraint || current_loc_start_array + current_word_size > array_line.length) {
+        if (current_word_size > word_size_constraint || current_loc_start_array + current_word_size > array.length) {
             current_word_size = 1;
             current_loc_start_array++;
 
             // (2) we check that we have not already processed the last token
             // if this is the case we load the next line
-            if (current_loc_start_array == array_line.length) {
+            if (current_loc_start_array == array.length) {
 
                 current_loc_start_array = 0;
                 try {
-                    array_line = loadNextNonEmptyLine();
+                    array = loadNextNonEmptyLine();
                 } catch (IOException ex) {
                     logger.error(WordIteratorAbstract.class.getName(), ex.getMessage());
                     ex.printStackTrace();

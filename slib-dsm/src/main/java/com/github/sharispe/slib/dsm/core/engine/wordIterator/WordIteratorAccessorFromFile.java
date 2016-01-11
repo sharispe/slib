@@ -33,7 +33,6 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import java.io.File;
 import java.io.IOException;
@@ -44,7 +43,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public class WordIteratorAccessor {
+public class WordIteratorAccessorFromFile {
 
     /**
      * Provides access to the suitable word accessor considering the given
@@ -63,19 +62,19 @@ public class WordIteratorAccessor {
      * @throws SLIB_Ex_Critic
      * @throws IOException
      */
-    public static WordIterator getWordIterator(Document d, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
+    public static WordIterator getWordIterator(File f, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
         switch (c) {
             case ALLOW_SHORTER_WORDS:
-                return new WordIterator_Allow_Shorter(d, word_size_constraint);
+                return new WordIterator_Allow_ShorterFromFile(f, word_size_constraint);
             case FIXED_SIZE:
-                return new WordIterator_FixedSize(d, word_size_constraint);
+                return new WordIterator_FixedSizeFromFile(f, word_size_constraint);
             default:
                 throw new SLIB_Ex_Critic(c + " is not a supported word constraint");
         }
     }
 
-    public static WordIterator getWordIterator(Document d, Vocabulary vocabulary) throws IOException {
-        return new WordIterator_Dictionary(d, vocabulary);
+    public static WordIterator getWordIterator(File f, Vocabulary vocabulary) throws IOException {
+        return new WordIterator_DictionaryFromFile(f, vocabulary);
     }
 
 }

@@ -33,41 +33,40 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.corpus.Document;
-import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public abstract class WordIteratorAbstract implements WordIterator {
+public abstract class WordIteratorAbstractFromFile implements WordIterator {
 
     final int word_size_constraint;
+    BufferedReader br;
     String[] array;
-    String[] lines;
-    int idCurrentLine = 0;
     StringBuffer sbuffer;
 
     // internal variables used for algorithmic purpose
     int current_loc_start_array = 0;
     int current_word_size = 1;
 
-    final static org.slf4j.Logger logger = LoggerFactory.getLogger(WordIteratorAbstract.class);
+    final static org.slf4j.Logger logger = LoggerFactory.getLogger(WordIteratorAbstractFromFile.class);
 
     /**
      * Note that any WordIterator instance has to be closed.
      *
-     * @param d
+     * @param f the file in which to iterate
      * @param word_size_constraint
      * @throws IOException
      */
-    public WordIteratorAbstract(Document d, int word_size_constraint) throws IOException {
+    public WordIteratorAbstractFromFile(File f, int word_size_constraint) throws IOException {
 
         this.word_size_constraint = word_size_constraint;
-        lines = d.getContent().split("\n");
-        array = loadNextNonEmptyLine();
+        br = new BufferedReader(new FileReader(f));
+        array = loadNextNonEmptyLine(); 
     }
 
     /**
@@ -80,8 +79,9 @@ public abstract class WordIteratorAbstract implements WordIterator {
         if (array == null) {
             try {
                 close();
+                br = null;
             } catch (IOException ex) {
-                logger.error(WordIteratorAbstract.class.getName() + "" + ex.getMessage());
+                logger.error(WordIteratorAbstractFromFile.class.getName() + "" + ex.getMessage());
                 ex.printStackTrace();
             }
             return false;
@@ -91,6 +91,9 @@ public abstract class WordIteratorAbstract implements WordIterator {
 
     @Override
     public void close() throws IOException {
+        if (br != null) {
+            br.close();
+        }
     }
 
     @Override
@@ -105,26 +108,6 @@ public abstract class WordIteratorAbstract implements WordIterator {
      * there is no more empty line the methods return null.
      * @throws IOException
      */
-    public final String[] loadNextNonEmptyLine() throws IOException {
-
-        String[] nextLine = null;
-        String l;
-        while (idCurrentLine < lines.length && nextLine == null) {
-            idCurrentLine++;
-            l = lines[idCurrentLine - 1].trim();
-            if (l.length() == 0) {
-                continue;
-            }
-            nextLine = Utils.blank_pattern.split(l);
-            if (nextLine.length == 0) {
-                nextLine = null;
-            }
-        }
-//        System.out.println("NextNonEmptyLine: " + Arrays.toString(nextLine));
-//        if (nextLine != null) {
-//            System.out.println(nextLine.length);
-//        }
-        return nextLine;
-    }
+    abstract String[] loadNextNonEmptyLine() throws IOException;
 
 }

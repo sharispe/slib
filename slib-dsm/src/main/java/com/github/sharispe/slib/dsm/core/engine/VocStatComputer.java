@@ -33,6 +33,8 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
+import com.github.sharispe.slib.dsm.core.corpus.Corpus;
+import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
 import com.github.sharispe.slib.dsm.utils.RQueue;
 import com.github.sharispe.slib.dsm.utils.Utils;
@@ -75,8 +77,8 @@ import slib.utils.threads.ThreadManager;
  */
 public class VocStatComputer {
 
-    private static int nb_files_processed = 0;
-    private static int nb_files_to_analyse = 0;
+    private static long nb_files_processed = 0;
+    private static long nb_files_to_analyse = 0;
 
     public final static int DEFAULT_CHUNK_FILE_SIZE = 50000;
 
@@ -120,17 +122,17 @@ public class VocStatComputer {
      * @throws SLIB_Ex_Critic
      * @throws Exception
      */
-    public static synchronized void computeVocStats(String corpusDir, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
-        computeVocStats_inner(corpusDir, outputDir, wordSizeConstraint, wordIteratorConstraint, null, nbThreads, file_per_threads, cache_thread);
+    public static synchronized void computeVocStats(Corpus corpus, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
+        computeVocStats_inner(corpus, outputDir, wordSizeConstraint, wordIteratorConstraint, null, nbThreads, file_per_threads, cache_thread);
     }
 
-    public static synchronized void computeVocStats(String corpusDir, String outputDir, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
-        computeVocStats_inner(corpusDir, outputDir, 0, null, vocabularyFile, nbThreads, file_per_threads, cache_thread);
+    public static synchronized void computeVocStats(Corpus corpus, String outputDir, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
+        computeVocStats_inner(corpus, outputDir, 0, null, vocabularyFile, nbThreads, file_per_threads, cache_thread);
     }
 
-    private static synchronized void computeVocStats_inner(String corpusDir, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
+    private static synchronized void computeVocStats_inner(Corpus corpus, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, String vocabularyFile, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
 
-        logger.info("Computing statistics for directory: " + corpusDir);
+        logger.info("Computing statistics for corpus: " + corpus);
 
         boolean use_vocabulary = vocabularyFile != null;
         Vocabulary vocabulary = null;
@@ -148,7 +150,7 @@ public class VocStatComputer {
         logger.info("file per threads: " + file_per_threads);
         logger.info("cache per threads: " + cache_thread);
 
-        nb_files_to_analyse = Utils.countNbFiles(corpusDir);
+        nb_files_to_analyse = corpus.getSize();
 
         logger.info("vocabulary index output: " + outputDir);
         logger.info("Number of files: " + nb_files_to_analyse);
@@ -169,27 +171,31 @@ public class VocStatComputer {
 
         PoolWorker poolWorker = threadManager.getMaxLoadPoolWorker();
 
-        Iterator<File> fileIterator = FileUtils.iterateFiles(new File(corpusDir), TrueFileFilter.TRUE, TrueFileFilter.INSTANCE);
+        Iterable<Document> documents = corpus.getDocuments();
+        List<Document> docSubset = new ArrayList();
 
-        while (fileIterator.hasNext()) {
+        int c = 0;
+        
+        for (Document d : documents) {
 
-            poolWorker.awaitFreeResource();
+            c++;
+            
+            if (docSubset.size() == chunk_size || (c ==  nb_files_to_analyse && !docSubset.isEmpty())) {
 
-            List<File> flist = new ArrayList();
-            while (fileIterator.hasNext() && flist.size() != chunk_size) {
-                File n = fileIterator.next();
-//                logger.info("queuing: " + n.toString());
-                flist.add(n);
-            }
-            poolWorker.addTask();
-            Callable<VocStatResult> worker;
-            if (use_vocabulary) {
-                worker = new VocStatComputerThreads(poolWorker, count_chunk, flist, vocabulary, outputDir + "/tmp", cache_thread);
+                poolWorker.awaitFreeResource();
+                poolWorker.addTask();
+                Callable<VocStatResult> worker;
+                if (use_vocabulary) {
+                    worker = new VocStatComputerThreads(poolWorker, count_chunk, docSubset, vocabulary, outputDir + "/tmp", cache_thread);
+                } else {
+                    worker = new VocStatComputerThreads(poolWorker, count_chunk, docSubset, wordSizeConstraint, wordIteratorConstraint, outputDir + "/tmp", cache_thread);
+                }
+                count_chunk++;
+                poolWorker.getPool().submit(worker);
+                docSubset = new ArrayList();
             } else {
-                worker = new VocStatComputerThreads(poolWorker, count_chunk, flist, wordSizeConstraint, wordIteratorConstraint, outputDir + "/tmp", cache_thread);
+                docSubset.add(d);
             }
-            count_chunk++;
-            poolWorker.getPool().submit(worker);
         }
 
         poolWorker.shutdown();
@@ -225,14 +231,14 @@ public class VocStatComputer {
     /**
      * @return the number of files already processed.
      */
-    public static int getNbFilesProcessed() {
+    public static long getNbFilesProcessed() {
         return nb_files_processed;
     }
 
     /**
      * @return the total number of files to analyse.
      */
-    public static int getNbFilesToAnalyse() {
+    public static long getNbFilesToAnalyse() {
         return nb_files_to_analyse;
     }
 

@@ -33,6 +33,7 @@
  */
 package com.github.sharispe.slib.dsm.core.engine;
 
+import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIterator;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAccessor;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
@@ -57,7 +58,7 @@ import slib.utils.threads.PoolWorker;
 public class VocStatComputerThreads implements Callable<VocStatResult> {
 
     PoolWorker poolWorker;
-    List<File> files;
+    List<Document> documents;
     int max_size_word;
     int id;
     MapIndexer indexer;
@@ -70,15 +71,15 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
     final static Logger logger = LoggerFactory.getLogger(VocStatComputerThreads.class);
 
-    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index) {
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<Document> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index) {
         this(poolWorker, id, flist, max_size_word, wordIteratorConstraint, dir_root_index, DEFAULT_CACHE_MAP_SIZE);
     }
 
-    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index, int cache_thread) {
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<Document> flist, int max_size_word, WordIteratorConstraint wordIteratorConstraint, String dir_root_index, int cache_thread) {
 
         this.poolWorker = poolWorker;
         this.id = id;
-        this.files = flist;
+        this.documents = flist;
         this.max_size_word = max_size_word;
         this.rootPath = dir_root_index + "/t_" + id;
         this.indexer = new MapIndexer(rootPath, id + "");
@@ -87,11 +88,11 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
         this.vocabulary = null;
     }
 
-    VocStatComputerThreads(PoolWorker poolWorker, int id, List<File> flist, final Vocabulary vocabulary, String dir_root_index, int cache_thread) {
+    VocStatComputerThreads(PoolWorker poolWorker, int id, List<Document> documents, final Vocabulary vocabulary, String dir_root_index, int cache_thread) {
 
         this.poolWorker = poolWorker;
         this.id = id;
-        this.files = flist;
+        this.documents = documents;
         this.vocabulary = vocabulary;
         this.rootPath = dir_root_index + "/t_" + id;
         this.indexer = new MapIndexer(rootPath, id + "");
@@ -105,7 +106,7 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             logger.info("(" + id + ") computation initiated " + dateFormat.format(new Date()));
-            logger.info("(" + id + ") files: " + files.size());
+            logger.info("(" + id + ") files: " + documents.size());
 
             long wordScanned = 0;
             long validateWordScanned = 0;
@@ -121,26 +122,26 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
             try (FileWriter corpusIndexWriter = new FileWriter(corpus_index)) {
 
-                for (File f : files) {
+                for (Document doc : documents) {
 
-//                    logger.info("processing: "+f);
+//                    System.out.println("doc "+ doc.getId());
                     nbFileDoneLastIteration++;
 
                     int file_id = nbFileDone;
-                    corpusIndexWriter.write(file_id + "\t" + f.getPath() + "\n");
+                    corpusIndexWriter.write(file_id + "\t" + doc.getId() + "\n");
 
-                    if (nbFileDone % 1000 == 0) {
+                    if (nbFileDone % 500 == 0) {
                         VocStatComputer.incrementProcessedFiles(nbFileDoneLastIteration);
                         nbFileDoneLastIteration = 0;
                         double p = VocStatComputer.getNbFilesProcessed() * 100.0 / VocStatComputer.getNbFilesToAnalyse();
                         String ps = Utils.format2digits(p);
-                        logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
+                        logger.info("(" + id + ") File: " + nbFileDone + "/" + documents.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
                     }
 
                     if (vocabulary != null) {
-                        wordIT = WordIteratorAccessor.getWordIterator(f, vocabulary);
+                        wordIT = WordIteratorAccessor.getWordIterator(doc, vocabulary);
                     } else {
-                        wordIT = WordIteratorAccessor.getWordIterator(f, max_size_word, wordIteratorConstraint);
+                        wordIT = WordIteratorAccessor.getWordIterator(doc, max_size_word, wordIteratorConstraint);
                     }
 
                     fileVoc = new HashMap();
@@ -149,6 +150,8 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
                     while (wordIT.hasNext()) {
 
                         w = wordIT.next();
+                        
+//                        System.out.println("-- '"+w+"'");
 
                         if (!wordOccurences.containsKey(w)) {
                             int size = Utils.blank_pattern.split(w).length;
@@ -171,10 +174,12 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
                         winfo.addFileWithWord();
                         winfo.concatAdditionnalInfo(file_id + "-" + fileVoc.get(word));
                     }
+                    
+//                    System.out.println(wordOccurences);
 
                     if (wordOccurences.size() >= cache_map_size) {
                         indexer.addToIndex(wordOccurences);
-                        logger.info("(" + id + ") * File: " + nbFileDone + "/" + files.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
+                        logger.info("(" + id + ") * File: " + nbFileDone + "/" + documents.size() + "\t" + " on " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + dateFormat.format(new Date()));
                         wordOccurences.clear();
                     }
                     nbFileDone++;
@@ -190,7 +195,7 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
 
             double p = VocStatComputer.getNbFilesProcessed() * 100.0 / VocStatComputer.getNbFilesToAnalyse();
             String ps = Utils.format2digits(p);
-            logger.info("(" + id + ") File: " + nbFileDone + "/" + files.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
+            logger.info("(" + id + ") File: " + nbFileDone + "/" + documents.size() + "\t\tcache: " + wordOccurences.size() + "/" + cache_map_size + "\t corpus: " + VocStatComputer.getNbFilesProcessed() + "/" + VocStatComputer.getNbFilesToAnalyse() + "\t" + ps + "%");
         } catch (Exception e) {
             logger.error("An error occured in thread: " + id);
             e.printStackTrace();

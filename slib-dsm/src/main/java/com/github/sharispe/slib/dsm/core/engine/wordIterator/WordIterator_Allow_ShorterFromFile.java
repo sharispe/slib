@@ -33,104 +33,36 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.corpus.Document;
-import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
 import static com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract.logger;
 import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- * Implementation of the interface {@link WordIterator} considering a given
- * vocabulary - only the words in the vocabulary will be returned. As an example
- * considering the following sentence "Twenty years from now you will be more
- * disappointed by the things that you didn’t do than by the ones you did do, so
- * throw off the bowlines, sail away from safe harbor, catch the trade winds in
- * your sails. Explore, Dream, Discover. –Mark Twain" and considering the
- * following vocabulary [things, Mark Twain, years, random, safe, sail] word
- * size of 3 the iterator will return five words: (1) years, (2) things, (3)
- * sail, (4) safe, (5) Mark Twain.
+ * Implementation of the interface {@link WordIterator} considering a maximal
+ * word size - shorter words are also returned. As an example considering the
+ * following sentence "Twenty years from now you will be more disappointed by
+ * the things that you didn’t do than by the ones you did do, so throw off the
+ * bowlines, sail away from safe harbor, catch the trade winds in your sails.
+ * Explore, Dream, Discover. –Mark Twain" and considering a maximum word size of
+ * 3 the iterator will return (1) Twenty, (2) Twenty years, (3) Twenty years
+ * from, (4) years, (5) years from, (6) years from now, ...
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public class WordIterator_Dictionary implements WordIterator {
+public class WordIterator_Allow_ShorterFromFile extends WordIteratorAbstractFromFile {
 
     long nbScannedWords;
-    long nbValidScannedWords;
 
-    final Vocabulary vocabulary;
-    final int word_size_constraint;
-    String[] array_line;
-    String[] lines;
-    int idCurrentLine = 0;
-    StringBuffer sbuffer;
-
-    String nextWord;
-
-    // internal variables used for algorithmic purpose
-    int current_loc_start_array = 0;
-    int current_word_size = 1;
-
-    public WordIterator_Dictionary(Document d, Vocabulary vocabulary) throws IOException {
-        
-        lines = d.getContent().split("\n");
-        
-        this.vocabulary = vocabulary;
-        word_size_constraint = vocabulary.getMax_token_lenght();
-        array_line = loadNextNonEmptyLine();
-
-        computeNextWord();
-    }
-
-    public final String[] loadNextNonEmptyLine() throws IOException {
-
-        if(idCurrentLine < lines.length){
-            idCurrentLine++;
-            String[] line = Utils.blank_pattern.split(lines[idCurrentLine-1]);
-            if(line.length == 0) return loadNextNonEmptyLine();
-            return line;
-        }
-        return null;
-    }
-
-    @Override
-    public WordIteratorConstraint getConstraint() {
-        return WordIteratorConstraint.FIXED_VOCABULARY;
+    public WordIterator_Allow_ShorterFromFile(File f, int word_size_constraint) throws IOException {
+        super(f, word_size_constraint);
+        current_word_size = 1;
     }
 
     @Override
     public String next() {
-        String next = nextWord;
-        try {
-            computeNextWord();
-        } catch (IOException ex) {
-            Logger.getLogger(WordIterator_Dictionary.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return next;
-    }
 
-    @Override
-    public void close() throws IOException {
-    }
-
-    @Override
-    public boolean hasNext() {
-        return nextWord != null;
-    }
-
-    private void computeNextWord() throws IOException {
-
-        if (array_line == null) {
-            nextWord = null;
-            close();
-            return;
-        }
-
-        nextWord = null;
-
-//        logger.info("current line: [["+Arrays.toString(array_line)+"]]");
-//        logger.info("loc_start: " + (current_loc_start_array + 1) + "/" + array_line.length);
+//        logger.info("loc_start: " + (current_loc_start_array + 1) + "/" + array.length);
 //        logger.info("word_size: " + current_word_size);
 //        logger.info("word_size cst: " + word_size_constraint);
         sbuffer = new StringBuffer();
@@ -141,15 +73,10 @@ public class WordIterator_Dictionary implements WordIterator {
             if (i != current_loc_start_array) {
                 sbuffer.append(' ');
             }
-            sbuffer.append(array_line[i]);
+            sbuffer.append(array[i]);
         }
 
         String w = sbuffer.toString();
-        if (vocabulary.contains(w)) {
-            nextWord = w;
-            nbValidScannedWords++;
-        }
-        nbScannedWords++;
 
         // We prepare the setting for the next iteration
         // (1) we try to enlarge the word if possible. 
@@ -158,27 +85,47 @@ public class WordIterator_Dictionary implements WordIterator {
         // - (ii) there is no more space to build such a larger word (but a shorter one could be possible).
         current_word_size++;
 
-        if (current_word_size > word_size_constraint || current_loc_start_array + current_word_size > array_line.length) {
+        if (current_word_size > word_size_constraint || current_loc_start_array + current_word_size > array.length) {
             current_word_size = 1;
             current_loc_start_array++;
 
             // (2) we check that we have not already processed the last token
             // if this is the case we load the next line
-            if (current_loc_start_array == array_line.length) {
+            if (current_loc_start_array == array.length) {
 
                 current_loc_start_array = 0;
                 try {
-                    array_line = loadNextNonEmptyLine();
+                    array = loadNextNonEmptyLine();
                 } catch (IOException ex) {
                     logger.error(WordIteratorAbstract.class.getName(), ex.getMessage());
                     ex.printStackTrace();
                 }
             }
         }
+        nbScannedWords++;
+        return w;
+    }
 
-        if (nextWord == null) {
-            computeNextWord();
+    @Override
+    public WordIteratorConstraint getConstraint() {
+        return WordIteratorConstraint.ALLOW_SHORTER_WORDS;
+    }
+
+    @Override
+    public String[] loadNextNonEmptyLine() throws IOException {
+
+        String line = br.readLine();
+        while (line != null) {
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                line = br.readLine();
+                continue;
+            }
+            return Utils.blank_pattern.split(line);
         }
+        return null;
     }
 
     @Override
@@ -188,7 +135,7 @@ public class WordIterator_Dictionary implements WordIterator {
 
     @Override
     public long nbValidScannedWords() {
-        return nbValidScannedWords;
+        return nbScannedWords;
     }
 
 }

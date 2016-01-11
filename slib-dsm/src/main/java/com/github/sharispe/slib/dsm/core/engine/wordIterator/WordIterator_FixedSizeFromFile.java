@@ -33,30 +33,28 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import com.github.sharispe.slib.dsm.core.corpus.Document;
-import static com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract.logger;
 import com.github.sharispe.slib.dsm.utils.Utils;
+import java.io.File;
 import java.io.IOException;
 
 /**
- * Implementation of the interface {@link WordIterator} considering a maximal
- * word size - shorter words are also returned. As an example considering the
- * following sentence "Twenty years from now you will be more disappointed by
- * the things that you didn’t do than by the ones you did do, so throw off the
- * bowlines, sail away from safe harbor, catch the trade winds in your sails.
- * Explore, Dream, Discover. –Mark Twain" and considering a maximum word size of
- * 3 the iterator will return (1) Twenty, (2) Twenty years, (3) Twenty years
- * from, (4) years, (5) years from, (6) years from now, ...
+ * Implementation of the interface {@link WordIterator} considering a fixed word
+ * size. As an example considering the following sentence "Twenty years from now
+ * you will be more disappointed by the things that you didn’t do than by the
+ * ones you did do, so throw off the bowlines, sail away from safe harbor, catch
+ * the trade winds in your sails. Explore, Dream, Discover. –Mark Twain"
+ * considering a fixed size of 2 the iterator will return (1) Twenty years, (2)
+ * years from, (3) from now, (4) now you ...
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
-public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
-
+public class WordIterator_FixedSizeFromFile extends WordIteratorAbstractFromFile {
+    
     long nbScannedWords;
 
-    public WordIterator_Allow_Shorter(Document d, int word_size_constraint) throws IOException {
-        super(d, word_size_constraint);
-        current_word_size = 1;
+    public WordIterator_FixedSizeFromFile(File f, int word_size_constraint) throws IOException {
+        super(f, word_size_constraint);
+        current_word_size = word_size_constraint;
     }
 
     @Override
@@ -79,39 +77,53 @@ public class WordIterator_Allow_Shorter extends WordIteratorAbstract {
         String w = sbuffer.toString();
 
         // We prepare the setting for the next iteration
-        // (1) we try to enlarge the word if possible. 
+        // (1) we iterate the starting position of the next word if possible. 
         // we reset the size to 1 and we define the starting point to be the next token if 
-        // - (i) extending the word will violate the word size constraint, 
-        // - (ii) there is no more space to build such a larger word (but a shorter one could be possible).
-        current_word_size++;
+        // - (i) there is no more space to build such a larger word.
+        current_loc_start_array++;
 
-        if (current_word_size > word_size_constraint || current_loc_start_array + current_word_size > array.length) {
-            current_word_size = 1;
-            current_loc_start_array++;
-
-            // (2) we check that we have not already processed the last token
-            // if this is the case we load the next line
-            if (current_loc_start_array == array.length) {
-
-                current_loc_start_array = 0;
-                try {
-                    array = loadNextNonEmptyLine();
-                } catch (IOException ex) {
-                    logger.error(WordIteratorAbstract.class.getName(), ex.getMessage());
-                    ex.printStackTrace();
-                }
+        if (current_loc_start_array + current_word_size > array.length) {
+            current_loc_start_array = 0;
+            try {
+                array = loadNextNonEmptyLine();
+            } catch (IOException ex) {
+                logger.error(WordIteratorAbstract.class.getName(), ex.getMessage());
+                ex.printStackTrace();
             }
+
         }
-        nbScannedWords++;
         return w;
     }
 
     @Override
-    public WordIteratorConstraint getConstraint() {
-        return WordIteratorConstraint.ALLOW_SHORTER_WORDS;
+    String[] loadNextNonEmptyLine() throws IOException {
+
+        String line = br.readLine();
+        String[] arr;
+        while (line != null) {
+
+            line = line.trim();
+
+            if (line.isEmpty()) {
+                line = br.readLine();
+                continue;
+            } else {
+                arr = Utils.blank_pattern.split(line);
+                if (arr.length < word_size_constraint) {
+                    line = br.readLine();
+                    continue;
+                }
+                return arr;
+            }
+        }
+        return null;
     }
 
-
+    @Override
+    public WordIteratorConstraint getConstraint() {
+        return WordIteratorConstraint.FIXED_SIZE;
+    }
+    
     @Override
     public long nbScannedWords() {
         return nbScannedWords;

@@ -33,6 +33,9 @@
  */
 package com.github.sharispe.slib.dsm.main;
 
+import com.github.sharispe.slib.dsm.core.corpus.Corpus;
+import com.github.sharispe.slib.dsm.core.corpus.CorpusFromFile;
+import com.github.sharispe.slib.dsm.core.corpus.CorpusFromFileDir;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputer;
 import com.github.sharispe.slib.dsm.core.engine.VocStatComputerThreads;
 import com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorConstraint;
@@ -557,26 +560,38 @@ public class MainCLI {
     public static void CMD_VOC_INDEX(String[] argv) throws SLIB_Ex_Critic, IOException, Exception {
 
         if (argv.length < 2 || argv.length > 7) {
-            log("[0] directory which contains the files to consider");
-            log("[1] output directory");
-            log("[2] word size constraint (optional default=1)");
-            log("[3] (1) Forces size constraint to be strict or (2) allows words of size between 1 token and size constraint tokens (optional default=1)");
-            log("[4] nbThreads (optional default=1)");
-            log("[5] file per thread (optional default=" + VocStatComputer.DEFAULT_CHUNK_FILE_SIZE + "): number of files allocated to a thread");
-            log("[6] cache thread (optional default=" + VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE + "): size of the index stored into memory");
+            log("[0] directory which contains the documents to consider");
+            log("[1] type of corpus (1) one directory, all files are documents, (2) one file a document per line, e.g. list of tweet");
+            log("[2] output directory");
+            log("[3] word size constraint (optional default=1)");
+            log("[4] (1) Forces size constraint to be strict or (2) allows words of size between 1 token and size constraint tokens (optional default=1)");
+            log("[5] nbThreads (optional default=1)");
+            log("[6] file per thread (optional default=" + VocStatComputer.DEFAULT_CHUNK_FILE_SIZE + "): number of files allocated to a thread");
+            log("[7] cache thread (optional default=" + VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE + "): size of the index stored into memory");
             System.exit(0);
         } else {
 
-            String corpusDir = argv[0];
-            String outputDir = argv[1];
-            int maxWordSize = argv.length >= 3 ? Integer.parseInt(argv[2]) : 1;
-            WordIteratorConstraint sizeConstraint = argv.length >= 4 ? Integer.parseInt(argv[3]) == 2 ? WordIteratorConstraint.ALLOW_SHORTER_WORDS : WordIteratorConstraint.FIXED_SIZE : WordIteratorConstraint.FIXED_SIZE;
-            int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 1;
-            int file_per_threads = argv.length >= 6 ? Integer.parseInt(argv[5]) : VocStatComputer.DEFAULT_CHUNK_FILE_SIZE;
-            int cache_thread = argv.length == 7 ? Integer.parseInt(argv[6]) : VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE;
+            String corpusPath = argv[0];
+            int corpusType = Integer.parseInt(argv[1]);
+            String outputDir = argv[2];
+            int maxWordSize = argv.length >= 4 ? Integer.parseInt(argv[3]) : 1;
+            WordIteratorConstraint sizeConstraint = argv.length >= 5 ? Integer.parseInt(argv[4]) == 2 ? WordIteratorConstraint.ALLOW_SHORTER_WORDS : WordIteratorConstraint.FIXED_SIZE : WordIteratorConstraint.FIXED_SIZE;
+            int nbThreads = argv.length >= 6 ? Integer.parseInt(argv[5]) : 1;
+            int file_per_threads = argv.length >= 7 ? Integer.parseInt(argv[6]) : VocStatComputer.DEFAULT_CHUNK_FILE_SIZE;
+            int cache_thread = argv.length == 8 ? Integer.parseInt(argv[8]) : VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE;
 
             logger.info("Computing vocabulary, max word size: " + maxWordSize);
-            VocStatComputer.computeVocStats(corpusDir, outputDir, maxWordSize, sizeConstraint, nbThreads, file_per_threads, cache_thread);
+
+            Corpus corpus;
+
+            if (corpusType == 1) {
+                corpus = new CorpusFromFileDir(corpusPath);
+            }
+            else{
+                corpus = new CorpusFromFile(corpusPath);
+            }
+            
+            VocStatComputer.computeVocStats(corpus, outputDir, maxWordSize, sizeConstraint, nbThreads, file_per_threads, cache_thread);
             logger.info("Vocabulary computed at: " + outputDir);
         }
     }
@@ -601,7 +616,8 @@ public class MainCLI {
             int cache_thread = argv.length == 6 ? Integer.parseInt(argv[5]) : VocStatComputerThreads.DEFAULT_CACHE_MAP_SIZE;
 
             logger.info("indexing vocabulary: " + vocabularyFile);
-            VocStatComputer.computeVocStats(corpusDir, outputDir, vocabularyFile, nbThreads, file_per_threads, cache_thread);
+            Corpus corpus = new CorpusFromFileDir(corpusDir);
+            VocStatComputer.computeVocStats(corpus, outputDir, vocabularyFile, nbThreads, file_per_threads, cache_thread);
             logger.info("Vocabulary indexed at: " + outputDir);
         }
     }

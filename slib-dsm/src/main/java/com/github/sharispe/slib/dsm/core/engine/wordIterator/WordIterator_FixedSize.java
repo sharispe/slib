@@ -33,6 +33,7 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
+import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -52,8 +53,8 @@ public class WordIterator_FixedSize extends WordIteratorAbstract {
     
     long nbScannedWords;
 
-    public WordIterator_FixedSize(File f, int word_size_constraint) throws IOException {
-        super(f, word_size_constraint);
+    public WordIterator_FixedSize(Document d, int word_size_constraint) throws IOException {
+        super(d, word_size_constraint);
         current_word_size = word_size_constraint;
     }
 
@@ -93,30 +94,6 @@ public class WordIterator_FixedSize extends WordIteratorAbstract {
 
         }
         return w;
-    }
-
-    @Override
-    String[] loadNextNonEmptyLine() throws IOException {
-
-        String line = br.readLine();
-        String[] arr;
-        while (line != null) {
-
-            line = line.trim();
-
-            if (line.isEmpty()) {
-                line = br.readLine();
-                continue;
-            } else {
-                arr = Utils.blank_pattern.split(line);
-                if (arr.length < word_size_constraint) {
-                    line = br.readLine();
-                    continue;
-                }
-                return arr;
-            }
-        }
-        return null;
     }
 
     @Override
