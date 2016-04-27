@@ -112,7 +112,7 @@ public class SMComputationGO_groupwise_BP_restriction {
         // We create a vertex corresponding to the BP concept
         URI bpGOTerm = factory.getURI("http://go/0008150");
 
-        // We root the graphs using the virtual root as root
+        // We root the graphs using the GO concept (all nodes that are not subsumed by it will be removed)
         GAction reduction = new GAction(GActionType.VERTICES_REDUCTION);
         reduction.addParameter("root_uri", bpGOTerm.stringValue());
         GraphActionExecutor.applyAction(factory, reduction, graph);
