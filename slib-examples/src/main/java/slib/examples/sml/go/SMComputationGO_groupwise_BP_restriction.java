@@ -106,19 +106,16 @@ public class SMComputationGO_groupwise_BP_restriction {
         // General information about the graph
         System.out.println(graph.toString());
 
-        // The Gene Ontology is not rooted, i.e. Molecular Function, Biological Process, Cellular Component, the three sub-ontologies of 
-        // the GO are not rooted. We create such a virtual root in order to be able to compare 
-        // the concepts expressed in different sub-ontologies.
+        // The Gene Ontology is composed of several aspects, i.e. Molecular Function, Biological Process, Cellular Component
+        // To focus on one of them we do the following, e.g. for Biological process (GO:008150)
 
-        // We create a vertex corresponding to the virtual root
-        // and we add it to the graph
-        URI virtualRoot = factory.getURI("http://go/0008150");
-        graph.addV(virtualRoot);
+        // We create a vertex corresponding to the BP concept
+        URI bpGOTerm = factory.getURI("http://go/0008150");
 
         // We root the graphs using the virtual root as root
-        GAction rooting = new GAction(GActionType.VERTICES_REDUCTION);
-        rooting.addParameter("root_uri", virtualRoot.stringValue());
-        GraphActionExecutor.applyAction(factory, rooting, graph);
+        GAction reduction = new GAction(GActionType.VERTICES_REDUCTION);
+        reduction.addParameter("root_uri", bpGOTerm.stringValue());
+        GraphActionExecutor.applyAction(factory, reduction, graph);
        
         System.out.println(graph.toString());
 
