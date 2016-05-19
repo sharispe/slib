@@ -63,16 +63,16 @@ import slib.utils.ex.SLIB_Exception;
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  * 
  * The file graph_test.nt is composed of the following lines: 
- * <http://graph/class/Mammal> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Animal> .
- * <http://graph/class/Reptile> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Animal> .
- * <http://graph/class/Human> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .
- * <http://graph/class/Cetacean> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .
- * <http://graph/class/Whale> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Cetacean> .
- * <http://graph/class/BlueWhale> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Whale> .
- * <http://graph/class/Dolphin> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Cetacean> .
- * <http://graph/class/Horse> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .
- * <http://graph/class/Whale> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Mammal> .
- * <http://graph/class/Crocodile> <http://www.w3.org/2000/01/rdf-schema#subClassOf> <http://graph/class/Reptile> .
+ * &lt;http://graph/class/Mammal&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Animal&gt; .
+ * &lt;http://graph/class/Reptile&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Animal&gt; .
+ * &lt;http://graph/class/Human&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Cetacean&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Whale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Cetacean&gt; .
+ * &lt;http://graph/class/BlueWhale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Whale&gt; .
+ * &lt;http://graph/class/Dolphin&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Cetacean&gt; .
+ * &lt;http://graph/class/Horse&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Whale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Crocodile&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Reptile&gt; .
  */
 public class SMComputation {
     
