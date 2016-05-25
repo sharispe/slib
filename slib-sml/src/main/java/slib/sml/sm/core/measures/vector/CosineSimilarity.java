@@ -51,9 +51,9 @@ public class CosineSimilarity {
 
         if(vectorA.length != vectorB.length)
             throw new IllegalArgumentException("vectors must have the same lenght");
-        
-        
-        double dotProduct = 0.0; double normA = 0.0; double normB = 0.0;
+       
+        double dotProduct = 0.0; double normA = 0.0; double normB = 0.0;     
+       
         for (int i = 0; i < vectorA.length; i++) {
             dotProduct += vectorA[i] * vectorB[i];
             normA += vectorA[i] * vectorA[i];
