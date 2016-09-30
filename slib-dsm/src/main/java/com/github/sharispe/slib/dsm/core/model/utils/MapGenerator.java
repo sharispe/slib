@@ -38,8 +38,8 @@ import java.util.Map;
 /**
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
- * @param <K>
- * @param <V>
+ * @param <K> key type
+ * @param <V> value type
  */
 public interface MapGenerator<K,V> {
     

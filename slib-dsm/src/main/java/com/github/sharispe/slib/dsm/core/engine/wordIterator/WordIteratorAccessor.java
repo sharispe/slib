@@ -35,9 +35,7 @@ package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
 import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.core.engine.Vocabulary;
-import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -50,7 +48,7 @@ public class WordIteratorAccessor {
      * Provides access to the suitable word accessor considering the given
      * constraints.
      *
-     * @param f the file from which the word iteration has to be done.
+     * @param d the file from which the word iteration has to be done.
      * @param word_size_constraint the constraint related to the number of must
      * have (at most). The way this constraint is understood is function of the
      * word iterator constraint definition (see above).
@@ -60,8 +58,8 @@ public class WordIteratorAccessor {
      * number of token equal to the given constraint.
      * @return the appropriate instance of word iterator considering the given
      * constraints
-     * @throws SLIB_Ex_Critic
-     * @throws IOException
+     * @throws SLIB_Ex_Critic if an error occurs
+     * @throws IOException if an IO related error occurs
      */
     public static WordIterator getWordIterator(Document d, int word_size_constraint, WordIteratorConstraint c) throws SLIB_Ex_Critic, IOException {
         switch (c) {

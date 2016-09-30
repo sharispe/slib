@@ -85,12 +85,12 @@ public class Utils {
      * Flush the given map into the file by considering a key value entry per
      * line and a given key/value separator.
      *
-     * @param <K>
-     * @param <V>
+     * @param <K> key type
+     * @param <V> value type
      * @param index the index to store into the file
      * @param kvSep the key-value separator
      * @param filename the index file
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static <K, V> void flushMapKV(Map<K, V> index, String kvSep, String filename) throws SLIB_Ex_Critic {
 
@@ -108,12 +108,12 @@ public class Utils {
      * Flush the given map into the file by considering a key value entry per
      * line and a given key/value separator.
      *
-     * @param <K>
-     * @param <V>
+     * @param <K> key type
+     * @param <V> value type
      * @param index the index to store into the file
      * @param kvSep the key-value separator
      * @param filename the index file
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static <K, V> void flushMapVK(Map<K, V> index, String kvSep, String filename) throws SLIB_Ex_Critic {
 
@@ -135,9 +135,9 @@ public class Utils {
      * per line with key and value delimited by a value that can be parsed by
      * the given pattern. If the entry contains more than two values only the
      * first will be used as key and the second as value.
-     * @param p
+     * @param p the pattern to consider for splitting the lines
      * @return an in-memory Map.
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static Map<String, Integer> loadMap(String filename, Pattern p) throws SLIB_Ex_Critic {
 
@@ -172,9 +172,9 @@ public class Utils {
      * per line with key and value delimited by a value that can be parsed by
      * the given pattern. If the entry contains more than two values only the
      * first will be used as key and the second as value.
-     * @param p
+     * @param p the pattern to consider for splitting the lines
      * @return an in-memory Map.
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static Map<String, Long> loadMapStringLong(String filename, Pattern p) throws SLIB_Ex_Critic {
 
@@ -237,9 +237,9 @@ public class Utils {
      * Load into memory a key-value String,Integer map that is defined into a
      * file considering a tabular separator between keys and values.
      *
-     * @param filename
+     * @param filename the file storing the map
      * @return an in-memory Map.
-     * @throws SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic if an error occurs loading the map
      */
     public static Map<String, Integer> loadMap(String filename) throws SLIB_Ex_Critic {
         return loadMap(filename, tab_pattern);

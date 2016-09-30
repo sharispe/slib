@@ -84,8 +84,8 @@ public class MainCLI {
     /**
      * remove first element
      *
-     * @param arr
-     * @return
+     * @param arr array
+     * @return the modified array
      */
     public static String[] shift(String[] arr) {
         return Arrays.copyOfRange(arr, 1, arr.length);
@@ -111,7 +111,7 @@ public class MainCLI {
         log("- voc_index: analyse a corpus by extracting the vocabulary considering specified constraint and create an index - basic statistics are also computed");
         log("- voc_index_dictionary: analyse a corpus to create an index of the given vocabulary- basic statistics are also computed");
         log("- merge_voc_index: merge voc indexes computed using voc_index");
-        log("- compute_stat_voc: compute basic statistics on the given vocabulary - for each n-gram size x this command computes (1) the n-grams with the maximal number of occurrences and (2) the distributions (a): number of occurrences / number of ngram of size x, (b) number of occurrences / number of words with a number of occurrences lower or equal than the number of occurrence (percentage is also printed). ");
+        log("- compute_stat_voc: compute basic statistics on the given vocabulary - for each n-gram size x this command computes (1) the n-grams with the maximal number of occurrences and (2) the distributions (a): number of occurrences / number of ngram of size x, (b) number of occurrences / number of words with a number of occurrences lower or equal than the number of occurrences (percentage is also printed). ");
         log("- reduce_index_nb_occ: reduce a vocabulary based on the number of occurrences of words");
         log("- reduce_index_using_voc: reduce a vocabulary index considering a given vocabulary");
         log("- compute_word_cocc: compute the coocurences between words of a specific vocabulary considering a specific window size");
@@ -128,6 +128,8 @@ public class MainCLI {
                 + "\tsim to compute the similarity between terms or entities\n"
                 + "\tbestsim to distinguish the k entities which are the more similar to the given one\n");
         log("---------------------------------------------------------------------");
+        log("Useful commands:\n");
+        log("Extract all the words from an index: cat /tmp/voc_stats/[0-9]* | awk '{print $1}'\n\n");
         log("Experimental:\n");
         log("- compute_pmi: compute 2-gram PMI");
         log("- normalize: normalize the vector representations contained into a model (locally in each vector using cross-multiplication)");

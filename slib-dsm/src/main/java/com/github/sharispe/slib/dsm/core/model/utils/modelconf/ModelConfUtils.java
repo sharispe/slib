@@ -33,20 +33,13 @@
  */
 package com.github.sharispe.slib.dsm.core.model.utils.modelconf;
 
-import com.github.sharispe.slib.dsm.core.model.utils.SparseMatrix;
-import com.github.sharispe.slib.dsm.core.model.utils.compression.CompressionUtils;
 import com.github.sharispe.slib.dsm.core.engine.VocStatConf;
-import com.github.sharispe.slib.dsm.utils.BinarytUtils;
 import com.github.sharispe.slib.dsm.utils.FileUtility;
-import com.github.sharispe.slib.dsm.utils.MapUtils;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +59,8 @@ public class ModelConfUtils {
     /**
      * Initialize a model according to the given configuration.
      *
-     * @param model
-     * @throws SLIB_Ex_Critic
+     * @param model the model configuration
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static void initModel(ModelConf model) throws SLIB_Ex_Critic {
 
@@ -101,8 +94,8 @@ public class ModelConfUtils {
      * refactor to merge with method above Initialize a model according to the
      * given configuration.
      *
-     * @param conf
-     * @throws SLIB_Ex_Critic
+     * @param conf the configuration
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static void initVocUsage(VocStatConf conf) throws SLIB_Ex_Critic {
 
@@ -124,8 +117,8 @@ public class ModelConfUtils {
     /**
      * refactor to merge with method above
      *
-     * @param conf
-     * @throws SLIB_Ex_Critic
+     * @param conf the configuration
+     * @throws SLIB_Ex_Critic if an error occurs
      */
     public static void flushVocStatConfProperties(VocStatConf conf) throws SLIB_Ex_Critic {
 

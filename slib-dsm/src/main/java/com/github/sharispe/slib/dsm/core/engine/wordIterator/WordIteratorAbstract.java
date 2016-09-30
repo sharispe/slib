@@ -36,7 +36,6 @@ package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 import com.github.sharispe.slib.dsm.core.corpus.Document;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.IOException;
-import java.util.Arrays;
 import org.slf4j.LoggerFactory;
 
 /**
@@ -59,9 +58,9 @@ public abstract class WordIteratorAbstract implements WordIterator {
     /**
      * Note that any WordIterator instance has to be closed.
      *
-     * @param d
-     * @param word_size_constraint
-     * @throws IOException
+     * @param d the document to analyse
+     * @param word_size_constraint the word size constraint
+     * @throws IOException if an error occurs
      */
     public WordIteratorAbstract(Document d, int word_size_constraint) throws IOException {
 
@@ -103,7 +102,7 @@ public abstract class WordIteratorAbstract implements WordIterator {
      *
      * @return an array containing each tokens of the next non empty line. If
      * there is no more empty line the methods return null.
-     * @throws IOException
+     * @throws IOException if an error occurs
      */
     public final String[] loadNextNonEmptyLine() throws IOException {
 

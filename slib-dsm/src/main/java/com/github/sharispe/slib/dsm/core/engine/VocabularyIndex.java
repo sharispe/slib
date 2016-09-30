@@ -66,7 +66,7 @@ public class VocabularyIndex {
     }
 
     /**
-     * @param token
+     * @param token the token of interest
      * @return null if the token is not indexed
      */
     public Integer getTokenID(String token) {
@@ -74,7 +74,7 @@ public class VocabularyIndex {
     }
 
     /**
-     * @param id
+     * @param id the id of the token of interest
      * @return null if the token is not indexed
      */
     public String getToken(int id) {
@@ -82,7 +82,7 @@ public class VocabularyIndex {
     }
 
     /**
-     * @param word
+     * @param word the word of interest
      * @return null if the word is not indexed
      */
     public Integer getWordID(String word) {
@@ -90,7 +90,7 @@ public class VocabularyIndex {
     }
 
     /**
-     * @param id
+     * @param id the id of the word of interest
      * @return null if the word is not indexed
      */
     public String getWord(int id) {

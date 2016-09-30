@@ -56,10 +56,10 @@ public class MapUtils {
      * Sort a map by value (increasing order)
      *
      *
-     * @param <K>
-     * @param <V>
-     * @param map
-     * @return
+     * @param <K> key type
+     * @param <V> value type
+     * @param map the map to sort
+     * @return Sort a map by value (increasing order)
      */
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
 
@@ -76,10 +76,10 @@ public class MapUtils {
     /**
      * Sort a map by value (decreasing order)
      *
-     * @param <K>
-     * @param <V>
-     * @param map
-     * @return
+     * @param <K> key type
+     * @param <V> value type
+     * @param map the map to sort
+     * @return Sort a map by value (decreasing order)
      */
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueDecreasing(Map<K, V> map) {
 
@@ -93,13 +93,13 @@ public class MapUtils {
     }
 
     /**
-     * Sort a map by value (increasing order)
+     * Sort a map by value considering the given comparator
      *
-     * @param <K>
-     * @param <V>
-     * @param map
-     * @param comparator
-     * @return
+     * @param <K> key type
+     * @param <V> value type
+     * @param map the map to sort
+     * @param comparator comparator to consider
+     * @return Sort a map by value 
      */
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Comparator<Entry<K, V>> comparator) {
 
@@ -126,7 +126,7 @@ public class MapUtils {
         int c = 0;
         try (PrintWriter writer = new PrintWriter(output, "UTF-8")) {
             for (Map.Entry<K, V> e : res.entrySet()) {
-                writer.println(c+"\t"+e.getKey().toString() + "\t" + e.getValue().toString());
+                writer.println(c + "\t" + e.getKey().toString() + "\t" + e.getValue().toString());
                 c++;
             }
         }

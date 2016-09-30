@@ -97,7 +97,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
             for (File f : files) {
                 
                 // TODO remove log
-                logger.info("(" + id + ") " + nbFileDone + "/" + files.size()+"  "+f.getPath());
+                //logger.info("(" + id + ") " + nbFileDone + "/" + files.size()+"  "+f.getPath());
 
                 nbFileDone++;
 

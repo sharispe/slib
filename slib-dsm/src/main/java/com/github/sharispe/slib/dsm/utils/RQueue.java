@@ -40,8 +40,8 @@ import java.util.List;
  * Result Queue
  *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
- * @param <V>
- * @param <L>
+ * @param <V> value type
+ * @param <L> label type
  */
 public class RQueue<L, V extends Number> {
 
@@ -66,9 +66,9 @@ public class RQueue<L, V extends Number> {
 
     /**
      *
-     * @param label
-     * @param value
-     * @return
+     * @param label label 
+     * @param value value
+     * @return true if the value is added
      */
     public boolean add(L label, V value) {
 

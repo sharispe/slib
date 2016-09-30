@@ -66,7 +66,7 @@ public class SparseMatrix {
 
     /**
      *
-     * @param id
+     * @param id the id of the dimension
      * @return the vector associated to a row as map key value for each
      * dimension not associated to a null value.
      */
@@ -98,9 +98,9 @@ public class SparseMatrix {
     /**
      * Add the given value to the current matrix cell
      *
-     * @param elementId
-     * @param dimensionID
-     * @param toadd
+     * @param elementId element id
+     * @param dimensionID dimension id
+     * @param toadd the value to add
      */
     public void add(int elementId, int dimensionID, double toadd) {
         if (toadd == 0) { // we don't want to store 0 values
@@ -130,8 +130,8 @@ public class SparseMatrix {
     /**
      * row of the matrix
      *
-     * @param elementId
-     * @return
+     * @param elementId the id of the element for which we xant the vector (id of the row)
+     * @return the vector associated to that row
      */
     public double[] getElementVector(int elementId) {
         double[] v = new double[nbDimensions];
@@ -145,8 +145,8 @@ public class SparseMatrix {
     /**
      * also return 0 if the element does not exist
      *
-     * @param elementID
-     * @return
+     * @param elementID the element id (row id)
+     * @return the number of non null values
      */
     public int getNbNonNullValuesInElementVector(int elementID) {
 
@@ -160,8 +160,8 @@ public class SparseMatrix {
     /**
      * column of the matrix
      *
-     * @param dimId
-     * @return
+     * @param dimId dimension id (column id)
+     * @return the column vector associated to that dimension
      */
     public double[] getDimensionVector(int dimId) {
 

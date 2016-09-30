@@ -89,8 +89,9 @@ public class SlibDist_Wrapper {
      *
      * @param indir the directory in which are the files to lemmatize
      * @param outdir the directory in which to save the result files
-     * @param skipExisting
-     * @throws IOException
+     * @param pathPOSmodel the path to the POS model to consider
+     * @param skipExisting if true existing lemmatized files will be excluded 
+     * @throws IOException if an IO error occurs
      */
     public static void lemmatize(String indir, String outdir, String pathPOSmodel, boolean skipExisting) throws IOException {
 
@@ -118,11 +119,11 @@ public class SlibDist_Wrapper {
      * vocabulary. The result is a set of files representing the vector
      * representation of each file composing the given directory.
      *
-     * @param voc_index
-     * @param model_dir
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws SLIB_Ex_Critic
+     * @param voc_index the location of the index
+     * @param model_dir the location of the model
+     * @throws FileNotFoundException if a file is not found
+     * @throws IOException if an IO error occurs
+     * @throws SLIB_Ex_Critic for other errors
      */
     public static void build_model_term_doc_classic(String voc_index, String model_dir) throws FileNotFoundException, IOException, SLIB_Ex_Critic {
 

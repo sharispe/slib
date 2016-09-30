@@ -50,10 +50,10 @@ public class ModelUtil {
      * TODO This MUST be replaced by an index. Return null if no entity with the
      * associated label has been found
      *
-     * @param mconf
-     * @param entityLabel
-     * @return
-     * @throws IOException
+     * @param mconf the model configuration
+     * @param entityLabel the entity label
+     * @return the vector info
+     * @throws IOException if an IO related error occurs
      */
     public static IndexedVectorInfo searchEntityVectorInfo(ModelConf mconf, String entityLabel) throws IOException {
         
@@ -62,7 +62,7 @@ public class ModelUtil {
             line = br.readLine(); //skip header
             while ((line = br.readLine()) != null) {
                 String[] word_data = Utils.tab_pattern.split(line);
-                if (word_data[3].equals(entityLabel)) {
+                if (word_data.length > 3 && word_data[3].equals(entityLabel)) {
                     return new IndexedVectorInfo(Integer.parseInt(word_data[0]), Long.parseLong(word_data[1]), Integer.parseInt(word_data[2]),word_data[3]);
                 }
             }

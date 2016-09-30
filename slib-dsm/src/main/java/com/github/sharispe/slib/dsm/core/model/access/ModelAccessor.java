@@ -52,9 +52,9 @@ public interface ModelAccessor {
      * Extract the vector of double representation of the corresponding id from
      * the model. This representation is expected not to be compressed
      *
-     * @param vectorInfo
+     * @param vectorInfo the vector info
      * @return the vector representation of the entity
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public IndexedVector vectorRepresentationOf(IndexedVectorInfo vectorInfo) throws SLIB_Ex_Critic;
     

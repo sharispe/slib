@@ -59,7 +59,7 @@ public abstract class WordIteratorAbstractFromFile implements WordIterator {
      * Note that any WordIterator instance has to be closed.
      *
      * @param f the file in which to iterate
-     * @param word_size_constraint
+     * @param word_size_constraint the word size constraint
      * @throws IOException
      */
     public WordIteratorAbstractFromFile(File f, int word_size_constraint) throws IOException {

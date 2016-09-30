@@ -49,14 +49,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
@@ -108,7 +106,7 @@ public class VocStatComputer {
      * Refer to the class documentation for more information about the format
      * used for storing the statistics.
      *
-     * @param corpusDir the location of the corpus (set of files)
+     * @param corpus the location of the corpus (set of files)
      * @param outputDir the result directory
      * @param wordSizeConstraint the maximal word size (in tokens)
      * @param nbThreads the number of threads allocated to the process
@@ -117,10 +115,10 @@ public class VocStatComputer {
      * @param cache_thread the number of values stored into memory in each
      * threads before being flushed into the disk. This parameters improves
      * computational performances by increasing memory consumption.
-     * @param wordIteratorConstraint
-     * @throws IOException
-     * @throws SLIB_Ex_Critic
-     * @throws Exception
+     * @param wordIteratorConstraint the word iterator constraints
+     * @throws IOException if an IO related error occurs
+     * @throws SLIB_Ex_Critic if an error occurs
+     * @throws Exception if an error occurs
      */
     public static synchronized void computeVocStats(Corpus corpus, String outputDir, int wordSizeConstraint, WordIteratorConstraint wordIteratorConstraint, int nbThreads, int file_per_threads, int cache_thread) throws IOException, SLIB_Ex_Critic, Exception {
         computeVocStats_inner(corpus, outputDir, wordSizeConstraint, wordIteratorConstraint, null, nbThreads, file_per_threads, cache_thread);
@@ -246,11 +244,11 @@ public class VocStatComputer {
      * Build an index considering an existing one by only considering words that
      * have a specified minimal number of occurrences
      *
-     * @param indexToReduceLocation
-     * @param reducedIndexLocation
-     * @param minNbOcc
-     * @throws SLIB_Ex_Critic
-     * @throws IOException
+     * @param indexToReduceLocation location of the index to reduce
+     * @param reducedIndexLocation location of the reduced index
+     * @param minNbOcc min number of occurrences
+     * @throws SLIB_Ex_Critic if an error occurs
+     * @throws IOException if an IO related error occurs
      */
     public static void reduceIndexUsingNbOcc(String indexToReduceLocation, String reducedIndexLocation, int minNbOcc) throws SLIB_Ex_Critic, IOException {
 
@@ -334,11 +332,11 @@ public class VocStatComputer {
      * specified into a given vocabulary. The vocabulary is a file with one word
      * per line.
      *
-     * @param indexToReduceLocation
-     * @param reducedIndexLocation
-     * @param vocabularyLocation
-     * @throws SLIB_Ex_Critic
-     * @throws IOException
+     * @param indexToReduceLocation location of the index to reduce
+     * @param reducedIndexLocation location of the reduced index
+     * @param vocabularyLocation location of the vocabulary to consider
+     * @throws SLIB_Ex_Critic if an error occurs
+     * @throws IOException if an IO related error occurs
      */
     public static void reduceIndexUsingVoc(String indexToReduceLocation, String reducedIndexLocation, String vocabularyLocation) throws SLIB_Ex_Critic, IOException {
 
@@ -431,9 +429,7 @@ public class VocStatComputer {
      * @param indexes the set of paths of the index to merge
      * @param deleteMerged true to delete merged indexes
      * @param mergedIndexLocation the merged index location
-     * @throws SLIB_Ex_Critic
-     * @throws IOException
-     * @throws Exception
+     * @throws Exception if an error occurs
      */
     public static void mergeIndexes(Set<String> indexes, boolean deleteMerged, String mergedIndexLocation) throws Exception {
 

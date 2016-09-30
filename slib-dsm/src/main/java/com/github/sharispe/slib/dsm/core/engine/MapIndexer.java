@@ -101,6 +101,9 @@ public class MapIndexer {
 
         for (String word : sortedWords) {
 
+            if (word.length() == 0) {
+                continue;
+            }
 //            logger.info("'"+word+"'"+"\t"+map_chunk.size());
             atmp = Character.toLowerCase(word.charAt(0));
             btmp = word.length() > 1 ? Character.toLowerCase(word.charAt(1)) : 'a';

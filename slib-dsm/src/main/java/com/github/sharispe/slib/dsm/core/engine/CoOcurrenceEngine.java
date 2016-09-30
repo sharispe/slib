@@ -103,11 +103,10 @@ public class CoOcurrenceEngine {
     }
 
     /**
-     *
-     * @param directory
-     * @param admittedExtensions
-     * @return
-     * @throws IOException
+     * @param directory deprecated
+     * @param admittedExtensions deprecated
+     * @return deprecated
+     * @throws java.io.IOException deprecated
      * @deprecated
      */
     public Map<String, Map<String, Double>> computeMatrixTermIDFDocFromDir(String directory, List<String> admittedExtensions) throws IOException {
@@ -216,14 +215,15 @@ public class CoOcurrenceEngine {
      * in a specified directory. The vocabulary and vocabulary usage is expected
      * to be loaded in the object prior to computation.
      *
-     * @param corpusDir
-     * @param output_dir_path
-     * @param window_token_size
-     * @param nbThreadsLimit
-     * @param nbFilesPerChunk
-     * @param max_size_matrix
-     * @throws slib.utils.ex.SLIB_Ex_Critic
-     * @throws java.io.IOException
+     * @param corpusDir the corpus directory
+     * @param output_dir_path the output directory
+     * @param window_token_size the token size
+     * @param nbThreadsLimit the maximum number of threads
+     * @param nbFilesPerChunk the number of files to process per chunk
+     * @param max_size_matrix the maximum allowed matrix size before storing the results into a file
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
+     * @throws java.io.IOException if an IO related error occurs
+     * @throws java.lang.InterruptedException if an thread error occurs
      */
 public void computeCoOcurrence(String corpusDir, String output_dir_path, int window_token_size, int nbThreadsLimit, int nbFilesPerChunk, int max_size_matrix) throws SLIB_Exception, IOException, InterruptedException {
 
@@ -482,11 +482,7 @@ public void computeCoOcurrence(String corpusDir, String output_dir_path, int win
     /**
      * return null if either the matrix file is empty or the matrix does not
      * contain the vector
-     *
-     * @param id
-     * @param matrix_path
-     * @return
-     * @throws IOException
+
      * @deprecated
      */
     private final Map<Integer, Double> getCompressedVector(int id, String matrix_path) throws IOException {

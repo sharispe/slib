@@ -95,9 +95,9 @@ public class ModelConf {
     /**
      * Load a model configuration from a model repository
      *
-     * @param dir
-     * @return
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @param dir the directory of the model
+     * @return the configuration of the model
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public static ModelConf load(String dir) throws SLIB_Ex_Critic {
 

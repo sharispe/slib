@@ -50,8 +50,8 @@ public class CompressionUtils {
      * Compress the given double array (refer to the documentation for the
      * format of compressed array).
      *
-     * @param arr
-     * @return
+     * @param arr the array to compress
+     * @return the compressed version of the array
      */
     public static double[] compressDoubleArray(double[] arr) {
         
@@ -80,10 +80,10 @@ public class CompressionUtils {
      * Uncompress the given compressed double array (refer to the documentation
      * for the format of compressed array).
      *
-     * @param arr
-     * @param size
-     * @return
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @param arr the array
+     * @param size the size of the uncompressed array
+     * @return the uncompressed array
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public static double[] uncompressDoubleArray(double[] arr, int size) throws SLIB_Ex_Critic {
         
@@ -105,8 +105,8 @@ public class CompressionUtils {
      * documentation for the format of compressed array). Each map entry
      * provides key=id, value=associated value such as array[id] = value.
      *
-     * @param arr
-     * @return
+     * @param arr the array to compress
+     * @return a map version of the compressed array
      */
     public static Map<Integer, Double> compressedDoubleArrayToMap(double[] arr) {
 
@@ -123,10 +123,10 @@ public class CompressionUtils {
      * specified are filled to zero. Each map entry is expected to provide
      * key=id, value=associated value such as array[id] = value.
      *
-     * @param sparserow
-     * @param sizeVector
-     * @return
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @param sparserow the map version of a sparse row
+     * @param sizeVector the original vector size
+     * @return the array version of the uncompressed map
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public static double[] toArray(Map<Integer, Double> sparserow, int sizeVector) throws SLIB_Ex_Critic {
 
@@ -147,7 +147,7 @@ public class CompressionUtils {
     /**
      * Convert an array of double values into an array of byte
      *
-     * @param doubleMap
+     * @param doubleMap the map to convert
      * @return the corresponding array of byte
      */
     public static byte[] toByteArray(Map<Integer, Double> doubleMap) {
@@ -165,7 +165,7 @@ public class CompressionUtils {
     /**
      * Convert an array of double values into an array of byte
      *
-     * @param array
+     * @param array the array to convert
      * @return the corresponding array of byte
      */
     public static byte[] toByteArray(double[] array) {

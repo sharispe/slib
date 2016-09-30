@@ -60,7 +60,8 @@ public class StanfordLemmatizer {
      * Lemmatize a document and save the result in another file
      * @param inputFile the file to lemmatize
      * @param outputFile the result 
-     * @throws IOException 
+     * @param path_to_pos_model the path to the POS model to consider
+     * @throws IOException if an IO error occurs
      */     
     public static void lemmatize(String inputFile, String outputFile, String path_to_pos_model) throws IOException {
 

@@ -64,8 +64,8 @@ public class VocStatInfo {
     /**
      * Stores the VocInfo into the given file.
      *
-     * @param filepath
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @param filepath the file path
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public void flush(String filepath) throws SLIB_Ex_Critic {
 
@@ -82,7 +82,7 @@ public class VocStatInfo {
      * Build a VocInfo object considering the specified file.
      *
      * @param filepath of the following form NB_FILES=X NB_WORDS=Y
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @throws slib.utils.ex.SLIB_Ex_Critic if an error occurs
      */
     public VocStatInfo(String filepath) throws SLIB_Ex_Critic {
 

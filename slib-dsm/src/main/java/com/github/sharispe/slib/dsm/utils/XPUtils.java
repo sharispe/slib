@@ -34,7 +34,6 @@
 package com.github.sharispe.slib.dsm.utils;
 
 import com.github.sharispe.slib.dsm.core.engine.Voc;
-import com.github.sharispe.slib.dsm.core.engine.WordInfo;
 import static com.github.sharispe.slib.dsm.utils.Utils.logger;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -45,7 +44,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.slf4j.LoggerFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
@@ -98,15 +96,7 @@ public class XPUtils {
 //
 //    }
     
-    /**
-     * use Utils class function instead
-     * @param <K>
-     * @param <V>
-     * @param index
-     * @param filename
-     * @throws SLIB_Ex_Critic
-     * @deprecated
-     */
+
     @Deprecated
     public static <K,V extends Comparable> void flushMAP(Map<K,V> index, String filename) throws SLIB_Ex_Critic {
 
@@ -173,13 +163,7 @@ public class XPUtils {
 //        return new VocIndex(vocIndexMap,maxWordSize);
 //    }
     
-    /**
-     * Use utils
-     * @param filename
-     * @return
-     * @throws SLIB_Ex_Critic
-     * @deprecated
-     */
+
     @Deprecated
     public static Map<String, Integer> loadMAP(String filename) throws SLIB_Ex_Critic {
 
@@ -239,9 +223,9 @@ public class XPUtils {
      * by 0. As an example given the vector [0,3,6,2,8] and setting k=2 the
      * results will be [0,0,6,0,8]
      *
-     * @param vec
-     * @param k
-     * @return
+     * @param vec vector to process
+     * @param k number of dimensions
+     * @return the modified vector
      */
     public static double[] applyKthreshold(double[] vec, int k) {
         Map<Integer, Double> vecAsMap = new HashMap<>();

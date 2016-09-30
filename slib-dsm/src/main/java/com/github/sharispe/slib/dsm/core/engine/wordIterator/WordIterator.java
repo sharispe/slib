@@ -55,7 +55,7 @@ public interface WordIterator extends Iterator<String> {
      * Close the underlying file. Must always be called to properly close the
      * iterator that has not be fully traversed (cf. hasNext).
      *
-     * @throws IOException
+     * @throws IOException if an error occurs
      */
     public void close() throws IOException;
 

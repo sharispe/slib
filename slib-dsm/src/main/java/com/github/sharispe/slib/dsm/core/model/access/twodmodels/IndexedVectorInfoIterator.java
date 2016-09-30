@@ -65,19 +65,26 @@ public class IndexedVectorInfoIterator implements Iterator<IndexedVectorInfo> {
 
     @Override
     public IndexedVectorInfo next() {
-        if (line != null) {
-            String[] word_data = Utils.tab_pattern.split(line);
-            IndexedVectorInfo info = new IndexedVectorInfo(Integer.parseInt(word_data[0]), Long.parseLong(word_data[1]), Integer.parseInt(word_data[2]), word_data[3]);
-            try {
+        try {
+            if (line != null) {
+                String[] word_data = Utils.tab_pattern.split(line);
+                if (word_data.length != 4) {
+                    line = br.readLine();
+                    return next();
+                }
+
+                IndexedVectorInfo info = new IndexedVectorInfo(Integer.parseInt(word_data[0]), Long.parseLong(word_data[1]), Integer.parseInt(word_data[2]), word_data[3]);
+
                 // try to close the file
                 line = br.readLine();
                 if (line == null) {
                     br.close();
                 }
                 return info;
-            } catch (Exception ex) {
-                logger.error(ex.getMessage());
+
             }
+        } catch (Exception ex) {
+            logger.error(ex.getMessage());
         }
         return null;
     }

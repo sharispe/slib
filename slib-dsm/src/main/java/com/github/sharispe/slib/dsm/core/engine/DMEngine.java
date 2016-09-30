@@ -70,7 +70,7 @@ public class DMEngine {
         VocabularyIndex vocabularyIndex = new VocabularyIndex(vocabulary);
         CoOcurrenceEngine engine = new CoOcurrenceEngine(vocabularyIndex);
         engine.computeCoOcurrence(corpusDir, model_dir, window_token_size, nbThreads, nbFilesPerChunk, max_size_matrix);
-        ModelConf modelConf = new ModelConf(ModelType.TWO_D_TERM_DOC, "TERM x TERM model", model_dir, vocabulary.size(), vocabulary.size(), engine.getNbFilesProcessed(), "0.1");
+        ModelConf modelConf = new ModelConf(ModelType.TWO_D_TERM_DOC, "TERM x TERM model", model_dir, vocabulary.size(), vocabulary.size(), CoOcurrenceEngine.getNbFilesProcessed(), "0.1");
         buildModel(modelConf, vocabularyIndex, model_dir + "/matrix");
 
     }
@@ -186,7 +186,6 @@ public class DMEngine {
                 FileUtils.deleteQuietly(new File(matrix_file));
                 logger.info("Writting model index to " + model.getModelIndex());
                 logger.info("Model built at " + model.path);
-
             }
         }
     }
