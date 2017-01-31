@@ -4,10 +4,10 @@
     <parent>
         <groupId>com.github.sharispe</groupId>
         <artifactId>slib</artifactId>
-        <version>0.9.4-SNAPSHOT</version>
+        <version>0.9.4</version>
     </parent>
     <artifactId>slib-dsm</artifactId>
-    <version>0.9.4-SNAPSHOT</version>
+    <version>0.9.4</version>
 
     <name>${project.artifactId}</name>
     
@@ -58,19 +58,19 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9.4-SNAPSHOT</version>
+            <version>0.9.4</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.9.4-SNAPSHOT</version>
+            <version>0.9.4</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-module</artifactId>
-            <version>0.9.4-SNAPSHOT</version>
+            <version>0.9.4</version>
         </dependency>
         
         <dependency>
