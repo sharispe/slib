@@ -35,6 +35,7 @@ package slib.graph.algo.validator.dag;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.openrdf.model.URI;
 import org.openrdf.model.vocabulary.RDFS;
@@ -61,7 +62,7 @@ public class ValidatorDAG {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
     WalkConstraint wc;
-    HashMap<URI, Color> verticesColors;
+    Map<URI, Color> vertexColor;
     boolean valid;
     E lastEdge;
     Path currentPath;
@@ -82,12 +83,11 @@ public class ValidatorDAG {
         this.wc = wc;
 
         this.graph = graph;
-        this.verticesColors = new HashMap<URI, Color>();
+        this.vertexColor = new HashMap();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
         logger.debug("WalkConstraint                  : " + wc);
-
 
         if (startingURIs == null || startingURIs.isEmpty()) {
             return false;
@@ -114,7 +114,6 @@ public class ValidatorDAG {
 
         logger.info("isDag : " + valid);
         if (!valid) {
-
             logger.info("current path :" + currentPath.toString());
             logger.info("Cycle detected adding : " + lastEdge + " to path");
         }
@@ -127,17 +126,13 @@ public class ValidatorDAG {
             return;
         }
 
-        if (!verticesColors.containsKey(v)) {
+        if (!vertexColor.containsKey(v)) {
 
-            verticesColors.put(v, Color.ORANGE);
-
+            vertexColor.put(v, Color.ORANGE);
 
             Set<E> edges = graph.getE(v, wc);
 
-
             for (E e : edges) {
-
-
 
                 if (!valid) {
                     return;
@@ -149,7 +144,7 @@ public class ValidatorDAG {
                     target = e.getSource();
                 }
 
-                if (verticesColors.get(target) != Color.RED) {
+                if (vertexColor.get(target) != Color.RED) {
                     currentPath.addEdge(e);
                     lastEdge = e;
                     performDFS(target);
@@ -160,9 +155,9 @@ public class ValidatorDAG {
                 return;
             }
             currentPath.removeLastEdge();
-            verticesColors.put(v, Color.RED);
+            vertexColor.put(v, Color.RED);
 
-        } else if (verticesColors.get(v) == Color.ORANGE) {
+        } else if (vertexColor.get(v) == Color.ORANGE) {
             valid = false;
         }
     }
@@ -215,21 +210,20 @@ public class ValidatorDAG {
 
         logger.debug("Check DAG property of the graph " + graph.getURI() + " considering the walkconstraint " + wc);
         Set<URI> startingNodes = getDAGRoots(graph, WalkConstraintUtils.getInverse(wc, false));
+        boolean isDag = false;
 
         logger.info("Starting process from " + startingNodes.size() + " vertices");
-        if(graph.getE().isEmpty()){
+        if (graph.getE().isEmpty()) {
             logger.info("No edge");
-        }
-        else if (startingNodes.isEmpty()) // No root No Dag
-        {
+            isDag = false;
+        } else if (startingNodes.isEmpty()) { // No root No Dag
             logger.debug("No roots have been detected...");
             logger.debug("DAG = false");
-            return false;
+            isDag = false;
+        } else {
+            isDag = isDag(graph, startingNodes, wc);
         }
-        else if(!isDag(graph, startingNodes, wc)){
-            return false;
-        }
-        return true;
+        return isDag;
     }
 
     /**
@@ -247,7 +241,7 @@ public class ValidatorDAG {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
 
-        Set<URI> roots = new HashSet<URI>();
+        Set<URI> roots = new HashSet();
         for (URI v : classes) {
 
             if (g.getV(v, wc).isEmpty()) {
@@ -274,7 +268,9 @@ public class ValidatorDAG {
         Set<URI> roots = getDAGRoots(g, wc);
 
         logger.info("Number of roots " + roots.size());
-        logger.debug("Root(s): " + roots);
+        if (roots.size() <= 20) {
+            logger.debug("Root(s): " + roots);
+        }
 
         if (roots.size() == 1) {
             isDag(g, roots.iterator().next(), new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN));
@@ -295,8 +291,8 @@ public class ValidatorDAG {
      * @param g the graph
      * @return the unique vertex which roots the taxonomic graph
      *
-     * @throws SLIB_Ex_Critic if the underlying taxonomic graph of the
-     * given graph contains multiple roots.
+     * @throws SLIB_Ex_Critic if the underlying taxonomic graph of the given
+     * graph contains multiple roots.
      *
      */
     public URI getUniqueTaxonomicRoot(G g) throws SLIB_Ex_Critic {

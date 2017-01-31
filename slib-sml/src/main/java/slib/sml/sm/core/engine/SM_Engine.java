@@ -38,20 +38,21 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDF;
-import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.graph.algo.accessor.GraphAccessor;
+import slib.graph.algo.accessor.InstanceAccessor;
+import slib.graph.algo.accessor.InstanceAccessorTax;
 import slib.graph.algo.extraction.rvf.AncestorEngine;
 import slib.graph.algo.extraction.rvf.DescendantEngine;
-import slib.graph.algo.extraction.rvf.RVF_TAX;
+import slib.graph.algo.extraction.rvf.RVF_DAG;
 import slib.graph.algo.metric.DepthAnalyserAG;
 import slib.graph.algo.reduction.dag.GraphReduction_Transitive;
 import slib.graph.algo.shortest_path.Dijkstra;
@@ -64,6 +65,7 @@ import slib.graph.model.graph.utils.Direction;
 import slib.graph.model.graph.utils.WalkConstraint;
 import slib.graph.model.graph.weight.GWS;
 import slib.graph.model.impl.graph.weight.GWS_impl;
+import slib.graph.utils.WalkConstraintGeneric;
 import slib.graph.utils.WalkConstraintUtils;
 import slib.sml.sm.core.measures.Sim_Groupwise_Direct;
 import slib.sml.sm.core.measures.Sim_Groupwise_Indirect;
@@ -139,12 +141,12 @@ public class SM_Engine {
 
     Logger logger = LoggerFactory.getLogger(this.getClass());
     final G graph;
-    AncestorEngine ancGetter;
-    DescendantEngine descGetter;
+    RVF_DAG topNodeAccessor;
+    RVF_DAG bottomNodeAccessor;
     LCAFinder lcaFinder;
     Set<URI> classes;
     Set<URI> classesLeaves;
-    Set<URI> instances;
+    InstanceAccessor instanceAccessor;
     URI root = null;
     SMProxResultStorage cache;
     boolean cachePairwiseResults = false;
@@ -152,12 +154,13 @@ public class SM_Engine {
      * TODO Replace by {@link GWS}
      */
     Map<URI, Double> vectorWeights = null;
-    Map<SMconf, Sim_Pairwise> pairwiseMeasures;
-    Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures;
-    Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures;
+    final Map<SMconf, Sim_Pairwise> pairwiseMeasures = new ConcurrentHashMap();
+    final Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures = new ConcurrentHashMap();
+    final Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures = new ConcurrentHashMap();
 
     /**
-     * Constructor of an engine associated to the given graph.
+     * Constructor of an engine associated to the given graph. The taxonomic
+     * relationship used is rdfs:subClassOf
      *
      * Note that the engine expects the graph not to be modified and coherency
      * of results are only ensured in this case. Please refer to the general
@@ -173,35 +176,111 @@ public class SM_Engine {
      * @throws SLIB_Ex_Critic
      */
     public SM_Engine(final G g) throws SLIB_Ex_Critic {
+        this.graph = g;
+        topNodeAccessor = new AncestorEngine(graph);
+        bottomNodeAccessor = new DescendantEngine(graph);
+        logger.info("Computing classes...");
+        classes = GraphAccessor.getClasses(graph);
+        instanceAccessor = new InstanceAccessorTax(graph);
+        initEngine();
+    }
+
+    /**
+     * Constructor of an engine associated to the given graph. TODO add doc
+     *
+     * Note that the engine expects the graph not to be modified and coherency
+     * of results are only ensured in this case. Please refer to the general
+     * documentation of the class for more information considering this specific
+     * restriction.
+     *
+     * The engine creation is expensive, avoid useless calls to the constructor.
+     * Indeed, some information such as classes and instances of the graph are
+     * computed at engine creation which can lead to performance issues dealing
+     * with large graphs.
+     *
+     * @param g the graph associated to the engine.
+     * @param toTop
+     * @param toBottom
+     * @param classes (in some cases all classes are not linked by the given
+     * relationships)
+     * @param iAccessor
+     * @throws SLIB_Ex_Critic
+     */
+    public SM_Engine(final G g, Set<URI> toTop, Set<URI> toBottom, Set<URI> classes, InstanceAccessor iAccessor) throws SLIB_Ex_Critic {
 
         this.graph = g;
+        
 
+        WalkConstraint toTopWC = new WalkConstraintGeneric();
+        WalkConstraint toBottomWC = new WalkConstraintGeneric();
+        if (toTop != null) {
+            toTopWC.addAcceptedTraversal(toTop, Direction.OUT);
+            toBottomWC.addAcceptedTraversal(toTop, Direction.IN);
+        }
+        if (toBottom != null) {
+            toTopWC.addAcceptedTraversal(toBottom, Direction.IN);
+            toBottomWC.addAcceptedTraversal(toBottom, Direction.OUT);
+        }
+
+        topNodeAccessor = new RVF_DAG(g, toTopWC);
+        bottomNodeAccessor = new RVF_DAG(g, toBottomWC);
+        this.classes = classes;
+
+        this.instanceAccessor = iAccessor;
+        initEngine();
+    }
+
+    public SM_Engine(final G g, Set<URI> toTop, Set<URI> toBottom, InstanceAccessor iAccessor) throws SLIB_Ex_Critic {
+        this.graph = g;
+
+        WalkConstraint toTopWC = new WalkConstraintGeneric();
+        WalkConstraint toBottomWC = new WalkConstraintGeneric();
+        if (toTop != null) {
+            toTopWC.addAcceptedTraversal(toTop, Direction.OUT);
+            toBottomWC.addAcceptedTraversal(toTop, Direction.IN);
+        } else {
+            toTop = new HashSet(); // for union
+        }
+        if (toBottom != null) {
+            toTopWC.addAcceptedTraversal(toBottom, Direction.IN);
+            toBottomWC.addAcceptedTraversal(toBottom, Direction.OUT);
+        } else {
+            toBottom = new HashSet(); // for union
+        }
+        topNodeAccessor = new RVF_DAG(g, toTopWC);
+        bottomNodeAccessor = new RVF_DAG(g, toBottomWC);
+
+        // We define that the classes are the vertices which are linked to relationships
+        // which are of the types specified to iterate over the DAG
+        Set<URI> c = new HashSet();
+        for (E e : g.getE(SetUtils.union(toTop, toBottom))) {
+            c.add(e.getSource());
+            c.add(e.getTarget());
+        }
+        classes = c;
+
+        this.instanceAccessor = iAccessor;
+        initEngine();
+    }
+
+    /**
+     * @throws SLIB_Ex_Critic
+     */
+    private void initEngine() throws SLIB_Ex_Critic {
         logger.info("================================================================");
         logger.info("Loading Semantic Measures Engine for graph " + graph.getURI());
         logger.info("================================================================");
         logger.info("Graph Info: ");
-        logger.info(g.toString());
-
-        ancGetter = new AncestorEngine(graph);
-        descGetter = new DescendantEngine(graph);
+        logger.info(graph.toString());
 
         logger.info("---------------------------------------------------------------");
         logger.info("Pre-processing");
         logger.info("---------------------------------------------------------------");
-        logger.info("Computing classes...");
-        classes = GraphAccessor.getClasses(graph);
-
-        logger.info("Computing instances...");
-        instances = GraphAccessor.getInstances(graph);
 
         logger.info("Classes  : " + classes.size());
-        logger.info("Instances: " + instances.size());
+        logger.info("Instances Accessor loaded: " + (instanceAccessor == null));
 
         cache = new SMProxResultStorage();
-        pairwiseMeasures = new ConcurrentHashMap<SMconf, Sim_Pairwise>();
-
-        groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
-        groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
 
         lcaFinder = new LCAFinderImpl(this);
 
@@ -226,8 +305,8 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    private void computeAllclassesAncestors() throws SLIB_Ex_Critic {
-        cache.ancestorsInc = ancGetter.getAllAncestorsInc();
+    private synchronized void computeAllclassesAncestors() throws SLIB_Ex_Critic {
+        cache.ancestorsInc = topNodeAccessor.getAllRVInc();
     }
 
     /**
@@ -235,8 +314,8 @@ public class SM_Engine {
      *
      * @throws SLIB_Ex_Critic
      */
-    private void computeAllclassesDescendants() throws SLIB_Ex_Critic {
-        cache.descendantsInc = descGetter.getAllDescendantsInc();
+    private synchronized void computeAllclassesDescendants() throws SLIB_Ex_Critic {
+        cache.descendantsInc = bottomNodeAccessor.getAllRVInc();
     }
 
     /**
@@ -244,7 +323,7 @@ public class SM_Engine {
      *
      * The given classes are included in the result (inclusive). This process
      * can be computationally expensive if the number of ancestors is important.
-     * The result is not cached by the engine.
+     * The result produced by this method is not cached by the engine.
      *
      * @param setClasses the set of classes considered
      * @return the union of the inclusive ancestors of the given classes
@@ -253,7 +332,7 @@ public class SM_Engine {
 
         throwErrorIfNotClass(setClasses);
 
-        Set<URI> unionAnc = new HashSet<URI>();
+        Set<URI> unionAnc = new HashSet();
 
         for (URI v : setClasses) {
             unionAnc.addAll(getAncestorsInc(v));
@@ -271,7 +350,6 @@ public class SM_Engine {
      * @return the set of inclusive ancestors of the given class (v included)
      */
     public Set<URI> getAncestorsInc(URI v) {
-
         throwErrorIfNotClass(v);
         return Collections.unmodifiableSet(cache.ancestorsInc.get(v));
     }
@@ -285,7 +363,7 @@ public class SM_Engine {
      * @param v the considered class
      * @return the set of inclusive descendants of the given class (v included)
      */
-    public synchronized Set<URI> getDescendantsInc(URI v) {
+    public Set<URI> getDescendantsInc(URI v) {
         throwErrorIfNotClass(v);
         return Collections.unmodifiableSet(cache.descendantsInc.get(v));
     }
@@ -307,9 +385,7 @@ public class SM_Engine {
     public Set<URI> getParents(URI v) {
 
         throwErrorIfNotClass(v);
-
-        Set<URI> parents = graph.getV(v, ancGetter.getWalkConstraint());
-        return parents;
+        return topNodeAccessor.getNeighbors(v);
     }
 
     /**
@@ -322,7 +398,7 @@ public class SM_Engine {
     public Map<URI, Integer> getMaxDepths() throws SLIB_Ex_Critic {
 
         if (cache.maxDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, descGetter.getWalkConstraint());
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, bottomNodeAccessor.getWalkConstraint());
             cache.maxDepths = dephtAnalyser.getVMaxDepths();
         }
 
@@ -339,7 +415,7 @@ public class SM_Engine {
     public Map<URI, Integer> getMinDepths() throws SLIB_Ex_Critic {
 
         if (cache.minDepths == null) {
-            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, descGetter.getWalkConstraint());
+            DepthAnalyserAG dephtAnalyser = new DepthAnalyserAG(graph, bottomNodeAccessor.getWalkConstraint());
             cache.minDepths = dephtAnalyser.getVMinDepths();
         }
         return Collections.unmodifiableMap(cache.minDepths);
@@ -389,15 +465,19 @@ public class SM_Engine {
     /**
      * Get the root of the taxonomic graph contained in the graph associated to
      * the engine. An exception will be thrown if the taxonomic graph contains
-     * multiple roots.
+     * multiple roots. The result is cached.
      *
      * @return the class corresponding to the root.
-     * @throws slib.utils.ex.SLIB_Ex_Critic
+     * @throws SLIB_Ex_Critic
      */
     public synchronized URI getRoot() throws SLIB_Ex_Critic {
+
         if (root == null) {
-            URI rooturi = new ValidatorDAG().getUniqueTaxonomicRoot(graph);
-            root = rooturi;
+            Set<URI> roots = new ValidatorDAG().getDAGRoots(graph, topNodeAccessor.getWalkConstraint());
+            if (roots.size() != 1) {
+                throw new SLIB_Ex_Critic("Multiple roots detected in the underlying taxonomic graph of graph " + graph.getURI());
+            }
+            root = roots.iterator().next();
         }
         return root;
     }
@@ -457,7 +537,7 @@ public class SM_Engine {
      */
     public Map<URI, Integer> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-        Map<URI, Integer> allNbDescendants = new HashMap<URI, Integer>();
+        Map<URI, Integer> allNbDescendants = new HashMap();
         for (URI c : classes) {
             allNbDescendants.put(c, getAllDescendantsInc().get(c).size());
         }
@@ -558,21 +638,7 @@ public class SM_Engine {
                 }
             }
 
-        } catch (ClassNotFoundException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (IllegalAccessException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (InstantiationException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (NoSuchMethodException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (SecurityException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (InvocationTargetException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (SLIB_Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         logger.info("ic " + icConf.getLabel() + " computed");
@@ -592,7 +658,7 @@ public class SM_Engine {
 
         if (cache.reachableLeaves.isEmpty()) {
 
-            Map<URI, Set<URI>> leaves = descGetter.getTerminalVertices();
+            Map<URI, Set<URI>> leaves = bottomNodeAccessor.getTerminalVertices();
             /* according to the documentation of the method used above, 
              if there are classes which are isolated (which do not establish rdfs:subClassOf in this case),
              the algorithm will not process them and them will not be associated to an entry in the returned map.
@@ -600,7 +666,7 @@ public class SM_Engine {
              */
             for (URI c : classes) {
                 if (!leaves.containsKey(c)) {
-                    Set<URI> s = new HashSet<URI>();
+                    Set<URI> s = new HashSet();
                     s.add(c);
                     leaves.put(c, s);
                 }
@@ -625,16 +691,16 @@ public class SM_Engine {
     }
 
     /**
-     * Access to a view of the set of leaves of the underlying taxonomic graph.
+     * Access to a view of the set of leaves of the underlying DAG.
      *
      * @return the set of classes which are leaves
      */
-    public Set<URI> getTaxonomicLeaves() {
+    public Set<URI> getLeaves() {
         return Collections.unmodifiableSet(classesLeaves);
     }
 
     /**
-     * Compute for each class x the number classes which are leaves which are
+     * Compute for each class x the number of classes which are leaves which are
      * subsumed by x. Inclusive i.e. a leaf will contain itself in it set of
      * reachable leaves. The result is cached for fast access.
      *
@@ -649,7 +715,7 @@ public class SM_Engine {
         if (cache.allNbReachableLeaves == null) {
 
             Map<URI, Set<URI>> allReachableLeaves = getReachableLeaves();
-            cache.allNbReachableLeaves = new HashMap<URI, Integer>();
+            cache.allNbReachableLeaves = new HashMap();
 
             for (URI c : classes) {
 
@@ -674,7 +740,7 @@ public class SM_Engine {
     public Map<URI, Integer> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
 
         Map<URI, Set<URI>> allAncestors = cache.ancestorsInc;
-        Map<URI, Integer> allNbancestors = new HashMap<URI, Integer>();
+        Map<URI, Integer> allNbancestors = new HashMap();
 
         for (URI c : classes) {
             allNbancestors.put(c, allAncestors.get(c).size());
@@ -737,7 +803,7 @@ public class SM_Engine {
 
                     if (cache.pairwise_results.get(pairwiseConf) == null) {
 
-                        ConcurrentHashMap<URI, Map<URI, Double>> pairwise_result = new ConcurrentHashMap<URI, Map<URI, Double>>();
+                        ConcurrentHashMap<URI, Map<URI, Double>> pairwise_result = new ConcurrentHashMap();
 
                         cache.pairwise_results.put(pairwiseConf, pairwise_result);
                     }
@@ -749,21 +815,7 @@ public class SM_Engine {
                     cache.pairwise_results.get(pairwiseConf).get(a).put(b, sim);
                 }
             }
-        } catch (ClassNotFoundException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (IllegalAccessException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (IllegalArgumentException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (InstantiationException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (NoSuchMethodException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (SecurityException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (InvocationTargetException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (SLIB_Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e);
         }
         return sim;
@@ -813,21 +865,7 @@ public class SM_Engine {
             }
             sim = gMeasure.compare(setA, setB, this, confGroupwise);
 
-        } catch (ClassNotFoundException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (IllegalAccessException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (InstantiationException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (NoSuchMethodException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (SecurityException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (InvocationTargetException e) {
-            throw new SLIB_Ex_Critic(e.getMessage());
-        } catch (SLIB_Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
         return sim;
@@ -879,21 +917,7 @@ public class SM_Engine {
 
             sim = gMeasure.compare(setA, setB, this, confGroupwise, confPairwise);
 
-        } catch (ClassNotFoundException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (IllegalAccessException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (IllegalArgumentException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (InstantiationException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (NoSuchMethodException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (SecurityException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (InvocationTargetException e) {
-            throw new SLIB_Ex_Critic(e);
-        } catch (SLIB_Exception e) {
+        } catch (ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | SLIB_Exception e) {
             throw new SLIB_Ex_Critic(e);
         }
 
@@ -908,7 +932,7 @@ public class SM_Engine {
     public Map<URI, Integer> getnbPathLeadingToAllVertex() throws SLIB_Ex_Critic {
 
         if (cache.nbPathLeadingToAllVertices == null) {
-            cache.nbPathLeadingToAllVertices = descGetter.computeNbPathLeadingToAllVertices();
+            cache.nbPathLeadingToAllVertices = bottomNodeAccessor.computeNbPathLeadingToAllVertices();
         }
 
         return Collections.unmodifiableMap(cache.nbPathLeadingToAllVertices);
@@ -916,12 +940,12 @@ public class SM_Engine {
 
     /**
      * Computes the number of instances which is associated to all the classes
-     * which are defined in the graph (with inferences). This methods considers
-     * the inferences induced by the transitivity of the rdfs:subClassOf
-     * predicate. Therefore, if i is an instance of the class B and B is a
-     * subclass of A it is also considered that i is an instance of A. Instances
-     * of a class are detected according to the predicate rdf:type. for all i in
-     * I(X) exists a statement (i rdf:type X).
+     * defined into the graph (with inferences). This methods considers the
+     * inferences induced by the transitivity of the rdfs:subClassOf predicate.
+     * Therefore, if i is an instance of the class B and B is a subclass of A it
+     * is also considered that i is an instance of A. Instances of a class are
+     * detected according to the predicate rdf:type. for all i in I(X) exists a
+     * statement (i rdf:type X).
      *
      * @param addAnInstanceToEachTerminalClass if true, each class which doesn't
      * subsumes any other classes is assumed to have an instance which is only
@@ -932,12 +956,17 @@ public class SM_Engine {
      * @return A Map which contains an entry for each class with the number of
      * instances of the class (with inference)
      */
-    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) {
+    public Map<URI, Integer> getNbInstancesInferredPropFromCorpus(boolean addAnInstanceToEachTerminalClass) throws SLIB_Ex_Critic {
 
-        Map<URI, Set<URI>> instancesOfClasses = new HashMap<URI, Set<URI>>();
+        checkInstanceAccessorIsDefined();
 
-        for (URI i : instances) {
-            Set<URI> directClassOfi = graph.getV(i, RDF.TYPE, Direction.OUT);
+        Map<URI, Set<URI>> instancesOfClasses = new HashMap();
+
+        Iterator<URI> it = instanceAccessor.getInstancesIt();
+        URI i;
+        while (it.hasNext()) {
+            i = it.next();
+            Set<URI> directClassOfi = instanceAccessor.getClassesOfInstance(i);
 
             if (directClassOfi != null) {
                 for (URI c : directClassOfi) {
@@ -951,12 +980,12 @@ public class SM_Engine {
         }
         // Get Topological ordering trough DFS
         // - get roots
-        Set<URI> roots = new ValidatorDAG().getDAGRoots(graph, ancGetter.getWalkConstraint());
+        Set<URI> roots = new ValidatorDAG().getDAGRoots(graph, topNodeAccessor.getWalkConstraint());
 
-        DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(ancGetter.getWalkConstraint(), (false)));
+        DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(topNodeAccessor.getWalkConstraint(), (false)));
         List<URI> topoOrdering = dfs.getTraversalOrder();
 
-        Map<URI, Integer> rStack = new HashMap<URI, Integer>();
+        Map<URI, Integer> rStack = new HashMap();
 
         // initialize data structure && add virtual instance if required
         for (URI c : topoOrdering) {
@@ -965,8 +994,8 @@ public class SM_Engine {
                 instancesOfClasses.put(c, new HashSet<URI>());
             }
             // this is a trick : if an instance must be added to each terminal class 
-            // we add the corresponding class as instance (onlu counts matters at the end)
-            if (addAnInstanceToEachTerminalClass && graph.getE(RDFS.SUBCLASSOF, c, Direction.IN).isEmpty()) {
+            // we add the corresponding class as instance (only counts matters at the end)
+            if (addAnInstanceToEachTerminalClass && getLeaves().contains(c)) {
                 instancesOfClasses.get(c).add(c);
             }
         }
@@ -977,7 +1006,7 @@ public class SM_Engine {
 
             // propagate instances in a bottom up fashion according the topological order
             // to the instances
-            for (E e : graph.getE(c, ancGetter.getWalkConstraint())) {
+            for (E e : graph.getE(c, topNodeAccessor.getWalkConstraint())) {
 
                 // we perform the union if the c contains instances
                 if (!instanceOfc.isEmpty()) {
@@ -986,31 +1015,6 @@ public class SM_Engine {
             }
         }
         cache.nbOccurrencePropagatted = rStack;
-
-        return Collections.unmodifiableMap(cache.nbOccurrencePropagatted);
-    }
-
-    /**
-     * Topological propagation considering one occurrence per term
-     *
-     * @return the number of occurrences (propagated considering a single
-     * occurrence per class)
-     * @throws SLIB_Exception
-     */
-    public Map<URI, Integer> getNbOccurrenceProp() throws SLIB_Exception {
-
-        if (cache.nbOccurrencePropagatted == null) {
-
-            RVF_TAX RVF = new RVF_TAX(graph, Direction.IN);
-            Map<URI, Integer> nbOccurrences = new HashMap<URI, Integer>();
-
-            for (URI o : classes) {
-                nbOccurrences.put(o, 1);
-            }
-
-            Map<URI, Integer> nbOccurrencesPropagated = RVF.propagateNbOccurences(nbOccurrences);
-            cache.nbOccurrencePropagatted = nbOccurrencesPropagated;
-        }
 
         return Collections.unmodifiableMap(cache.nbOccurrencePropagatted);
     }
@@ -1037,7 +1041,7 @@ public class SM_Engine {
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
 
-        MatrixDouble<URI, URI> m = new MatrixDouble<URI, URI>(setA, setB);
+        MatrixDouble<URI, URI> m = new MatrixDouble(setA, setB);
 
         for (URI a : setA) {
             for (URI b : setB) {
@@ -1080,14 +1084,15 @@ public class SM_Engine {
      * @param set
      * @param groupwiseconf
      * @return the vector associated to the given configuration.
+     * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public Map<URI, Double> getVector(Set<URI> set, SMconf groupwiseconf) {
+    public Map<URI, Double> getVector(Set<URI> set, SMconf groupwiseconf) throws SLIB_Ex_Critic {
 
         if (vectorWeights == null) {
             vectorWeights = VectorWeight_Chabalier_2007.compute(this);
         }
 
-        Map<URI, Double> vector = new HashMap<URI, Double>();
+        Map<URI, Double> vector = new HashMap();
 
         Set<URI> setAncestors;
         setAncestors = set; // unpropragatted
@@ -1144,18 +1149,18 @@ public class SM_Engine {
         return new GWS_impl(1);
     }
 
-    public AncestorEngine getAncestorEngine() {
-        return ancGetter;
+    public RVF_DAG getAncestorEngine() {
+        return topNodeAccessor;
     }
 
-    public DescendantEngine getDescendantEngine() {
-        return descGetter;
+    public RVF_DAG getDescendantEngine() {
+        return bottomNodeAccessor;
     }
 
     private void computeLeaves() {
-        classesLeaves = new HashSet<URI>();
+        classesLeaves = new HashSet();
 
-        WalkConstraint wc = descGetter.getWalkConstraint();
+        WalkConstraint wc = bottomNodeAccessor.getWalkConstraint();
         for (URI v : classes) {
             if (graph.getV(v, wc).isEmpty()) {
                 classesLeaves.add(v);
@@ -1176,9 +1181,11 @@ public class SM_Engine {
      * Access to the set of URI of the graph considered as instances.
      *
      * @return the set of instances
+     * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public Set<URI> getInstances() {
-        return instances;
+    public Set<URI> getInstances() throws SLIB_Ex_Critic {
+        checkInstanceAccessorIsDefined();
+        return instanceAccessor.getInstances();
     }
 
     private void throwErrorIfNotClass(URI c) {
@@ -1227,8 +1234,8 @@ public class SM_Engine {
                 cache.shortestPath.put(a, new ConcurrentHashMap<URI, Double>());
             }
 
-            WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
-            wc.addWalkconstraints(descGetter.getWalkConstraint());
+            WalkConstraint wc = WalkConstraintUtils.copy(topNodeAccessor.getWalkConstraint());
+            wc.addWalkconstraints(bottomNodeAccessor.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             double sp = dijkstra.shortestPath(a, b);
@@ -1248,7 +1255,7 @@ public class SM_Engine {
      */
     public URI getMSA(URI a, URI b, GWS weightingScheme) throws SLIB_Ex_Critic {
 
-        Dijkstra dijkstra = new Dijkstra(graph, ancGetter.getWalkConstraint(), weightingScheme);
+        Dijkstra dijkstra = new Dijkstra(graph, topNodeAccessor.getWalkConstraint(), weightingScheme);
 
         URI msa_pk = SimDagEdgeUtils.getMSA_pekar_staab(getRoot(), getAllShortestPath(a, weightingScheme), getAllShortestPath(b, weightingScheme), getAncestorsInc(a), getAncestorsInc(b), dijkstra);
 
@@ -1269,8 +1276,8 @@ public class SM_Engine {
 
         if (cache.shortestPath.get(a) == null) {
 
-            WalkConstraint wc = WalkConstraintUtils.copy(ancGetter.getWalkConstraint());
-            wc.addWalkconstraints(descGetter.getWalkConstraint());
+            WalkConstraint wc = WalkConstraintUtils.copy(topNodeAccessor.getWalkConstraint());
+            wc.addWalkconstraints(bottomNodeAccessor.getWalkConstraint());
 
             Dijkstra dijkstra = new Dijkstra(graph, wc, weightingScheme);
             ConcurrentHashMap<URI, Double> minDists_cA = dijkstra.shortestPath(a);
@@ -1295,6 +1302,10 @@ public class SM_Engine {
     }
 
     /**
+     * Compute the set of descendants of the nodes which are not shared between
+     * the ancestors of the given concept. ancDiff = { anc(a) union anc(b) }
+     * diff { anc(a) inter anc(b) } result = Union (for c in ancDiff) : desc(c)
+     *
      * NOT_CACHED
      *
      * @param a
@@ -1302,23 +1313,33 @@ public class SM_Engine {
      * @return all subclasses of the superclass, of the given classes, which are
      * not shared.
      */
-    public Set<URI> getHypoAncEx(URI a, URI b) {
+    public Set<URI> getHypoOfAncDiff(URI a, URI b) {
 
         Set<URI> anc_a = getAncestorsInc(a);
         Set<URI> anc_b = getAncestorsInc(b);
 
         Set<URI> unionAncestors = SetUtils.union(anc_a, anc_b);
-        Set<URI> interAncestors = SetUtils.union(anc_a, anc_b);
+        Set<URI> interAncestors = SetUtils.intersection(anc_a, anc_b);
 
         Set<URI> ancsEx = unionAncestors;
         unionAncestors.removeAll(interAncestors);
 
-        Set<URI> hypoAncsEx = new HashSet<URI>();
+        Set<URI> hypoAncsEx = new HashSet();
 
         for (URI v : ancsEx) {
-            Set<URI> descCurAnc = descGetter.getRV(v);
+            Set<URI> descCurAnc = bottomNodeAccessor.getRV(v);
             hypoAncsEx = SetUtils.union(hypoAncsEx, descCurAnc);
         }
         return hypoAncsEx;
+    }
+
+    private void checkInstanceAccessorIsDefined() throws SLIB_Ex_Critic {
+        if (instanceAccessor == null) {
+            throw new SLIB_Ex_Critic("Please define an Instance Accessor to use this measure/metric configuration");
+        }
+    }
+
+    private void initTopAndBottomAccessor() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

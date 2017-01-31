@@ -61,6 +61,18 @@ import slib.utils.ex.SLIB_Exception;
  * Note that you can set the LOG level in specified in log4j.xml, e.g. in root element, change value="INFO" to value="DEBUG"
  * 
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
+ * 
+ * The file graph_test.nt is composed of the following lines: 
+ * &lt;http://graph/class/Mammal&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Animal&gt; .
+ * &lt;http://graph/class/Reptile&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Animal&gt; .
+ * &lt;http://graph/class/Human&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Cetacean&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Whale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Cetacean&gt; .
+ * &lt;http://graph/class/BlueWhale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Whale&gt; .
+ * &lt;http://graph/class/Dolphin&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Cetacean&gt; .
+ * &lt;http://graph/class/Horse&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Whale&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Mammal&gt; .
+ * &lt;http://graph/class/Crocodile&gt; &lt;http://www.w3.org/2000/01/rdf-schema#subClassOf&gt; &lt;http://graph/class/Reptile&gt; .
  */
 public class SMComputation {
     
@@ -73,6 +85,7 @@ public class SMComputation {
         
         G graph = new GraphMemory(graph_uri);
         
+        // The content of graph_test.nt is specified above
         String fpath = System.getProperty("user.dir")+"/src/main/resources/graph_test.nt";
         GDataConf graphconf = new GDataConf(GFormat.NTRIPLES, fpath);
         GraphLoaderGeneric.populate(graphconf, graph);

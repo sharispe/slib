@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib-graph</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.10-SNAPSHOT</version>
+        <version>0.9.4-SNAPSHOT</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-graph-utils</artifactId>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.10-SNAPSHOT</version>
+            <version>0.9.4-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         
@@ -78,7 +78,7 @@
                 <configuration>
                     <passphrase>${gpg.passphrase}</passphrase>
                 </configuration>
-                <executions>
+<!--                <executions>
                     <execution>
                         <id>sign-artifacts</id>
                         <phase>verify</phase>
@@ -86,7 +86,7 @@
                             <goal>sign</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>-->
             </plugin>
         </plugins>
     </build>

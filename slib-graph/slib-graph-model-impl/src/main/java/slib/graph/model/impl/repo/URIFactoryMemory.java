@@ -92,20 +92,13 @@ public final class URIFactoryMemory implements URIFactory {
         namespaces2namespacePrefixes = new HashMap<String, String>();
 
         try {
-            loadNamespacePrefix("rdf", RDF.NAMESPACE);
-            loadNamespacePrefix("rdfs", RDFS.NAMESPACE);
-            loadNamespacePrefix("owl", OWL.NAMESPACE);
-            loadNamespacePrefix("owl", SKOS.NAMESPACE);
-            loadNamespacePrefix("dc", DC.NAMESPACE);
-            loadNamespacePrefix("dcterm", DCTERMS.NAMESPACE);
-            loadNamespacePrefix("foaf", FOAF.NAMESPACE);
+            loadDefaultNamespaces();
         } catch (SLIB_Ex_Critic e) {//cannot happen}
         }
     }
 
     @Override
     public boolean loadNamespacePrefix(String prefix, String reference) throws SLIB_Ex_Critic {
-
 
         if (!namespacePrefixes2namespaces.containsKey(prefix.toLowerCase())) {
 
@@ -131,23 +124,31 @@ public final class URIFactoryMemory implements URIFactory {
     }
 
     @Override
-    public void clear() {
+    public void clearNamespacePrefixes() {
         namespacePrefixes2namespaces.clear();
+        try {
+            loadDefaultNamespaces();
+        } catch (Exception e) {
+            // to modify
+        }
     }
 
     @Override
-    public URI getURI(String sURI) {
+    public URI getURI(String sURI
+    ) {
         return internalUriFactory.createURI(sURI);
 
     }
 
     @Override
-    public URI getURI(String snamespace, String sURI) {
+    public URI getURI(String snamespace, String sURI
+    ) {
         return internalUriFactory.createURI(snamespace, sURI);
     }
 
     @Override
-    public URI getURI(String sURI, boolean useLoadedPrefix) {
+    public URI getURI(String sURI, boolean useLoadedPrefix
+    ) {
         if (!useLoadedPrefix) {
             return getURI(sURI);
         } else {
@@ -166,7 +167,8 @@ public final class URIFactoryMemory implements URIFactory {
     }
 
     @Override
-    public String shortURIasString(URI uri) {
+    public String shortURIasString(URI uri
+    ) {
         if (namespaces2namespacePrefixes.containsKey(uri.getNamespace())) {
             return namespaces2namespacePrefixes.get(uri.getNamespace()) + ":" + uri.getLocalName();
         } else {
@@ -177,5 +179,15 @@ public final class URIFactoryMemory implements URIFactory {
     @Override
     public Map<String, String> getURIPrefixes() {
         return namespacePrefixes2namespaces;
+    }
+
+    private void loadDefaultNamespaces() throws SLIB_Ex_Critic {
+        loadNamespacePrefix("rdf", RDF.NAMESPACE);
+        loadNamespacePrefix("rdfs", RDFS.NAMESPACE);
+        loadNamespacePrefix("owl", OWL.NAMESPACE);
+        loadNamespacePrefix("owl", SKOS.NAMESPACE);
+        loadNamespacePrefix("dc", DC.NAMESPACE);
+        loadNamespacePrefix("dcterm", DCTERMS.NAMESPACE);
+        loadNamespacePrefix("foaf", FOAF.NAMESPACE);
     }
 }

@@ -75,6 +75,7 @@ public class GraphReduction_Transitive {
      */
     public static Set<E> process(G graph) throws SLIB_Ex_Critic {
 
+        logger.info("Processing self-loop");
         // remove self loops
         int selfLoops = 0;
         for (E e : graph.getE(RDFS.SUBCLASSOF)) {
@@ -83,9 +84,7 @@ public class GraphReduction_Transitive {
                 selfLoops++;
             }
         }
-        if (selfLoops != 0) {
-            logger.info(selfLoops + " self loops have been removed");
-        }
+        logger.info(selfLoops + " self loops have been removed");
 
         ValidatorDAG validator = new ValidatorDAG();
 
@@ -111,39 +110,47 @@ public class GraphReduction_Transitive {
      */
     public static Set<E> process(G g, Set<URI> srcs) {
 
-        Set<E> removableEdges = new HashSet<E>();
+        Set<E> removableEdges = new HashSet();
 
         logger.info("Processing transitive reduction: ");
         logger.debug("Number of roots" + srcs.size() + " root(s)");
-        logger.debug("roots: " + srcs);
+        if (srcs.size() < 30) {
+            logger.debug("roots: " + srcs);
+        }
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         DFS dfs = new DFS(g, srcs, wc);
 
         List<URI> topoOrder = dfs.getTraversalOrder();
 
-        HashMap<URI, HashSet<URI>> reachableV = new HashMap<URI, HashSet<URI>>();
+        HashMap<URI, HashSet<URI>> reachableV_buffer = new HashMap();
+
+        int c = 0;
 
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 
+            c++;
+            System.out.print(c + "/" + topoOrder.size() + "\tbuffer:" + reachableV_buffer.size() + "\tnumber of useless edges already detected:" + removableEdges.size() + "\r");
+
             URI currentV = topoOrder.get(i);
 
-            if (!reachableV.containsKey(currentV)) {
-                reachableV.put(currentV, new HashSet<URI>());
+            if (!reachableV_buffer.containsKey(currentV)) {
+                reachableV_buffer.put(currentV, new HashSet<URI>());
             }
 
-            reachableV.get(currentV).add(currentV);
+            reachableV_buffer.get(currentV).add(currentV);
+
             Collection<E> edges = g.getE(RDFS.SUBCLASSOF, currentV, Direction.IN);
 
             for (E e : edges) {
 
                 URI target = e.getSource();
 
-                if (!reachableV.containsKey(target)) {
-                    reachableV.put(target, new HashSet<URI>());
-                    reachableV.get(target).addAll(reachableV.get(currentV));
+                if (!reachableV_buffer.containsKey(target)) {
+                    reachableV_buffer.put(target, new HashSet<URI>());
+                    reachableV_buffer.get(target).addAll(reachableV_buffer.get(currentV));
                 } else {
-                    Collection<URI> inter = SetUtils.intersection(reachableV.get(target), reachableV.get(currentV));
+                    Collection<URI> inter = SetUtils.intersection(reachableV_buffer.get(target), reachableV_buffer.get(currentV));
 
                     Collection<E> outTarget = g.getE(RDFS.SUBCLASSOF, target, Direction.OUT);
 
@@ -152,9 +159,10 @@ public class GraphReduction_Transitive {
                             removableEdges.add(eTarget);
                         }
                     }
-                    reachableV.get(target).addAll(reachableV.get(currentV));
+                    reachableV_buffer.get(target).addAll(reachableV_buffer.get(currentV));
                 }
             }
+            reachableV_buffer.remove(currentV); // all valuable information has already been propagated
         }
         g.removeE(removableEdges);
 
@@ -164,7 +172,7 @@ public class GraphReduction_Transitive {
             }
         }
 
-        logger.info("Deletion of " + removableEdges.size() + " subClassOf relationships");
+        logger.info("Deletion of " + removableEdges.size() + " rdfs:subClassOf relationships");
         return removableEdges;
     }
 }

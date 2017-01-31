@@ -87,8 +87,8 @@ public class DFS implements GraphTraversal {
 
     private void init() {
 
-        this.coloredVertex = new HashMap<URI, Boolean>();
-        this.topoSort = new ArrayList<URI>();
+        this.coloredVertex = new HashMap();
+        this.topoSort = new ArrayList();
 
         logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources);
         logger.debug("Considering Walkconstraint " + wc);
@@ -97,7 +97,7 @@ public class DFS implements GraphTraversal {
         for (URI r : sources) {
             performDFS(r);
         }
-
+        coloredVertex.clear();
         current_id = topoSort.size() - 1;
         logger.debug("TopoSort contains " + topoSort.size() + " vertices (on " + g.getNumberVertices() + " graph vertices)");
 
@@ -109,11 +109,7 @@ public class DFS implements GraphTraversal {
 
             coloredVertex.put(v, true);
 
-
-            Iterator<E> it = g.getE(v, wc).iterator();
-
-            while (it.hasNext()) {
-                E e = it.next();
+            for (E e : g.getE(v, wc)) {
                 if (!e.getTarget().equals(v)) {
                     performDFS(e.getTarget());
                 } else {
@@ -126,7 +122,7 @@ public class DFS implements GraphTraversal {
 
     @Override
     public boolean hasNext() {
-        return current_id > 0;
+        return current_id >= 0;
     }
 
     @Override

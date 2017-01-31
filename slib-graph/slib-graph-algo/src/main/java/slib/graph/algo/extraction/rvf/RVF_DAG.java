@@ -87,13 +87,13 @@ public class RVF_DAG extends RVF {
         logger.debug("Get all reachable vertices : start");
         logger.debug("Walk constraint\n" + wc);
 
-        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
+        Map<URI, Set<URI>> allVertices = new HashMap();
 
-        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
-        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegree = new HashMap();
+        Map<URI, Integer> inDegreeDone = new HashMap();
 
         // Initialize DataStructure + queue considering walk constraint
-        List<URI> queue = new ArrayList<URI>();
+        List<URI> queue = new ArrayList();
 
         WalkConstraint oppositeWC = WalkConstraintUtils.getInverse(wc, false);
         logger.debug("Opposite Walk constraint " + oppositeWC);
@@ -162,7 +162,7 @@ public class RVF_DAG extends RVF {
         }
 
         //TOREMOVE 
-        logger.info("Checking Treatment coherency");
+        logger.debug("Checking Treatment coherency");
         long incoherencies = 0;
         for (URI c : inDegree.keySet()) {
 
@@ -175,7 +175,7 @@ public class RVF_DAG extends RVF {
                 incoherencies++;
             }
         }
-        logger.info("Incoherencies : " + incoherencies);
+        logger.debug("Incoherencies : " + incoherencies);
         if (incoherencies != 0) {
             String incoherenceMessage = "incoherences found during a treatment, "
                     + "this can be due to incoherences with regard to the graph properties "
@@ -186,6 +186,25 @@ public class RVF_DAG extends RVF {
 
         logger.debug("Get All reachable vertices : end");
         return allVertices;
+    }
+
+    /**
+     * Compute the set of reachable vertices for each vertices contained in the
+     * graph according to the specified constraint associated to the instance in
+     * use. Inclusive process, i.e. the process do consider that vertex v is
+     * contained in the set of reachable vertices from v.
+     *
+     * Optimized through a topological ordering
+     *
+     * @return an Map key V value the set of vertices reachable from the key
+     * @throws SLIB_Ex_Critic
+     */
+    public Map<URI, Set<URI>> getAllRVInc() throws SLIB_Ex_Critic {
+        Map<URI, Set<URI>> allRVEx = getAllRV();
+        for (URI v : allRVEx.keySet()) {
+            allRVEx.get(v).add(v);
+        }
+        return allRVEx;
     }
 
     /**
@@ -211,14 +230,14 @@ public class RVF_DAG extends RVF {
 
         logger.info("Retrieving all reachable leaves");
 
-        Map<URI, Set<URI>> allReachableLeaves = new HashMap<URI, Set<URI>>();
-        Map<URI, Integer> inDegrees = new HashMap<URI, Integer>();
-        Map<URI, Integer> inDegreesDone = new HashMap<URI, Integer>();
+        Map<URI, Set<URI>> allReachableLeaves = new HashMap();
+        Map<URI, Integer> inDegrees = new HashMap();
+        Map<URI, Integer> inDegreesDone = new HashMap();
 
         // Retrieve all leaves
-        List<URI> queue = new ArrayList<URI>();
+        List<URI> queue = new ArrayList();
 
-        Set<URI> studiedURIs = new HashSet<URI>();
+        Set<URI> studiedURIs = new HashSet();
         for (E e : g.getE(wc.getAcceptedPredicates())) {
             studiedURIs.add(e.getSource());
             studiedURIs.add(e.getTarget());
@@ -286,7 +305,7 @@ public class RVF_DAG extends RVF {
      */
     public Map<URI, Integer> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
-        Map<URI, Integer> allVertices = new HashMap<URI, Integer>();
+        Map<URI, Integer> allVertices = new HashMap();
 
         for (URI v : g.getV()) {
             allVertices.put(v, 1);
@@ -310,16 +329,16 @@ public class RVF_DAG extends RVF {
      */
     public Map<URI, Integer> propagateNbOccurences(Map<URI, Integer> nbOccurrence) throws SLIB_Ex_Critic {
 
-        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
-        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
-        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
-        Map<URI, Integer> nbOcc_prop = new HashMap<URI, Integer>();
+        Map<URI, Set<URI>> allVertices = new HashMap();
+        Map<URI, Integer> inDegree = new HashMap();
+        Map<URI, Integer> inDegreeDone = new HashMap();
+        Map<URI, Integer> nbOcc_prop = new HashMap();
 
         for (URI v : nbOccurrence.keySet()) {
             nbOcc_prop.put(v, nbOccurrence.get(v));
         }
         // Initialize DataStructure + queue considering setEdgeTypes
-        List<URI> queue = new ArrayList<URI>();
+        List<URI> queue = new ArrayList();
 
         for (URI v : g.getV()) {
 

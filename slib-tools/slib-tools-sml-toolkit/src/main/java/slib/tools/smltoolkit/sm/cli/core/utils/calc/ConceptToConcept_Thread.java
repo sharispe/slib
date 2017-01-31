@@ -70,6 +70,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
      * @param poolWorker
      * @param queriesBench
      * @param sspM
+     * @param queryParam
      */
     public ConceptToConcept_Thread(PoolWorker poolWorker, Collection<QueryEntry> queriesBench, SmCli sspM, SMQueryParam queryParam) {
 
@@ -185,7 +186,7 @@ public class ConceptToConcept_Thread implements Callable<ThreadResultsQueryLoade
             if (logger.isDebugEnabled()) {
                 e.printStackTrace();
             }
-            throw new Exception(e);
+            throw e;
         } finally {
             poolWorker.taskComplete();
         }

@@ -82,7 +82,7 @@ public class ValidatorDAG {
         this.wc = wc;
 
         this.graph = graph;
-        this.verticesColors = new HashMap<URI, Color>();
+        this.verticesColors = new HashMap();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
@@ -234,7 +234,8 @@ public class ValidatorDAG {
 
     /**
      * Root vertices (terminal vertices) are those of type CLASS which respect
-     * the following restrictions :<br> <ul> <li> must not contains an edges of
+     * the following restrictions :
+     * <ul> <li> must not contains an edges of
      * the given types and direction </li> </ul>
      *
      * Do not check if the graph is a DAG

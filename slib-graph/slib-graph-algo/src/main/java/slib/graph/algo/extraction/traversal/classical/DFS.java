@@ -126,7 +126,7 @@ public class DFS implements GraphTraversal {
 
     @Override
     public boolean hasNext() {
-        return current_id > 0;
+        return current_id >= 0;
     }
 
     @Override

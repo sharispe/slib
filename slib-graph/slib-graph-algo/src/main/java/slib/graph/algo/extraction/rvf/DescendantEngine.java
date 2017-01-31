@@ -103,10 +103,7 @@ public class DescendantEngine extends RVF_TAX {
      * @throws SLIB_Ex_Critic
      */
     public Map<URI, Set<URI>> getAllDescendantsInc() throws SLIB_Ex_Critic {
-        Map<URI, Set<URI>> allDescs = getAllRV();
-        for (URI v : allDescs.keySet()) {
-            allDescs.get(v).add(v);
-        }
-        return allDescs;
+        
+        return getAllRVInc();
     }
 }

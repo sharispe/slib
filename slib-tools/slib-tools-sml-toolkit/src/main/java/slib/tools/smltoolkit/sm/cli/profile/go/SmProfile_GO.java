@@ -130,7 +130,7 @@ public class SmProfile_GO implements SmlModuleCLI {
 
 
             String GRAPH_URI = "http://bio/";
-            String GENE_ID_PREFIX = GRAPH_URI + "geneid/";
+            String GENE_ID_PREFIX = GRAPH_URI ;//+ "geneid/";
             smconf.setGraphURI(GRAPH_URI);
             smconf.setPrefixURIAttribut(GENE_ID_PREFIX);
 

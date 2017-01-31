@@ -120,7 +120,7 @@ public class ICi_sanchez_2011 extends LogBasedMetric implements ICtopo {
         // getAllNbReachableLeaves() is inclusive and Sanchez measure require excluvive i.e.
         // if a concept is a leaf it must not be contained in the set of reachable leaves
 
-        Set<URI> leaves = manager.getTaxonomicLeaves();
+        Set<URI> leaves = manager.getLeaves();
 
         Map<URI, Integer> correctedNbReachableLeaves = new HashMap<URI, Integer>();
         for (Map.Entry<URI, Integer> e : allNbReachableLeaves.entrySet()) {

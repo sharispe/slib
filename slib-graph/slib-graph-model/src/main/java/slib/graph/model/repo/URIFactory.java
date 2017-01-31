@@ -78,7 +78,7 @@ public interface URIFactory{
     
     public URI getURI(String snamespace, String localName);
     
-    public void clear();
+    public void clearNamespacePrefixes();
     
     /**
      * Create a string representing the URI using the loaded prefixes if any can be used

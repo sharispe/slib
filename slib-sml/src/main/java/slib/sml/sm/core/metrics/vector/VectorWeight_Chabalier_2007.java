@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import slib.graph.model.graph.G;
 import slib.graph.model.graph.utils.Direction;
 import slib.sml.sm.core.engine.SM_Engine;
+import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
@@ -56,8 +57,9 @@ public class VectorWeight_Chabalier_2007 {
      *
      * @param engine
      * @return the vector weights
+     * @throws slib.utils.ex.SLIB_Ex_Critic
      */
-    public static Map<URI, Double> compute(SM_Engine engine) {
+    public static Map<URI, Double> compute(SM_Engine engine) throws SLIB_Ex_Critic {
 
         Logger logger = LoggerFactory.getLogger(VectorWeight_Chabalier_2007.class);
 

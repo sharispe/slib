@@ -167,7 +167,7 @@ public class SMconf extends Conf {
         this.className = SMConstants.semanticMeasureClassName(this.flag);
 
         if (this.className == null) {
-            throw new SLIB_Ex_Critic("Cannot resolve Semantic measure associated to flag: " + flag);
+            throw new SLIB_Ex_Critic("Cannot resolve Semantic measure associated to flag: '" + flag+"'");
         }
     }
 
