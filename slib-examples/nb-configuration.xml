@@ -8,8 +8,9 @@ Without this configuration present, some functionality in the IDE may be limited
 -->
     <config-data xmlns="http://www.netbeans.org/ns/maven-config-data/1">
         <configurations>
-            <configuration id="SnomedCT_ex" profiles=""/>
             <configuration id="GO_groupwise" profiles=""/>
+            <configuration id="SnomedCT_ex" profiles=""/>
+            <configuration id="PA" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

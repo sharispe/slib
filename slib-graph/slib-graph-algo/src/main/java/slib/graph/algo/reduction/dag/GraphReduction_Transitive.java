@@ -114,7 +114,9 @@ public class GraphReduction_Transitive {
 
         logger.info("Processing transitive reduction: ");
         logger.debug("Number of roots" + srcs.size() + " root(s)");
-        logger.debug("roots: " + srcs);
+        if (srcs.size() < 30) {
+            logger.debug("roots: " + srcs);
+        }
 
         WalkConstraint wc = new WalkConstraintGeneric(RDFS.SUBCLASSOF, Direction.IN);
         DFS dfs = new DFS(g, srcs, wc);
@@ -122,14 +124,14 @@ public class GraphReduction_Transitive {
         List<URI> topoOrder = dfs.getTraversalOrder();
 
         HashMap<URI, HashSet<URI>> reachableV_buffer = new HashMap();
-        
+
         int c = 0;
 
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 
             c++;
-            System.out.print(c+"/"+topoOrder.size()+"\tbuffer:"+reachableV_buffer.size()+"\tnumber of useless edges already detected:"+removableEdges.size()+"\r");
-            
+            System.out.print(c + "/" + topoOrder.size() + "\tbuffer:" + reachableV_buffer.size() + "\tnumber of useless edges already detected:" + removableEdges.size() + "\r");
+
             URI currentV = topoOrder.get(i);
 
             if (!reachableV_buffer.containsKey(currentV)) {
@@ -137,8 +139,7 @@ public class GraphReduction_Transitive {
             }
 
             reachableV_buffer.get(currentV).add(currentV);
-            
-            
+
             Collection<E> edges = g.getE(RDFS.SUBCLASSOF, currentV, Direction.IN);
 
             for (E e : edges) {

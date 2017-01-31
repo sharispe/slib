@@ -57,6 +57,7 @@ public enum GActionType {
      * </ul>
      */
     TRANSITIVE_REDUCTION,
+    
     /**
      * Root the graph according to the rdfs:subClassOf relationship.
      *
@@ -75,6 +76,7 @@ public enum GActionType {
      * </ul>
      */
     REROOTING,
+    
     /**
      * Remove of the set of vertices composing the graph.
      *
@@ -93,6 +95,8 @@ public enum GActionType {
      * <li> file_uris: specify a list of files containing URIs corresponding to
      * the vertices to remove. Multiple files can be specified using comma
      * separator. </li>
+     * 
+     * <li>root_uri: URI of the root of the graph (other nodes will be removed)</li>
      *
      * </ul>
      *
