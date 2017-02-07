@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9.4b</version>
+        <version>0.9.4c</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-examples</artifactId>
@@ -47,34 +47,34 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model-impl</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-indexer</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-algo</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.9.4b</version>
+            <version>0.9.4c</version>
         </dependency>
 
 
