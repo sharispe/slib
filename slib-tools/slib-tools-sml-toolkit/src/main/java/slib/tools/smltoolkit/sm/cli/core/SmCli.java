@@ -48,6 +48,7 @@ import slib.graph.algo.extraction.rvf.instances.impl.InstanceAccessor_RDF_TYPE;
 import slib.graph.algo.validator.dag.ValidatorDAG;
 import slib.graph.io.loader.GraphLoaderGeneric;
 import slib.graph.model.graph.G;
+import slib.graph.model.graph.elements.E;
 import slib.graph.model.impl.repo.GraphRepositoryMemory;
 import slib.graph.model.impl.repo.URIFactoryMemory;
 import slib.graph.model.repo.GraphRepository;
@@ -154,6 +155,10 @@ public class SmCli implements SmlModuleCLI {
         }
 
         graph = graphRepo.getGraph(graphURI);
+        
+//        for(E e : graph.getE()){
+//            System.out.println(e);
+//        }
 
         logger.info("Graph information:\n" + graph.toString());
 

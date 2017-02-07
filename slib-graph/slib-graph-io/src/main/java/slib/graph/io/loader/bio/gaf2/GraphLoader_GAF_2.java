@@ -223,7 +223,7 @@ public class GraphLoader_GAF_2 implements GraphLoader {
                         String flag = data[0].trim().substring(1);
                         String version = data[1].trim();
 
-                        if (flag.equals("gaf-version") && (version.equals("2") || version.equals("2.0"))) {
+                        if (flag.equals("gaf-version") && (version.equals("2") || version.equals("2.0") || version.equals("2.1"))) {
                             validHeader = true;
                         }
                     }

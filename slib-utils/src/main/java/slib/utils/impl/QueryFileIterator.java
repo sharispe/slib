@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +120,7 @@ public class QueryFileIterator implements QueryIterator {
         QueryEntry entry = null;
 
         try {
-            String[] csvRow = line.split("\t");
+            String[] csvRow = line.trim().split("\t");
 
 
             if (csvRow.length == 2) {
@@ -129,6 +130,9 @@ public class QueryFileIterator implements QueryIterator {
                 } else {
                     entry = new QueryEntry(csvRow[0], csvRow[1]);
                 }
+            }
+            else{
+                System.out.println("skipping line (incorrect format): "+line+"\t--> "+Arrays.toString(csvRow));
             }
 
             line = br.readLine();

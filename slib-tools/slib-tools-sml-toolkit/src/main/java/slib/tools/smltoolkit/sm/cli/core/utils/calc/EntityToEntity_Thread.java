@@ -126,8 +126,6 @@ public class EntityToEntity_Thread implements Callable<ThreadResultsQueryLoader>
                 uriE1s = q.getKey();
                 uriE2s = q.getValue();
 
-
-
                 try {
                     e1 = factory.getURI(uriE1s, useLoadedPrefixes);
                     e2 = factory.getURI(uriE2s, useLoadedPrefixes);
