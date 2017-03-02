@@ -97,8 +97,6 @@ public class SmProfile_GO implements SmlModuleCLI {
             logger.info("nonotrannots : " + Util.stringToBoolean(smconf.notrannots));
             logger.info("---------------------------------------------------------------");
 
-
-
             if (smconf.ontologyPath == null) {
                 throw new SLIB_Ex_Critic("Please precise the location of the ontology");
             }
@@ -124,16 +122,13 @@ public class SmProfile_GO implements SmlModuleCLI {
                 throw new SLIB_Ex_Critic("Please correct the number of threads allocated");
             }
 
-
-            String GO_PREFIX_OWL = "http://purl.org/obo/owl/GO#GO_";
-
-
+            String GO_PREFIX = "http://purl.org/obo/owl/GO#";
+            String GO_PREFIX_OWL = "http://purl.obolibrary.org/obo/GO_";
 
             String GRAPH_URI = "http://bio/";
-            String GENE_ID_PREFIX = GRAPH_URI ;//+ "geneid/";
+            String GENE_ID_PREFIX = GRAPH_URI;//+ "geneid/";
             smconf.setGraphURI(GRAPH_URI);
             smconf.setPrefixURIAttribut(GENE_ID_PREFIX);
-
 
             //Build XML File
             // Ontology TAG
@@ -141,7 +136,13 @@ public class SmProfile_GO implements SmlModuleCLI {
 
             xmlconf += "\t<opt  threads = \"" + smconf.threads + "\"  />\n\n";
 
-            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + GO_PREFIX_OWL + "\" />\n\t</namespaces>\n\n";
+            if (smconf.ontologyFormat.equals("RDF_XML")) {
+                // Gene Ontology use a strange URI Format in the OWL File
+                GO_PREFIX =GO_PREFIX_OWL;
+            }
+
+            xmlconf += "\t<namespaces>\n\t\t<nm prefix=\"GO\" ref=\"" + GO_PREFIX + "\" />\n\t</namespaces>\n\n";
+
             xmlconf += "\t<graphs>    \n";
             xmlconf += "\t\t<graph uri=\"" + smconf.graphURI + "\"  >    \n";
             xmlconf += "\t\t\t<data>\n";
@@ -176,15 +177,15 @@ public class SmProfile_GO implements SmlModuleCLI {
 //                GO_LOCAL_NAME_PREFIX = "GO_";
 //            }
             if (smconf.aspect == null || smconf.aspect.equals("BP")) {
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0008150";
+                goAspectValue = GO_PREFIX + GO_LOCAL_NAME_PREFIX + "0008150";
 
             } else if (smconf.aspect.equals("MF")) {
 
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0003674";
+                goAspectValue = GO_PREFIX + GO_LOCAL_NAME_PREFIX + "0003674";
 
             } else if (smconf.aspect.equals("CC")) {
 
-                goAspectValue = GO_PREFIX_OWL + GO_LOCAL_NAME_PREFIX + "0005575";
+                goAspectValue = GO_PREFIX + GO_LOCAL_NAME_PREFIX + "0005575";
             } else if (smconf.aspect.equals("GLOBAL")) {
 
                 goAspectValue = GraphActionExecutor.REROOT_UNIVERSAL_ROOT_FLAG;
@@ -219,7 +220,6 @@ public class SmProfile_GO implements SmlModuleCLI {
                 }
                 xmlconf += "\t<filters>\n" + XMLConfUtils.buildSML_FilterGAF2_XML_block(smconf.filter) + "\t</filters>\n";
             }
-
 
             xmlconf += XMLConfUtils.buildSML_SM_module_XML_block_GO_PROFILE(smconf);
 

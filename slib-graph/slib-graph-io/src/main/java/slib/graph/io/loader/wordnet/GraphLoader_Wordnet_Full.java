@@ -41,7 +41,6 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import org.openrdf.model.URI;
-import org.openrdf.model.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slib.graph.io.conf.GDataConf;
@@ -59,14 +58,77 @@ import slib.utils.ex.SLIB_Exception;
 /**
  *
  * https://wordnet.princeton.edu/man/wndb.5WN.html
+ * https://wordnet.princeton.edu/man/wninput.5WN.html
+ *
  * @author Sébastien Harispe (sebastien.harispe@gmail.com)
+ *
+ *
  */
-public class GraphLoader_Wordnet implements GraphLoader {
+public class GraphLoader_Wordnet_Full implements GraphLoader {
 
     private G graph;
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    Map<String, PointerToEdge> pointerSymbolToURIsMap;
     URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
+
+    public static final Map<String, URI> pointerSymbolsToURIs = new HashMap();
+
+    static {
+
+        // Considered Mapping
+        // !    Antonym     http://SML/wordNet/Antonym  Noun, Verb, Adjective, Adverb
+        // @    Hypernym    http://SML/wordNet/Hypernym Noun, Verb
+        // @i    Instance Hypernym http://SML/wordNet/InstanceHypernym Noun
+        // ~    Hyponym     http://SML/wordNet/Hyponym Noun, Verb
+        // ~i    Instance Hyponym http://SML/wordNet/InstanceHyponym Noun
+        // #m    Member holonym http://SML/wordNet/MemberHolonym Noun
+        // #s    Substance holonym http://SML/wordNet/SubstanceHolonym Noun
+        // #p    Part holonym http://SML/wordNet/PartHolonym Noun
+        // %m    Member meronym http://SML/wordNet/MemberMeronym Noun
+        // %s    Substance meronym http://SML/wordNet/SubstanceMeronym Noun
+        // %p    Part meronym http://SML/wordNet/PartMeronym Noun
+        // =    Attribute http://SML/wordNet/Attribut Noun, Adjective
+        // +    Derivationally related form  http://SML/wordNet/DerivationallyRelatedForm Noun, Verb       
+        // ;c    Domain of synset - TOPIC http://SML/wordNet/DomainOfTopic Noun, Verb, Adjective, Adverb
+        // -c    Member of this domain - TOPIC http://SML/wordNet/MemberOfTopic Noun
+        // ;r    Domain of synset - REGION  http://SML/wordNet/DomainOfRegion Noun, Verb, Adjective, Adverb
+        // -r    Member of this domain - REGION http://SML/wordNet/MemberOfRegion Noun
+        // ;u    Domain of synset - USAGE http://SML/wordNet/DomainOfUsage Noun, Adjective, Adverb
+        // -u    Member of this domain - USAGE http://SML/wordNet/MemberOfUsage Noun, Verb
+        // &    Similar to http://SML/wordNet/SimilarTo Adjective
+        // *    Entailment  http://SML/wordNet/Entailment Verb
+        // >    Cause   http://SML/wordNet/Cause Verb
+        // ^    Also see   http://SML/wordNet/AlsoSee Verb, Adjective
+        // $    Verb group   http://SML/wordNet/VerbGroup Verb
+        // <    Cause   http://SML/wordNet/ParticipleOfVerb Adjective
+        // \    Cause   http://SML/wordNet/DerivedPertains Adjective, Adverbe
+        URIFactory f = URIFactoryMemory.getSingleton();
+        pointerSymbolsToURIs.put("!", f.getURI("http://SML/wordNet/Antonym"));
+        pointerSymbolsToURIs.put("@", f.getURI("http://SML/wordNet/Hypernym"));
+        pointerSymbolsToURIs.put("@i", f.getURI("http://SML/wordNet/InstanceHypernym"));
+        pointerSymbolsToURIs.put("~", f.getURI("http://SML/wordNet/Hyponym"));
+        pointerSymbolsToURIs.put("~i", f.getURI("http://SML/wordNet/InstanceHyponym"));
+        pointerSymbolsToURIs.put("#m", f.getURI("http://SML/wordNet/MemberHolonym"));
+        pointerSymbolsToURIs.put("#s", f.getURI("http://SML/wordNet/SubstanceHolonym"));
+        pointerSymbolsToURIs.put("#p", f.getURI("http://SML/wordNet/PartHolonym"));
+        pointerSymbolsToURIs.put("%m", f.getURI("http://SML/wordNet/MemberMeronym"));
+        pointerSymbolsToURIs.put("%s", f.getURI("http://SML/wordNet/SubstanceMeronym"));
+        pointerSymbolsToURIs.put("%p", f.getURI("http://SML/wordNet/PartMeronym"));
+        pointerSymbolsToURIs.put("=", f.getURI("http://SML/wordNet/Attribut"));
+        pointerSymbolsToURIs.put("+", f.getURI("http://SML/wordNet/DerivationallyRelatedForm"));
+        pointerSymbolsToURIs.put(";c", f.getURI("http://SML/wordNet/DomainOfTopic"));
+        pointerSymbolsToURIs.put("-c", f.getURI("http://SML/wordNet/MemberOfTopic"));
+        pointerSymbolsToURIs.put(";r", f.getURI("http://SML/wordNet/DomainOfRegion"));
+        pointerSymbolsToURIs.put("-r", f.getURI("http://SML/wordNet/MemberOfRegion"));
+        pointerSymbolsToURIs.put(";u", f.getURI("http://SML/wordNet/DomainOfUsage"));
+        pointerSymbolsToURIs.put("-u", f.getURI("http://SML/wordNet/MemberOfUsage"));
+        pointerSymbolsToURIs.put("&", f.getURI("http://SML/wordNet/SimilarTo"));
+        pointerSymbolsToURIs.put("*", f.getURI("http://SML/wordNet/Entailment"));
+        pointerSymbolsToURIs.put(">", f.getURI("http://SML/wordNet/Cause"));
+        pointerSymbolsToURIs.put("^", f.getURI("http://SML/wordNet/AlsoSee"));
+        pointerSymbolsToURIs.put("$", f.getURI("http://SML/wordNet/VerbGroup"));
+        pointerSymbolsToURIs.put("<", f.getURI("http://SML/wordNet/ParticipleOfVerb"));
+        pointerSymbolsToURIs.put("\\", f.getURI("http://SML/wordNet/DerivedPertains"));
+    }
 
     @Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
@@ -80,25 +142,22 @@ public class GraphLoader_Wordnet implements GraphLoader {
             throw new SLIB_Ex_Critic("Cannot use " + this.getClass() + " to load file format " + conf.getFormat() + ", required format is " + GFormat.WORDNET_DATA);
         }
 
-        initPointerToURImap();
-
         graph = g;
         boolean inHeader = true;
         String filepath = conf.getLoc();
 
         logger.info("From " + filepath);
         logger.info("-----------------------------------------------------------");
-        
-        
 
         String uriPrefix = g.getURI().getNamespace();
         if (conf.getParameter("prefix") != null) {
             uriPrefix = (String) conf.getParameter("prefix");
         }
         try {
-            
-            if(filepath == null)
+
+            if (filepath == null) {
                 throw new SLIB_Ex_Critic("Error please precise a  file to load.");
+            }
 
             FileInputStream fstream = new FileInputStream(filepath);
             DataInputStream in = new DataInputStream(fstream);
@@ -125,11 +184,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
                 URI synset = dataRepo.getURI(uriPrefix + synset_offset);
                 graph.addV(synset);
-                
+
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
-                
-                
-                
 
 //                logger.info(synset_offset);
                 Word[] words = extractWords(data, 4, w_cnt);
@@ -137,37 +193,34 @@ public class GraphLoader_Wordnet implements GraphLoader {
                 int c = 3 + w_cnt * 2 + 1;
 
                 int p_cnt = Integer.parseInt(data[c]);
-                
+
+//                System.out.println(synset_offset + "\twords:" + w_cnt + "\tpointers:" + p_cnt);
                 Pointer[] pointers = extractPointers(data, c + 1, p_cnt);
 
-                
                 for (Pointer p : pointers) {
 
-                    if (pointerSymbolToURIsMap.containsKey(p.pointerSymbol)) {
+//                    System.out.println("\t" + p.pointerSymbol + "\t" + p.synsetOffset + "\t" + p.pos + "\t" + p.src_target);
+                    if (pointerSymbolsToURIs.containsKey(p.pointerSymbol)) {
 
 //                        logger.info("\t " + p.synsetOffset + " \t " + p.pointerSymbol);
-
                         URI s = dataRepo.getURI(uriPrefix + synset_offset);
                         URI o = dataRepo.getURI(uriPrefix + p.synsetOffset);
+                        URI pr = pointerSymbolsToURIs.get(p.pointerSymbol);
 
                         graph.addV(s);
                         graph.addV(o);
 
-                        E e = pointerSymbolToURIsMap.get(p.pointerSymbol).createEdge(s, o);
-                        
-//                        logger.info("\t"+e.toString());
-
+                        E e = new Edge(s, pr, o);
                         g.addE(e);
 
-
                     } else {
-                       //logger.debug("\tExclude Pointer symbol: " + p.pointerSymbol);
+                        throw new SLIB_Ex_Critic("No URI associated to pointer " + p.pointerSymbol);
                     }
                 }
             }
             in.close();
         } catch (IOException e) {
-            throw new SLIB_Ex_Critic("Error loading the file: "+e.getMessage());
+            throw new SLIB_Ex_Critic("Error loading the file: " + e.getMessage());
         }
 
         logger.info(graph.toString());
@@ -209,22 +262,6 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
         return pointers;
 
-    }
-
-    private void initPointerToURImap() {
-        
-        pointerSymbolToURIsMap = new HashMap();
-
-        PointerToEdge hypernym = new PointerToEdge(RDFS.SUBCLASSOF, true);
-        PointerToEdge hyponym = new PointerToEdge(RDFS.SUBCLASSOF, false);
-
-        // @ Hypernym / @i instance hypernym
-        pointerSymbolToURIsMap.put("@", hypernym);
-        pointerSymbolToURIsMap.put("@i", hypernym);
-
-        // @ Hyponym / @i instance hyponym
-        pointerSymbolToURIsMap.put("~", hyponym);
-        pointerSymbolToURIsMap.put("~i", hyponym);
     }
 
     private class Word {
@@ -287,5 +324,27 @@ public class GraphLoader_Wordnet implements GraphLoader {
             }
             return e;
         }
+    }
+
+    public static void main(String[] args) throws SLIB_Exception {
+        String dataloc = "/data/WordNet/WordNet-3.1/dict/";
+
+        // We create the graph
+        URIFactory factory = URIFactoryMemory.getSingleton();
+        URI guri = factory.getURI("http://graph/wordnet/");
+        G wordnet = new GraphMemory(guri);
+
+        // We load the data into the graph
+        GraphLoader_Wordnet_Full loader = new GraphLoader_Wordnet_Full();
+
+        GDataConf dataNoun = new GDataConf(GFormat.WORDNET_DATA, dataloc + "data.noun");
+        GDataConf dataVerb = new GDataConf(GFormat.WORDNET_DATA, dataloc + "data.verb");
+        GDataConf dataAdj = new GDataConf(GFormat.WORDNET_DATA, dataloc + "data.adj");
+        GDataConf dataAdv = new GDataConf(GFormat.WORDNET_DATA, dataloc + "data.adv");
+
+        loader.populate(dataNoun, wordnet);
+        loader.populate(dataVerb, wordnet);
+        loader.populate(dataAdj, wordnet);
+        loader.populate(dataAdv, wordnet);
     }
 }

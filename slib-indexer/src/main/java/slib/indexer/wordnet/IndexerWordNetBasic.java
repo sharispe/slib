@@ -58,12 +58,10 @@ import slib.utils.ex.SLIB_Ex_Critic;
  */
 public class IndexerWordNetBasic {
 
-    Map<String, Set<URI>> stringToSynsetIndex = new HashMap<String, Set<URI>>();
+    Map<String, Set<URI>> stringToSynsetIndex = new HashMap();
     Logger logger = LoggerFactory.getLogger(this.getClass());
     G graph;
-
-    public IndexerWordNetBasic() {
-    }
+    
 
     /**
      *
@@ -73,12 +71,15 @@ public class IndexerWordNetBasic {
      * @throws SLIB_Ex_Critic
      */
     public IndexerWordNetBasic(URIFactory factory, G g, String file) throws SLIB_Ex_Critic {
-
         graph = g;
         populateIndex(factory, file);
     }
+    
+    public IndexerWordNetBasic(G g) throws SLIB_Ex_Critic {
+        graph = g;
+    }
 
-    private void populateIndex(URIFactory factory, String filepath) throws SLIB_Ex_Critic {
+    public final void populateIndex(URIFactory factory, String filepath) throws SLIB_Ex_Critic {
 
         logger.info("---------------------------------");
         logger.info("Populating index from " + filepath);
@@ -140,7 +141,7 @@ public class IndexerWordNetBasic {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
 
-        logger.info("Index build");
+        logger.info("Index populated");
     }
 
     /**

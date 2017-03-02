@@ -120,7 +120,7 @@ public class QueryFileIterator implements QueryIterator {
         QueryEntry entry = null;
 
         try {
-            String[] csvRow = line.trim().split("\t");
+            String[] csvRow = line.trim().split("\\s");
 
 
             if (csvRow.length == 2) {

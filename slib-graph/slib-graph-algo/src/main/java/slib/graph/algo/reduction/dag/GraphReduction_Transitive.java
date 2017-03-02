@@ -130,7 +130,7 @@ public class GraphReduction_Transitive {
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 
             c++;
-            System.out.print(c + "/" + topoOrder.size() + "\tbuffer:" + reachableV_buffer.size() + "\tnumber of useless edges already detected:" + removableEdges.size() + "\r");
+            //System.out.print(c + "/" + topoOrder.size() + "\tbuffer:" + reachableV_buffer.size() + "\tnumber of useless edges already detected:" + removableEdges.size() + "\r");
 
             URI currentV = topoOrder.get(i);
 

@@ -51,10 +51,6 @@ import slib.graph.model.impl.graph.memory.GraphMemory;
 import slib.graph.model.impl.repo.URIFactoryMemory;
 import slib.graph.model.repo.URIFactory;
 import slib.sml.sm.core.engine.SM_Engine;
-import slib.sml.sm.core.metrics.ic.utils.IC_Conf_Topo;
-import slib.sml.sm.core.metrics.ic.utils.ICconf;
-import slib.sml.sm.core.utils.SMConstants;
-import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.UtilDebug;
@@ -194,18 +190,5 @@ public class WordnetExample_ExtractionAnimal {
         for (URI u : animalsUris) {
             System.out.println(u + "\t" + indexURI2String.get(u));
         }
-
-//
-//        // we compute the semantic similarities
-//        double sim_iced_coffee_vs_instant_coffee = engine.compare(measureConf, uri_iced_coffee, uri_instant_coffee);
-//        double sim_iced_coffee_vs_green_tea = engine.compare(measureConf, uri_iced_coffee, uri_green_tea);
-//
-//        // That's it
-//        System.out.println("sim(iced_coffee,instant_coffee) = " + sim_iced_coffee_vs_instant_coffee);
-//        System.out.println("sim(iced_coffee,green_tea)      = " + sim_iced_coffee_vs_green_tea);
-//
-//        // Which prints
-//        // sim(iced_coffee,instant_coffee) = 0.7573022852697784
-//        // sim(iced_coffee,green_tea)      = 0.3833914674618656
     }
 }
