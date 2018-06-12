@@ -104,7 +104,7 @@
                         <id>make-assembly-egs</id>
                         <phase>package</phase><!-- append to the packaging phase. -->
                         <goals>
-                            <goal>attached</goal><!-- goals == mojos -->
+                            <goal>single</goal><!-- goals == mojos -->
                         </goals>
                     </execution>
                 </executions>
