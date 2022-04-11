@@ -73,7 +73,7 @@ public class VectorWeight_Chabalier_2007 {
         Map<URI, Long> nbOcc = new HashMap<URI, Long>();
 
         for (URI v : engine.getClasses()) {
-            nbOcc.put(v, new Long(0));
+            nbOcc.put(v, Long.valueOf(0));
         }
 
 

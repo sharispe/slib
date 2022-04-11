@@ -54,6 +54,18 @@ public class Matrix<R, C> {
     public Map<R, Map<C, Double>> getInternalStorage(){
         return storage;
     }
+    
+    @SuppressWarnings("unchecked")
+	public void addValue(String a, String b, double val) {
+    	addValue((R)a , (C)b , val);
+    }
+    
+    @SuppressWarnings("unchecked")
+	public void addValue(String a, org.apache.lucene.document.Document b, double val) {
+    	addValue((R)a , (C)b , val);
+    }
+        
+    
 
     public void addValue(R a, C b, double val) {
         if (!storage.containsKey(a)) {

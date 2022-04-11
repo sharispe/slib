@@ -76,13 +76,13 @@ public class SMProxResultStorage {
      */
     public void clearCache() {
 
-        metrics_results = new ConcurrentHashMap();
-        ancestorsInc = new ConcurrentHashMap();
-        descendantsInc = new ConcurrentHashMap();
-        reachableLeaves = new ConcurrentHashMap();
-        shortestPath = new ConcurrentHashMap();
-        pairwise_results = new ConcurrentHashMap();
-        nbOccurrencePropagatted = new HashMap();
+        metrics_results = new ConcurrentHashMap<ICconf, Map<URI, Double>>();
+        ancestorsInc = new ConcurrentHashMap<URI, Set<URI>>();
+        descendantsInc = new ConcurrentHashMap<URI, Set<URI>>();
+        reachableLeaves = new ConcurrentHashMap<URI, Set<URI>>();
+        shortestPath = new ConcurrentHashMap<URI, ConcurrentHashMap<URI, Double>>();
+        pairwise_results = new ConcurrentHashMap<SMconf, ConcurrentHashMap<URI, Map<URI, Double>>>();
+        nbOccurrencePropagatted = new HashMap<URI, Integer>();
 
         // do not inialize
         nbPathLeadingToAllVertices = null;

@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -45,7 +45,7 @@ import java.util.Set;
 
 /**
  *
- * @author SÃ©bastien Harispe {@literal (sebastien.harispe@gmail.com)}
+ * @author Sébastien Harispe {@literal (sebastien.harispe@gmail.com)}
  */
 class CoocurenceComputer {
 
@@ -55,7 +55,7 @@ class CoocurenceComputer {
 
         int[] encodedText = encodeTokenArray(stab, vocabularyIndex);
 
-        List<Word> leftWords = new ArrayList();
+        List<Word> leftWords = new ArrayList<Word>();
 
         Word word = getNextWord(encodedText, 0, null, vocabularyIndex);
 
@@ -169,13 +169,13 @@ class CoocurenceComputer {
 
             } else if (next_token.isWordEnd()) { // indexed token is a word
 
-                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory = new ArrayList<VocabularyIndex.TokenNode>();
                 tokenNodeHistory.add(next_token); // we store the token into the history
                 return new Word(next_token.getWordID(), tokenNodeHistory, start); // and we return the result
 
             } else { // indexed token is a not word but starts a word we therefore try to extend it
 
-                tokenNodeHistory = new ArrayList();
+                tokenNodeHistory = new ArrayList<VocabularyIndex.TokenNode>();
                 tokenNodeHistory.add(next_token);
                 return getNextWordInner(encodedText, start, tokenNodeHistory, index);
             }
@@ -226,7 +226,7 @@ class CoocurenceComputer {
         }
         return IDArray;
     }
-
+/*
     private static String showTokenNodeHistory(List<VocabularyIndex.TokenNode> tokenNodeHistory, VocabularyIndex index) {
         if (tokenNodeHistory == null) {
             return "null";
@@ -237,7 +237,8 @@ class CoocurenceComputer {
             }
             return s;
         }
-    }
+       
+    }*/
 
     public static void main(String[] argv) {
 
@@ -250,7 +251,7 @@ class CoocurenceComputer {
                 + "the science and engineering of making intelligent machines"; // [wikipedia]
 
         text = text.toLowerCase();
-        Set<String> words = new HashSet(Arrays.asList("intelligence", "software", "artificial intelligence", "environment", "system that perceives its environment","maximize"));
+        Set<String> words = new HashSet<String>(Arrays.asList("intelligence", "software", "artificial intelligence", "environment", "system that perceives its environment","maximize"));
         Vocabulary voc = new Vocabulary(words);
         VocabularyIndex index = new VocabularyIndex(voc);
         SparseMatrix matrix = SparseMatrixGenerator.buildSparseMatrix(voc.size(), voc.size());

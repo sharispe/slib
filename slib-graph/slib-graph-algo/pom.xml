@@ -3,7 +3,7 @@
     <parent>
         <artifactId>slib-graph</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9.5</version>
+        <version>0.9.6</version>
         <relativePath>..</relativePath>
     </parent>
     <artifactId>slib-graph-algo</artifactId>
@@ -32,13 +32,13 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model-impl</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
 
         <dependency>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-utils</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -90,8 +90,7 @@
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <artifactId>maven-gpg-plugin</artifactId>                
                 <configuration>
                     <passphrase>${gpg.passphrase}</passphrase>
                 </configuration>

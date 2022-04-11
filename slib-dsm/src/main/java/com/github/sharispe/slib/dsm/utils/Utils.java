@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -60,7 +60,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class Utils {
 
@@ -141,7 +141,7 @@ public class Utils {
      */
     public static Map<String, Integer> loadMap(String filename, Pattern p) throws SLIB_Ex_Critic {
 
-        Map<String, Integer> map = new HashMap();
+        Map<String, Integer> map = new HashMap<String, Integer>();
         try {
             String line;
             String[] data;
@@ -178,7 +178,7 @@ public class Utils {
      */
     public static Map<String, Long> loadMapStringLong(String filename, Pattern p) throws SLIB_Ex_Critic {
 
-        Map<String, Long> map = new HashMap();
+        Map<String, Long> map = new HashMap<String, Long>();
         try {
             String line;
             String[] data;
@@ -209,7 +209,7 @@ public class Utils {
 
     public static Map<Integer, String> loadMap_IntString(String filename, Pattern p) throws SLIB_Ex_Critic {
 
-        Map<Integer, String> map = new HashMap();
+        Map<Integer, String> map = new HashMap<Integer, String>();
         try {
             String line;
             String[] data;
@@ -282,7 +282,7 @@ public class Utils {
 //    }
     public static Set<String> loadWords(String f) throws IOException {
 
-        Set<String> words = new HashSet();
+        Set<String> words = new HashSet<String>();
 
         // Load the vocabulary
         try (BufferedReader br = new BufferedReader(new FileReader(f))) {

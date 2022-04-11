@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -37,7 +37,7 @@ import java.util.List;
 
 /**
  *
- * @author SÃ©bastien Harispe {@literal (sebastien.harispe@gmail.com)}
+ * @author Sébastien Harispe {@literal (sebastien.harispe@gmail.com)}
  */
 public class Word {
 

@@ -77,7 +77,8 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
     /**
      *
      */
-    public static Map<String, URI> idMapping = new HashMap<String, URI>() {
+    @SuppressWarnings("serial")
+	public static Map<String, URI> idMapping = new HashMap<String, URI>() {
         {
             put(ID_SUBCLASSOF_SNOMED, RDFS.SUBCLASSOF);
         }
@@ -271,6 +272,9 @@ public class GraphLoaderSnomedCT_RF2 implements GraphLoader {
             logger.info("Number of relationships loaded: " + relationship_count);
             logger.info("-------------------------------------");
             
+         
+            //PJE
+            br.close();
             
         } catch (Exception ex) {
             ex.printStackTrace();

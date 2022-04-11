@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -35,6 +35,7 @@ package com.github.sharispe.slib.dsm.utils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -58,12 +59,12 @@ public class MapUtils {
      *
      * @param <K> key type
      * @param <V> value type
-     * @param map the map to sort
+     * @param index the map to sort
      * @return Sort a map by value (increasing order)
      */
-    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> index) {
 
-        return sortByValue(map, new Comparator<Entry<K, V>>() {
+        return sortByValue(index, new Comparator<Entry<K, V>>() {
 
             @Override
             public int compare(Entry<K, V> o1, Entry<K, V> o2) {
@@ -72,6 +73,21 @@ public class MapUtils {
         });
 
     }
+    
+    
+    public static <K, V extends Comparable<? super V>> Map<K, V> sortByValueV2(Map<K, V> map) {
+        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Entry.comparingByValue());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+    }
+    
+    
 
     /**
      * Sort a map by value (decreasing order)
@@ -103,11 +119,11 @@ public class MapUtils {
      */
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Comparator<Entry<K, V>> comparator) {
 
-        List<Entry<K, V>> list = new LinkedList(map.entrySet());
+        List<Entry<K, V>> list = new LinkedList<Entry<K, V>>(map.entrySet());
 
         Collections.sort(list, comparator);
 
-        Map<K, V> result = new LinkedHashMap();
+        Map<K, V> result = new LinkedHashMap<K, V>();
         for (Entry<K, V> entry : list) {
             result.put(entry.getKey(), entry.getValue());
         }
@@ -115,7 +131,7 @@ public class MapUtils {
     }
 
     public static <K, V> Map<V, K> revert(Map<K, V> map) {
-        Map<V, K> maprevert = new HashMap();
+        Map<V, K> maprevert = new HashMap<V, K>();
         for (Map.Entry<K, V> e : map.entrySet()) {
             maprevert.put(e.getValue(), e.getKey());
         }

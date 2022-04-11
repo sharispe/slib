@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -35,7 +35,7 @@ package com.github.sharispe.slib.dsm.core.engine;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 class VocStatResult {
 

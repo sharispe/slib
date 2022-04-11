@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -42,7 +42,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class CompressionUtils {
 
@@ -110,7 +110,7 @@ public class CompressionUtils {
      */
     public static Map<Integer, Double> compressedDoubleArrayToMap(double[] arr) {
 
-        Map<Integer, Double> map = new HashMap(arr.length / 2);
+        Map<Integer, Double> map = new HashMap<Integer, Double>(arr.length / 2);
 
         for (int i = 0; i < arr.length; i += 2) {
             map.put((int) arr[i], arr[i + 1]);
@@ -180,7 +180,7 @@ public class CompressionUtils {
     
     public static void main(String[] a) throws SLIB_Ex_Critic{
         
-        Map<Integer,Double> m = new HashMap();
+        Map<Integer,Double> m = new HashMap<Integer, Double>();
         m.put(0, 0.1);
         m.put(1, 3.0);
         System.out.println(Arrays.toString(toByteArray(m)));

@@ -60,10 +60,14 @@ public class CorpusFromFile implements Corpus {
 
     private class DocIterableLine implements Iterable<Document> {
 
-        DirectoryStream<Path> newDirectoryStream;
-        Iterator<Path> pathIterator;
-        List<File> subdirectories;
-        String filepath;
+        @SuppressWarnings("unused")
+		private DirectoryStream<Path> newDirectoryStream;
+        @SuppressWarnings("unused")
+		private Iterator<Path> pathIterator;
+        @SuppressWarnings("unused")
+		private List<File> subdirectories;
+        @SuppressWarnings("unused")
+		private String filepath = null;
         LineIterator it;
 
         private DocIterableLine(String filepath) throws IOException {

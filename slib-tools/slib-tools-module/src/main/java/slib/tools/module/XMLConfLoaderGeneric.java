@@ -379,7 +379,7 @@ public class XMLConfLoaderGeneric {
                 Conf conf = GenericConfBuilder.build(xmlConf);
 
                 Integer field = Util.stringToInteger((String) conf.getParam(XmlTags.MAP_ATT_FIELD));
-                String type = (String) conf.getParam(XmlTags.MAP_ATT_TYPE);
+                //PJE String type = (String) conf.getParam(XmlTags.MAP_ATT_TYPE);
                 String prefix = (String) conf.getParam(XmlTags.MAP_ATT_PREFIX);
 
                 if (field == null) {

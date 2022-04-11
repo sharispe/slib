@@ -163,7 +163,6 @@ public class SmlToolKitCli extends CmdHandler {
      *
      * @param args
      */
-    @SuppressWarnings("unused")
     public static void main(String[] args) {
 
 //        //DEBUG

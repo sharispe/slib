@@ -120,8 +120,8 @@ public class Dijkstra {
 
         logger.debug("\tComputing Shortest path... from " + source + " to " + t + " " + ws);
 
-        HashMap<URI, Double> dists = new HashMap();
-        HashMap<URI, Boolean> visited = new HashMap();
+        HashMap<URI, Double> dists = new HashMap<URI, Double>();
+        HashMap<URI, Boolean> visited = new HashMap<URI, Boolean>();
 
         // initialize data structures
         for (URI v : g.getV()) {
@@ -190,7 +190,7 @@ public class Dijkstra {
             visited.put(v, false);
         }
 
-        dists.put(source, new Double(0));
+        dists.put(source, Double.valueOf(0));
 
         for (int i = 0; i < dists.size(); i++) {
 

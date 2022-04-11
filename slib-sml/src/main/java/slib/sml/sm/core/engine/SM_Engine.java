@@ -154,9 +154,9 @@ public class SM_Engine {
      * TODO Replace by {@link GWS}
      */
     Map<URI, Double> vectorWeights = null;
-    final Map<SMconf, Sim_Pairwise> pairwiseMeasures = new ConcurrentHashMap();
-    final Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures = new ConcurrentHashMap();
-    final Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures = new ConcurrentHashMap();
+    final Map<SMconf, Sim_Pairwise> pairwiseMeasures = new ConcurrentHashMap<SMconf, Sim_Pairwise>();
+    final Map<SMconf, Sim_Groupwise_Indirect> groupwiseAddOnMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Indirect>();
+    final Map<SMconf, Sim_Groupwise_Direct> groupwiseStandaloneMeasures = new ConcurrentHashMap<SMconf, Sim_Groupwise_Direct>();
 
     /**
      * Constructor of an engine associated to the given graph. The taxonomic
@@ -239,20 +239,20 @@ public class SM_Engine {
             toTopWC.addAcceptedTraversal(toTop, Direction.OUT);
             toBottomWC.addAcceptedTraversal(toTop, Direction.IN);
         } else {
-            toTop = new HashSet(); // for union
+            toTop = new HashSet<URI>(); // for union
         }
         if (toBottom != null) {
             toTopWC.addAcceptedTraversal(toBottom, Direction.IN);
             toBottomWC.addAcceptedTraversal(toBottom, Direction.OUT);
         } else {
-            toBottom = new HashSet(); // for union
+            toBottom = new HashSet<URI>(); // for union
         }
         topNodeAccessor = new RVF_DAG(g, toTopWC);
         bottomNodeAccessor = new RVF_DAG(g, toBottomWC);
 
         // We define that the classes are the vertices which are linked to relationships
         // which are of the types specified to iterate over the DAG
-        Set<URI> c = new HashSet();
+        Set<URI> c = new HashSet<URI>();
         for (E e : g.getE(SetUtils.union(toTop, toBottom))) {
             c.add(e.getSource());
             c.add(e.getTarget());
@@ -332,7 +332,7 @@ public class SM_Engine {
 
         throwErrorIfNotClass(setClasses);
 
-        Set<URI> unionAnc = new HashSet();
+        Set<URI> unionAnc = new HashSet<URI>();
 
         for (URI v : setClasses) {
             unionAnc.addAll(getAncestorsInc(v));
@@ -537,7 +537,7 @@ public class SM_Engine {
      */
     public Map<URI, Integer> getAllNbDescendantsInc() throws SLIB_Ex_Critic {
 
-        Map<URI, Integer> allNbDescendants = new HashMap();
+        Map<URI, Integer> allNbDescendants = new HashMap<URI, Integer>();
         for (URI c : classes) {
             allNbDescendants.put(c, getAllDescendantsInc().get(c).size());
         }
@@ -666,7 +666,7 @@ public class SM_Engine {
              */
             for (URI c : classes) {
                 if (!leaves.containsKey(c)) {
-                    Set<URI> s = new HashSet();
+                    Set<URI> s = new HashSet<URI>();
                     s.add(c);
                     leaves.put(c, s);
                 }
@@ -715,7 +715,7 @@ public class SM_Engine {
         if (cache.allNbReachableLeaves == null) {
 
             Map<URI, Set<URI>> allReachableLeaves = getReachableLeaves();
-            cache.allNbReachableLeaves = new HashMap();
+            cache.allNbReachableLeaves = new HashMap<URI, Integer>();
 
             for (URI c : classes) {
 
@@ -740,7 +740,7 @@ public class SM_Engine {
     public Map<URI, Integer> getAllNbAncestorsInc() throws SLIB_Ex_Critic {
 
         Map<URI, Set<URI>> allAncestors = cache.ancestorsInc;
-        Map<URI, Integer> allNbancestors = new HashMap();
+        Map<URI, Integer> allNbancestors = new HashMap<URI, Integer>();
 
         for (URI c : classes) {
             allNbancestors.put(c, allAncestors.get(c).size());
@@ -803,7 +803,7 @@ public class SM_Engine {
 
                     if (cache.pairwise_results.get(pairwiseConf) == null) {
 
-                        ConcurrentHashMap<URI, Map<URI, Double>> pairwise_result = new ConcurrentHashMap();
+                        ConcurrentHashMap<URI, Map<URI, Double>> pairwise_result = new ConcurrentHashMap<URI, Map<URI, Double>>();
 
                         cache.pairwise_results.put(pairwiseConf, pairwise_result);
                     }
@@ -960,7 +960,7 @@ public class SM_Engine {
 
         checkInstanceAccessorIsDefined();
 
-        Map<URI, Set<URI>> instancesOfClasses = new HashMap();
+        Map<URI, Set<URI>> instancesOfClasses = new HashMap<URI, Set<URI>>();
 
         Iterator<URI> it = instanceAccessor.getInstancesIt();
         URI i;
@@ -985,7 +985,7 @@ public class SM_Engine {
         DFS dfs = new DFS(graph, roots, WalkConstraintUtils.getInverse(topNodeAccessor.getWalkConstraint(), (false)));
         List<URI> topoOrdering = dfs.getTraversalOrder();
 
-        Map<URI, Integer> rStack = new HashMap();
+        Map<URI, Integer> rStack = new HashMap<URI, Integer>();
 
         // initialize data structure && add virtual instance if required
         for (URI c : topoOrdering) {
@@ -1041,7 +1041,7 @@ public class SM_Engine {
         throwErrorIfNotClass(setA);
         throwErrorIfNotClass(setB);
 
-        MatrixDouble<URI, URI> m = new MatrixDouble(setA, setB);
+        MatrixDouble<URI, URI> m = new MatrixDouble<URI, URI>(setA, setB);
 
         for (URI a : setA) {
             for (URI b : setB) {
@@ -1092,7 +1092,7 @@ public class SM_Engine {
             vectorWeights = VectorWeight_Chabalier_2007.compute(this);
         }
 
-        Map<URI, Double> vector = new HashMap();
+        Map<URI, Double> vector = new HashMap<URI, Double>();
 
         Set<URI> setAncestors;
         setAncestors = set; // unpropragatted
@@ -1158,7 +1158,7 @@ public class SM_Engine {
     }
 
     private void computeLeaves() {
-        classesLeaves = new HashSet();
+        classesLeaves = new HashSet<URI>();
 
         WalkConstraint wc = bottomNodeAccessor.getWalkConstraint();
         for (URI v : classes) {
@@ -1324,7 +1324,7 @@ public class SM_Engine {
         Set<URI> ancsEx = unionAncestors;
         unionAncestors.removeAll(interAncestors);
 
-        Set<URI> hypoAncsEx = new HashSet();
+        Set<URI> hypoAncsEx = new HashSet<URI>();
 
         for (URI v : ancsEx) {
             Set<URI> descCurAnc = bottomNodeAccessor.getRV(v);
@@ -1339,7 +1339,8 @@ public class SM_Engine {
         }
     }
 
-    private void initTopAndBottomAccessor() {
+    @SuppressWarnings("unused")
+	private void initTopAndBottomAccessor() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

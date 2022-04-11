@@ -1,220 +1,229 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
-    
-    
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>com.github.sharispe</groupId>
-    <artifactId>slib</artifactId>
-    <version>0.9.5</version>
-    <packaging>pom</packaging>
-    <name>${project.artifactId}</name>
-    <description>Slib is a JAVA library dedicated to semantic data analysis. The project currently focuses on semantic data represented as semantic graphs (networks). The Semantic Measures Library (SML) is a sub-project of the Slib. </description>
-    <url>http://www.semantic-measures-library.org</url>
-    
-    <licenses>
-        <license>
-            <name>CECILL</name>
-            <url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
-        </license>
-    </licenses>
-    
-    <developers>
-        <developer>
-            <name>Sébastien Harispe</name>
-            <email>sebastien.harispe@gmail.com</email>
-            <organization>Ecole des mines d'Alès - LGI2P</organization>
-            <organizationUrl>http://www.mines-ales.fr/</organizationUrl>
-        </developer>
-    </developers>
-    
-    <properties>
-        <slib.version>${project.version}</slib.version>
-        <sml-toolkit.version>${project.version}</sml-toolkit.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
-        <timestamp>${maven.build.timestamp}</timestamp>
-    </properties>
-    
-    <scm>
-        <connection>scm:git:git://github.com/sharispe/slib.git</connection>
-        <developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
-        <url>http://github.com/sharispe/slib</url>
-    </scm>
-    
-    <distributionManagement>
-        <snapshotRepository>
-            <id>sonatype-nexus-snapshots</id>
-            <name>Sonatype Nexus snapshot repository</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>sonatype-nexus-staging</id>
-            <name>Sonatype Nexus release repository</name>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.github.sharispe</groupId>
+	<artifactId>slib</artifactId>
+	<version>0.9.55</version>
+	<packaging>pom</packaging>
+	<name>${project.artifactId}</name>
+	<description>Slib is a JAVA library dedicated to semantic data analysis. The project currently focuses on semantic data represented as semantic graphs (networks). The Semantic Measures Library (SML) is a sub-project of the Slib. </description>
+	<url>http://www.semantic-measures-library.org</url>
 
-    <modules>
-        <module>slib-utils</module>
-        <module>slib-tools</module>
-        <module>slib-indexer</module>
-        <module>slib-sml</module>
-        <module>slib-examples</module>
-        <module>slib-dist</module>
-        <module>slib-graph</module>
-        <module>slib-dsm</module>
-    </modules>
+	<licenses>
+		<license>
+			<name>CECILL</name>
+			<url>http://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Sébastien Harispe</name>
+			<email>sebastien.harispe@gmail.com</email>
+			<organization>Ecole des mines d'Alès - LGI2P</organization>
+			<organizationUrl>http://www.mines-ales.fr/</organizationUrl>
+		</developer>
+	</developers>
+
+	<properties>
+		<slib.version>${project.version}</slib.version>
+		<sml-toolkit.version>${project.version}</sml-toolkit.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMdd-HHmm</maven.build.timestamp.format>
+		<timestamp>${maven.build.timestamp}</timestamp>
+	</properties>
+
+	<scm>
+		<connection>scm:git:git://github.com/sharispe/slib.git</connection>
+		<developerConnection>scm:git:git@github.com:sharispe/slib.git</developerConnection>
+		<url>http://github.com/sharispe/slib</url>
+	</scm>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus snapshot repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Sonatype Nexus release repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+	<modules>
+		<module>slib-utils</module>
+		<module>slib-tools</module>
+		<module>slib-indexer</module>
+		<module>slib-sml</module>
+		<module>slib-examples</module>
+		<module>slib-dist</module>
+		<module>slib-graph</module>
+		<module>slib-dsm</module>
+	</modules>
 
 
-    
-    <dependencyManagement>
+	<dependencyManagement>
 
-        <dependencies>
+		<dependencies>
 
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.0</version>
-                <type>jar</type>
-                <scope>test</scope>
-                <optional>true</optional>
-            </dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.0</version>
+				<type>jar</type>
+				<scope>test</scope>
+				<optional>true</optional>
+			</dependency>
 
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.3</version>
-                <scope>compile</scope>
-            </dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.3</version>
+				<scope>compile</scope>
+			</dependency>
 
-            <!-- concrete Log4J Implementation for SLF4J API -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>1.7.3</version>
-                <scope>runtime</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+			<!-- concrete Log4J Implementation for SLF4J API -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.3</version>
+				<scope>runtime</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-    <build>
-        
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                </plugin>
-                
-                <plugin>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.5.1</version>
-                    <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
-                    </configuration>
-                </plugin>
-                
-                        
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
-                    <executions>
-                        <execution>
-                            <id>aggregate</id>
-                            <phase>site</phase>
-                            <goals>
-                                <goal>aggregate</goal>
-                                <goal>aggregate-jar</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.3</version>
-                </plugin>
-                
-                <plugin>
-                    <artifactId>maven-assembly-plugin</artifactId>
-                    <inherited>false</inherited>
-                    <configuration>
-                        <finalName>slib-${project.version}</finalName>
-                        <descriptors>
-                            <descriptor>src/main/assembly/sdk.xml</descriptor>
-                        </descriptors>
-                    </configuration>
-                </plugin>
-               
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>2.5</version>
-                    <configuration>
-                        <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-                    </configuration>
-                </plugin>
-                
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.5</version>
-                    <configuration>
-                        <passphrase>${gpg.passphrase}</passphrase>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </configuration>
-                </plugin>
-               
-            </plugins>
-            
-        </pluginManagement>
-    
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <passphrase>${gpg.passphrase}</passphrase>
-<!--                    <executions>
+	<build>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<configuration>
+						<source>17</source>
+						<target>17</target>
+					</configuration>
+				</plugin>
+
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.3</version>
+					<executions>
+						<execution>
+							<id>aggregate</id>
+							<phase>site</phase>
+							<goals>
+								<goal>aggregate</goal>
+								<goal>aggregate-jar</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.3</version>
+				</plugin>
+
+				<plugin>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<inherited>false</inherited>
+					<configuration>
+						<finalName>slib-${project.version}</finalName>
+						<descriptors>
+							<descriptor>src/main/assembly/sdk.xml</descriptor>
+						</descriptors>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5</version>
+					<configuration>
+						<arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.5</version>
+					<configuration>
+						<passphrase>${gpg.passphrase}</passphrase>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</configuration>
+				</plugin>
+
+			</plugins>
+
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<configuration>
+					<passphrase>${gpg.passphrase}</passphrase>
+					<!--                    <executions>
                         <execution>
                             <id>sign-artifacts</id>
-                            <phase>packag</phase>
+                            <phase>package</phase>
                             <goals>
                                 <goal>sign</goal>
                             </goals>
                         </execution>
                     </executions>-->
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.8.1</version>
-                <configuration>
-                    <skip>false</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-        
-    </build>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<skip>false</skip>
+				</configuration>
+			</plugin>
+
+			<!-- https://github.com/sharispe/slib/issues/54 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/log4j.properties</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+
+	</build>
 </project>

@@ -93,7 +93,8 @@ public class LCAFinderImpl implements LCAFinder {
         return false;
     }
 
-    private void printStackStatus(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
+    @SuppressWarnings("unused")
+	private void printStackStatus(List<URI> ancestorsOrdered, Map<URI, Boolean> visited) {
         for (int i = ancestorsOrdered.size() - 1; i >= 0; i--) {
 
             System.out.println(ancestorsOrdered.get(i) + "\t" + visited.get(ancestorsOrdered.get(i)));
@@ -110,7 +111,7 @@ public class LCAFinderImpl implements LCAFinder {
             throw new SLIB_Ex_Critic("Graph " + graph.getURI() + " doesn't contain vertice " + b);
         }
 
-        Set<URI> lca = new HashSet();
+        Set<URI> lca = new HashSet<URI>();
 
         Set<URI> ancA = engine.getAncestorsInc(a);
         Set<URI> ancB = engine.getAncestorsInc(b);
@@ -138,7 +139,7 @@ public class LCAFinderImpl implements LCAFinder {
             to.remove(b);
 
 //        logger.debug("Traversal Order : " + to);
-            List<URI> ancestorsOrdered = new ArrayList(to.size());
+            List<URI> ancestorsOrdered = new ArrayList<URI>(to.size());
 
             for (URI v : to) {
                 if (intersection.contains(v)) {

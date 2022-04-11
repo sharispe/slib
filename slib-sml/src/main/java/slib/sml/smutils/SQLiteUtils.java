@@ -174,7 +174,8 @@ public class SQLiteUtils {
      * @throws SLIB_Ex_Critic
      *
      */
-    public void createTableDB(String filepath, String db, String tableName) throws SLIB_Ex_Critic {
+    @SuppressWarnings("resource")
+	public void createTableDB(String filepath, String db, String tableName) throws SLIB_Ex_Critic {
 
 
         logger.info("Create SQLlite DB from " + filepath);
@@ -278,6 +279,9 @@ public class SQLiteUtils {
                     }
                 }
                 in.close();
+                
+                //PJE
+                br.close();
             } catch (IOException e) {//Catch exception if any
                 throw new SLIB_Ex_Critic(e.getMessage());
             }
@@ -1210,7 +1214,7 @@ public class SQLiteUtils {
      * @param BATCH_LIMIT
      */
     public void setBATCH_LIMIT(int BATCH_LIMIT) {
-        this.BATCH_LIMIT = BATCH_LIMIT;
+    	SQLiteUtils.BATCH_LIMIT = BATCH_LIMIT;
     }
 
     /**

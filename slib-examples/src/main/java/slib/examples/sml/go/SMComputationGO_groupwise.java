@@ -126,7 +126,8 @@ public class SMComputationGO_groupwise {
 
 
         // We compute the similarity between http://go/0071869 and the collection of vertices
-        URI concept = factory.getURI("http://go/0071869");
+        @SuppressWarnings("unused")
+		URI concept = factory.getURI("http://go/0071869");
 
         ICconf icConf = new IC_Conf_Topo("Sanchez", SMConstants.FLAG_ICI_SANCHEZ_2011);
 
@@ -148,14 +149,15 @@ public class SMComputationGO_groupwise {
         System.out.println("http://go/I3L2H2 is annotated by " + annotations_i.size() + " concepts");
 
 
-        double sim;
+      //PJE double sim;
         int c = 0;
         
         for (URI v : engine.getInstances()) {
 
             Set<URI> annotations_v = iAccessor.getDirectClass(v);
 
-            sim = engine.compare(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
+            // PJE double sim = engine.compare(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
+            engine.compare(smConfGroupwise, smConfPairwise, annotations_i, annotations_v);
 //            System.out.println(i + "\t" + v + "\t" + sim);
             c++;
         }

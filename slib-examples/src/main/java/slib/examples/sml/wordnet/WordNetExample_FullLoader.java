@@ -49,7 +49,7 @@ public class WordNetExample_FullLoader {
         }
 
         // reverse index to be able to retrieve the labels associated to an URI
-        Map<URI, Set<String>> invertedIndex = new HashMap();
+        Map<URI, Set<String>> invertedIndex = new HashMap<URI, Set<String>>();
         for (Map.Entry<String, Set<URI>> e : indexWordnetWordUris.getIndex().entrySet()) {
             String label = e.getKey();
             Set<URI> uris = e.getValue();

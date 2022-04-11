@@ -193,7 +193,8 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
         logger.info("-------------------------------------");
     }
 
-    private void loadOboSpec() throws SLIB_Exception {
+    @SuppressWarnings("resource")
+	private void loadOboSpec() throws SLIB_Exception {
 
         try {
 
@@ -209,7 +210,7 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
 
             String[] data;
 
-            String gNamespace = g.getURI().getNamespace();
+            // PJE String gNamespace = g.getURI().getNamespace();
 
             while ((line = br.readLine()) != null) {
 
@@ -340,6 +341,10 @@ public class GraphLoader_OBO_1_2 implements GraphLoader {
             handleElement();
 
             in.close();
+            
+            //PJE
+            br.close();
+
         } catch (IOException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }

@@ -54,7 +54,6 @@ import slib.sml.sm.core.utils.SMConstants;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.Timer;
-import slib.utils.impl.UtilDebug;
 
 /**
  *
@@ -74,7 +73,8 @@ import slib.utils.impl.UtilDebug;
  */
 public class SMComputationGO_groupwise_BP_restriction {
 
-    public static void main(String[] params) throws SLIB_Exception {
+    @SuppressWarnings("unused")
+	public static void main(String[] params) throws SLIB_Exception {
         
         Timer t = new Timer();
         t.start();

@@ -50,9 +50,7 @@ import slib.graph.io.util.GFormat;
 import slib.graph.model.graph.G;
 import slib.graph.model.graph.elements.E;
 import slib.graph.model.impl.graph.elements.Edge;
-import slib.graph.model.impl.graph.memory.GraphMemory;
 import slib.graph.model.impl.repo.URIFactoryMemory;
-import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.ex.SLIB_Exception;
 
@@ -120,8 +118,8 @@ public class GraphLoader_Wordnet implements GraphLoader {
                 data = line.split("\\s+");
 
                 String synset_offset = data[0];
-                String lex_filenum = data[1];
-                String ss_type = data[2];
+                //PJE String lex_filenum = data[1];
+                //PJE String ss_type = data[2];
 
                 URI synset = dataRepo.getURI(uriPrefix + synset_offset);
                 graph.addV(synset);
@@ -213,7 +211,7 @@ public class GraphLoader_Wordnet implements GraphLoader {
 
     private void initPointerToURImap() {
         
-        pointerSymbolToURIsMap = new HashMap();
+        pointerSymbolToURIsMap = new HashMap<String, PointerToEdge>();
 
         PointerToEdge hypernym = new PointerToEdge(RDFS.SUBCLASSOF, true);
         PointerToEdge hyponym = new PointerToEdge(RDFS.SUBCLASSOF, false);

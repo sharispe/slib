@@ -3,10 +3,10 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9.5</version>
+        <version>0.9.6</version>
         <relativePath>..</relativePath>
     </parent>
-    
+        
     <artifactId>slib-dist</artifactId>
     <packaging>pom</packaging>
 
@@ -36,6 +36,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <configuration>
+					<archive>
+						<manifest>
+							<mainClass>slib.tools.smltoolkit.SmlToolKitCli</mainClass>
+						</manifest>						
+					</archive>                
                     <finalName>slib-dist-${slib.version}-${timestamp}</finalName>
                 </configuration>
                 <version>2.4</version>
@@ -58,8 +63,7 @@
         
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
+                <artifactId>maven-javadoc-plugin</artifactId>               
                 <configuration>
                     <use>false</use>
                     <excludePackageNames>slib.quicktest.*:slib-graph.gui.*</excludePackageNames>
@@ -82,8 +86,7 @@
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <artifactId>maven-gpg-plugin</artifactId>                
                 <configuration>
                     <passphrase>${gpg.passphrase}</passphrase>
                 </configuration>
@@ -114,48 +117,48 @@
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-utils</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-algo</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-model-impl</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-indexer</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-sml</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-graph-io</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-tools-sml-toolkit</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
         
         <dependency>
             <groupId>com.github.sharispe</groupId>
             <artifactId>slib-dsm</artifactId>
-            <version>0.9.5</version>
+            <version>0.9.6</version>
         </dependency>
     </dependencies>
     

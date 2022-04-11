@@ -60,7 +60,7 @@ import slib.utils.ex.SLIB_Exception;
  *
  * Distributional Model Engine. Class used to build distributional models
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class DMEngine {
 
@@ -114,7 +114,7 @@ public class DMEngine {
                     Map<Integer, Double> vectorAsMap = null;
                     byte[] compressed_vector_byte;
 
-                    Set<Integer> id_vectors = new HashSet(index.wordIdToWord.keySet());
+                    Set<Integer> id_vectors = new HashSet<Integer>(index.wordIdToWord.keySet());
 
                     // create the vector representations that are specified into the matrix file
                     while ((line = br.readLine()) != null) {
@@ -126,7 +126,7 @@ public class DMEngine {
                         word_id = Integer.parseInt(data[0]);
                         id_vectors.remove(word_id);
 
-                        vectorAsMap = new HashMap();
+                        vectorAsMap = new HashMap<Integer, Double>();
                         for (int i = 1; i < data.length; i++) {
                             data2 = Utils.dash_pattern.split(data[i]);// 30-456
                             word_id_c = Integer.parseInt(data2[0]);

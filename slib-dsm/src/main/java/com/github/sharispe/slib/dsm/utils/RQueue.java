@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -39,7 +39,7 @@ import java.util.List;
 /**
  * Result Queue
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  * @param <V> value type
  * @param <L> label type
  */
@@ -59,8 +59,8 @@ public class RQueue<L, V extends Number> {
     public RQueue(int capacity, boolean maximize) {
         this.maximize = maximize;
         this.capacity = capacity;
-        this.values = new ArrayList(capacity + 1);
-        this.labels = new ArrayList(capacity + 1);
+        this.values = new ArrayList<Double>(capacity + 1);
+        this.labels = new ArrayList<L>(capacity + 1);
         nbValues = 0;
     }
 
@@ -145,7 +145,7 @@ public class RQueue<L, V extends Number> {
 
     public static void main(String[] args) {
 
-        RQueue<String, Double> kbestValues = new RQueue(3, true);
+        RQueue<String, Double> kbestValues = new RQueue<String, Double>(3, true);
 
         System.out.println(kbestValues.toString());
 

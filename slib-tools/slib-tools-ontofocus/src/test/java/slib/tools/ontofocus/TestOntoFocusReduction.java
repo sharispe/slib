@@ -306,7 +306,7 @@ public class TestOntoFocusReduction {
      */
     @Test
     public void testReduction3f() throws SLIB_Exception {
-        assertTrue(true == true);
+        // assertTrue(true == true);
     }
 
     /**

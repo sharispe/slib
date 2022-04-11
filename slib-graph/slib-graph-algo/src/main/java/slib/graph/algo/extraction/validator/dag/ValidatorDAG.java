@@ -82,7 +82,7 @@ public class ValidatorDAG {
         this.wc = wc;
 
         this.graph = graph;
-        this.verticesColors = new HashMap();
+        this.verticesColors = new HashMap<URI, Color>();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());

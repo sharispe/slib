@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -53,7 +53,7 @@ import slib.utils.threads.PoolWorker;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class VocStatComputerThreads implements Callable<VocStatResult> {
 
@@ -116,7 +116,7 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
             Map<String, Integer> fileVoc;
             String w;
 
-            Map<String, WordInfo> wordOccurences = new HashMap();
+            Map<String, WordInfo> wordOccurences = new HashMap<String, WordInfo>();
 
             File corpus_index = new File(rootPath + "/" + VocStatComputer.CORPUS_INDEX);
 
@@ -144,7 +144,7 @@ public class VocStatComputerThreads implements Callable<VocStatResult> {
                         wordIT = WordIteratorAccessor.getWordIterator(doc, max_size_word, wordIteratorConstraint);
                     }
 
-                    fileVoc = new HashMap();
+                    fileVoc = new HashMap<String, Integer>();
 
                     // retrieve all the words and associated number of occurrences
                     while (wordIT.hasNext()) {

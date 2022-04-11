@@ -110,7 +110,7 @@ public class GraphReduction_Transitive {
      */
     public static Set<E> process(G g, Set<URI> srcs) {
 
-        Set<E> removableEdges = new HashSet();
+        Set<E> removableEdges = new HashSet<E>();
 
         logger.info("Processing transitive reduction: ");
         logger.debug("Number of roots" + srcs.size() + " root(s)");
@@ -123,9 +123,10 @@ public class GraphReduction_Transitive {
 
         List<URI> topoOrder = dfs.getTraversalOrder();
 
-        HashMap<URI, HashSet<URI>> reachableV_buffer = new HashMap();
+        HashMap<URI, HashSet<URI>> reachableV_buffer = new HashMap<URI, HashSet<URI>>();
 
-        int c = 0;
+        @SuppressWarnings("unused")
+		int c = 0;
 
         for (int i = topoOrder.size() - 1; i >= 0; --i) {
 

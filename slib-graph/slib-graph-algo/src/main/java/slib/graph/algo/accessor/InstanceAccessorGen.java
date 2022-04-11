@@ -51,7 +51,7 @@ public class InstanceAccessorGen implements InstanceAccessor {
 
     public InstanceAccessorGen(Set<URI> instances, Map<URI, Set<URI>> mapClassInstances) {
         this.instances = instances;
-        this.mapInstancesClass = new HashMap();
+        this.mapInstancesClass = new HashMap<URI, Set<URI>>();
         for (Map.Entry<URI, Set<URI>> e : mapClassInstances.entrySet()) {
 
             for (URI i : e.getValue()) {

@@ -59,7 +59,8 @@ public class VocContextMatrixBuilder {
 
     List<String> docFields = new ArrayList<String>();
     Set<String> vocabulary;
-    Matrix matrix;
+    @SuppressWarnings("rawtypes")
+	Matrix<String,?> matrix;
     MatrixType matrixType;
 
     public VocContextMatrixBuilder(MatrixType matrixType, Set<String> voc) {
@@ -79,7 +80,7 @@ public class VocContextMatrixBuilder {
         logger.info("Matrix Builder: " + this.matrixType);
     }
 
-    public Matrix getMatrix() {
+    public Matrix<String,?> getMatrix() {
         return matrix;
     }
 
@@ -145,8 +146,11 @@ public class VocContextMatrixBuilder {
 
                             if (vocabulary == null || vocabulary.contains(wordsDoc[i]) && vocabulary.contains(wordsDoc[j])) {
 //                                logger.info(wordsDoc[i] + "\t" + wordsDoc[j]);
+
+                            	
                                 matrix.addValue(wordsDoc[i], wordsDoc[j], 1);
                                 matrix.addValue(wordsDoc[j], wordsDoc[i], 1);
+                                
                             }
                         }
                     }
@@ -206,11 +210,13 @@ public class VocContextMatrixBuilder {
 //        docs.add(docC);
 //        matrixBuilder.buildMatrix(docs);
 
-        Matrix<String, String> mat = matrixBuilder.getMatrix();
+        Matrix<String,?> mat = matrixBuilder.getMatrix();
 
         System.out.println("size: " + mat.getInternalStorage().keySet().size());
 
-        for (String s : mat.getInternalStorage().keySet()) {
+        Set<String> keys = mat.getInternalStorage().keySet();
+        
+        for (String s : keys ) {
             System.out.println(s + "\t(" + mat.getInternalStorage().get(s).size() + ")\t" + mat.getInternalStorage().get(s));
         }
     }

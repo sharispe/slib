@@ -102,11 +102,11 @@ public class MapUtils {
      */
     public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map, Comparator<Entry<K, V>> comparator) {
 
-        List<Entry<K, V>> list = new LinkedList(map.entrySet());
+        List<Entry<K, V>> list = new LinkedList<Entry<K, V>>(map.entrySet());
 
         Collections.sort(list, comparator);
 
-        Map<K, V> result = new LinkedHashMap();
+        Map<K, V> result = new LinkedHashMap<K, V>();
         for (Entry<K, V> entry : list) {
             result.put(entry.getKey(), entry.getValue());
         }
@@ -114,7 +114,7 @@ public class MapUtils {
     }
 
     public static <K, V> Map<V, K> revert(Map<K, V> map) {
-        Map<V, K> maprevert = new HashMap();
+        Map<V, K> maprevert = new HashMap<V, K>();
         for (Map.Entry<K, V> e : map.entrySet()) {
             maprevert.put(e.getValue(), e.getKey());
         }

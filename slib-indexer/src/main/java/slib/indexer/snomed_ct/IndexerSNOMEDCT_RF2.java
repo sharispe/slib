@@ -60,7 +60,7 @@ public class IndexerSNOMEDCT_RF2 {
     private static final int DESCRIPTION_CONCEPT_ID = 4;
     private static final int DESCRIPTION_ACTIVE = 2;
     private static final int DESCRIPTION_TERM = 7;
-    private static final int DESCRIPTION_DATE = 1;
+    //PJE private static final int DESCRIPTION_DATE = 1;
     static Logger logger = LoggerFactory.getLogger(IndexerSNOMEDCT_RF2.class);
     static Pattern p_tab = Pattern.compile("\\t");
     static URIFactory repo;

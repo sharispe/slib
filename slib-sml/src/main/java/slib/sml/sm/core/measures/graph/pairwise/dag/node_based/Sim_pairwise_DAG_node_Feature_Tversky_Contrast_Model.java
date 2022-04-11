@@ -35,7 +35,6 @@ package slib.sml.sm.core.measures.graph.pairwise.dag.node_based;
 
 import org.openrdf.model.URI;
 import slib.sml.sm.core.engine.SM_Engine;
-import static slib.sml.sm.core.measures.graph.pairwise.dag.node_based.Sim_pairwise_DAG_node_IC_Tversky_Contrast_Model.gamma_param_name;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Exception;
 import slib.utils.impl.SetUtils;

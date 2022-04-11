@@ -55,7 +55,7 @@ public class SetUtils {
      */
     public static <X> Set<X> union(Collection<X> a, Collection<X> b) {
 
-        Set<X> union = new HashSet(a);
+        Set<X> union = new HashSet<X>(a);
         union.addAll(b);
         return union;
     }
@@ -69,7 +69,7 @@ public class SetUtils {
      * @return the intersection
      */
     public static <X> Set<X> intersection(Collection<X> anc_setA, Collection<X> anc_setB) {
-        Set<X> inter = new HashSet(anc_setA);
+        Set<X> inter = new HashSet<X>(anc_setA);
         inter.retainAll(anc_setB);
         return inter;
     }
@@ -105,7 +105,7 @@ public class SetUtils {
             return null;
         }
 
-        Set<X> set = new HashSet();
+        Set<X> set = new HashSet<X>();
         set.add(o);
         return set;
     }

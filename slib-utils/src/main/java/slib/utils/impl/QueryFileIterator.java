@@ -170,7 +170,8 @@ public class QueryFileIterator implements QueryIterator {
         return bench;
     }
 
-    @Override
+    @SuppressWarnings("resource")
+	@Override
     public long getNumberQueries() throws Exception {
 
         LineNumberReader lnr;

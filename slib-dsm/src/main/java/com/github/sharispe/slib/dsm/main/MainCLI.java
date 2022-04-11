@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -70,7 +70,7 @@ import slib.utils.impl.Timer;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MainCLI {
 
@@ -290,7 +290,7 @@ public class MainCLI {
         String dm_dir = argv[0];
         ModelConf modelConf = ModelConf.load(dm_dir);
         Iterator<IndexedVectorInfo> itIndexedVectorInfo = new IndexedVectorInfoIterator(modelConf);
-        Map<String, IndexedVectorInfo> index = new HashMap();
+        Map<String, IndexedVectorInfo> index = new HashMap<String, IndexedVectorInfo>();
         logger.info("Loading index into memory");
         while (itIndexedVectorInfo.hasNext()) {
             IndexedVectorInfo i = itIndexedVectorInfo.next();
@@ -417,7 +417,7 @@ public class MainCLI {
             boolean show_compressed = getInput("Do you want to see a compressed representation? (y/n): ").toLowerCase().equals("y");
             if (show_compressed) {
                 log("compressed representation:");
-                SortedSet<Integer> keys = new TreeSet(compressedVecAsMap.keySet());
+                SortedSet<Integer> keys = new TreeSet<Integer>(compressedVecAsMap.keySet());
                 for (Integer k : keys) {
                     log("(" + k + "," + compressedVecAsMap.get(k) + ")");
                 }
@@ -499,8 +499,8 @@ public class MainCLI {
         ModelAccessor_2D modelAccessor = new ModelAccessorPersistance_2D(modelConf);
 
         Iterator<IndexedVectorInfo> itIndexedVectorInfo = new IndexedVectorInfoIterator(modelConf);
-        Map<String, IndexedVectorInfo> index = new HashMap();
-        Map<Integer, String> index_id = new HashMap();
+        Map<String, IndexedVectorInfo> index = new HashMap<String, IndexedVectorInfo>();
+        Map<Integer, String> index_id = new HashMap<Integer, String>();
         logger.info("Loading index into memory");
         while (itIndexedVectorInfo.hasNext()) {
             IndexedVectorInfo i = itIndexedVectorInfo.next();
@@ -522,7 +522,7 @@ public class MainCLI {
 
         double[] vector_result = modelAccessor.vectorRepresentationOf(queryVectorInfo).values;
 
-        RQueue<String, Double> bestSim = new RQueue(k);
+        RQueue<String, Double> bestSim = new RQueue<String, Double>(k);
 
         for (int i = 0; i < vector_result.length; i++) {
 
@@ -636,7 +636,7 @@ public class MainCLI {
 
         String new_index = argv[0];
         boolean delete = argv[1].equalsIgnoreCase("true");
-        Set<String> indexToMerge = new HashSet();
+        Set<String> indexToMerge = new HashSet<String>();
         for (int i = 2; i < argv.length; i++) {
             indexToMerge.add(argv[i]);
         }
@@ -878,10 +878,10 @@ public class MainCLI {
             String voc_file = argv[0];
             String model_dir = argv[1];
             String output_dir = argv[2];
-            int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
-            int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
-            int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
-            int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
+            //PJE  int window_size_token = argv.length >= 4 ? Integer.parseInt(argv[3]) : 30;
+            //PJE int nbThreads = argv.length >= 5 ? Integer.parseInt(argv[4]) : 2;
+            //PJE int nbFilesPerChunk = argv.length >= 6 ? Integer.parseInt(argv[5]) : 10000;
+            //PJE  int max_matrix_size = argv.length == 7 ? Integer.parseInt(argv[6]) : 1000000;
 
             SlibDist_Wrapper.reduceWordOccMatrix(voc_file, model_dir, output_dir);
         }

@@ -34,7 +34,6 @@
 package slib.sml.sm.core.measures.graph.framework.dag;
 
 import java.util.Set;
-import javax.swing.text.StyledEditorKit;
 import org.openrdf.model.URI;
 
 import slib.sml.sm.core.engine.SM_Engine;

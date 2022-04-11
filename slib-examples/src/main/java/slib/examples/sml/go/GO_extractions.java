@@ -48,7 +48,8 @@ public class GO_extractions {
         final URI ccGOTerm = factory.getURI("http://go/0005575");
         final URI mfGOTerm = factory.getURI("http://go/0003674");
 
-        HashMap<String, URI> aspects = new HashMap() {
+        @SuppressWarnings("serial")
+		HashMap<String, URI> aspects = new HashMap<String, URI>() {
             {
                 put("BP", bpGOTerm);
                 put("CC", ccGOTerm);

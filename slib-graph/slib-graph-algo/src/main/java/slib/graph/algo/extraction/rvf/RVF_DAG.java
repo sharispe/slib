@@ -87,13 +87,13 @@ public class RVF_DAG extends RVF {
         logger.debug("Get all reachable vertices : start");
         logger.debug("Walk constraint\n" + wc);
 
-        Map<URI, Set<URI>> allVertices = new HashMap();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
 
-        Map<URI, Integer> inDegree = new HashMap();
-        Map<URI, Integer> inDegreeDone = new HashMap();
+        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
 
         // Initialize DataStructure + queue considering walk constraint
-        List<URI> queue = new ArrayList();
+        List<URI> queue = new ArrayList<URI>();
 
         WalkConstraint oppositeWC = WalkConstraintUtils.getInverse(wc, false);
         logger.debug("Opposite Walk constraint " + oppositeWC);
@@ -230,14 +230,14 @@ public class RVF_DAG extends RVF {
 
         logger.info("Retrieving all reachable leaves");
 
-        Map<URI, Set<URI>> allReachableLeaves = new HashMap();
-        Map<URI, Integer> inDegrees = new HashMap();
-        Map<URI, Integer> inDegreesDone = new HashMap();
+        Map<URI, Set<URI>> allReachableLeaves = new HashMap<URI, Set<URI>>();
+        Map<URI, Integer> inDegrees = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreesDone = new HashMap<URI, Integer>();
 
         // Retrieve all leaves
-        List<URI> queue = new ArrayList();
+        List<URI> queue = new ArrayList<URI>();
 
-        Set<URI> studiedURIs = new HashSet();
+        Set<URI> studiedURIs = new HashSet<URI>();
         for (E e : g.getE(wc.getAcceptedPredicates())) {
             studiedURIs.add(e.getSource());
             studiedURIs.add(e.getTarget());
@@ -305,7 +305,7 @@ public class RVF_DAG extends RVF {
      */
     public Map<URI, Integer> computeNbPathLeadingToAllVertices() throws SLIB_Ex_Critic {
 
-        Map<URI, Integer> allVertices = new HashMap();
+        Map<URI, Integer> allVertices = new HashMap<URI, Integer>();
 
         for (URI v : g.getV()) {
             allVertices.put(v, 1);
@@ -329,16 +329,16 @@ public class RVF_DAG extends RVF {
      */
     public Map<URI, Integer> propagateNbOccurences(Map<URI, Integer> nbOccurrence) throws SLIB_Ex_Critic {
 
-        Map<URI, Set<URI>> allVertices = new HashMap();
-        Map<URI, Integer> inDegree = new HashMap();
-        Map<URI, Integer> inDegreeDone = new HashMap();
-        Map<URI, Integer> nbOcc_prop = new HashMap();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
+        Map<URI, Integer> inDegree = new HashMap<URI, Integer>();
+        Map<URI, Integer> inDegreeDone = new HashMap<URI, Integer>();
+        Map<URI, Integer> nbOcc_prop = new HashMap<URI, Integer>();
 
         for (URI v : nbOccurrence.keySet()) {
             nbOcc_prop.put(v, nbOccurrence.get(v));
         }
         // Initialize DataStructure + queue considering setEdgeTypes
-        List<URI> queue = new ArrayList();
+        List<URI> queue = new ArrayList<URI>();
 
         for (URI v : g.getV()) {
 

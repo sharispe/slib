@@ -78,7 +78,8 @@ public class GraphLoader_SLIB implements GraphLoader {
      * @param graph
      * @throws SLIB_Exception
      */
-    public void process(GDataConf conf, G graph) throws SLIB_Exception {
+    @SuppressWarnings("resource")
+	public void process(GDataConf conf, G graph) throws SLIB_Exception {
 
         this.g = graph;
         factory = URIFactoryMemory.getSingleton();
@@ -125,6 +126,11 @@ public class GraphLoader_SLIB implements GraphLoader {
                 }
             }
             in.close();
+            
+            //PJE
+            br.close();
+            
+            
         } catch (IOException e) {
             throw new SLIB_Ex_Critic(e.getMessage());
         }

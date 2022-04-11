@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -68,7 +68,6 @@ import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -78,7 +77,7 @@ import slib.utils.impl.Timer;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SlibDist_Wrapper {
 
@@ -213,7 +212,7 @@ public class SlibDist_Wrapper {
 
         double[] q = modelAccessor.vectorRepresentationOf(queryVectorInfo).values;
 
-        RQueue<String, Double> bestScores = new RQueue(k_limit);
+        RQueue<String, Double> bestScores = new RQueue<String, Double>(k_limit);
 
         Iterator<IndexedVector> vectorIterator = modelAccessor.iterator();
 
@@ -266,7 +265,7 @@ public class SlibDist_Wrapper {
         VocStatInfo idxInfo = new VocStatInfo(voc_stat_info);
         long nb_word_corpus = idxInfo.nbScannedWords;
 
-        Map<String, WordInfo> wordStat = new HashMap();
+        Map<String, WordInfo> wordStat = new HashMap<String, WordInfo>();
 
         int c = 0;
 
@@ -285,7 +284,7 @@ public class SlibDist_Wrapper {
 
         // Load the labels associated to the dimension
         Iterator<IndexedVectorInfo> it = new IndexedVectorInfoIterator(cocc_model_conf);
-        Map<Integer, String> idToLabel = new HashMap();
+        Map<Integer, String> idToLabel = new HashMap<Integer, String>();
 
         while (it.hasNext()) {
             IndexedVectorInfo info = it.next();
@@ -401,7 +400,7 @@ public class SlibDist_Wrapper {
      */
     private static Map<Integer, Double> decodeFileOccDistribution(String encodedFileOcc) {
 
-        Map<Integer, Double> encodedResult = new HashMap();
+        Map<Integer, Double> encodedResult = new HashMap<Integer, Double>();
 
         String[] nbocc_files = Utils.colon_pattern.split(encodedFileOcc);
         for (String nbocc_file : nbocc_files) {
@@ -444,7 +443,7 @@ public class SlibDist_Wrapper {
         }
 
         // We select the best dimensions, i.e. the dimensions that are the most often used
-        RQueue<Integer, Integer> bestDimensionsResult = new RQueue(nbDimension);
+        RQueue<Integer, Integer> bestDimensionsResult = new RQueue<Integer, Integer>(nbDimension);
         for (int i = 0; i < vec_using_dimension.length; i++) {
             bestDimensionsResult.add(i, vec_using_dimension[i]);
         }
@@ -487,7 +486,7 @@ public class SlibDist_Wrapper {
 
                     // all values that are not associated to selected dimensions are set to 0
                     // the others are set to the original value
-                    Map<Integer, Double> compressedReducedVectorAsMap = new HashMap();
+                    Map<Integer, Double> compressedReducedVectorAsMap = new HashMap<Integer, Double>();
                     int new_id = 0;
                     for (Integer i : bestDimensions) {
                         if (vec[i] != 0) {
@@ -537,8 +536,10 @@ public class SlibDist_Wrapper {
 
         // 1 - generates the factors that will be used to reduce the matrix
         int group_size = mConf.vec_size / nbDimensions; // each new dimensions will summarize group_size old dimensions (a least dimension can be added).
-        Integer[][][] all_params = new Integer[nbIterations][nbDimensions][group_size]; // stores the original dimensions that will be used to compute the new ones for each iteration.
-        List<Integer>[] unused_dimensions = new ArrayList[nbDimensions];
+        Integer[][][] all_params = new Integer[nbIterations][nbDimensions][group_size]; // stores the original dimensions that will be used to compute the new ones for each iteration.        
+        @SuppressWarnings("unchecked")
+		List<Integer>[] unused_dimensions = (List<Integer>[]) new ArrayList[nbDimensions];
+        
 
         System.out.println("Building reduction factor matrices: n=" + mConf.vec_size + "\tk=" + nbDimensions + "\titerations=" + nbIterations + "\tgroup size: " + group_size);
         Random randomGenerator = new Random();
@@ -547,7 +548,7 @@ public class SlibDist_Wrapper {
 
             logger.info("Generating factor for iteration " + (it + 1) + " \r");
 
-            unused_dimensions[it] = new ArrayList(mConf.vec_size);
+            unused_dimensions[it] = new ArrayList<Integer>(mConf.vec_size);
 
             for (int i = 0; i < mConf.vec_size; i++) {
                 unused_dimensions[it].add(i);

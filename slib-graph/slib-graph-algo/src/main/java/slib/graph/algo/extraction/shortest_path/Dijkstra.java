@@ -190,7 +190,7 @@ public class Dijkstra {
             visited.put(v, false);
         }
 
-        dists.put(source, new Double(0));
+        dists.put(source, Double.valueOf(0));
 
         for (int i = 0; i < dists.size(); i++) {
 

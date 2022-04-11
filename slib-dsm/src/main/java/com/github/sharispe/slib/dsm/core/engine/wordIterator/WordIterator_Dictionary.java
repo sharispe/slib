@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -45,14 +45,14 @@ import java.util.logging.Logger;
  * Implementation of the interface {@link WordIterator} considering a given
  * vocabulary - only the words in the vocabulary will be returned. As an example
  * considering the following sentence "Twenty years from now you will be more
- * disappointed by the things that you didnâ€™t do than by the ones you did do, so
+ * disappointed by the things that you didn’t do than by the ones you did do, so
  * throw off the bowlines, sail away from safe harbor, catch the trade winds in
- * your sails. Explore, Dream, Discover. â€“Mark Twain" and considering the
+ * your sails. Explore, Dream, Discover. –Mark Twain" and considering the
  * following vocabulary [things, Mark Twain, years, random, safe, sail] word
  * size of 3 the iterator will return five words: (1) years, (2) things, (3)
  * sail, (4) safe, (5) Mark Twain.
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_Dictionary implements WordIterator {
 

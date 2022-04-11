@@ -100,7 +100,8 @@ public class TestGraphEngine {
         }
     }
 
-    private void loadExpectedValues() throws Exception {
+    @SuppressWarnings("resource")
+	private void loadExpectedValues() throws Exception {
 
 
         informationContents.put(SANCHEZ_IC, new HashMap<URI, Double>());
@@ -180,7 +181,9 @@ public class TestGraphEngine {
         }
         in.close();
 
-
+        
+        //PJE
+        br.close();
     }
 
     @Test

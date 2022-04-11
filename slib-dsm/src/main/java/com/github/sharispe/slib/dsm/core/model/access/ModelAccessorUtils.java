@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -46,7 +46,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ModelAccessorUtils {
 
@@ -54,7 +54,7 @@ public class ModelAccessorUtils {
 
     public static Map<Integer, IndexedVectorInfo> loadIndex_2D_MODEL(ModelConf model) throws SLIB_Ex_Critic {
 
-        Map<Integer, IndexedVectorInfo> index = new HashMap();
+        Map<Integer, IndexedVectorInfo> index = new HashMap<Integer, IndexedVectorInfo>();
         String index_path = model.getModelIndex();
 
         logger.info("Loading index from " + index_path);

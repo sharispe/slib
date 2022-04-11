@@ -7,7 +7,6 @@ package com.github.sharispe.slib.dsm.core.corpus;
 
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
@@ -59,14 +58,15 @@ public class CorpusFromFileDir implements Corpus {
 
     private class DocIterable implements Iterable<Document> {
 
-        DirectoryStream<Path> newDirectoryStream;
-        Iterator<Path> pathIterator;
-        List<File> subdirectories;
+        @SuppressWarnings("unused")
+		private DirectoryStream<Path> newDirectoryStream;
+        private Iterator<Path> pathIterator;
+        private List<File> subdirectories;
 
         private DocIterable(DirectoryStream<Path> newDirectoryStream) {
             this.newDirectoryStream = newDirectoryStream;
             pathIterator = newDirectoryStream.iterator();
-            subdirectories = new ArrayList();
+            subdirectories = new ArrayList<File>();
         }
 
         @Override

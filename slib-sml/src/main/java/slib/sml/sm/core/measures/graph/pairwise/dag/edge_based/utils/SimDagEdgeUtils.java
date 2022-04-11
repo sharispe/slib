@@ -80,7 +80,7 @@ public class SimDagEdgeUtils {
 
 //		System.out.println("intersec "+interSecAncestors);
 
-        Map<URI, Double> msaSet = new HashMap(); // eligible MSA + dist to root
+        Map<URI, Double> msaSet = new HashMap<URI, Double>(); // eligible MSA + dist to root
 
         if (!interSecAncestors.isEmpty()) {
 

@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -46,7 +46,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -60,7 +59,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
@@ -175,8 +174,8 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
             File matrix_file = new File(matrix_dir + "/matrix");
             File new_matrix_file = new File(matrix_file.getPath() + ".new");
-
-            List<Integer> sorted_ids_matrix = new ArrayList(matrix.getElementIDs());
+            
+            List<Integer> sorted_ids_matrix = new ArrayList<Integer>(matrix.getElementIDs());
             Collections.sort(sorted_ids_matrix);
 
             Map<Integer, Double> new_matrix_current_word_compressed_vector;
@@ -277,7 +276,7 @@ public class CoOccurrenceEngineTheads implements Callable<CooccEngineResult> {
 
         vectorAsString.append(vectorID);
 
-        Map<Integer, Double> sortedMap = new TreeMap();
+        Map<Integer, Double> sortedMap = new TreeMap<Integer, Double>();
         sortedMap.putAll(vector);
 
         for (Map.Entry<Integer, Double> e : sortedMap.entrySet()) {

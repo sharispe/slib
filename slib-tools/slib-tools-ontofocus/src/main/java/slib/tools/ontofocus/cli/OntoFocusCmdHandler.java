@@ -311,7 +311,7 @@ public final class OntoFocusCmdHandler extends CmdHandler {
         IndexHash index = null;
         if (c.format.equals(GFormat.OBO)) {
             logger.info("Loading index");
-            index = new IndexerOBO().buildIndex(uriFactory, c.ontoFile, graph.getURI().stringValue());
+            index = IndexerOBO.buildIndex(uriFactory, c.ontoFile, graph.getURI().stringValue());
         }
 
 

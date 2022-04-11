@@ -220,4 +220,4 @@ Example when the dimensions used to characterized the entities are documents:
 
 ## Credits
 
-RDSM as first been proposed by SÃ©bastien Harispe (during a Postdoctoral research position at Ecole des mines d'AlÃ¨s).
+RDSM as first been proposed by Sébastien Harispe (during a Postdoctoral research position at Ecole des mines d'Alès).

@@ -125,7 +125,7 @@ public class GraphExample {
         
         System.out.println("- Graph, edges and vertices removed");
         // Remove the vertices and the edges
-        Set<URI> verticesToRemove = new HashSet();
+        Set<URI> verticesToRemove = new HashSet<URI>();
         verticesToRemove.add(vA);
         verticesToRemove.add(vD);
         graph.removeV(verticesToRemove); // associated edges are also removed

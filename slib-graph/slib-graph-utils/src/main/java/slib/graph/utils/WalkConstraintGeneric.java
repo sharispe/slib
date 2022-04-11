@@ -52,8 +52,8 @@ import slib.utils.impl.SetUtils;
  */
 public class WalkConstraintGeneric implements WalkConstraint {
 
-    Set<URI> acceptedWalksIN = new HashSet();
-    Set<URI> acceptedWalksOUT = new HashSet();
+    Set<URI> acceptedWalksIN = new HashSet<URI>();
+    Set<URI> acceptedWalksOUT = new HashSet<URI>();
 
     public WalkConstraintGeneric() {
     }
@@ -114,7 +114,7 @@ public class WalkConstraintGeneric implements WalkConstraint {
 
     @Override
     public Set<URI> getAcceptedPredicates() {
-        Set<URI> union = new HashSet();
+        Set<URI> union = new HashSet<URI>();
         union.addAll(acceptedWalksIN);
         union.addAll(acceptedWalksOUT);
         return union;

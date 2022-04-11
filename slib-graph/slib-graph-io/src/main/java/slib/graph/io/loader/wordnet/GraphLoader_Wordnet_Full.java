@@ -70,7 +70,7 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
     Logger logger = LoggerFactory.getLogger(this.getClass());
     URIFactoryMemory dataRepo = URIFactoryMemory.getSingleton();
 
-    public static final Map<String, URI> pointerSymbolsToURIs = new HashMap();
+    public static final Map<String, URI> pointerSymbolsToURIs = new HashMap<String, URI>();
 
     static {
 
@@ -130,7 +130,8 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
         pointerSymbolsToURIs.put("\\", f.getURI("http://SML/wordNet/DerivedPertains"));
     }
 
-    @Override
+    @SuppressWarnings("resource")
+	@Override
     public void populate(GDataConf conf, G g) throws SLIB_Exception {
 
         logger.info("-------------------------------------");
@@ -179,8 +180,8 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
                 data = line.split("\\s+");
 
                 String synset_offset = data[0];
-                String lex_filenum = data[1];
-                String ss_type = data[2];
+                //PJE String lex_filenum = data[1];
+                //PJE String ss_type = data[2];
 
                 URI synset = dataRepo.getURI(uriPrefix + synset_offset);
                 graph.addV(synset);
@@ -188,7 +189,7 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
                 int w_cnt = Integer.parseInt(data[3], 16);// hexa  
 
 //                logger.info(synset_offset);
-                Word[] words = extractWords(data, 4, w_cnt);
+                //PJE  Word[] words = extractWords(data, 4, w_cnt);
 
                 int c = 3 + w_cnt * 2 + 1;
 
@@ -219,6 +220,9 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
                 }
             }
             in.close();
+            
+            //PJE
+            br.close();
         } catch (IOException e) {
             throw new SLIB_Ex_Critic("Error loading the file: " + e.getMessage());
         }
@@ -304,17 +308,20 @@ public class GraphLoader_Wordnet_Full implements GraphLoader {
         }
     }
 
-    private class PointerToEdge {
+    @SuppressWarnings("unused")
+	private class PointerToEdge {
 
         URI rel;
         boolean fromSourceToTarget;
 
-        public PointerToEdge(URI rel, boolean fromSourceToTarget) {
+        
+		public PointerToEdge(URI rel, boolean fromSourceToTarget) {
             this.rel = rel;
             this.fromSourceToTarget = fromSourceToTarget;
         }
 
-        public E createEdge(URI srcPointer, URI targetPointer) {
+        
+		public E createEdge(URI srcPointer, URI targetPointer) {
 
             E e;
             if (fromSourceToTarget) {

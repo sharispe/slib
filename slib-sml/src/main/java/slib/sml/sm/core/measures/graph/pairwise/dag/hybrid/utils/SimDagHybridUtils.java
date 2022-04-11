@@ -98,14 +98,14 @@ public class SimDagHybridUtils {
             visited.put(c, false);
             inDegree.put(c, 0);
             inDegreeDone.put(c, 0);
-            sc.put(c, new Double(0));
+            sc.put(c, Double.valueOf(0));
         }
 
         ArrayList<URI> queue = new ArrayList<URI>();
         queue.add(v);
         visited.put(v, true);
 
-        sc.put(v, new Double(1));
+        sc.put(v, Double.valueOf(1));
 
         while (!queue.isEmpty()) {
 

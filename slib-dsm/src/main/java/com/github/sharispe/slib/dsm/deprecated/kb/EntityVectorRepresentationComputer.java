@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -57,7 +57,7 @@ import slib.utils.ex.SLIB_Exception;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class EntityVectorRepresentationComputer {
 
@@ -69,7 +69,7 @@ public class EntityVectorRepresentationComputer {
     public void buildVectorRepresentations(Set<URI> uris, G graph) {
 
         logger.info("Building index map");
-        Map<URI, Integer> indexMap = new HashMap();
+        Map<URI, Integer> indexMap = new HashMap<URI, Integer>();
         int c = 0;
         for (URI u : graph.getV()) {
             indexMap.put(u, c);
@@ -81,12 +81,14 @@ public class EntityVectorRepresentationComputer {
             logger.info("Building vector representation of " + uri + " " + c + "/" + uris.size() + "\t(size=" + indexMap.size() + ")");
             c++;
             double[] vec = buildVectorRepresentation(uri, graph, indexMap);
-            Map<Integer, Double> compression = CompressionUtils.compressedDoubleArrayToMap(CompressionUtils.compressDoubleArray(vec));
+            // PJE Map<Integer, Double> compression = CompressionUtils.compressedDoubleArrayToMap(CompressionUtils.compressDoubleArray(vec));
 //            System.out.println(compression);
+            CompressionUtils.compressedDoubleArrayToMap(CompressionUtils.compressDoubleArray(vec));
         }
     }
 
-    private double[] buildVectorRepresentation(URI uri, G graph, Map<URI, Integer> indexMap) {
+    @SuppressWarnings("unused")
+	private double[] buildVectorRepresentation(URI uri, G graph, Map<URI, Integer> indexMap) {
 
         double[] vector = new double[indexMap.size()];
         boolean propagate;
@@ -183,7 +185,8 @@ public class EntityVectorRepresentationComputer {
         GraphConf gConf = new GraphConf(uriFactory.getURI("http://graph"));
 
         for (int i = 0; i < args.length; i += 2) {
-            GFormat format = null;
+            @SuppressWarnings("unused")
+			GFormat format = null;
             if (args[i].equals(GFormat.RDF_XML.name())) {
                 format = GFormat.RDF_XML;
             } else if (args[i].equals(GFormat.NTRIPLES.name())) {
@@ -193,7 +196,7 @@ public class EntityVectorRepresentationComputer {
         }
 
         G graph = GraphLoaderGeneric.load(gConf);
-        Set<URI> uris = new HashSet(graph.getV());
+        Set<URI> uris = new HashSet<URI>(graph.getV());
         uris.clear();
         uris.add(uriFactory.getURI("http://dbpedia.org/ontology/engineer"));
         G reducedGraph = new EntityVectorRepresentationComputer().reduceGraph(uris, graph, 3);

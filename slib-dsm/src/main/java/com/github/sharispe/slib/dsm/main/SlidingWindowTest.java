@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class SlidingWindowTest {
 
@@ -98,7 +98,7 @@ public class SlidingWindowTest {
         int window_size_total = window_size_left + 1 + window_size_right;
         int[] text = textToArrayIDs(vocabulary, s);
 
-        List<Integer> window = new ArrayList();
+        List<Integer> window = new ArrayList<Integer>();
         for (int i = 0; i < 1 + window_size_right; i++) {
             window.add(text[i]);
         }
@@ -152,7 +152,7 @@ public class SlidingWindowTest {
     }
 
     private static Map<String, Integer> createVoc(String s) {
-        Map<String, Integer> vocabulary = new HashMap();
+        Map<String, Integer> vocabulary = new HashMap<String, Integer>();
         int c = 0;
         for (String ss : blank_pattern.split(s)) {
             vocabulary.put(ss, c);
@@ -170,7 +170,7 @@ public class SlidingWindowTest {
     }
 
     private static int[] textToArrayIDs(Map<String, Integer> vocabulary, String s) {
-        ArrayList<Integer> list = new ArrayList();
+        ArrayList<Integer> list = new ArrayList<Integer>();
         for (String ss : blank_pattern.split(s)) {
             list.add(vocabulary.get(ss));
         }

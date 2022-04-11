@@ -154,7 +154,8 @@ public class ResultsMerger {
 
     }
 
-    public void processLarge(String file_a, String file_b, String output, String tmp_dir, Integer split_size) throws SLIB_Ex_Critic {
+    @SuppressWarnings("resource")
+	public void processLarge(String file_a, String file_b, String output, String tmp_dir, Integer split_size) throws SLIB_Ex_Critic {
 
 
         values_a_index = new HashMap<String, Long>();
@@ -402,7 +403,8 @@ public class ResultsMerger {
         return newHeader;
     }
 
-    private void loadData(boolean isFile_A) throws SLIB_Ex_Critic {
+    @SuppressWarnings("resource")
+	private void loadData(boolean isFile_A) throws SLIB_Ex_Critic {
 
         String filePath = file_a;
 
@@ -453,6 +455,9 @@ public class ResultsMerger {
                 }
             }
             in.close();
+            
+            //PJE
+            br.close();
         } catch (IOException e) {//Catch exception if any
             throw new SLIB_Ex_Critic(e.getMessage());
         }

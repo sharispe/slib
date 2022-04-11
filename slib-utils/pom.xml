@@ -3,13 +3,14 @@
     <parent>
         <artifactId>slib</artifactId>
         <groupId>com.github.sharispe</groupId>
-        <version>0.9.5</version>
+        <version>0.9.6</version>
         <relativePath>..</relativePath>
     </parent>
         
     <artifactId>slib-utils</artifactId>
     <name>${project.artifactId}</name>
-    
+
+  
     
     <description>Utility class for the slib project</description>
     <url>http://www.semantic-measures-library.org</url>
@@ -82,8 +83,7 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <artifactId>maven-gpg-plugin</artifactId>                
                 <configuration>
                     <passphrase>${gpg.passphrase}</passphrase>
                 </configuration>

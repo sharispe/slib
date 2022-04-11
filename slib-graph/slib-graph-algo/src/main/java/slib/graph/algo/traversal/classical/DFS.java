@@ -35,7 +35,6 @@ package slib.graph.algo.traversal.classical;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.openrdf.model.URI;
@@ -87,8 +86,8 @@ public class DFS implements GraphTraversal {
 
     private void init() {
 
-        this.coloredVertex = new HashMap();
-        this.topoSort = new ArrayList();
+        this.coloredVertex = new HashMap<URI, Boolean>();
+        this.topoSort = new ArrayList<URI>();
 
         logger.debug("Iterator loaded for " + g.getURI() + " from " + sources.size() + " source(s) " + sources);
         logger.debug("Considering Walkconstraint " + wc);

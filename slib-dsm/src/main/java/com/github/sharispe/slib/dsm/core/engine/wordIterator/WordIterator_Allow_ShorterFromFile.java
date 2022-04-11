@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -33,7 +33,6 @@
  */
 package com.github.sharispe.slib.dsm.core.engine.wordIterator;
 
-import static com.github.sharispe.slib.dsm.core.engine.wordIterator.WordIteratorAbstract.logger;
 import com.github.sharispe.slib.dsm.utils.Utils;
 import java.io.File;
 import java.io.IOException;
@@ -42,13 +41,13 @@ import java.io.IOException;
  * Implementation of the interface {@link WordIterator} considering a maximal
  * word size - shorter words are also returned. As an example considering the
  * following sentence "Twenty years from now you will be more disappointed by
- * the things that you didnâ€™t do than by the ones you did do, so throw off the
+ * the things that you didn’t do than by the ones you did do, so throw off the
  * bowlines, sail away from safe harbor, catch the trade winds in your sails.
- * Explore, Dream, Discover. â€“Mark Twain" and considering a maximum word size of
+ * Explore, Dream, Discover. –Mark Twain" and considering a maximum word size of
  * 3 the iterator will return (1) Twenty, (2) Twenty years, (3) Twenty years
  * from, (4) years, (5) years from, (6) years from now, ...
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_Allow_ShorterFromFile extends WordIteratorAbstractFromFile {
 

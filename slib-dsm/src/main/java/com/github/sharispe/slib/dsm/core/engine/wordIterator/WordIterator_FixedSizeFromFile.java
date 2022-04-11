@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -40,13 +40,13 @@ import java.io.IOException;
 /**
  * Implementation of the interface {@link WordIterator} considering a fixed word
  * size. As an example considering the following sentence "Twenty years from now
- * you will be more disappointed by the things that you didnâ€™t do than by the
+ * you will be more disappointed by the things that you didn’t do than by the
  * ones you did do, so throw off the bowlines, sail away from safe harbor, catch
- * the trade winds in your sails. Explore, Dream, Discover. â€“Mark Twain"
+ * the trade winds in your sails. Explore, Dream, Discover. –Mark Twain"
  * considering a fixed size of 2 the iterator will return (1) Twenty years, (2)
  * years from, (3) from now, (4) now you ...
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class WordIterator_FixedSizeFromFile extends WordIteratorAbstractFromFile {
     

@@ -96,7 +96,7 @@ public class WordnetExample_ExtractionAnimal {
         String data_noun = dataloc + "index.noun";
 
         IndexerWordNetBasic indexWordnetNoun = new IndexerWordNetBasic(factory, wordnet, data_noun);
-        Map<URI, Set<String>> indexURI2String = new HashMap();
+        Map<URI, Set<String>> indexURI2String = new HashMap<URI, Set<String>>();
 
         for (Map.Entry<String, Set<URI>> entry : indexWordnetNoun.getIndex().entrySet()) {
 
@@ -104,7 +104,7 @@ public class WordnetExample_ExtractionAnimal {
             for (URI u : entry.getValue()) {
 
                 if (!indexURI2String.containsKey(u)) {
-                    Set<String> labels = new HashSet();
+                    Set<String> labels = new HashSet<String>();
                     labels.add(entry.getKey().replace("_", " "));
                     indexURI2String.put(u, labels);
 

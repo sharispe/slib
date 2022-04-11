@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -52,7 +52,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class MapIndexer {
 
@@ -66,7 +66,7 @@ public class MapIndexer {
 
         this.label = label;
         this.directory = filepath;
-        dataChunkInfo = new HashMap();
+        dataChunkInfo = new HashMap<String, DataChunkInfo>();
         logger.info("(" + this.label + ") map indexer: " + this.directory);
         new File(filepath).mkdirs();
     }
@@ -86,7 +86,7 @@ public class MapIndexer {
         logger.info("(" + label + ") add map size " + map.size() + " to index");
         logger.info("(" + label + ") sort map keys");
 
-        List<String> sortedWords = new ArrayList(map.keySet());
+        List<String> sortedWords = new ArrayList<String>(map.keySet());
         Collections.sort(sortedWords, String.CASE_INSENSITIVE_ORDER);
 
         logger.info("(" + label + ") process chunks");
@@ -97,7 +97,7 @@ public class MapIndexer {
         char atmp = 1;
         char btmp = 1;
 
-        Map<String, WordInfo> map_chunk = new HashMap();
+        Map<String, WordInfo> map_chunk = new HashMap<String, WordInfo>();
 
         for (String word : sortedWords) {
 
@@ -141,7 +141,7 @@ public class MapIndexer {
             index_file = new File(directory + "/" + dataChunkCount);
             dataChunkInfo.put(key, new DataChunkInfo(key, dataChunkCount, 0));
             dataChunkCount++;
-            mapWordInfoDataChunk = new HashMap();
+            mapWordInfoDataChunk = new HashMap<String, WordInfo>();
         } else {
             index_file = new File(directory + "/" + dataChunkInfo.get(key).id);
             mapWordInfoDataChunk = loadMapWordInfo(index_file);
@@ -183,7 +183,7 @@ public class MapIndexer {
 
     public static Map<String, WordInfo> loadMapWordInfo(File wordInfoFile) throws Exception {
 
-        Map<String, WordInfo> map = new HashMap();
+        Map<String, WordInfo> map = new HashMap<String, WordInfo>();
         if (!wordInfoFile.exists()) {
             return map;
         }

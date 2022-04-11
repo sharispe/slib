@@ -83,7 +83,7 @@ public class ValidatorDAG {
         this.wc = wc;
 
         this.graph = graph;
-        this.vertexColor = new HashMap();
+        this.vertexColor = new HashMap<URI, Color>();
         valid = true;
 
         logger.debug("Cheking DAG property of : " + graph.getURI());
@@ -241,7 +241,7 @@ public class ValidatorDAG {
 
         Set<URI> classes = GraphAccessor.getClasses(g);
 
-        Set<URI> roots = new HashSet();
+        Set<URI> roots = new HashSet<URI>();
         for (URI v : classes) {
 
             if (g.getV(v, wc).isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -48,7 +48,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class XPUtils {
 
@@ -96,9 +96,9 @@ public class XPUtils {
 //
 //    }
     
-
+/* PJE PJE 
     @Deprecated
-    public static <K,V extends Comparable> void flushMAP(Map<K,V> index, String filename) throws SLIB_Ex_Critic {
+    public static <K,V extends Comparable<?>> void flushMAP(Map<K,V> index, String filename) throws SLIB_Ex_Critic {
 
         logger.info("Flushing index into " + filename + " (n=" + index.size() + ")");
         try (PrintWriter writer = new PrintWriter(filename, "UTF-8")) {
@@ -112,11 +112,12 @@ public class XPUtils {
             throw new SLIB_Ex_Critic(e.getMessage());
         }
 
-    }
+    }*/
     
-    public static Map<Integer,String> loadIndexRevert(String filename) throws SLIB_Ex_Critic {
+    @SuppressWarnings("deprecation")
+	public static Map<Integer,String> loadIndexRevert(String filename) throws SLIB_Ex_Critic {
 
-        Map<Integer,String> vocIndex = new HashMap();
+        Map<Integer,String> vocIndex = new HashMap<Integer, String>();
         Voc i = new Voc(filename);
         for(Entry<String, Integer> e  : i.getIndex().entrySet()){
             vocIndex.put(e.getValue(), e.getKey());
@@ -167,7 +168,7 @@ public class XPUtils {
     @Deprecated
     public static Map<String, Integer> loadMAP(String filename) throws SLIB_Ex_Critic {
 
-        Map<String, Integer> map = new HashMap();
+        Map<String, Integer> map = new HashMap<String, Integer>();
         try {
             String line;
             String[] data;
@@ -193,7 +194,7 @@ public class XPUtils {
 
     public static Map<Integer, Integer> loadVocUsage(String filename) throws SLIB_Ex_Critic {
 
-        Map<Integer, Integer> vocUsage = new HashMap();
+        Map<Integer, Integer> vocUsage = new HashMap<Integer,Integer>();
         try {
             String line;
             String[] data;

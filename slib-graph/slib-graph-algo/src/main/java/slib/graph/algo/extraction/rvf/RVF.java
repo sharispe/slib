@@ -98,7 +98,7 @@ public class RVF {
      */
     public Set<URI> getRV(URI v) {
 
-        List<URI> rv = new ArrayList();
+        List<URI> rv = new ArrayList<URI>();
 
         BFS it = new BFS(g, v, wc);
 
@@ -110,7 +110,7 @@ public class RVF {
 
         rv.remove(v);// The BFS is exclusive
 
-        return new HashSet(rv);
+        return new HashSet<URI>(rv);
     }
 
     /**
@@ -128,7 +128,7 @@ public class RVF {
 
         logger.debug("Get All reachable vertices : start");
 
-        Map<URI, Set<URI>> allVertices = new HashMap();
+        Map<URI, Set<URI>> allVertices = new HashMap<URI, Set<URI>>();
 
         for (URI v : queryVertices) {
             allVertices.put(v, getRV(v));
@@ -153,7 +153,7 @@ public class RVF {
     public Map<URI, Integer> getRVnb(Set<URI> queryVertices) {
 
         Map<URI, Set<URI>> r = getRV(queryVertices);
-        Map<URI, Integer> results = new HashMap(r.size());
+        Map<URI, Integer> results = new HashMap<URI, Integer>(r.size());
 
         for (Entry<URI, Set<URI>> entry : r.entrySet()) {
             results.put(entry.getKey(), entry.getValue().size());

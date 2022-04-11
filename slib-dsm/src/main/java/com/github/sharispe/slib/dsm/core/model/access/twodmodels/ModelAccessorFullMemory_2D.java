@@ -1,5 +1,5 @@
 /*
- *  Copyright or Â© or Copr. Ecole des Mines d'AlÃ¨s (2012-2014) 
+ *  Copyright or © or Copr. Ecole des Mines d'Alès (2012-2014) 
  *  
  *  This software is a computer program whose purpose is to provide 
  *  several functionalities for the processing of semantic data 
@@ -53,7 +53,7 @@ import slib.utils.ex.SLIB_Ex_Critic;
  * Class used to access information which is stored into the model This class
  * enable fast access of the vectors but stores them into a matrix
  *
- * @author SÃ©bastien Harispe (sebastien.harispe@gmail.com)
+ * @author Sébastien Harispe (sebastien.harispe@gmail.com)
  */
 public class ModelAccessorFullMemory_2D extends ModelAccessor_2D {
 
