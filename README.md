@@ -4,7 +4,7 @@ Slib
 `Slib` is a JAVA library dedicated to semantic data mining based on texts and/or ontology processing. The library is composed of various modules dedicated to specific treatments - they can be used in the context of information retrieval, data analysis, recommendation system design...
 
 
-* *slib-sml*, the module dedicated to [The Semantic Measures Library](http://www.semantic-measures-library.org) (SML), a library dedicated to semantic measures (similarity/relatedness) computation, evaluation and analysis. See dedicated web site: http://www.semantic-measures-library.org for more information on both semantic measures and this module.
+* *slib-sml*, the module dedicated to [The Semantic Measures Library](https://factory.euromov.eu/sml/) (SML), a library dedicated to semantic measures (similarity/relatedness) computation, evaluation and analysis. See dedicated web site: https://factory.euromov.eu/sml for more information on both semantic measures and this module.
 
 * *slib-graph* a simple in-memory graph engine used to manipulate graphs of URIs - based on on the sesame library (RDF/OWL data loading...). This module provides an easy way to process semantic graphs (e.g. RDF graph) as graphs in which traversal can easily be performed. Numerous algorithms commonly used to process semantic graphs are implemented.
                                                                                  
